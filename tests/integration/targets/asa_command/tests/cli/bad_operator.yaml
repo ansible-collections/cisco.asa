@@ -1,0 +1,21 @@
+---
+- debug: msg="START cli/bad_operator.yaml"
+
+- name: test bad operator
+  register: result
+  ignore_errors: true
+  cisco.asa.asa_command:
+    commands:
+      - show version
+      - show interfaces GigabitEthernet 0/0
+    wait_for:
+
+      - result[0] contains 'Description: Foo'
+    provider: '{{ cli }}'
+
+- assert:
+    that:
+      - result.failed == true
+      - result.msg is defined
+
+- debug: msg="END cli/bad_operator.yaml"

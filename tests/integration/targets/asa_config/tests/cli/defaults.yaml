@@ -1,0 +1,45 @@
+---
+- debug: msg="START cli/defaults.yaml"
+
+- name: setup
+  ignore_errors: true
+  cisco.asa.asa_config:
+    commands:
+      - no object-group network OG-ANSIBLE-TEMPLATE-DEFAULT
+    provider: '{{ cli }}'
+
+- name: configure device with defaults included
+  register: result
+  cisco.asa.asa_config:
+    src: defaults/config.j2
+    defaults: true
+    provider: '{{ cli }}'
+
+- debug: var=result
+
+- assert:
+    that:
+      - result.changed == true
+      - result.updates is defined
+
+- name: check device with defaults included
+  register: result
+  cisco.asa.asa_config:
+    src: defaults/config.j2
+    defaults: true
+    provider: '{{ cli }}'
+
+- debug: var=result
+
+- assert:
+    that:
+      - result.changed == false
+      - result.updates is not defined
+
+- name: teardown
+  cisco.asa.asa_config:
+    commands:
+      - no object-group network OG-ANSIBLE-TEMPLATE-DEFAULT
+    provider: '{{ cli }}'
+
+- debug: msg="END cli/defaults.yaml"
