@@ -1,0 +1,67 @@
+---
+- debug: msg="START cli/sublevel_block.yaml"
+
+- name: setup
+  register: object_group
+  cisco.asa.asa_command:
+    commands:
+      - show run object-group
+    provider: '{{ cli }}'
+
+- name: setup
+  cisco.asa.asa_config:
+    lines:
+      - no object-group network OG-ANSIBLE
+    match: none
+    provider: '{{ cli }}'
+
+- name: configure sub level command using block replace
+  register: result
+  cisco.asa.asa_config:
+    lines:
+      - network-object 192.168.10.0 255.255.255.0
+      - network-object 192.168.20.0 255.255.255.0
+      - network-object 192.168.30.0 255.255.255.0
+      - network-object 192.168.40.0 255.255.255.0
+    parents:
+      - object-group network OG-ANSIBLE
+    replace: block
+    after:
+      - exit
+    provider: '{{ cli }}'
+
+- assert:
+    that:
+      - result.changed == true
+      - "'object-group network OG-ANSIBLE' in result.updates"
+      - "'network-object 192.168.10.0 255.255.255.0' in result.updates"
+      - "'network-object 192.168.20.0 255.255.255.0' in result.updates"
+      - "'network-object 192.168.30.0 255.255.255.0' in result.updates"
+      - "'network-object 192.168.40.0 255.255.255.0' in result.updates"
+
+- name: check sub level command using block replace
+  register: result
+  cisco.asa.asa_config:
+    lines:
+      - network-object 192.168.10.0 255.255.255.0
+      - network-object 192.168.20.0 255.255.255.0
+      - network-object 192.168.30.0 255.255.255.0
+      - network-object 192.168.40.0 255.255.255.0
+    parents:
+      - object-group network OG-ANSIBLE
+    replace: block
+    after:
+      - exit
+    provider: '{{ cli }}'
+
+- assert:
+    that:
+      - result.changed == false
+
+- name: teardown
+  cisco.asa.asa_config:
+    lines:
+      - no object-group network OG-ANSIBLE
+    provider: '{{ cli }}'
+
+- debug: msg="END cli/sublevel_block.yaml"

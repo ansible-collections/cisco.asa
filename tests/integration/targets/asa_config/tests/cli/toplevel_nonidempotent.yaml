@@ -1,0 +1,40 @@
+---
+- debug: msg="START cli/toplevel_nonidempotent.yaml"
+
+- name: setup
+  cisco.asa.asa_config:
+    backup: true
+    provider: '{{ cli }}'
+
+- name: configure top level command
+  register: result
+  cisco.asa.asa_config:
+    lines:
+      - hostname foo
+    provider: '{{ cli }}'
+    match: strict
+
+- assert:
+    that:
+      - result.changed == true
+      - "'hostname foo' in result.updates"
+
+- name: configure top level command idempotent check
+  register: result
+  cisco.asa.asa_config:
+    lines:
+      - hostname foo
+    provider: '{{ cli }}'
+    match: strict
+
+- assert:
+    that:
+      - result.changed == true
+
+- name: teardown
+  cisco.asa.asa_config:
+    lines:
+      - hostname {{ inventory_hostname_short }}
+    provider: '{{ cli }}'
+
+- debug: msg="END cli/toplevel_nonidempotent.yaml"

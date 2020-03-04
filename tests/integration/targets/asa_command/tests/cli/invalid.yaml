@@ -1,0 +1,30 @@
+---
+- debug: msg="START cli/invalid.yaml"
+
+- name: run invalid command
+  register: result
+  ignore_errors: true
+  cisco.asa.asa_command:
+    commands:
+      - show foo
+    provider: '{{ cli }}'
+
+- assert:
+    that:
+      - result.failed
+
+- name: run commands that include invalid command
+  register: result
+  ignore_errors: true
+  cisco.asa.asa_command:
+    commands:
+      - show version
+      - show foo
+    provider: '{{ cli }}'
+
+- assert:
+    that:
+      - result.failed
+  ignore_errors: true
+
+- debug: msg="END cli/invalid.yaml"
