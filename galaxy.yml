@@ -1,0 +1,10 @@
+---
+authors:
+  - Ansible Security Community (ansible-security)
+dependencies:
+  "ansible.netcommon": "*"
+license_file: LICENSE
+name: asa
+namespace: cisco
+readme: README.rst
+repository: https://github.com/ansible-collections/asa
