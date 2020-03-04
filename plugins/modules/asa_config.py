@@ -262,7 +262,6 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.c
     NetworkConfig,
     dumps,
 )
-from ansible.module_utils._text import to_native
 
 
 def get_candidate(module):
@@ -363,8 +362,6 @@ def main():
     result = {"changed": False}
 
     check_args(module)
-
-    config = None
 
     if module.params["backup"]:
         result["__backup__"] = get_config(module)

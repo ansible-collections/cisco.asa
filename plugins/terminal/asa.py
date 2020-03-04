@@ -46,7 +46,6 @@ class TerminalModule(TerminalBase):
             self.disable_pager()
 
     def disable_pager(self):
-        cmd = {u"command": u"no terminal pager"}
         try:
             self._exec_cli_command(u"no terminal pager")
         except AnsibleConnectionFailure:

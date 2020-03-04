@@ -126,12 +126,10 @@ updates:
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
     asa_argument_spec,
-    check_args,
 )
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
     get_config,
     load_config,
-    run_commands,
 )
 
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.config import (
