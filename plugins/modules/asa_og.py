@@ -136,20 +136,11 @@ commands:
     ]
 """
 import re
-import sys
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
-    check_args,
-)
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
     get_config,
     load_config,
-    run_commands,
-)
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.config import (
-    NetworkConfig,
-    dumps,
 )
 
 
@@ -266,7 +257,6 @@ def map_config_to_obj(module):
     obj = list()
     obj_dict = dict()
 
-    group_type = module.params["group_type"]
     group_name = module.params["name"]
     protocol = module.params["protocol"]
 
@@ -333,9 +323,7 @@ def replace(want_dict, have):
     add_lines = list()
     remove_lines = list()
 
-    have_name = have[0].get("have_name")
     have_group_type = have[0].get("have_group_type")
-    have_config = have[0].get("have_lines")
     have_description = have[0].get("have_description")
     have_host_ip = have[0].get("have_host_ip")
     have_group_object = have[0].get("have_group_object")
@@ -599,9 +587,7 @@ def present(want_dict, have):
 
     commands = list()
 
-    have_name = have[0].get("have_name")
     have_group_type = have[0].get("have_group_type")
-    have_config = have[0].get("have_lines")
     have_description = have[0].get("have_description")
     have_host_ip = have[0].get("have_host_ip")
     have_group_object = have[0].get("have_group_object")
@@ -784,9 +770,7 @@ def absent(want_dict, have):
 
     commands = list()
 
-    have_name = have[0].get("have_name")
     have_group_type = have[0].get("have_group_type")
-    have_config = have[0].get("have_lines")
     have_description = have[0].get("have_description")
     have_host_ip = have[0].get("have_host_ip")
     have_group_object = have[0].get("have_group_object")
