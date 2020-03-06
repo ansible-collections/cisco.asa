@@ -34,8 +34,9 @@ import re
 import json
 
 from itertools import chain
-
+from ansible.errors import AnsibleConnectionFailure
 from ansible.module_utils._text import to_text
+from ansible.module_utils.common._collections_compat import Mapping
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
     to_list,
 )
@@ -50,9 +51,17 @@ class Cliconf(CliconfBase):
         reply = self.get("show version")
         data = to_text(reply, errors="surrogate_or_strict").strip()
 
-        match = re.search(r"Version (\S+),", data)
+        match = re.search(r"Version (\S+)", data)
         if match:
             device_info["network_os_version"] = match.group(1)
+
+        match = re.search(r"Firepower .+ Version (\S+)", data)
+        if match:
+            device_info["network_os_firepower_version"] = match.group(1)
+
+        match = re.search(r"Device .+ Version (\S+)", data)
+        if match:
+            device_info["network_os_device_mgr_version"] = match.group(1)
 
         match = re.search(r"^Model Id:\s+(.+) \(revision", data, re.M)
         if match:
@@ -61,6 +70,10 @@ class Cliconf(CliconfBase):
         match = re.search(r"^(.+) up", data, re.M)
         if match:
             device_info["network_os_hostname"] = match.group(1)
+
+        match = re.search(r'image file is "(.+)"', data)
+        if match:
+            device_info["network_os_image"] = match.group(1)
 
         return device_info
 
@@ -81,24 +94,38 @@ class Cliconf(CliconfBase):
         for cmd in chain(["configure terminal"], to_list(command), ["end"]):
             self.send_command(cmd)
 
-    def get(
-        self,
-        command,
-        prompt=None,
-        answer=None,
-        sendonly=False,
-        newline=True,
-        check_all=False,
-    ):
-        return self.send_command(
-            command=command,
-            prompt=prompt,
-            answer=answer,
-            sendonly=sendonly,
-            newline=newline,
-            check_all=check_all,
-        )
+    def get(self, command, prompt=None, answer=None, sendonly=False, newline=True, check_all=False):
+        return self.send_command(command=command,
+                                 prompt=prompt,
+                                 answer=answer,
+                                 sendonly=sendonly,
+                                 newline=newline,
+                                 check_all=check_all)
 
     def get_capabilities(self):
         result = super(Cliconf, self).get_capabilities()
         return json.dumps(result)
+
+    def run_commands(self, commands=None, check_rc=True):
+        if commands is None:
+            raise ValueError("'commands' value is required")
+
+        responses = list()
+        for cmd in to_list(commands):
+            if not isinstance(cmd, Mapping):
+                cmd = {"command": cmd}
+
+            output = cmd.pop("output", None)
+            if output:
+                raise ValueError("'output' value %s is not supported for run_commands" % output)
+
+            try:
+                out = self.send_command(**cmd)
+            except AnsibleConnectionFailure as e:
+                if check_rc:
+                    raise
+                out = getattr(e, "err", to_text(e))
+
+            responses.append(out)
+
+        return responses
