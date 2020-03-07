@@ -8,3 +8,4 @@ name: asa
 namespace: cisco
 readme: README.rst
 repository: https://github.com/ansible-collections/asa
+tags: [cisco, asa, networking, security]
