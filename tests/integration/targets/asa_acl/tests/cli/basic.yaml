@@ -1,13 +1,6 @@
 ---
 - debug: msg="START cli/basic.yaml"
 
-- name: setup
-  ignore_errors: true
-  cisco.asa.asa_config:
-    commands:
-      - clear configure access-list ACL-BASIC
-    provider: '{{ cli }}'
-
 - name: Basic ACL
   register: result
   cisco.asa.asa_acl:
