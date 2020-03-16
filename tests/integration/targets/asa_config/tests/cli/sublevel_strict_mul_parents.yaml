@@ -10,7 +10,6 @@
       - policy-map p1
       - class c1
     before:
-      - no policy-map p1
       - no class-map c1
     match: none
 
