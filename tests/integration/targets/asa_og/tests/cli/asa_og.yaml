@@ -502,8 +502,8 @@
       cisco.asa.asa_og: *id021
 
     - assert: *id004
-  always:
 
+  always:
     - name: remove test config if any
       ignore_errors: true
       cisco.asa.asa_config:
