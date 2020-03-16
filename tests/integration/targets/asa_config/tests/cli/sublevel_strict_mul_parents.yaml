@@ -9,8 +9,6 @@
       - match default-inspection-traffic
       - policy-map p1
       - class c1
-    before:
-      - no class-map c1
     match: none
 
 - name: configure sub level command using strict match
