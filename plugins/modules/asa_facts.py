@@ -15,12 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 #
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['preview'],
-                    'supported_by': 'network'}
+ANSIBLE_METADATA = {
+    "metadata_version": "1.1",
+    "status": ["preview"],
+    "supported_by": "network",
+}
 
 
 DOCUMENTATION = """
@@ -193,12 +196,15 @@ def main():
     argument_spec = FactsArgs.argument_spec
     argument_spec.update(asa_argument_spec)
 
-    module = AnsibleModule(argument_spec=argument_spec,
-                           supports_check_mode=True)
+    module = AnsibleModule(
+        argument_spec=argument_spec, supports_check_mode=True
+    )
 
     warnings = []
     if module.params["gather_subset"] == "!config":
-        warnings.append('default value for `gather_subset` will be changed to `min` from `!config` v2.11 onwards')
+        warnings.append(
+            "default value for `gather_subset` will be changed to `min` from `!config` v2.11 onwards"
+        )
 
     result = Facts(module).get_facts()
 
@@ -208,5 +214,5 @@ def main():
     module.exit_json(ansible_facts=ansible_facts, warnings=warnings)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
