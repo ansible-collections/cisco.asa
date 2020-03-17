@@ -5,14 +5,12 @@
   cisco.asa.asa_config:
     lines:
       - hostname firewall
-    provider: '{{ cli }}'
 
 - name: configure top level command
   register: result
   cisco.asa.asa_config:
     lines:
       - hostname foo
-    provider: '{{ cli }}'
 
 - assert:
     that:
@@ -24,7 +22,6 @@
   cisco.asa.asa_config:
     lines:
       - hostname foo
-    provider: '{{ cli }}'
 
 - assert:
     that:
@@ -34,6 +31,5 @@
   cisco.asa.asa_config:
     lines:
       - hostname {{ inventory_hostname_short }}
-    provider: '{{ cli }}'
 
 - debug: msg="END cli/toplevel.yaml"

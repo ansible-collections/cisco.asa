@@ -6,14 +6,13 @@
   cisco.asa.asa_config:
     commands:
       - no object-group network OG-ANSIBLE-TEMPLATE
-    provider: '{{ cli }}'
 
 - name: collect any backup files
   find:
     paths: '{{ role_path }}/backup'
     pattern: '{{ inventory_hostname_short }}_config*'
   register: backup_files
-  delegate_to: localhost
+  connection: local
 
 - name: delete backup files
   file:
@@ -26,7 +25,6 @@
   cisco.asa.asa_config:
     src: basic/config.j2
     backup: true
-    provider: '{{ cli }}'
 
 - assert:
     that:
@@ -38,7 +36,7 @@
     paths: '{{ role_path }}/backup'
     pattern: '{{ inventory_hostname_short }}_config*'
   register: backup_files
-  delegate_to: localhost
+  connection: local
 
 - assert:
     that:
@@ -48,6 +46,5 @@
   cisco.asa.asa_config:
     commands:
       - no object-group network OG-ANSIBLE-TEMPLATE
-    provider: '{{ cli }}'
 
 - debug: msg="END cli/backup.yaml"

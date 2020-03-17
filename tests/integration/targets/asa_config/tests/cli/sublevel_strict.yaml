@@ -15,7 +15,6 @@
       - no object-group network OG-ANSIBLE-STRICT
     after:
       - exit
-    provider: '{{ cli }}'
 
 - name: configure sub level command using strict match
   register: result
@@ -28,7 +27,6 @@
     parents:
       - object-group network OG-ANSIBLE-STRICT
     match: strict
-    provider: '{{ cli }}'
 
 - assert:
     that:
@@ -46,7 +44,6 @@
     after:
       - exit
     match: strict
-    provider: '{{ cli }}'
 
 - assert:
     that:
@@ -62,6 +59,5 @@
   cisco.asa.asa_config:
     lines:
       - no object-group network OG-ANSIBLE-STRICT
-    provider: '{{ cli }}'
 
 - debug: msg="END cli/sublevel_strict.yaml"
