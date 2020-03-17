@@ -61,7 +61,9 @@ asa_provider_spec = {
 }
 
 asa_argument_spec = {
-    'provider': dict(type='dict', options=asa_provider_spec, removed_in_version=2.14),
+    "provider": dict(
+        type="dict", options=asa_provider_spec, removed_in_version=2.14
+    ),
 }
 
 asa_top_spec = {
@@ -90,17 +92,17 @@ def check_args(module):
 
 
 def get_connection(module):
-    if hasattr(module, '_asa_connection'):
+    if hasattr(module, "_asa_connection"):
         return module._asa_connection
 
     # Not all modules include the 'context' key.
-    context = module.params.get('context')
+    context = module.params.get("context")
     capabilities = get_capabilities(module)
-    network_api = capabilities.get('network_api')
-    if network_api == 'cliconf':
+    network_api = capabilities.get("network_api")
+    if network_api == "cliconf":
         module._asa_connection = Connection(module._socket_path)
     else:
-        module.fail_json(msg='Invalid connection type %s' % network_api)
+        module.fail_json(msg="Invalid connection type %s" % network_api)
 
     if context:
         if context == "system":
@@ -113,12 +115,12 @@ def get_connection(module):
 
 
 def get_capabilities(module):
-    if hasattr(module, '_asa_capabilities'):
+    if hasattr(module, "_asa_capabilities"):
         return module._asa_capabilities
     try:
         capabilities = Connection(module._socket_path).get_capabilities()
     except ConnectionError as exc:
-        module.fail_json(msg=to_text(exc, errors='surrogate_then_replace'))
+        module.fail_json(msg=to_text(exc, errors="surrogate_then_replace"))
     module._asa_capabilities = json.loads(capabilities)
 
     return module._asa_capabilities
@@ -126,15 +128,17 @@ def get_capabilities(module):
 
 def to_commands(module, commands):
     if not isinstance(commands, list):
-        raise AssertionError('argument must be of type <list>')
+        raise AssertionError("argument must be of type <list>")
 
     transform = EntityCollection(module, command_spec)
     commands = transform(commands)
 
     for index, item in enumerate(commands):
-        if module.check_mode and not item['command'].startswith('show'):
-            module.warn('only show commands are supported when using check '
-                        'mode, not executing `%s`' % item['command'])
+        if module.check_mode and not item["command"].startswith("show"):
+            module.warn(
+                "only show commands are supported when using check "
+                "mode, not executing `%s`" % item["command"]
+            )
 
     return commands
 
@@ -151,12 +155,12 @@ def get_config(module, flags=None):
     flags = [] if flags is None else flags
 
     # Not all modules include the 'passwords' key.
-    passwords = module.params.get('passwords', False)
+    passwords = module.params.get("passwords", False)
     if passwords:
-        cmd = 'more system:running-config'
+        cmd = "more system:running-config"
     else:
-        cmd = 'show running-config '
-        cmd += ' '.join(flags)
+        cmd = "show running-config "
+        cmd += " ".join(flags)
         cmd = cmd.strip()
 
     try:
@@ -164,7 +168,7 @@ def get_config(module, flags=None):
     except KeyError:
         conn = get_connection(module)
         out = conn.get(cmd)
-        cfg = to_text(out, errors='surrogate_then_replace').strip()
+        cfg = to_text(out, errors="surrogate_then_replace").strip()
         _DEVICE_CONFIGS[cmd] = cfg
         return cfg
 
@@ -178,15 +182,15 @@ def load_config(module, config):
 
 
 def get_defaults_flag(module):
-    rc, out, err = exec_command(module, 'show running-config ?')
-    out = to_text(out, errors='surrogate_then_replace')
+    rc, out, err = exec_command(module, "show running-config ?")
+    out = to_text(out, errors="surrogate_then_replace")
 
     commands = set()
     for line in out.splitlines():
         if line:
             commands.add(line.strip().split()[0])
 
-    if 'all' in commands:
-        return 'all'
+    if "all" in commands:
+        return "all"
     else:
-        return 'full'
+        return "full"

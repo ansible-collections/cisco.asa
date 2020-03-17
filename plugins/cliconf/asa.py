@@ -94,13 +94,23 @@ class Cliconf(CliconfBase):
         for cmd in chain(["configure terminal"], to_list(command), ["end"]):
             self.send_command(cmd)
 
-    def get(self, command, prompt=None, answer=None, sendonly=False, newline=True, check_all=False):
-        return self.send_command(command=command,
-                                 prompt=prompt,
-                                 answer=answer,
-                                 sendonly=sendonly,
-                                 newline=newline,
-                                 check_all=check_all)
+    def get(
+        self,
+        command,
+        prompt=None,
+        answer=None,
+        sendonly=False,
+        newline=True,
+        check_all=False,
+    ):
+        return self.send_command(
+            command=command,
+            prompt=prompt,
+            answer=answer,
+            sendonly=sendonly,
+            newline=newline,
+            check_all=check_all,
+        )
 
     def get_capabilities(self):
         result = super(Cliconf, self).get_capabilities()
@@ -117,7 +127,10 @@ class Cliconf(CliconfBase):
 
             output = cmd.pop("output", None)
             if output:
-                raise ValueError("'output' value %s is not supported for run_commands" % output)
+                raise ValueError(
+                    "'output' value %s is not supported for run_commands"
+                    % output
+                )
 
             try:
                 out = self.send_command(**cmd)
