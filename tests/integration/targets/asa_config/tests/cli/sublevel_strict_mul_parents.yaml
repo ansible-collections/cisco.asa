@@ -1,6 +1,5 @@
 ---
-- debug: msg="START cli/sublevel_strict_mul_parents.yaml on connection={{ ansible_connection
-    }}"
+- debug: msg="START cli/sublevel_strict_mul_parents.yaml on connection={{ ansible_connection}}"
 
 - name: setup
   cisco.asa.asa_config:

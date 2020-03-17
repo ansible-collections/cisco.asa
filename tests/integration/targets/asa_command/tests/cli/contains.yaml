@@ -10,7 +10,6 @@
     wait_for:
       - result[0] contains 'Cisco Adaptive Security Appliance Software Version'
       - result[1] contains 'Hardware'
-    provider: '{{ cli }}'
 
 - assert:
     that:

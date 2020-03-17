@@ -6,14 +6,12 @@
   cisco.asa.asa_command:
     commands:
       - show run object-group
-    provider: '{{ cli }}'
 
 - name: setup
   cisco.asa.asa_config:
     lines:
       - no object-group network OG-ANSIBLE
     match: none
-    provider: '{{ cli }}'
 
 - name: configure sub level command using block replace
   register: result
@@ -28,7 +26,6 @@
     replace: block
     after:
       - exit
-    provider: '{{ cli }}'
 
 - assert:
     that:
@@ -52,7 +49,6 @@
     replace: block
     after:
       - exit
-    provider: '{{ cli }}'
 
 - assert:
     that:
@@ -62,6 +58,5 @@
   cisco.asa.asa_config:
     lines:
       - no object-group network OG-ANSIBLE
-    provider: '{{ cli }}'
 
 - debug: msg="END cli/sublevel_block.yaml"

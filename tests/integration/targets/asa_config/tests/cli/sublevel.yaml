@@ -5,7 +5,6 @@
   cisco.asa.asa_config:
     lines:
       - no object-group network OG-ANSIBLE-SUBLEVEL
-    provider: '{{ cli }}'
 
 - name: configure sub level command
   register: result
@@ -14,7 +13,6 @@
       - network-object host 192.168.10.1
     parents:
       - object-group network OG-ANSIBLE-SUBLEVEL
-    provider: '{{ cli }}'
 
 - assert:
     that:
@@ -29,7 +27,6 @@
       - network-object host 192.168.10.1
     parents:
       - object-group network OG-ANSIBLE-SUBLEVEL
-    provider: '{{ cli }}'
 
 - assert:
     that:
@@ -39,6 +36,5 @@
   cisco.asa.asa_config:
     lines:
       - no object-group network OG-ANSIBLE-SUBLEVEL
-    provider: '{{ cli }}'
 
 - debug: msg="END cli/sublevel.yaml"

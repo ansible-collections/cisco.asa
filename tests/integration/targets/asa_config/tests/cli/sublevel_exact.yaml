@@ -15,7 +15,6 @@
       - no object-group network OG-ANSIBLE-EXACT
     after:
       - exit
-    provider: '{{ cli }}'
 
 - name: configure sub level command using exact match
   register: result
@@ -30,7 +29,6 @@
     after:
       - exit
     match: exact
-    provider: '{{ cli }}'
 
 - assert:
     that:
@@ -56,7 +54,6 @@
     after:
       - exit
     match: exact
-    provider: '{{ cli }}'
 
 - assert:
     that:
@@ -66,6 +63,5 @@
   cisco.asa.asa_config:
     lines:
       - no object-group network OG-ANSIBLE-EXACT
-    provider: '{{ cli }}'
 
 - debug: msg="END cli/sublevel_exact.yaml"
