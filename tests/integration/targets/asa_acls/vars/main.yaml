@@ -39,7 +39,8 @@ gathered:
               line: 1
               log: default
               protocol: tcp
-              sequence: 10
+              protocol_options:
+                tcp: true
               source:
                 address: 192.0.2.0
                 netmask: 255.255.255.0
@@ -47,15 +48,14 @@ gathered:
                 address: 198.51.110.0
                 netmask: 255.255.255.0
               grant: deny
-              inactive: true
               line: 2
+              log: errors
               protocol: igrp
               protocol_options:
                 igrp: true
               source:
                 address: 198.51.100.0
                 wildcard_bits: 255.255.255.0
-              log: errors
           acl_type: extended
           name: test_access
         - aces:
