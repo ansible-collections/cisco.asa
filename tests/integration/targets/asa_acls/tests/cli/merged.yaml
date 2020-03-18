@@ -38,7 +38,7 @@
                   destination:
                     address: 198.51.110.0
                     netmask: 255.255.255.0
-                  time_range: temp
+                  log: errors
             - name: test_global_access
               acl_type: extended
               aces:
