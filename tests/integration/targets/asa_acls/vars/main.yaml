@@ -101,7 +101,6 @@ parsed:
                   eq: www
               grant: deny
               line: 1
-              protocol: tcp
               log: default
               protocol: tcp
               protocol_options:
@@ -114,13 +113,13 @@ parsed:
                 netmask: 255.255.255.0
               grant: deny
               line: 2
+              log: errors
               protocol: igrp
               protocol_options:
                 igrp: true
               source:
                 address: 198.51.100.0
                 netmask: 255.255.255.0
-              log: errors
           acl_type: extended
           name: test_access
     - acls:
