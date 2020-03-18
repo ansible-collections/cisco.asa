@@ -1,5 +1,4 @@
 ---
 - name: Remove Config
-  - name: Delete all off ACLs configured
-    cisco.asa.asa_acls:
-      state: deleted
+  cisco.asa.asa_acls:
+    state: deleted
