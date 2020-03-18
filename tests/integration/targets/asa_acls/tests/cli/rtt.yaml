@@ -83,22 +83,22 @@
       cisco.asa.asa_acls:
         config:
           - name: test_access
-              acl_type: extended
-              aces:
-                - grant: deny
-                  line: 1
-                  protocol_options:
-                    tcp: true
-                  source:
-                    address: 192.0.4.0
-                    netmask: 255.255.255.0
-                    port_protocol:
-                      eq: telnet
-                  destination:
-                    address: 192.0.5.0
-                    netmask: 255.255.255.0
-                    port_protocol:
-                      eq: www
+            acl_type: extended
+            aces:
+              - grant: deny
+                line: 1
+                protocol_options:
+                  tcp: true
+                source:
+                  address: 192.0.4.0
+                  netmask: 255.255.255.0
+                  port_protocol:
+                    eq: telnet
+                destination:
+                  address: 192.0.5.0
+                  netmask: 255.255.255.0
+                  port_protocol:
+                    eq: www
         state: overridden
 
     - assert:
