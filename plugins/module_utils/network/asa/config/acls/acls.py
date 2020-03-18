@@ -91,7 +91,7 @@ class Acls(ConfigBase):
             running_config = self._module.params["running_config"]
             if not running_config:
                 self._module.fail_json(
-                    msg="Value of running_config parameter must not be empty for state parsed"
+                    msg="value of running_config parameter must not be empty for state parsed"
                 )
             result["parsed"] = self.get_acls_facts(data=running_config)
         else:
