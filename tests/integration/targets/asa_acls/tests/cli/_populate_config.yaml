@@ -1,0 +1,11 @@
+---
+- name: Populate Config
+  vars:
+    lines:
+    "access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default\n
+     access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 time-range temp\n
+     access-list test_global_access line 1 extended deny tcp any any eq www log errors\n
+     access-list test_R1_traffic deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive\n"
+
+  ansible.netcommon.cli_config:
+    config: '{{ lines }}'
