@@ -234,7 +234,6 @@ class Acls(ConfigBase):
                 for ace_have in acls_have.get("aces"):
                     check = False
                     for config_want in temp_want:
-                        count = 0
                         for acls_want in config_want.get("acls"):
                             for ace_want in acls_want.get("aces"):
                                 if acls_want.get("name") == acls_have.get(
@@ -257,21 +256,18 @@ class Acls(ConfigBase):
                                                 ) == temp_acls_have.get(
                                                     "name"
                                                 ):
-                                                    commands.extend(
-                                                        self._clear_config(
-                                                            temp_ace_have,
-                                                            temp_acls_have,
-                                                        )
+                                                    temp = self._clear_config(
+                                                        temp_ace_have,
+                                                        temp_acls_have,
                                                     )
+                                                    if (
+                                                        temp
+                                                        and temp[0]
+                                                        not in commands
+                                                    ):
+                                                        commands.extend(temp)
                                         commands.extend(cmd)
                                     check = True
-                                    if check:
-                                        # Delete all the have acls that are present in want post configuration
-                                        # and the only want acls left will be new acls which is not in have and
-                                        # need to be configured
-                                        del config_want.get("acls")[count]
-                                else:
-                                    count += 1
                         if check:
                             break
                     if not check:
@@ -285,7 +281,9 @@ class Acls(ConfigBase):
             for acls_want in config_want.get("acls"):
                 for ace_want in acls_want.get("aces"):
                     ace_want = remove_empties(ace_want)
-                    commands.extend(self._set_config(ace_want, {}, acls_want))
+                    temp = self._set_config(ace_want, {}, acls_want)
+                    if temp and temp[0] not in commands:
+                        commands.extend(temp)
 
         # Arranging the cmds suct that all delete cmds are fired before all set cmds
         # and reversing the negate/no access-list as otherwise if deleted from top the
