@@ -17,8 +17,13 @@ __metaclass__ = type
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.facts.facts import (
     FactsBase,
 )
+<<<<<<< HEAD
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.ogs.ogs import (
     OGsFacts,
+=======
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.acls.acls import (
+    AclsFacts,
+>>>>>>> d3aecee (asa acls)
 )
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.legacy.base import (
     Default,
@@ -29,9 +34,13 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.legacy
 
 FACT_LEGACY_SUBSETS = dict(default=Default, hardware=Hardware, config=Config)
 
+<<<<<<< HEAD
 FACT_RESOURCE_SUBSETS = dict(
     ogs=OGsFacts,
 )
+=======
+FACT_RESOURCE_SUBSETS = dict(acls=AclsFacts)
+>>>>>>> d3aecee (asa acls)
 
 
 class Facts(FactsBase):
