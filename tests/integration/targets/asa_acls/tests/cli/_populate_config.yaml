@@ -34,6 +34,7 @@
           acl_type: extended
           aces:
             - grant: deny
+              line: 1
               protocol_options:
                 tcp: true
               source:

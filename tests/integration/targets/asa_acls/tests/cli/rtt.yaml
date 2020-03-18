@@ -45,6 +45,7 @@
               acl_type: extended
               aces:
                 - grant: deny
+                  line: 1
                   protocol_options:
                     tcp: true
                   source:
@@ -55,8 +56,10 @@
                       eq: www
                   log: errors
             - name: test_R1_traffic
+              acl_type: extended
               aces:
                 - grant: deny
+                  line: 1
                   protocol_options:
                     tcp: true
                   source:
