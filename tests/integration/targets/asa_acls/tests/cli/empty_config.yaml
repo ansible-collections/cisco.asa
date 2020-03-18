@@ -56,5 +56,4 @@
 
 - assert:
     that:
-      - result.msg == 'value of running_config parameter must not be empty for state
-        parsed'
+      - result.msg == 'value of running_config parameter must not be empty for state parsed'
