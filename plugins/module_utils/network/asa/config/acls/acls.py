@@ -269,6 +269,7 @@ class Acls(ConfigBase):
                                         if cmd and cmd[0] not in commands:
                                             commands.extend(cmd)
                                     check = True
+                                    del config_want.get('acls')[0].get('aces')[0]
                         if check:
                             break
                     if not check:
