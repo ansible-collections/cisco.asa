@@ -56,5 +56,4 @@
     - assert:
         that:
           - result.changed == false
-          - result.commands|length == 3
           - result.rendered|symmetric_difference(rendered.commands) == []

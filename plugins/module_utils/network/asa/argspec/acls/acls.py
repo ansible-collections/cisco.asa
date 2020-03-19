@@ -248,7 +248,7 @@ class AclsArgs(object):
                                         "udp": {"type": "bool"},
                                     },
                                 },
-                                "inactive": {"type": "str"},
+                                "inactive": {"type": "bool"},
                                 "log": {
                                     "type": "str",
                                     "choices": [
