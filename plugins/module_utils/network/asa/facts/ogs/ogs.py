@@ -22,10 +22,10 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common i
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.ogs.ogs import (
     OGsArgs,
 )
-
+import q
 
 class OGsFacts(object):
-    """ The asa_og fact class
+    """ The asa_ogs fact class
     """
 
     def __init__(self, module, subspec='config', options='options'):
@@ -60,7 +60,7 @@ class OGsFacts(object):
             data = self.get_og_data(connection)
         # operate on a collection of resource x
         config = data.split('object-group ')
-
+        q(config)
         for conf in config:
             if conf:
                 obj = self.render_config(self.generated_spec, conf)
@@ -88,18 +88,18 @@ class OGsFacts(object):
         :returns: The generated config
         """
         config = deepcopy(spec)
-
+        q(conf)
         if conf:
-            if conf.split(' ')[0] in ['network', 'protocol', 'security', 'service', 'user']:
+            if conf.split(' ')[0] in ['icmp-type', 'network', 'protocol', 'security', 'service', 'user']:
                 object = conf.split(' ')[0]
                 name_object = utils.parse_conf_arg(conf, object)
-                config['object'] = object
+                config['object_type'] = object
                 config['name'] = name_object
-            elif conf.split(' ')[0] == 'icmp-type':
-                object = conf.split(' ')[0]
-                name_object = utils.parse_conf_arg(conf, object)
-                config['object'] = 'icmp_type'
-                config['name'] = name_object
+            # elif conf.split(' ')[0] == 'icmp-type':
+            #     object = conf.split(' ')[0]
+            #     name_object = utils.parse_conf_arg(conf, object)
+            #     config['object'] = 'icmp-type'
+            #     config['name'] = name_object
             description = utils.parse_conf_arg(conf, 'description')
             if description:
                 config['description'] = description.rstrip()
@@ -114,61 +114,102 @@ class OGsFacts(object):
                 config['icmp_object'] = {'icmp_type': icmp_type}
                 #config['icmp_object'] = ({'icmp_object': icmp_object})
             network_object = re.findall('network-object (.+)', conf)
-            if network_object:
-                for every in network_object:
-                    host = utils.parse_conf_arg(every, 'host')
-                    network = {}
-                    if host:
-                        network['host'] = True
-                        network['ip_address'] = host
-                    elif ':' in every:
-                        network['ipv6_address'] = every
-                    else:
-                        network_object = every.split(' ')
-                        network['ip_address'] = network_object[0]
-                        network['ip_mask'] = network_object[1]
-                    if config.get('network_object'):
-                        config['network_object'].append(network)
-                    else:
-                        config['network_object'] = []
-                        config['network_object'].append(network)
+            if utils.parse_conf_arg(conf, 'network'):
+                host = re.findall('host (.+)', conf)
+                all_address = re.findall('network-object (.+)', conf)
+                address = [each for each in all_address if 'host' not in each and ':' not in each]
+                ipv6_address = [each for each in all_address if ':' in each]
+                config['network_object'] = {}
+                if host:
+                    config['network_object'].update({'host': host})
+                if address:
+                    config['network_object'].update({'address': address})
+                if ipv6_address:
+                    config['network_object'].update({'ipv6_address': ipv6_address})
+                # object = re.findall('object (.+)', conf)
+                # if object:
+                #     config['network_object'].update({'object': object})
+                # for every in network_object:
+                #     host = utils.parse_conf_arg(every, 'host')
+                #     object = utils.parse_conf_arg(every, 'object')
+                #     network = {}
+                #     if object:
+                #         network['object'] = object
+                #     if host:
+                #         network['host'] = host
+                #     elif ':' in every:
+                #         network['ipv6_address'] = every
+                #     else:
+                #         network_object = every.split(' ')
+                #         network['address'] = network_object[0]
+                #         network['netmask'] = network_object[1]
+                #     if config.get('network_object'):
+                #         config['network_object'].append(network)
+                #     else:
+                #         config['network_object'] = []
+                #         config['network_object'].append(network)
             protocol_object = re.findall('protocol-object (.+)', conf)
             if protocol_object:
                 protocol = []
                 for every in protocol_object:
                     protocol.append(every.rstrip())
                 config['protocol_object'] = {'protocol': protocol}
-            security_group = re.findall('security-group (.+)', conf)
-            if security_group:
-                security = {}
-                for every in security_group:
-                    name = utils.parse_conf_arg(every, 'name')
-                    tag = utils.parse_conf_arg(every, 'tag')
-                    if name:
-                        security['name'] = name
-                    if tag:
-                        security['tag'] = int(tag)
-                if config.get('security_group'):
-                    config['security_group'].append(security)
-                else:
-                    config['security_group'] = []
-                    config['security_group'].append(security)
+
+            if utils.parse_conf_arg(conf, 'security'):
+                security_group_name = re.findall('name (.+)', conf)
+                security_group_tag = re.findall('tag (.+)', conf)
+                config['security_group'] = {}
+                if security_group_name:
+                    config['security_group'].update({'name': security_group_name})
+                if security_group_tag:
+                    config['security_group'].update({'tag': security_group_tag})
+                # security = {}
+                # for every in security_group:
+                #     name = utils.parse_conf_arg(every, 'name')
+                #     tag = utils.parse_conf_arg(every, 'tag')
+                #     if name:
+                #         security['name'] = name
+                #     if tag:
+                #         security['tag'] = int(tag)
+                # if config.get('security_group'):
+                #     config['security_group'].append(security)
+                # else:
+                #     config['security_group'] = []
+                #     config['security_group'].append(security)
             service_object = re.findall('service-object (.+)', conf)
             if service_object:
                 protocol = []
                 for every in service_object:
+                    object = utils.parse_conf_arg(every, 'object')
+                    if object:
+                        object = object
                     protocol.append(every.rstrip())
-                config['service_object'] = {'protocol': protocol}
-            user_group = utils.parse_conf_arg(conf, 'user-object')
-            if user_group:
-                name = utils.parse_conf_arg(security_group, 'name')
-                user = {}
-                if name:
-                    user['name'] = name
-                if config.get('user_group'):
-                    config['user_group'].append(user)
-                else:
-                    config['user_group'] = []
-                    config['user_group'].append(user)
+                if object and protocol:
+                    config['service_object'] = {'protocol': protocol, 'object': object}
+                elif object and not protocol:
+                    config['service_object'] = {'object': object}
+                elif not object and protocol:
+                    config['service_object'] = {'protocol': protocol}
+            user_object = utils.parse_conf_arg(conf, 'user')
+            if user_object:
+                users = re.findall('user (.+)', conf)
+                users = [each.split('LOCAL\\')[1] for each in users if 'LOCAL' in each]
+                user_groups = re.findall('user-group (.+)', conf)
+                if users and user_groups:
+                    config['user_object'] = {'user': users, 'user_group': user_groups}
+                elif users and not user_groups:
+                    config['user_object'] = {'user': users}
+                elif not users and user_groups:
+                    config['user_object'] = {'user_group': user_groups}
+                #
+                # name = utils.parse_conf_arg(security_group, 'user')
+                # user = {}
+                # if name:
+                #     user['name'] = name
+                # if config.get('user_group'):
+                #     config['user_group'].append(user)
+                # else:
+                #     config['user_group'] = []
+                #     config['user_group'].append(user)
 
         return utils.remove_empties(config)

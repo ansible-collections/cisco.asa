@@ -3,7 +3,7 @@
 # Copyright 2019 Red Hat Inc.
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 """
-The asa_og class
+The asa_ogs class
 It is in this file where the current configuration (as dict)
 is compared to the provided configuration (as dict) and the command set
 necessary to bring the current configuration to it's desired end-state is
@@ -29,11 +29,12 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.u
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.utils.utils import (
     new_dict_to_set,
 )
+import q
 
 
 class OGs(ConfigBase):
     """
-    The asa_og class
+    The asa_ogs class
     """
 
     gather_subset = [
@@ -46,7 +47,7 @@ class OGs(ConfigBase):
     ]
 
     def __init__(self, module):
-        super(OG, self).__init__(module)
+        super(OGs, self).__init__(module)
 
     def get_og_facts(self, data=None):
         """ Get the 'facts' (the current configuration)
@@ -213,7 +214,7 @@ class OGs(ConfigBase):
                   the current configuration
         """
         commands = []
-
+        q(want, have)
         for each_want in want:
             for each_have in have:
                 if each_want.get('name') == each_have.get('name'):
@@ -273,6 +274,7 @@ class OGs(ConfigBase):
             new_dict_to_set(have, [], have_set)
         diff = want_set - have_set
         q(want, have, want_set, have_set, diff)
+        return
         # check for protocol options by creating an individual sets for both want and have
         if len(diff) == 1 and dict(diff).get('protocol'):
             diff = set(dict(want_set).get('protocol')) - set(dict(have_set).get('protocol'))

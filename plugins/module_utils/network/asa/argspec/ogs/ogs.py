@@ -23,7 +23,7 @@
 #############################################
 
 """
-The arg spec for the asa_og module
+The arg spec for the asa_ogs module
 """
 
 from __future__ import absolute_import, division, print_function
@@ -31,7 +31,7 @@ __metaclass__ = type
 
 
 class OGsArgs(object):
-    """The arg spec for the asa_og module
+    """The arg spec for the asa_ogs module
     """
 
     def __init__(self, **kwargs):
@@ -43,10 +43,10 @@ class OGsArgs(object):
             'type': 'list',
             'options': {
                 'name': {'required': True, 'type': 'str'},
-                'object': {
+                'object_type': {
                     'type': 'str',
                     'required': True,
-                    'choices': ['icmp_type', 'network', 'protocol', 'security', 'service', 'user']
+                    'choices': ['icmp-type', 'network', 'protocol', 'security', 'service', 'user']
                 },
                 'description': {'type': 'str'},
                 'icmp_object': {
@@ -64,13 +64,11 @@ class OGsArgs(object):
                     }
                 },
                 'network_object': {
-                    'elements': 'dict',
-                    'type': 'list',
+                    'type': 'dict',
                     'options': {
-                        'host': {'type': 'bool'},
-                        'ip_address': {'type': 'str'},
-                        'ip_mask': {'type': 'str'},
-                        'ipv6_address': {'type': 'str'},
+                        'host': {'type': 'list'},
+                        'address': {'type': 'list'},
+                        'ipv6_address': {'type': 'list'},
                         'object': {'type': 'str'}
                     }
                 },
@@ -86,11 +84,10 @@ class OGsArgs(object):
                     }
                 },
                 'security_group': {
-                    'elements': 'dict',
-                    'type': 'list',
+                    'type': 'dict',
                     'options': {
-                        'name': {'type': 'str'},
-                        'tag': {'type': 'int'}
+                        'name': {'type': 'list'},
+                        'tag': {'type': 'list'}
                     }
                 },
                 'service_object': {
@@ -105,11 +102,11 @@ class OGsArgs(object):
                         'object': {'type': 'str'}
                     }
                 },
-                'user_group': {
-                    'elements': 'dict',
-                    'type': 'list',
+                'user_object': {
+                    'type': 'dict',
                     'options': {
-                        'name': {'type': 'str'}
+                        'user': {'type': 'list'},
+                        'user_group': {'type': 'list'}
                     }
                 },
                 'group_object': {'type': 'str'}

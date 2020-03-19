@@ -31,7 +31,7 @@ __metaclass__ = type
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
-                    'supported_by': 'network'}
+                    'supported_by': 'security'}
 
 DOCUMENTATION = """
 ---
@@ -68,17 +68,16 @@ options:
       description:
         description: The description for the object-group.
         type: str
-      icmp-object:
+      icmp_object:
         description: Configure an ICMP-type object
-        type: list
-        element: dict
+        type: dict
         suboptions:
           icmp_type:
             description: Defines the ICMP types in the group.
-            type: str
-            choices: [alternate_address, conversion_error, echo, echo_reply, information_reply, information_request,
-            mask_reply, mask_request, mobile_redirect, parameter_problem, redirect, router_advertisement,
-            router_solicitation, source_quench, time_exceeded, timestamp_reply, timestamp_request, traceroute,
+            type: list
+            choices: [alternate-address, conversion-error, echo, echo-reply, information-reply, information-request,
+            mask-reply, mask-request, mobile-redirect, parameter-problem, redirect, router-advertisement,
+            router-solicitation, source-quench, time-exceeded, timestamp-reply, timestamp-request, traceroute,
             unreachable]
       network_object:
         description: Configure a network object
@@ -87,61 +86,57 @@ options:
         suboptions:
           host:
             description: Set this to specify a single host object.
-            type: bool
-          ip_address:
-            description: Enter an IPv4/host IP network address.
-            type: str
-          ip_mask:
-            description: Enter an IPv4 network mask.
-            type: str
+            type: list
+          address:
+            description: Enter an IPv4 network address with netmask.
+            type: list
           ipv6_address:
-            description: Enter an IPv6 prefix/host IPv6 address.
-            type: str
+            description: Enter an IPv6 prefix.
+            type: list
           object:
             description: Enter this keyword to specify a network object
             type: str
       protocol_object:
         description: Configure a protocol object
-        type: list
-        element: dict
+        type: dict
         suboptions:
           protocol:
             description: Defines the protocols in the group.
-            type: str
+            type: list
             choices: [ah, eigrp, esp, gre, icmp, icmp6, igmp, igrp, ip, ipinip, ipsec, nos, ospf, pcp, pim, pptp,
             sctp, snp, tcp, udp]
       security_group:
         description: Configure a security-group
-        type: list
-        element: dict
+        type: dict
         suboptions:
           name:
             description: Enter this keyword to specify a security-group name.
-            type: str
+            type: list
           tag:
             description: Enter this keyword to specify a security-group tag.
-            type: str
+            type: list
       service_object:
         description: Configure a service object
-        type: list
-        element: dict
+        type: dict
         suboptions:
           protocol:
             description: Defines the protocols in the group.
-            type: str
+            type: list
             choices: [ah, eigrp, esp, gre, icmp, icmp6, igmp, igrp, ip, ipinip, ipsec, nos, ospf, pcp, pim, pptp,
             sctp, snp, tcp, tcp-udp, udp]
           object:
             description: Enter this keyword to specify a service object
             type: str
-      user_group:
-        description: Configure a user group object
-        type: list
-        element: dict
+      user_object:
+        description: Configures single user, local or import user group
+        type: dict
         suboptions:
-          name:
-            description: Group name.
-            type: str
+          user:
+            description: User name to configure a user object.
+            type: list
+          user_group:
+            description: User group name to configure a user group object.
+            type: list
       group_object:
         description:
           - Configure an object group as an object.
@@ -658,19 +653,20 @@ commands:
   description: The set of commands pushed to the remote device
   returned: always
   type: list
-  sample: ['interface GigabitEthernet0/1', 'ip access-group 110 in', 'ipv6 traffic-filter test_v6 out']
+  sample: ['object-group network test_network_og', 'description test network og', 'network-object host 192.0.2.1']
 """
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.network.asa.argspec.ogs.ogs import OGsArgs
-from ansible.module_utils.network.asa.config.ogs.ogs import OGs
-
+# from ansible.module_utils.network.asa.config.ogs.ogs import OGs
+import q
 
 def main():
     """
     Main entry point for module execution
     :returns: the result form module invocation
     """
+    q("start")
     required_if = [('state', 'merged', ('config',)),
                    ('state', 'replaced', ('config',)),
                    ('state', 'overridden', ('config',)),
@@ -683,8 +679,9 @@ def main():
                            required_if=required_if,
                            mutually_exclusive=mutually_exclusive,
                            supports_check_mode=True)
-
+    q("start")
     result = OGs(module).execute_module()
+    q(result)
     module.exit_json(**result)
 
 
