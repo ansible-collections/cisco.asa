@@ -266,7 +266,8 @@ class Acls(ConfigBase):
                                                         not in commands
                                                     ):
                                                         commands.extend(temp)
-                                        commands.extend(cmd)
+                                        if cmd and cmd[0] not in commands:
+                                            commands.extend(cmd)
                                     check = True
                         if check:
                             break
