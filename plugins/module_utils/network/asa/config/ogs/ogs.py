@@ -31,7 +31,7 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.utils.utils 
 )
 
 
-class OG(ConfigBase):
+class OGs(ConfigBase):
     """
     The asa_og class
     """
@@ -42,7 +42,7 @@ class OG(ConfigBase):
     ]
 
     gather_network_resources = [
-        'og',
+        'ogs',
     ]
 
     def __init__(self, module):
@@ -54,7 +54,7 @@ class OG(ConfigBase):
         :returns: The current configuration as a dictionary
         """
         facts, _warnings = Facts(self._module).get_facts(self.gather_subset, self.gather_network_resources, data=data)
-        og_facts = facts['ansible_network_resources'].get('og')
+        og_facts = facts['ansible_network_resources'].get('ogs')
         if not og_facts:
             return []
 
@@ -92,7 +92,7 @@ class OG(ConfigBase):
         elif self.state == 'parsed':
             running_config = self._module.params['running_config']
             if not running_config:
-                self._module.fail_json(msg="Value of running_config parameter must not be empty for state parsed")
+                self._module.fail_json(msg="value of running_config parameter must not be empty for state parsed")
             result['parsed'] = self.get_og_facts(data=running_config)
         else:
             changed_og_facts = []
@@ -255,10 +255,10 @@ class OG(ConfigBase):
             commands.append(cmd)
 
     def _set_config(self, want, have):
-        """ Function that sets the og config based on the want and have config
+        """ Function that sets the ogs config based on the want and have config
         :param want: want config
         :param have: have config
-        :param og_want: want og config
+        :param og_want: want ogs config
         :rtype: A list
         :returns: the commands generated based on input want/have params
         """

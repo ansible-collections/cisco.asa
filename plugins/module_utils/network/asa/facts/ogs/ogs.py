@@ -19,19 +19,19 @@ import re
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
     utils,
 )
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.og.og import (
-    OGArgs,
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.ogs.ogs import (
+    OGsArgs,
 )
-import q
 
-class OGFacts(object):
+
+class OGsFacts(object):
     """ The asa_og fact class
     """
 
     def __init__(self, module, subspec='config', options='options'):
 
         self._module = module
-        self.argument_spec = OGArgs.argument_spec
+        self.argument_spec = OGsArgs.argument_spec
         spec = deepcopy(self.argument_spec)
         if subspec:
             if options:
@@ -47,7 +47,7 @@ class OGFacts(object):
         return connection.get('sh running-config object-group')
 
     def populate_facts(self, connection, ansible_facts, data=None):
-        """ Populate the facts for og
+        """ Populate the facts for ogs
         :param connection: the device connection
         :param ansible_facts: Facts dictionary
         :param data: previously collected conf
@@ -69,10 +69,10 @@ class OGFacts(object):
         facts = {}
 
         if objs:
-            facts['og'] = []
+            facts['ogs'] = []
             params = utils.validate_config(self.argument_spec, {'config': objs})
             for cfg in params['config']:
-                facts['og'].append(utils.remove_empties(cfg))
+                facts['ogs'].append(utils.remove_empties(cfg))
         ansible_facts['ansible_network_resources'].update(facts)
 
         return ansible_facts
