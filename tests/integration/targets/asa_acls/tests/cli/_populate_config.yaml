@@ -1,0 +1,61 @@
+---
+- name: Populate Config
+  cisco.asa.asa_acls: &id001
+    config:
+      - acls:
+        - name: test_access
+          acl_type: extended
+          aces:
+            - grant: deny
+              line: 1
+              protocol_options:
+                tcp: true
+              source:
+                address: 192.0.2.0
+                netmask: 255.255.255.0
+              destination:
+                address: 192.0.3.0
+                netmask: 255.255.255.0
+                port_protocol:
+                  eq: www
+              log: default
+            - grant: deny
+              line: 2
+              protocol_options:
+                igrp: true
+              source:
+                address: 198.51.100.0
+                netmask: 255.255.255.0
+              destination:
+                address: 198.51.110.0
+                netmask: 255.255.255.0
+              log: errors
+        - name: test_global_access
+          acl_type: extended
+          aces:
+            - grant: deny
+              line: 1
+              protocol_options:
+                tcp: true
+              source:
+                any: true
+              destination:
+                any: true
+                port_protocol:
+                  eq: www
+              log: errors
+        - name: test_R1_traffic
+          aces:
+            - grant: deny
+              protocol_options:
+                tcp: true
+              source:
+                address: 2001:db8:0:3::/64
+                port_protocol:
+                  eq: www
+              destination:
+                address: 2001:fc8:0:4::/64
+                port_protocol:
+                  eq: telnet
+              inactive: true
+    state: merged

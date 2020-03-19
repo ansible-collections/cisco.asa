@@ -1,0 +1,4 @@
+---
+- name: Remove Config
+  cisco.asa.asa_acls:
+    state: deleted

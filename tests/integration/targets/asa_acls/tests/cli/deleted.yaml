@@ -1,0 +1,68 @@
+---
+- debug:
+    msg: Start Deleted integration state for asa_acls ansible_connection={{ ansible_connection
+      }}
+
+- include_tasks: _remove_config.yaml
+
+- include_tasks: _populate_config.yaml
+
+- block:
+
+    - name: Delete attributes of provided configured ACLs
+      register: result
+      cisco.asa.asa_acls: &id001
+        config:
+          - acls:
+              - name: test_access
+                aces:
+                  - line: 2
+              - name: test_global_access
+                aces:
+                  - line: 1
+        state: deleted
+
+    - assert:
+        that:
+          - result.commands|length == 2
+          - result.changed == true
+          - result.commands|symmetric_difference(deleted.commands) == []
+
+    - name: Delete attributes of all configured interfaces (IDEMPOTENT)
+      register: result
+      cisco.asa.asa_acls: *id001
+
+    - name: Assert that the previous task was idempotent
+      assert:
+        that:
+          - result.commands|length == 0
+          - result.changed == false
+
+    - include_tasks: _remove_config.yaml
+
+    - include_tasks: _populate_config.yaml
+
+    - name: Delete all off ACLs configured
+      register: result
+      cisco.asa.asa_acls: &id002
+        state: deleted
+
+    - assert:
+        that:
+          - result.commands|length == 4
+          - result.changed == true
+          - result.commands|symmetric_difference(delete_all.commands) == []
+
+    - name: Delete ACL attributes of provided configured interfaces based on AFI
+        (IDEMPOTENT)
+      register: result
+      cisco.asa.asa_acls: *id002
+
+    - name: Assert that the previous task was idempotent
+      assert:
+        that:
+          - result.commands|length == 0
+          - result.changed == false
+  always:
+
+    - include_tasks: _remove_config.yaml
