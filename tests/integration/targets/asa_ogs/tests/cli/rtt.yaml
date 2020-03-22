@@ -87,7 +87,7 @@
     - name: Revert back to base config using facts round trip
       register: revert
       cisco.asa.asa_ogs:
-        config: "{{ ansible_facts['network_resources']['acl_interfaces'] }}"
+        config: "{{ ansible_facts['network_resources']['ogs'] }}"
         state: overridden
 
     - assert:

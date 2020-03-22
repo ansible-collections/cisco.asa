@@ -57,7 +57,7 @@
 
     - assert:
         that:
-          - result.commands|length == 4
+          - result.commands|length == 3
           - result.changed == true
           - result.commands|symmetric_difference(deleted_all.commands) == []
 
