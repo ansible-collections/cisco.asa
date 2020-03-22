@@ -27,11 +27,20 @@ The module file for asa_ogs
 """
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
+<<<<<<< HEAD
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'network'}
+=======
+ANSIBLE_METADATA = {
+    "metadata_version": "1.1",
+    "status": ["preview"],
+    "supported_by": "security",
+}
+>>>>>>> 1ebe46a (fix linters)
 
 DOCUMENTATION = """
 ---
@@ -832,15 +841,26 @@ def main():
 <<<<<<< HEAD
 =======
 
+<<<<<<< HEAD
 >>>>>>> 936b102 (asa_ogs update)
     required_if = [('state', 'merged', ('config',)),
                    ('state', 'replaced', ('config',)),
                    ('state', 'overridden', ('config',)),
                    ('state', 'rendered', ('config',)),
                    ('state', 'parsed', ('running_config',))]
+=======
+    required_if = [
+        ("state", "merged", ("config",)),
+        ("state", "replaced", ("config",)),
+        ("state", "overridden", ("config",)),
+        ("state", "rendered", ("config",)),
+        ("state", "parsed", ("running_config",)),
+    ]
+>>>>>>> 1ebe46a (fix linters)
 
-    mutually_exclusive = [('config', 'running_config')]
+    mutually_exclusive = [("config", "running_config")]
 
+<<<<<<< HEAD
     module = AnsibleModule(argument_spec=OGsArgs.argument_spec,
                            required_if=required_if,
                            mutually_exclusive=mutually_exclusive,
@@ -849,11 +869,19 @@ def main():
 
     result = OGs(module).execute_module()
 =======
+=======
+    module = AnsibleModule(
+        argument_spec=OGsArgs.argument_spec,
+        required_if=required_if,
+        mutually_exclusive=mutually_exclusive,
+        supports_check_mode=True,
+    )
+>>>>>>> 1ebe46a (fix linters)
     result = OGs(module).execute_module()
 
 >>>>>>> 936b102 (asa_ogs update)
     module.exit_json(**result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

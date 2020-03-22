@@ -1,4 +1,3 @@
-#
 # -*- coding: utf-8 -*-
 # Copyright 2019 Red Hat
 # GNU General Public License v3.0+
@@ -11,41 +10,30 @@ calls the appropriate facts gathering function
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.facts.facts import (
     FactsBase,
 )
-<<<<<<< HEAD
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.ogs.ogs import (
-    OGsFacts,
-=======
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.acls.acls import (
-    AclsFacts,
->>>>>>> d3aecee (asa acls)
-)
+
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.acls.acls import AclsFacts
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.legacy.base import (
+    Config,
     Default,
     Hardware,
-    Config,
 )
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.ogs.ogs import OGsFacts
 
 
 FACT_LEGACY_SUBSETS = dict(default=Default, hardware=Hardware, config=Config)
 
-<<<<<<< HEAD
-FACT_RESOURCE_SUBSETS = dict(
-    ogs=OGsFacts,
-)
-=======
-FACT_RESOURCE_SUBSETS = dict(acls=AclsFacts)
->>>>>>> d3aecee (asa acls)
+FACT_RESOURCE_SUBSETS = dict(acls=AclsFacts, ogs=OGsFacts)
 
 
 class Facts(FactsBase):
-    """ The fact class for asa
-    """
+    """The fact class for asa"""
 
     VALID_LEGACY_GATHER_SUBSETS = frozenset(FACT_LEGACY_SUBSETS.keys())
     VALID_RESOURCE_SUBSETS = frozenset(FACT_RESOURCE_SUBSETS.keys())
@@ -54,9 +42,12 @@ class Facts(FactsBase):
         super(Facts, self).__init__(module)
 
     def get_facts(
-        self, legacy_facts_type=None, resource_facts_type=None, data=None
+        self,
+        legacy_facts_type=None,
+        resource_facts_type=None,
+        data=None,
     ):
-        """ Collect the facts for asa
+        """Collect the facts for asa
         :param legacy_facts_type: List of legacy facts types
         :param resource_facts_type: List of resource fact types
         :param data: previously collected conf
@@ -65,12 +56,15 @@ class Facts(FactsBase):
         """
         if self.VALID_RESOURCE_SUBSETS:
             self.get_network_resources_facts(
-                FACT_RESOURCE_SUBSETS, resource_facts_type, data
+                FACT_RESOURCE_SUBSETS,
+                resource_facts_type,
+                data,
             )
 
         if self.VALID_LEGACY_GATHER_SUBSETS:
             self.get_network_legacy_facts(
-                FACT_LEGACY_SUBSETS, legacy_facts_type
+                FACT_LEGACY_SUBSETS,
+                legacy_facts_type,
             )
 
         return self.ansible_facts, self._warnings
