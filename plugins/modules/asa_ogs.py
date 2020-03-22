@@ -63,12 +63,12 @@ options:
         description: Specifies object-group ID
         required: true
         type: str
-      object:
+      object_type:
         description: The object group type.
         type: str
         required: true
         choices:
-          - icmp_type
+          - icmp-type
           - network
           - protocol
           - security
