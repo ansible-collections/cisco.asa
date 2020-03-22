@@ -27,6 +27,7 @@ The arg spec for the asa_ogs module
 """
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 
@@ -38,84 +39,153 @@ class OGsArgs(object):
         pass
 
     argument_spec = {
-        'config': {
-            'elements': 'dict',
-            'type': 'list',
-            'options': {
-                'name': {'required': True, 'type': 'str'},
-                'object_type': {
-                    'type': 'str',
-                    'required': True,
-                    'choices': ['icmp-type', 'network', 'protocol', 'security', 'service', 'user']
+        "config": {
+            "elements": "dict",
+            "type": "list",
+            "options": {
+                "name": {"required": True, "type": "str"},
+                "object_type": {
+                    "type": "str",
+                    "required": True,
+                    "choices": [
+                        "icmp-type",
+                        "network",
+                        "protocol",
+                        "security",
+                        "service",
+                        "user",
+                    ],
                 },
-                'description': {'type': 'str'},
-                'icmp_object': {
-                    'type': 'dict',
-                    'options': {
-                        'icmp_type': {
-                            'type': 'list',
-                            'choices': ['alternate-address', 'conversion-error', 'echo', 'echo-reply',
-                                        'information-reply', 'information-request', 'mask-reply',
-                                        'mask-request', 'mobile-redirect', 'parameter-problem',
-                                        'redirect', 'router-advertisement', 'router-solicitation',
-                                        'source-quench', 'time-exceeded', 'timestamp-reply',
-                                        'timestamp-request', 'traceroute', 'unreachable']
+                "description": {"type": "str"},
+                "icmp_object": {
+                    "type": "dict",
+                    "options": {
+                        "icmp_type": {
+                            "type": "list",
+                            "choices": [
+                                "alternate-address",
+                                "conversion-error",
+                                "echo",
+                                "echo-reply",
+                                "information-reply",
+                                "information-request",
+                                "mask-reply",
+                                "mask-request",
+                                "mobile-redirect",
+                                "parameter-problem",
+                                "redirect",
+                                "router-advertisement",
+                                "router-solicitation",
+                                "source-quench",
+                                "time-exceeded",
+                                "timestamp-reply",
+                                "timestamp-request",
+                                "traceroute",
+                                "unreachable",
+                            ],
                         }
-                    }
+                    },
                 },
-                'network_object': {
-                    'type': 'dict',
-                    'options': {
-                        'host': {'type': 'list'},
-                        'address': {'type': 'list'},
-                        'ipv6_address': {'type': 'list'},
-                        'object': {'type': 'str'}
-                    }
+                "network_object": {
+                    "type": "dict",
+                    "options": {
+                        "host": {"type": "list"},
+                        "address": {"type": "list"},
+                        "ipv6_address": {"type": "list"},
+                        "object": {"type": "str"},
+                    },
                 },
-                'protocol_object': {
-                    'type': 'dict',
-                    'options': {
-                        'protocol': {
-                            'type': 'list',
-                            'choices': ['ah', 'eigrp', 'esp', 'gre', 'icmp', 'icmp6', 'igmp', 'igrp',
-                                        'ip', 'ipinip', 'ipsec', 'nos', 'ospf', 'pcp', 'pim', 'pptp',
-                                        'sctp', 'snp', 'tcp', 'udp']
+                "protocol_object": {
+                    "type": "dict",
+                    "options": {
+                        "protocol": {
+                            "type": "list",
+                            "choices": [
+                                "ah",
+                                "eigrp",
+                                "esp",
+                                "gre",
+                                "icmp",
+                                "icmp6",
+                                "igmp",
+                                "igrp",
+                                "ip",
+                                "ipinip",
+                                "ipsec",
+                                "nos",
+                                "ospf",
+                                "pcp",
+                                "pim",
+                                "pptp",
+                                "sctp",
+                                "snp",
+                                "tcp",
+                                "udp",
+                            ],
                         }
-                    }
+                    },
                 },
-                'security_group': {
-                    'type': 'dict',
-                    'options': {
-                        'name': {'type': 'list'},
-                        'tag': {'type': 'list'}
-                    }
+                "security_group": {
+                    "type": "dict",
+                    "options": {
+                        "name": {"type": "list"},
+                        "tag": {"type": "list"},
+                    },
                 },
-                'service_object': {
-                    'type': 'dict',
-                    'options': {
-                        'protocol': {
-                            'type': 'list',
-                            'choices': ['ah', 'eigrp', 'esp', 'gre', 'icmp', 'icmp6', 'igmp', 'igrp',
-                                        'ip', 'ipinip', 'ipsec', 'nos', 'ospf', 'pcp', 'pim', 'pptp',
-                                        'sctp', 'snp', 'tcp', 'tcp-udp', 'udp']
+                "service_object": {
+                    "type": "dict",
+                    "options": {
+                        "protocol": {
+                            "type": "list",
+                            "choices": [
+                                "ah",
+                                "eigrp",
+                                "esp",
+                                "gre",
+                                "icmp",
+                                "icmp6",
+                                "igmp",
+                                "igrp",
+                                "ip",
+                                "ipinip",
+                                "ipsec",
+                                "nos",
+                                "ospf",
+                                "pcp",
+                                "pim",
+                                "pptp",
+                                "sctp",
+                                "snp",
+                                "tcp",
+                                "tcp-udp",
+                                "udp",
+                            ],
                         },
-                        'object': {'type': 'str'}
-                    }
+                        "object": {"type": "str"},
+                    },
                 },
-                'user_object': {
-                    'type': 'dict',
-                    'options': {
-                        'user': {'type': 'list'},
-                        'user_group': {'type': 'list'}
-                    }
+                "user_object": {
+                    "type": "dict",
+                    "options": {
+                        "user": {"type": "list"},
+                        "user_group": {"type": "list"},
+                    },
                 },
-                'group_object': {'type': 'str'}
-            }
+                "group_object": {"type": "str"},
+            },
         },
-        'running_config': {'type': 'str'},
-        'state': {
-            'choices': ['merged', 'replaced', 'overridden', 'deleted', 'gathered', 'rendered', 'parsed'],
-            'default': 'merged',
-            'type': 'str'
-        }
+        "running_config": {"type": "str"},
+        "state": {
+            "choices": [
+                "merged",
+                "replaced",
+                "overridden",
+                "deleted",
+                "gathered",
+                "rendered",
+                "parsed",
+            ],
+            "default": "merged",
+            "type": "str",
+        },
     }

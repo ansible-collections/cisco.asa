@@ -93,15 +93,11 @@ class TestAsaOGsModule(TestAsaModule):
                         group_object="test_og_network",
                         name="test_network_og",
                         network_object=dict(
-                            host=[
-                                "192.0.3.1"
-                            ],
-                            ipv6_address=[
-                                "2001:db8:0:3::/64"
-                            ]
+                            host=["192.0.3.1"],
+                            ipv6_address=["2001:db8:0:3::/64"],
                         ),
-                        object_type="network"
-                    ),
+                        object_type="network",
+                    )
                 ],
                 state="merged",
             )
@@ -111,7 +107,7 @@ class TestAsaOGsModule(TestAsaModule):
             "object-group network test_network_og",
             "network-object host 192.0.3.1",
             "network-object 2001:db8:0:3::/64",
-            "group-object test_og_network"
+            "group-object test_og_network",
         ]
         self.assertEqual(result["commands"], commands)
 
@@ -123,25 +119,16 @@ class TestAsaOGsModule(TestAsaModule):
                         description="test_og_network",
                         name="test_og_network",
                         network_object=dict(
-                            host=[
-                                "192.0.2.1"
-                            ],
-                            address=[
-                                "192.0.2.0 255.255.255.0"
-                            ]
+                            host=["192.0.2.1"],
+                            address=["192.0.2.0 255.255.255.0"],
                         ),
-                        object_type="network"
+                        object_type="network",
                     ),
                     dict(
                         name="test_og_service",
-                        service_object=dict(
-                            protocol=[
-                                "ipinip",
-                                "tcp-udp",
-                            ]
-                        ),
-                        object_type="service"
-                    )
+                        service_object=dict(protocol=["ipinip", "tcp-udp"]),
+                        object_type="service",
+                    ),
                 ],
                 state="merged",
             )
@@ -156,15 +143,11 @@ class TestAsaOGsModule(TestAsaModule):
                         name="test_og_network",
                         description="test_og_network_replace",
                         network_object=dict(
-                            host=[
-                                "192.0.3.1"
-                            ],
-                            address=[
-                                "192.0.3.0 255.255.255.0"
-                            ]
+                            host=["192.0.3.1"],
+                            address=["192.0.3.0 255.255.255.0"],
                         ),
-                        object_type="network"
-                    ),
+                        object_type="network",
+                    )
                 ],
                 state="replaced",
             )
@@ -175,7 +158,7 @@ class TestAsaOGsModule(TestAsaModule):
             "object-group network test_og_network",
             "description test_og_network_replace",
             "network-object host 192.0.3.1",
-            "network-object 192.0.3.0 255.255.255.0"
+            "network-object 192.0.3.0 255.255.255.0",
         ]
         self.assertEqual(result["commands"], commands)
 
@@ -187,25 +170,16 @@ class TestAsaOGsModule(TestAsaModule):
                         description="test_og_network",
                         name="test_og_network",
                         network_object=dict(
-                            host=[
-                                "192.0.2.1"
-                            ],
-                            address=[
-                                "192.0.2.0 255.255.255.0"
-                            ]
+                            host=["192.0.2.1"],
+                            address=["192.0.2.0 255.255.255.0"],
                         ),
-                        object_type="network"
+                        object_type="network",
                     ),
                     dict(
                         name="test_og_service",
-                        service_object=dict(
-                            protocol=[
-                                "ipinip",
-                                "tcp-udp",
-                            ]
-                        ),
-                        object_type="service"
-                    )
+                        service_object=dict(protocol=["ipinip", "tcp-udp"]),
+                        object_type="service",
+                    ),
                 ],
                 state="replaced",
             )
@@ -220,15 +194,11 @@ class TestAsaOGsModule(TestAsaModule):
                         name="test_og_network",
                         description="test_og_network_override",
                         network_object=dict(
-                            host=[
-                                "192.0.3.1"
-                            ],
-                            address=[
-                                "192.0.3.0 255.255.255.0"
-                            ]
+                            host=["192.0.3.1"],
+                            address=["192.0.3.0 255.255.255.0"],
                         ),
-                        object_type="network"
-                    ),
+                        object_type="network",
+                    )
                 ],
                 state="overridden",
             )
@@ -252,25 +222,16 @@ class TestAsaOGsModule(TestAsaModule):
                         description="test_og_network",
                         name="test_og_network",
                         network_object=dict(
-                            host=[
-                                "192.0.2.1"
-                            ],
-                            address=[
-                                "192.0.2.0 255.255.255.0"
-                            ]
+                            host=["192.0.2.1"],
+                            address=["192.0.2.0 255.255.255.0"],
                         ),
-                        object_type="network"
+                        object_type="network",
                     ),
                     dict(
                         name="test_og_service",
-                        service_object=dict(
-                            protocol=[
-                                "ipinip",
-                                "tcp-udp",
-                            ]
-                        ),
-                        object_type="service"
-                    )
+                        service_object=dict(protocol=["ipinip", "tcp-udp"]),
+                        object_type="service",
+                    ),
                 ],
                 state="overridden",
             )
@@ -293,21 +254,15 @@ class TestAsaOGsModule(TestAsaModule):
                     dict(
                         name="test_og_network",
                         network_object=dict(
-                            address=[
-                                "192.0.2.0 255.255.255.0"
-                            ]
+                            address=["192.0.2.0 255.255.255.0"]
                         ),
-                        object_type="network"
+                        object_type="network",
                     ),
                     dict(
                         name="test_og_service",
-                        service_object=dict(
-                            protocol=[
-                                "ipinip",
-                            ]
-                        ),
-                        object_type="service"
-                    )
+                        service_object=dict(protocol=["ipinip"]),
+                        object_type="service",
+                    ),
                 ],
                 state="deleted",
             )
@@ -329,25 +284,16 @@ class TestAsaOGsModule(TestAsaModule):
                         description="test_og_network",
                         name="test_og_network",
                         network_object=dict(
-                            host=[
-                                "192.0.2.1"
-                            ],
-                            address=[
-                                "192.0.2.0 255.255.255.0"
-                            ]
+                            host=["192.0.2.1"],
+                            address=["192.0.2.0 255.255.255.0"],
                         ),
-                        object_type="network"
+                        object_type="network",
                     ),
                     dict(
                         name="test_og_service",
-                        service_object=dict(
-                            protocol=[
-                                "ipinip",
-                                "tcp-udp",
-                            ]
-                        ),
-                        object_type="service"
-                    )
+                        service_object=dict(protocol=["ipinip", "tcp-udp"]),
+                        object_type="service",
+                    ),
                 ],
                 state="rendered",
             )

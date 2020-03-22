@@ -32,10 +32,7 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.legacy
 
 FACT_LEGACY_SUBSETS = dict(default=Default, hardware=Hardware, config=Config)
 
-FACT_RESOURCE_SUBSETS = dict(
-    acls=AclsFacts,
-    ogs=OGsFacts,
-)
+FACT_RESOURCE_SUBSETS = dict(acls=AclsFacts, ogs=OGsFacts)
 
 
 class Facts(FactsBase):

@@ -27,11 +27,14 @@ The module file for asa_ogs
 """
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['preview'],
-                    'supported_by': 'security'}
+ANSIBLE_METADATA = {
+    "metadata_version": "1.1",
+    "status": ["preview"],
+    "supported_by": "security",
+}
 
 DOCUMENTATION = """
 ---
@@ -820,22 +823,26 @@ def main():
     :returns: the result form module invocation
     """
 
-    required_if = [('state', 'merged', ('config',)),
-                   ('state', 'replaced', ('config',)),
-                   ('state', 'overridden', ('config',)),
-                   ('state', 'rendered', ('config',)),
-                   ('state', 'parsed', ('running_config',))]
+    required_if = [
+        ("state", "merged", ("config",)),
+        ("state", "replaced", ("config",)),
+        ("state", "overridden", ("config",)),
+        ("state", "rendered", ("config",)),
+        ("state", "parsed", ("running_config",)),
+    ]
 
-    mutually_exclusive = [('config', 'running_config')]
+    mutually_exclusive = [("config", "running_config")]
 
-    module = AnsibleModule(argument_spec=OGsArgs.argument_spec,
-                           required_if=required_if,
-                           mutually_exclusive=mutually_exclusive,
-                           supports_check_mode=True)
+    module = AnsibleModule(
+        argument_spec=OGsArgs.argument_spec,
+        required_if=required_if,
+        mutually_exclusive=mutually_exclusive,
+        supports_check_mode=True,
+    )
     result = OGs(module).execute_module()
 
     module.exit_json(**result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
