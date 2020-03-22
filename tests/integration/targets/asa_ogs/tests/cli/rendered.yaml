@@ -10,42 +10,36 @@
       register: result
       cisco.asa.asa_ogs:
         config:
-
-          - name: GigabitEthernet0/1
-            access_groups:
-
-              - afi: ipv4
-                acls:
-
-                  - name: 110
-                    direction: in
-
-                  - name: 123
-                    direction: out
-
-              - afi: ipv6
-                acls:
-
-                  - name: test_v6
-                    direction: out
-
-                  - name: temp_v6
-                    direction: in
-
-          - name: GigabitEthernet0/2
-            access_groups:
-
-              - afi: ipv4
-                acls:
-
-                  - name: 110
-                    direction: in
-
-                  - name: 123
-                    direction: out
+          - name: test_og_network
+            object_type: network
+            description: test_og_network
+            network_object:
+              host:
+                - 192.0.2.1
+                - 192.0.2.2
+              address:
+                - 192.0.2.0 255.255.255.0
+                - 198.51.100.0 255.255.255.0
+          - name: test_network_og
+            object_type: network
+            description: test network og
+            network_object:
+              host:
+                - 192.0.3.1
+                - 192.0.3.2
+              ipv6_address:
+                - 2001:db8:0:3::/64
+            group_object: test_og_network
+          - name: test_og_service
+            object_type: service
+            description: test_service
+            service_object:
+              protocol:
+                - ipinip
+                - tcp-udp
         state: rendered
 
     - assert:
         that:
           - result.changed == false
-          - result.rendered|symmetric_difference(merged.commands) == []
+          - result.rendered|symmetric_difference(rendered.commands) == []

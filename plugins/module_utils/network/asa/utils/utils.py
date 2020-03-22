@@ -18,6 +18,19 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.u
 )
 
 
+def remove_duplicate_cmd(cmd, commands):
+    # Remove duplicate interface from commands
+    set_cmd = []
+    for each in commands:
+        if cmd in each:
+            if each not in set_cmd:
+                set_cmd.append(each)
+        else:
+            set_cmd.append(each)
+
+    return set_cmd
+
+
 def remove_command_from_config_list(interface, cmd, commands):
     # To delete the passed config
     if interface not in commands:

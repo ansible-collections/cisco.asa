@@ -60,7 +60,10 @@ class OGsFacts(object):
             data = self.get_og_data(connection)
         # operate on a collection of resource x
         config = data.split('object-group ')
+<<<<<<< HEAD
 
+=======
+>>>>>>> 936b102 (asa_ogs update)
         for conf in config:
             if conf:
                 obj = self.render_config(self.generated_spec, conf)
@@ -112,6 +115,7 @@ class OGsFacts(object):
                 for every in icmp_object:
                     icmp_type.append(every.rstrip())
                 config['icmp_object'] = {'icmp_type': icmp_type}
+<<<<<<< HEAD
                 #config['icmp_object'] = ({'icmp_object': icmp_object})
             network_object = re.findall('network-object (.+)', conf)
             if network_object:
@@ -132,12 +136,29 @@ class OGsFacts(object):
                     else:
                         config['network_object'] = []
                         config['network_object'].append(network)
+=======
+
+            if utils.parse_conf_arg(conf, 'network'):
+                host = re.findall('host (.+)', conf)
+                all_address = re.findall('network-object (.+)', conf)
+                address = [each for each in all_address if 'host' not in each and ':' not in each]
+                ipv6_address = [each for each in all_address if ':' in each]
+                config['network_object'] = {}
+                if host:
+                    config['network_object'].update({'host': host})
+                if address:
+                    config['network_object'].update({'address': address})
+                if ipv6_address:
+                    config['network_object'].update({'ipv6_address': ipv6_address})
+
+>>>>>>> 936b102 (asa_ogs update)
             protocol_object = re.findall('protocol-object (.+)', conf)
             if protocol_object:
                 protocol = []
                 for every in protocol_object:
                     protocol.append(every.rstrip())
                 config['protocol_object'] = {'protocol': protocol}
+<<<<<<< HEAD
             security_group = re.findall('security-group (.+)', conf)
             if security_group:
                 security = {}
@@ -153,11 +174,24 @@ class OGsFacts(object):
                 else:
                     config['security_group'] = []
                     config['security_group'].append(security)
+=======
+
+            if utils.parse_conf_arg(conf, 'security'):
+                security_group_name = re.findall('name (.+)', conf)
+                security_group_tag = re.findall('tag (.+)', conf)
+                config['security_group'] = {}
+                if security_group_name:
+                    config['security_group'].update({'name': security_group_name})
+                if security_group_tag:
+                    security_group_tag = [int(each) for each in security_group_tag]
+                    config['security_group'].update({'tag': security_group_tag})
+>>>>>>> 936b102 (asa_ogs update)
             service_object = re.findall('service-object (.+)', conf)
             if service_object:
                 protocol = []
                 for every in service_object:
                     protocol.append(every.rstrip())
+<<<<<<< HEAD
                 config['service_object'] = {'protocol': protocol}
             user_group = utils.parse_conf_arg(conf, 'user-object')
             if user_group:
@@ -170,5 +204,24 @@ class OGsFacts(object):
                 else:
                     config['user_group'] = []
                     config['user_group'].append(user)
+=======
+                if object and protocol:
+                    config['service_object'] = {'protocol': protocol, 'object': object}
+                elif object and not protocol:
+                    config['service_object'] = {'object': object}
+                elif not object and protocol:
+                    config['service_object'] = {'protocol': protocol}
+            user_object = utils.parse_conf_arg(conf, 'user')
+            if user_object:
+                users = re.findall('user (.+)', conf)
+                users = [each.split('LOCAL\\')[1] for each in users if 'LOCAL' in each]
+                user_groups = re.findall('user-group (.+)', conf)
+                if users and user_groups:
+                    config['user_object'] = {'user': users, 'user_group': user_groups}
+                elif users and not user_groups:
+                    config['user_object'] = {'user': users}
+                elif not users and user_groups:
+                    config['user_object'] = {'user_group': user_groups}
+>>>>>>> 936b102 (asa_ogs update)
 
         return utils.remove_empties(config)

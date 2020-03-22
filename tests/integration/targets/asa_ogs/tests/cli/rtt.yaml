@@ -11,42 +11,45 @@
       register: base_config
       cisco.asa.asa_ogs:
         config:
-
-          - name: GigabitEthernet0/1
-            access_groups:
-
-              - afi: ipv4
-                acls:
-
-                  - name: 110
-                    direction: in
-
-                  - name: 123
-                    direction: out
-
-              - afi: ipv6
-                acls:
-
-                  - name: temp_v6
-                    direction: in
-
-                  - name: test_v6
-                    direction: out
-
-          - name: GigabitEthernet0/2
-            access_groups:
-
-              - afi: ipv4
-                acls:
-
-                  - name: 110
-                    direction: in
-
-                  - name: 123
-                    direction: out
+          - name: test_og_network
+            object_type: network
+            description: test_og_network
+            network_object:
+              host:
+                - 192.0.2.1
+                - 192.0.2.2
+              address:
+                - 192.0.2.0 255.255.255.0
+                - 198.51.100.0 255.255.255.0
+          - name: test_network_og
+            object_type: network
+            description: test network og
+            network_object:
+              host:
+                - 192.0.3.1
+                - 192.0.3.2
+              ipv6_address:
+                - 2001:db8:0:3::/64
+            group_object: test_og_network
+          - name: test_og_security
+            object_type: security
+            description: test_security
+            security_group:
+              name:
+                - test_1
+                - test_2
+              tag:
+                - 10
+                - 20
+          - name: test_og_user
+            object_type: user
+            user_object:
+              user:
+                - new_user_1
+                - new_user_2
         state: merged
 
-    - name: Gather acl interfaces facts
+    - name: Gather Object group facts
       cisco.asa.asa_facts:
         gather_subset:
           - '!all'
@@ -58,23 +61,26 @@
       register: result
       cisco.asa.asa_ogs:
         config:
-
-          - name: GigabitEthernet0/1
-            access_groups:
-
-              - afi: ipv4
-                acls:
-
-                  - name: 100
-                    direction: out
-
-                  - name: 110
-                    direction: in
+          - name: test_og_network
+            object_type: network
+            description: test_og_network_override
+            network_object:
+              host:
+                - 192.0.3.1
+              address:
+                - 192.0.3.0 255.255.255.0
+          - name: test_og_protocol
+            object_type: protocol
+            description: test_og_protocol
+            protocol_object:
+              protocol:
+                - tcp
+                - udp
         state: overridden
 
     - assert:
         that:
-          - result.commands|length == 8
+          - result.commands|length == 12
           - result.changed == true
           - result.commands|symmetric_difference(overridden.commands) == []
 
@@ -86,7 +92,7 @@
 
     - assert:
         that:
-          - revert.commands|length == 8
+          - revert.commands|length == 23
           - revert.changed == true
           - revert.commands|symmetric_difference(rtt.commands) == []
   always:

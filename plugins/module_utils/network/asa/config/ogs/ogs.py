@@ -3,7 +3,7 @@
 # Copyright 2019 Red Hat Inc.
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 """
-The asa_og class
+The asa_ogs class
 It is in this file where the current configuration (as dict)
 is compared to the provided configuration (as dict) and the command set
 necessary to bring the current configuration to it's desired end-state is
@@ -11,465 +11,684 @@ created
 """
 
 from __future__ import absolute_import, division, print_function
+
+
 __metaclass__ = type
 
 import copy
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.cfg.base import (
-    ConfigBase,
+
+from ansible.module_utils.six import iteritems
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.resource_module import (
+    ResourceModule,
 )
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
-    to_list,
+    dict_merge,
 )
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.facts import (
-    Facts,
-)
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
-    remove_empties,
-)
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.utils.utils import (
-    new_dict_to_set,
+
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.facts import Facts
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates.ogs import (
+    OGsTemplate,
 )
 
 
-class OGs(ConfigBase):
+class OGs(ResourceModule):
     """
-    The asa_og class
+    The asa_ogs class
     """
 
-    gather_subset = [
-        '!all',
-        '!min',
-    ]
+    gather_subset = ["!all", "!min"]
 
-    gather_network_resources = [
-        'ogs',
-    ]
+    gather_network_resources = ["ogs"]
 
     def __init__(self, module):
-        super(OG, self).__init__(module)
-
-    def get_og_facts(self, data=None):
-        """ Get the 'facts' (the current configuration)
-        :rtype: A dictionary
-        :returns: The current configuration as a dictionary
-        """
-        facts, _warnings = Facts(self._module).get_facts(self.gather_subset, self.gather_network_resources, data=data)
-        og_facts = facts['ansible_network_resources'].get('ogs')
-        if not og_facts:
-            return []
-
-        return og_facts
+        super(OGs, self).__init__(
+            empty_fact_val={},
+            facts_module=Facts(module),
+            module=module,
+            resource="ogs",
+            tmplt=OGsTemplate(),
+        )
 
     def execute_module(self):
-        """ Execute the module
+        """Execute the module
         :rtype: A dictionary
-        :returns: The result from moduel execution
+        :returns: The result from module execution
         """
-        result = {'changed': False}
-        commands = list()
-        warnings = list()
+        self.gen_config()
+        self.run_commands()
+        return self.result
 
-        if self.state in self.ACTION_STATES:
-            existing_og_facts = self.get_og_facts()
-        else:
-            existing_og_facts = []
-
-        if self.state in self.ACTION_STATES or self.state == 'rendered':
-            commands.extend(self.set_config(existing_og_facts))
-
-        if commands and self.state in self.ACTION_STATES:
-            if not self._module.check_mode:
-                self._connection.edit_config(commands)
-            result['changed'] = True
-
-        if self.state in self.ACTION_STATES:
-            result['commands'] = commands
-
-        if self.state in self.ACTION_STATES or self.state == 'gathered':
-            changed_og_facts = self.get_og_facts()
-        elif self.state == 'rendered':
-            result['rendered'] = commands
-        elif self.state == 'parsed':
-            running_config = self._module.params['running_config']
-            if not running_config:
-                self._module.fail_json(msg="value of running_config parameter must not be empty for state parsed")
-            result['parsed'] = self.get_og_facts(data=running_config)
-        else:
-            changed_og_facts = []
-
-        if self.state in self.ACTION_STATES:
-            result['before'] = existing_og_facts
-            if result['changed']:
-                result['after'] = changed_og_facts
-        elif self.state == 'gathered':
-            result['gathered'] = changed_og_facts
-
-        result['warnings'] = warnings
-
-        return result
-
-    def set_config(self, existing_og_facts):
-        """ Collect the configuration from the args passed to the module,
-            collect the current configuration (as a dict from facts)
-        :rtype: A list
-        :returns: the commands necessary to migrate the current configuration
-                  to the deisred configuration
-        """
-        want = self._module.params['config']
-        have = existing_og_facts
-        resp = self.set_state(want, have)
-        return to_list(resp)
-
-    def set_state(self, want, have):
-        """ Select the appropriate function based on the state provided
-        :param want: the desired configuration as a dictionary
-        :param have: the current configuration as a dictionary
-        :rtype: A list
-        :returns: the commands necessary to migrate the current configuration
-                  to the deisred configuration
-        """
-        commands = []
-
-        state = self._module.params["state"]
-        if (
-                state in ("overridden", "merged", "replaced", "rendered")
-                and not want
-        ):
-            self._module.fail_json(
-                msg="value of config parameter must not be empty for state {0}".format(
-                    state
-                )
-            )
-
-        if state == 'overridden':
-            commands = self._state_overridden(want, have)
-        elif state == 'deleted':
-            commands = self._state_deleted(want, have)
-        elif state == 'merged' or state == "rendered":
-            commands = self._state_merged(want, have)
-        elif state == 'replaced':
-            commands = self._state_replaced(want, have)
-
-        return commands
-
-    def _state_replaced(self, want, have):
-        """ The command generator when state is replaced
-        :param want: the desired configuration as a dictionary
-        :param have: the current configuration as a dictionary
-        :rtype: A list
-        :returns: the commands necessary to migrate the current configuration
-                  to the deisred configuration
-        """
-        commands = []
-
-        for interface in want:
-            for each in have:
-                if each['name'] == interface['name']:
-                    break
-            else:
-                continue
-            commands.extend(self._clear_config(interface, each, 'replaced'))
-            commands.extend(self._set_config(interface, each))
-        # Remove the duplicate interface call
-        commands = remove_duplicate_interface(commands)
-
-        return commands
-
-    def _state_overridden(self, want, have):
-        """ The command generator when state is overridden
-        :param want: the desired configuration as a dictionary
-        :param have: the current configuration as a dictionary
+    def gen_config(self):
+        """Select the appropriate function based on the state provided
         :rtype: A list
         :returns: the commands necessary to migrate the current configuration
                   to the desired configuration
         """
-        commands = []
-        # Creating a copy of want, so that want dict is intact even after delete operation
-        # performed during override want n have comparison
-        temp_want = copy.deepcopy(want)
-        for each in have:
-            for interface in want:
-                if each['name'] == interface['name']:
-                    break
-            else:
-                # We didn't find a matching desired state, which means we can
-                # pretend we recieved an empty desired state.
-                interface = dict(name=each['name'])
-                commands.extend(self._clear_config(interface, each))
-                continue
-            commands.extend(self._clear_config(interface, each, 'overridden'))
-            commands.extend(self._set_config(interface, each))
-        # Remove the duplicate interface call
-        commands = remove_duplicate_interface(commands)
+        if self.want:
+            temp = {}
+            for entry in self.want:
+                temp.update({(entry["object_type"]): entry})
+            wantd = temp
+        else:
+            wantd = {}
+        if self.have:
+            temp = {}
+            for entry in self.have:
+                temp.update({(entry["object_type"]): entry})
+            haved = temp
+        else:
+            haved = {}
 
-        return commands
+        obj_gp = {}
+        for k, v in wantd.items():
+            temp = {}
+            for each in v.get("object_groups"):
+                temp[each.get("name")] = each
+                temp["object_type"] = k
+                obj_gp[k] = temp
+        if obj_gp:
+            wantd = obj_gp
+            obj_gp = {}
+        for k, v in haved.items():
+            temp = {}
+            for each in v.get("object_groups"):
+                temp[each.get("name")] = each
+                temp["object_type"] = k
+                obj_gp[k] = temp
+        if obj_gp:
+            haved = obj_gp
 
-    def _state_merged(self, want, have):
-        """ The command generator when state is merged
-        :param want: the additive configuration as a dictionary
-        :param have: the current configuration as a dictionary
-        :rtype: A list
-        :returns: the commands necessary to merge the provided into
-                  the current configuration
-        """
-        commands = []
+        # if state is merged, merge want onto have
+        if self.state == "merged":
+            wantd = dict_merge(haved, wantd)
 
-        for each_want in want:
-            for each_have in have:
-                if each_want.get('name') == each_have.get('name'):
-                    break
-            else:
-                commands.extend(self._set_config(remove_empties(each_want), dict()))
-                continue
-            commands.extend(self._set_config(remove_empties(each_want), each_have))
-        q(commands)
-        commands=[]
-        return commands
+        # if state is deleted, empty out wantd and set haved to wantd
+        if self.state == "deleted":
+            temp = {}
+            for k, v in iteritems(haved):
+                temp_have = {}
+                if k in wantd or not wantd:
+                    for key, val in iteritems(v):
+                        if not wantd or key in wantd[k]:
+                            temp_have.update({key: val})
+                    temp.update({k: temp_have})
+            haved = temp
+            wantd = {}
 
-    def _state_deleted(self, want, have):
-        """ The command generator when state is deleted
-        :param want: the objects from which the configuration should be removed
-        :param have: the current configuration as a dictionary
-        :rtype: A list
-        :returns: the commands necessary to remove the current configuration
-                  of the provided objects
-        """
-        commands = []
+        # delete processes first so we do run into "more than one" errors
+        if self.state in ["overridden", "deleted"]:
+            for k, have in iteritems(haved):
+                if k not in wantd:
+                    for each_key, each_val in iteritems(have):
+                        if each_key != "object_type":
+                            each_val.update(
+                                {"object_type": have.get("object_type")},
+                            )
+                            self.addcmd(each_val, "og_name", True)
 
-        if want:
-            for each_want in want:
-                for each_have in have:
-                    if each_want['name'] == each_have['name']:
-                        break
-                else:
+        for k, want in iteritems(wantd):
+            self._compare(want=want, have=haved.pop(k, {}))
+
+    def _compare(self, want, have):
+        if want != have:
+            for k, v in iteritems(want):
+                if k != "object_type":
+                    v.update({"object_type": want.get("object_type")})
+            if have:
+                for k, v in iteritems(have):
+                    if k != "object_type":
+                        v.update({"object_type": want.get("object_type")})
+
+            object_type = want.get("object_type")
+            if object_type == "icmp-type":
+                self._icmp_object_compare(want, have)
+            if object_type == "network":
+                self._network_object_compare(want, have)
+            elif object_type == "protocol":
+                self._protocol_object_compare(want, have)
+            elif object_type == "security":
+                self._security_object_compare(want, have)
+            elif object_type == "service":
+                self._service_object_compare(want, have)
+            elif object_type == "user":
+                self._user_object_compare(want, have)
+
+    def get_list_diff(self, want, have, object, param):
+        diff = [item for item in want[object][param] if item not in have[object][param]]
+        return diff
+
+    def check_for_have_and_overidden(self, have):
+        if have and self.state == "overridden":
+            for name, entry in iteritems(have):
+                if name != "object_type":
+                    self.addcmd(entry, "og_name", True)
+
+    def _icmp_object_compare(self, want, have):
+        icmp_obj = "icmp_type"
+        for name, entry in iteritems(want):
+            h_item = have.pop(name, {})
+            if entry != h_item and name != "object_type" and entry[icmp_obj].get("icmp_object"):
+                if h_item and entry.get("group_object"):
+                    self.addcmd(entry, "og_name", False)
+                    self._add_group_object_cmd(entry, h_item)
                     continue
-                commands.extend(self._clear_config(remove_empties(each_want), each_have))
+                if h_item:
+                    self._add_object_cmd(
+                        entry,
+                        h_item,
+                        icmp_obj,
+                        ["icmp_type"],
+                    )
+                else:
+                    self.addcmd(entry, "og_name", False)
+                    self.compare(["description"], entry, h_item)
+                if entry.get("group_object"):
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
+                if self.state in ("overridden", "replaced") and h_item:
+                    self.compare(["icmp_type"], {}, h_item)
+                if h_item and h_item[icmp_obj].get("icmp_object"):
+                    li_diff = self.get_list_diff(
+                        entry,
+                        h_item,
+                        icmp_obj,
+                        "icmp_object",
+                    )
+                else:
+                    li_diff = entry[icmp_obj].get("icmp_object")
+                entry[icmp_obj]["icmp_object"] = li_diff
+                self.addcmd(entry, "icmp_type", False)
+        self.check_for_have_and_overidden(have)
+
+    def _network_object_compare(self, want, have):
+        network_obj = "network_object"
+        parsers = [
+            "network_object.host",
+            "network_object.address",
+            "network_object.ipv6_address",
+            "network_object.object",
+        ]
+        add_obj_cmd = False
+        for name, entry in iteritems(want):
+            h_item = have.pop(name, {})
+            if entry != h_item and name != "object_type":
+                if h_item and entry.get("group_object"):
+                    self.addcmd(entry, "og_name", False)
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
+                if h_item:
+                    self._add_object_cmd(
+                        entry,
+                        h_item,
+                        network_obj,
+                        ["address", "host", "ipv6_address", "object"],
+                    )
+                else:
+                    add_obj_cmd = True
+                    self.addcmd(entry, "og_name", False)
+                    self.compare(["description"], entry, h_item)
+                if entry.get("group_object"):
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
+                if entry[network_obj].get("address"):
+                    self._compare_object_diff(
+                        entry,
+                        h_item,
+                        network_obj,
+                        "address",
+                        parsers,
+                        "network_object.address",
+                    )
+                elif h_item and h_item.get(network_obj) and h_item[network_obj].get("address"):
+                    h_item[network_obj] = {
+                        "address": h_item[network_obj].get("address"),
+                    }
+                    if not add_obj_cmd:
+                        self.addcmd(entry, "og_name", False)
+                    self.compare(parsers, {}, h_item)
+                if entry[network_obj].get("host"):
+                    self._compare_object_diff(
+                        entry,
+                        h_item,
+                        network_obj,
+                        "host",
+                        parsers,
+                        "network_object.host",
+                    )
+                elif h_item and h_item[network_obj].get("host"):
+                    h_item[network_obj] = {
+                        "host": h_item[network_obj].get("host"),
+                    }
+                    if not add_obj_cmd:
+                        self.addcmd(entry, "og_name", False)
+                    self.compare(parsers, {}, h_item)
+                if entry[network_obj].get("ipv6_address"):
+                    self._compare_object_diff(
+                        entry,
+                        h_item,
+                        network_obj,
+                        "ipv6_address",
+                        parsers,
+                        "network_object.ipv6_address",
+                    )
+                elif h_item and h_item.get(network_obj) and h_item[network_obj].get("ipv6_address"):
+                    h_item[network_obj] = {
+                        "ipv6_address": h_item[network_obj].get("ipv6_address"),
+                    }
+                    if not add_obj_cmd:
+                        self.addcmd(entry, "og_name", False)
+                    self.compare(parsers, {}, h_item)
+                if entry[network_obj].get("object"):
+                    self._compare_object_diff(
+                        entry,
+                        h_item,
+                        network_obj,
+                        "object",
+                        parsers,
+                        "network_object.object",
+                    )
+                elif h_item and h_item.get(network_obj) and h_item[network_obj].get("object"):
+                    h_item[network_obj] = {
+                        "object": h_item[network_obj].get("object"),
+                    }
+                    if not add_obj_cmd:
+                        self.addcmd(entry, "og_name", False)
+                    self.compare(parsers, {}, h_item)
+        self.check_for_have_and_overidden(have)
+
+    def _protocol_object_compare(self, want, have):
+        protocol_obj = "protocol_object"
+        for name, entry in iteritems(want):
+            h_item = have.pop(name, {})
+            if entry != h_item and name != "object_type":
+                if h_item and entry.get("group_object"):
+                    self.addcmd(entry, "og_name", False)
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
+                if h_item:
+                    self._add_object_cmd(
+                        entry,
+                        h_item,
+                        protocol_obj,
+                        ["protocol"],
+                    )
+                else:
+                    self.addcmd(entry, "og_name", False)
+                    self.compare(["description"], entry, h_item)
+                if entry.get("group_object"):
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
+                if entry[protocol_obj].get("protocol"):
+                    self._compare_object_diff(
+                        entry,
+                        h_item,
+                        protocol_obj,
+                        "protocol",
+                        [protocol_obj],
+                        protocol_obj,
+                    )
+        self.check_for_have_and_overidden(have)
+
+    def _security_object_compare(self, want, have):
+        security_obj = "security_group"
+        parsers = ["security_group.sec_name", "security_group.tag"]
+        add_obj_cmd = False
+        for name, entry in iteritems(want):
+            h_item = have.pop(name, {})
+            if entry != h_item and name != "object_type":
+                if h_item and entry.get("group_object"):
+                    self.addcmd(entry, "og_name", False)
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
+                if h_item:
+                    self._add_object_cmd(
+                        entry,
+                        h_item,
+                        security_obj,
+                        ["sec_name", "tag"],
+                    )
+                else:
+                    add_obj_cmd = True
+                    self.addcmd(entry, "og_name", False)
+                    self.compare(["description"], entry, h_item)
+                if entry.get("group_object"):
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
+                if entry[security_obj].get("sec_name"):
+                    self._compare_object_diff(
+                        entry,
+                        h_item,
+                        security_obj,
+                        "sec_name",
+                        parsers,
+                        "security_group.sec_name",
+                    )
+                elif h_item and h_item[security_obj].get("sec_name"):
+                    h_item[security_obj] = {
+                        "sec_name": h_item[security_obj].get("sec_name"),
+                    }
+                    if not add_obj_cmd:
+                        self.addcmd(entry, "og_name", False)
+                    self.compare(parsers, {}, h_item)
+                if entry[security_obj].get("tag"):
+                    self._compare_object_diff(
+                        entry,
+                        h_item,
+                        security_obj,
+                        "tag",
+                        parsers,
+                        "security_group.tag",
+                    )
+                elif h_item and h_item[security_obj].get("tag"):
+                    h_item[security_obj] = {
+                        "tag": h_item[security_obj].get("tag"),
+                    }
+                    if not add_obj_cmd:
+                        self.addcmd(entry, "og_name", False)
+                    self.compare(parsers, {}, h_item)
+        self.check_for_have_and_overidden(have)
+
+    def _service_object_compare(self, want, have):
+        service_obj = "service_object"
+        services_obj = "services_object"
+        port_obj = "port_object"
+        for name, entry in iteritems(want):
+            h_item = have.pop(name, {})
+            if entry != h_item and name != "object_type":
+                if h_item and entry.get("group_object"):
+                    self.addcmd(entry, "og_name", False)
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
+                if h_item:
+                    self._add_object_cmd(
+                        entry,
+                        h_item,
+                        service_obj,
+                        ["protocol"],
+                    )
+                else:
+                    protocol = entry.get("protocol")
+                    if protocol:
+                        entry["name"] = "{0} {1}".format(name, protocol)
+                    self.addcmd(entry, "og_name", False)
+                    self.compare(["description"], entry, h_item)
+                if entry.get("group_object"):
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
+                if entry.get(service_obj):
+                    if entry[service_obj].get("protocol"):
+                        self._compare_object_diff(
+                            entry,
+                            h_item,
+                            service_obj,
+                            "protocol",
+                            ["service_object"],
+                            service_obj,
+                        )
+                elif entry.get(services_obj):
+                    if h_item:
+                        h_item = self.convert_list_to_dict(
+                            val=h_item,
+                            source="source_port",
+                            destination="destination_port",
+                        )
+                    entry = self.convert_list_to_dict(
+                        val=entry,
+                        source="source_port",
+                        destination="destination_port",
+                    )
+                    command_len = len(self.commands)
+                    for k, v in iteritems(entry):
+                        if h_item:
+                            h_service_item = h_item.pop(k, {})
+                            if h_service_item != v:
+                                self.compare(
+                                    [services_obj],
+                                    want={services_obj: v},
+                                    have={services_obj: h_service_item},
+                                )
+                        else:
+                            temp_want = {"name": name, services_obj: v}
+                            self.addcmd(temp_want, "og_name", True)
+
+                            self.compare(
+                                [services_obj],
+                                want=temp_want,
+                                have={},
+                            )
+                    if h_item and self.state in ["overridden", "replaced"]:
+                        for k, v in iteritems(h_item):
+                            temp_have = {"name": name, services_obj: v}
+                            self.compare(
+                                [services_obj],
+                                want={},
+                                have=temp_have,
+                            )
+                    if command_len < len(self.commands):
+                        cmd = "object-group service {0}".format(name)
+                        if cmd not in self.commands:
+                            self.commands.insert(command_len, cmd)
+                elif entry.get(port_obj):
+                    protocol = entry.get("protocol")
+                    if h_item:
+                        h_item = self.convert_list_to_dict(
+                            val=h_item,
+                            source="source_port",
+                            destination="destination_port",
+                        )
+                    entry = self.convert_list_to_dict(
+                        val=entry,
+                        source="source_port",
+                        destination="destination_port",
+                    )
+                    command_len = len(self.commands)
+                    for k, v in iteritems(entry):
+                        h_port_item = h_item.pop(k, {})
+                        if "http" in k and "_" in k:
+                            # This condition is to TC of device behaviour, where if user tries to
+                            # configure http it gets converted to www.
+                            temp = k.split("_")[0]
+                            h_port_item = {temp: "http"}
+                        if h_port_item != v:
+                            self.compare(
+                                [port_obj],
+                                want={port_obj: v},
+                                have={port_obj: h_port_item},
+                            )
+                        elif not h_port_item:
+                            temp_want = {"name": name, port_obj: v}
+                            self.compare([port_obj], want=temp_want, have={})
+                    if h_item and self.state in ["overridden", "replaced"]:
+                        for k, v in iteritems(h_item):
+                            temp_have = {"name": name, port_obj: v}
+                            self.compare([port_obj], want={}, have=temp_have)
+        self.check_for_have_and_overidden(have)
+
+    def convert_list_to_dict(self, *args, **kwargs):
+        temp = {}
+        if kwargs["val"].get("services_object"):
+            for every in kwargs["val"]["services_object"]:
+                temp_key = every["protocol"]
+                if "source_port" in every:
+                    if "range" in every["source_port"]:
+                        temp_key = (
+                            "range"
+                            + "_"
+                            + str(every["source_port"]["range"]["start"])
+                            + "_"
+                            + str(every["source_port"]["range"]["end"])
+                        )
+                    else:
+                        source_key = list(every["source_port"])[0]
+                        temp_key = (
+                            temp_key + "_" + source_key + "_" + every["source_port"][source_key]
+                        )
+                if "destination_port" in every:
+                    if "range" in every["destination_port"]:
+                        temp_key = (
+                            "range"
+                            + "_"
+                            + str(every["destination_port"]["range"]["start"])
+                            + "_"
+                            + str(every["destination_port"]["range"]["end"])
+                        )
+                    else:
+                        destination_key = list(every["destination_port"])[0]
+                        temp_key = (
+                            temp_key
+                            + "_"
+                            + destination_key
+                            + "_"
+                            + every["destination_port"][destination_key]
+                        )
+                temp.update({temp_key: every})
+            return temp
+        elif kwargs["val"].get("port_object"):
+            for every in kwargs["val"]["port_object"]:
+                if "range" in every:
+                    temp_key = (
+                        "start"
+                        + "_"
+                        + every["range"]["start"]
+                        + "_"
+                        + "end"
+                        + "_"
+                        + every["range"]["end"]
+                    )
+                else:
+                    every_key = list(every)[0]
+                    temp_key = every_key + "_" + every[every_key]
+                temp.update({temp_key: every})
+            return temp
+
+    def _user_object_compare(self, want, have):
+        user_obj = "user_object"
+        parsers = ["user_object.user", "user_object.user_gp"]
+        add_obj_cmd = False
+        for name, entry in iteritems(want):
+            h_item = have.pop(name, {})
+            if entry != h_item and name != "object_type":
+                if h_item and entry.get("group_object"):
+                    self.addcmd(entry, "og_name", False)
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
+                if h_item:
+                    self._add_object_cmd(
+                        entry,
+                        h_item,
+                        user_obj,
+                        ["user", "user_group"],
+                    )
+                else:
+                    add_obj_cmd = True
+                    self.addcmd(entry, "og_name", False)
+                    self.compare(["description"], entry, h_item)
+                if entry.get("group_object"):
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
+                if entry[user_obj].get("user"):
+                    self._compare_object_diff(
+                        entry,
+                        h_item,
+                        user_obj,
+                        "user",
+                        ["user_object.user"],
+                        "user_object.user",
+                    )
+                elif h_item and h_item[user_obj].get("user"):
+                    h_item[user_obj] = {"user": h_item[user_obj].get("user")}
+                    if not add_obj_cmd:
+                        self.addcmd(entry, "og_name", False)
+                    self.compare(parsers, {}, h_item)
+                if entry[user_obj].get("user_group"):
+                    self._compare_object_diff(
+                        entry,
+                        h_item,
+                        user_obj,
+                        "user_group",
+                        ["user_object.user_group"],
+                        "user_object.user_gp",
+                    )
+                elif h_item and h_item[user_obj].get("user_group"):
+                    h_item[user_obj] = {
+                        "user_group": h_item[user_obj].get("user_group"),
+                    }
+                    if not add_obj_cmd:
+                        self.addcmd(entry, "og_name", False)
+                    self.compare(parsers, {}, h_item)
+        self.check_for_have_and_overidden(have)
+
+    def _add_object_cmd(self, want, have, object, object_elements):
+        obj_cmd_added = False
+        for each in object_elements:
+            want_element = want[object].get(each) if want.get(object) else want
+            have_element = have[object].get(each) if have.get(object) else have
+            if (
+                want_element
+                and isinstance(want_element, list)
+                and isinstance(want_element[0], dict)
+            ):
+                if want_element and have_element and want_element != have_element:
+                    if not obj_cmd_added:
+                        self.addcmd(want, "og_name", False)
+                        self.compare(["description"], want, have)
+                        obj_cmd_added = True
+            else:
+                if want_element and have_element and set(want_element) != set(have_element):
+                    if not obj_cmd_added:
+                        self.addcmd(want, "og_name", False)
+                        self.compare(["description"], want, have)
+                        obj_cmd_added = True
+
+    def _add_group_object_cmd(self, want, have):
+        if have and have.get("group_object"):
+            want["group_object"] = list(
+                set(want.get("group_object")) - set(have.get("group_object")),
+            )
+            have["group_object"] = list(
+                set(have.get("group_object")) - set(want.get("group_object")),
+            )
+        for each in want["group_object"]:
+            self.compare(["group_object"], {"group_object": each}, dict())
+        if (
+            (self.state == "replaced" or self.state == "overridden")
+            and have
+            and have.get("group_object")
+        ):
+            for each in have["group_object"]:
+                self.compare(["group_object"], dict(), {"group_object": each})
+
+    def _compare_object_diff(
+        self,
+        want,
+        have,
+        object,
+        object_type,
+        parsers,
+        val,
+    ):
+        temp_have = copy.copy(have)
+        temp_want = copy.copy(want)
+        if temp_have and temp_have.get(object) and temp_have[object].get(object_type):
+            want_diff = self.get_list_diff(
+                temp_want,
+                temp_have,
+                object,
+                object_type,
+            )
+            have_diff = [
+                each
+                for each in temp_have[object][object_type]
+                if each not in temp_want[object][object_type]
+            ]
+            if have_diff:
+                temp_have[object].pop(object_type)
         else:
-            for each in have:
-                commands.extend(self._clear_config(dict(), each))
-
-        return commands
-
-    def add_command_to_config_list(self, cmd, commands):
-        if cmd not in commands:
-            commands.append(cmd)
-
-    def _set_config(self, want, have):
-        """ Function that sets the ogs config based on the want and have config
-        :param want: want config
-        :param have: have config
-        :param og_want: want ogs config
-        :rtype: A list
-        :returns: the commands generated based on input want/have params
-        """
-        commands = []
-
-        # Populate the config only when there's a diff b/w want and have config
-        # Convert the want and have dict to its respective set for taking the set diff
-        want_set = set()
-        have_set = set()
-        new_dict_to_set(want, [], want_set)
-        if have:
-            new_dict_to_set(have, [], have_set)
-        diff = want_set - have_set
-        q(want, have, want_set, have_set, diff)
-        # check for protocol options by creating an individual sets for both want and have
-        if len(diff) == 1 and dict(diff).get('protocol'):
-            diff = set(dict(want_set).get('protocol')) - set(dict(have_set).get('protocol'))
-
-        if diff:
-            og_name = want.get('name')
-            og_object = want.get('object')
-            cmd = 'object-group {0} {1}'.format(og_object, og_name)
-            self.add_command_to_config_list(cmd, commands)
-            try:
-                each = dict(diff)
-            except ValueError:
-                pass
-                # each = {}
-                # for every in diff:
-                #     each.update(dict(every))
-            # if each.get('description'):
-            #     description = 'description {0}'.format(each['description'])
-            #     self.add_command_to_config_list(description, commands)
-            # if og_object == 'network':
-            #     if each.get('host'):
-            #         if each.get('ip_address'):
-            #             cmd = 'network-object host {0}'.format(each['ip_address'])
-            #             self.add_command_to_config_list(cmd, commands)
-            #         else:
-            #             self._module.fail_json(msg='IP address is needed for Network-Object host to be configured '
-            #                                        'as expected!')
-            #     elif each.get('ip_mask'):
-            #         if each.get('ip_address'):
-            #             cmd = 'network-object {0} {1}'.format(each['ip_address'], each['ip_mask'])
-            #             self.add_command_to_config_list(cmd, commands)
-            #         else:
-            #             self._module.fail_json(msg='IP address is required for Network-Object to be configured '
-            #                                        'as expected!')
-            #     elif each.get('ip_address') and dict(want_set).get('host'):
-            #         cmd = 'network-object host {0}'.format(each['ip_address'])
-            #         self.add_command_to_config_list(cmd, commands)
-            # elif og_object == 'icmp_type':
-            #     icmp_object = each.get('icmp_object')
-            #     if icmp_object:
-            #         for every in icmp_object:
-            #             cmd = 'icmp-object {0}'.format(every)
-            #             self.add_command_to_config_list(cmd, commands)
-            # elif og_object == 'protocol':
-            #     protocol_object = each.get('protocol')
-            #     if protocol_object:
-            #         for every in protocol_object:
-            #             cmd = 'protocol-object {0}'.format(every)
-            #             self.add_command_to_config_list(cmd, commands)
-            # elif og_object == 'security':
-            #     name = each.get('name')
-            #     tag = each.get('tag')
-            #     if name:
-            #         cmd = 'security-group name {0}'.format(name)
-            #         self.add_command_to_config_list(cmd, commands)
-            #     if tag:
-            #         cmd = 'security-group tag {0}'.format(tag)
-            #         self.add_command_to_config_list(cmd, commands)
-            # elif og_object == 'service':
-            #     service_object = each.get('protocol')
-            #     if service_object:
-            #         for every in service_object:
-            #             cmd = 'service-object {0}'.format(every)
-            #             self.add_command_to_config_list(cmd, commands)
-            # elif og_object == 'user' and not each.get('object'):
-            #     name = each.get('name')
-            #     q(name, each.get('user_group'))
-            #     if name:
-            #         cmd = 'user-group name {0}'.format(name)
-            #         self.add_command_to_config_list(cmd, commands)
-            # if 'group_object' in each:
-            #     description = 'group-object {0}'.format(each['group_object'])
-            #     self.add_command_to_config_list(description, commands)
-
-        return commands
-
-    def remove_command_from_config_list(self, cmd, commands):
-        # To delete the passed config
-        if cmd not in commands:
-            commands.append('no %s' % cmd)
-
-    def _clear_config(self, want, have):
-        """ Function that deletes the acl config based on the want and have config
-        :param acl: acl config
-        :param config: config
-        :rtype: A list
-        :returns: the commands generated based on input acl/config params
-        """
-        commands = []
-
-        if want:
-            object = want.get('object')
-            if object == 'icmp_type':
-                object = 'icmp-type'
-            name = want.get('name')
-        else:
-            object = have.get('object')
-            if object == 'icmp_type':
-                object = 'icmp-type'
-            name = have.get('name')
-        top_cmd = "object-group {0} {1}".format(object, name)
-
-        granular_delete = False
-        if want.get('icmp_object') and have.get('icmp_object'):
-            w_icmp_object = want.get('icmp_object')
-            h_icmp_object = have.get('icmp_object')
-
-            if h_icmp_object.get('icmp_type'):
-                granular_delete = True
-                for each in h_icmp_object.get('icmp_type'):
-                    for every in w_icmp_object.get('icmp_type'):
-                        if every == each:
-                            cmd = 'icmp-object {0}'.format(every)
-                            self.remove_command_from_config_list(cmd, commands)
-        elif want.get('network_object') and have.get('network_object'):
-            w_network_object = want.get('network_object')
-            h_network_object = have.get('network_object')
-
-            if h_network_object:
-                granular_delete = True
-                for each in h_network_object:
-                    for every in w_network_object:
-                        if every.get('host') and every.get('host') == each.get('host') and \
-                                every.get('ip_address') == each.get('ip_address'):
-                            cmd = "network-object host {0}".format(every.get('ip_address'))
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
-                        if every.get('ip_address') and every.get('ip_address') == each.get('ip_address') and \
-                                every.get('ip_mask') == each.get('ip_mask'):
-                            cmd = "network-object {0} {1}".format(every.get('ip_address'), every.get('ip_mask'))
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
-                        if every.get('ipv6_address') == each.get('ipv6_address') and every.get('ipv6_address'):
-                            cmd = "network-object {0}".format(every.get('ipv6_address'))
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
-                        if every.get('object') and every.get('object') == each.get('object'):
-                            cmd = "network-object object {0}".format(every.get('object'))
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
-        elif want.get('protocol_object') and have.get('protocol_object'):
-            w_protocol_object = want.get('protocol_object')
-            h_protocol_object = have.get('protocol_object')
-
-            if h_protocol_object.get('protocol'):
-                granular_delete = True
-                for each in h_protocol_object.get('protocol'):
-                    for every in w_protocol_object.get('protocol'):
-                        if every == each:
-                            cmd = 'protocol-object {0}'.format(every)
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
-        elif want.get('security_group') and have.get('security_group'):
-            w_security_group = want.get('security_group')
-            h_security_group = have.get('security_group')
-
-            if h_security_group.get('name'):
-                granular_delete = True
-                for each in h_security_group:
-                    for every in w_security_group:
-                        if every.get('name') == each.get('name'):
-                            cmd = "security-group name {0}".format(every.get('name'))
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
-                        if every.get('tag') == each.get('tag'):
-                            cmd = "security-group tag {0}".format(every.get('tag'))
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
-        elif want.get('service_object') and have.get('service_object'):
-            w_service_object = want.get('service_object')
-            h_service_object = have.get('service_object')
-
-            if h_service_object.get('protocol'):
-                granular_delete = True
-                for each in h_service_object.get('protocol'):
-                    for every in w_service_object.get('protocol'):
-                        if every == each:
-                            cmd = 'service-object {0}'.format(every)
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
-        elif want.get('user_group') and have.get('user_group'):
-            w_user_group = want.get('user_group')
-            h_user_group = have.get('user_group')
-            if h_user_group.get('name') and w_user_group.get('name') == h_user_group.get('name'):
-                granular_delete = True
-                for each in h_user_group.get('name'):
-                    for every in w_user_group.get('name'):
-                        if every == each:
-                            cmd = 'user-group {0}'.format(every)
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
-
-        if granular_delete:
-            if len(commands) > 0:
-                commands.insert(0, top_cmd)
-        elif want or have and not granular_delete:
-            self.remove_command_from_config_list(top_cmd, commands)
-
-
-        return commands
+            have_diff = []
+            want_diff = temp_want[object].get(object_type)
+        temp_want[object][object_type] = want_diff
+        if have_diff or temp_have.get(object) and self.state in ("overridden", "replaced"):
+            if have_diff:
+                temp_have[object] = {object_type: have_diff}
+                self.compare(parsers, {}, temp_have)
+        self.addcmd(temp_want, val, False)

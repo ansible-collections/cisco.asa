@@ -7,34 +7,35 @@
 
 - block:
 
-    - name: Replaces device configuration of listed acl_interfaces with provided
-        configuration
+    - name: Replace module attributes of given object-group
       become: true
       register: result
       cisco.asa.asa_ogs: &id001
         config:
-
-          - name: GigabitEthernet0/1
-            access_groups:
-
-              - afi: ipv4
-                acls:
-
-                  - name: 100
-                    direction: out
-
-                  - name: 110
-                    direction: in
+          - name: test_og_network
+            object_type: network
+            description: test_og_network_replace
+            network_object:
+              host:
+                - 192.0.3.1
+              address:
+                - 192.0.3.0 255.255.255.0
+          - name: test_og_protocol
+            object_type: protocol
+            description: test_og_protocol
+            protocol_object:
+              protocol:
+                - tcp
+                - udp
         state: replaced
 
     - assert:
         that:
-          - result.commands|length == 5
+          - result.commands|length == 9
           - result.changed == true
           - result.commands|symmetric_difference(replaced.commands) == []
 
-    - name: Replaces device configuration of listed acl_interfaces with provided
-        configuration (IDEMPOTENT)
+    - name: Replace module attributes of given object-group (IDEMPOTENT)
       become: true
       register: result
       cisco.asa.asa_ogs: *id001
