@@ -10,7 +10,7 @@ deleted:
     - object-group security test_og_security
     - no security-group name test_1
     - no object-group user test_og_user
-delete_all:
+deleted_all:
   commands:
     - no object-group network test_og_network
     - no object-group network test_network_og
@@ -95,8 +95,7 @@ gathered:
         tag:
           - 10
           - 20
-    - description: test_user
-      name: test_og_user
+    - name: test_og_user
       object_type: user
       user_object:
         user:
