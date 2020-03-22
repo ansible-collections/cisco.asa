@@ -14,6 +14,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 import copy
+from ansible.module_utils.six import iteritems
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.cfg.base import (
     ConfigBase,
 )
@@ -27,9 +28,8 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.u
     remove_empties,
 )
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.utils.utils import (
-    new_dict_to_set,
+    remove_duplicate_cmd,
 )
-import q
 
 
 class OGs(ConfigBase):
@@ -163,16 +163,17 @@ class OGs(ConfigBase):
         """
         commands = []
 
-        for interface in want:
-            for each in have:
-                if each['name'] == interface['name']:
+        for each_want in want:
+            for each_have in have:
+                if each_have['name'] == each_want['name']:
                     break
             else:
+                commands.extend(self._set_config(remove_empties(each_want), dict()))
                 continue
-            commands.extend(self._clear_config(interface, each, 'replaced'))
-            commands.extend(self._set_config(interface, each))
-        # Remove the duplicate interface call
-        commands = remove_duplicate_interface(commands)
+            commands.extend(self._clear_config(remove_empties(each_want), each_have, 'replaced'))
+            commands.extend(self._set_config(remove_empties(each_want), each_have))
+            # Remove duplicate object-group cmd if any
+            commands = remove_duplicate_cmd('object-group', commands)
 
         return commands
 
@@ -187,21 +188,32 @@ class OGs(ConfigBase):
         commands = []
         # Creating a copy of want, so that want dict is intact even after delete operation
         # performed during override want n have comparison
-        temp_want = copy.deepcopy(want)
-        for each in have:
-            for interface in want:
-                if each['name'] == interface['name']:
+        temp_want = copy.copy(want)
+
+        for each_have in have:
+            for each_want in temp_want:
+                count = 0
+                if each_want['name'] == each_have['name']:
                     break
+                count += 1
             else:
                 # We didn't find a matching desired state, which means we can
                 # pretend we recieved an empty desired state.
-                interface = dict(name=each['name'])
-                commands.extend(self._clear_config(interface, each))
+                commands.extend(self._clear_config(dict(), each_have, 'overridden'))
                 continue
-            commands.extend(self._clear_config(interface, each, 'overridden'))
-            commands.extend(self._set_config(interface, each))
-        # Remove the duplicate interface call
-        commands = remove_duplicate_interface(commands)
+            commands.extend(self._clear_config(remove_empties(each_want), each_have, 'overridden'))
+            commands.extend(self._set_config(remove_empties(each_want), each_have))
+            # Remove duplicate object-group cmd if any
+            commands = remove_duplicate_cmd('object-group', commands)
+            # as the pre-existing interface are now configured by
+            # above set_config call, deleting the respective
+            # interface entry from the want list
+            del temp_want[count]
+
+        # Iterating through want list which now only have new interfaces to be
+        # configured
+        for each in temp_want:
+            commands.extend(self._set_config(remove_empties(each), dict()))
 
         return commands
 
@@ -214,7 +226,7 @@ class OGs(ConfigBase):
                   the current configuration
         """
         commands = []
-        q(want, have)
+
         for each_want in want:
             for each_have in have:
                 if each_want.get('name') == each_have.get('name'):
@@ -223,8 +235,7 @@ class OGs(ConfigBase):
                 commands.extend(self._set_config(remove_empties(each_want), dict()))
                 continue
             commands.extend(self._set_config(remove_empties(each_want), each_have))
-        q(commands)
-        commands=[]
+
         return commands
 
     def _state_deleted(self, want, have):
@@ -244,16 +255,50 @@ class OGs(ConfigBase):
                         break
                 else:
                     continue
-                commands.extend(self._clear_config(remove_empties(each_want), each_have))
+                commands.extend(self._clear_config(remove_empties(each_want), each_have, 'deleted'))
         else:
             for each in have:
                 commands.extend(self._clear_config(dict(), each))
+        # Remove duplicate object-group cmd if any
+        commands = remove_duplicate_cmd('object-group', commands)
 
         return commands
 
     def add_command_to_config_list(self, cmd, commands):
         if cmd not in commands:
             commands.append(cmd)
+
+    def new_dict_to_set(self, input_dict, temp_list, test_set, count=0):
+        # recursive function to convert input dict to set for comparision
+        test_dict = dict()
+        if isinstance(input_dict, dict):
+            input_dict_len = len(input_dict)
+            for k, v in sorted(iteritems(input_dict)):
+                count += 1
+                if isinstance(v, list):
+                    temp_list.append(k)
+                    for each in v:
+                        if isinstance(each, dict):
+                            if [True for i in each.values() if type(i) == list]:
+                                self.new_dict_to_set(each, temp_list, test_set, count)
+                            else:
+                                self.new_dict_to_set(each, temp_list, test_set, 0)
+                if isinstance(v, dict):
+                    if tuple(iteritems(test_dict)) not in test_set:
+                        test_set.add(tuple(iteritems(test_dict)))
+                    self.new_dict_to_set(v, temp_list, test_set, 0)
+                else:
+                    if v is not None:
+                        if isinstance(v, list):
+                            test_dict.update({k: tuple(v)})
+                        else:
+                            test_dict.update({k: v})
+                    if (
+                            tuple(iteritems(test_dict)) not in test_set
+                            and count == input_dict_len
+                    ):
+                        test_set.add(tuple(iteritems(test_dict)))
+                        count = 0
 
     def _set_config(self, want, have):
         """ Function that sets the ogs config based on the want and have config
@@ -269,85 +314,115 @@ class OGs(ConfigBase):
         # Convert the want and have dict to its respective set for taking the set diff
         want_set = set()
         have_set = set()
-        new_dict_to_set(want, [], want_set)
+        self.new_dict_to_set(want, [], want_set)
+        temp = {}
         if have:
-            new_dict_to_set(have, [], have_set)
-        diff = want_set - have_set
-        q(want, have, want_set, have_set, diff)
-        return
-        # check for protocol options by creating an individual sets for both want and have
-        if len(diff) == 1 and dict(diff).get('protocol'):
-            diff = set(dict(want_set).get('protocol')) - set(dict(have_set).get('protocol'))
+            self.new_dict_to_set(have, [], have_set)
+            for each in want_set:
+                for every in have_set:
+                    want_keys = dict(each).keys()
+                    have_keys = dict(every).keys()
+                    if any(elem in have_keys for elem in want_keys) and (dict(each).get('object_type') == dict(every).get('object_type')):
+                        diff = set(each) - set(every)
+                        if diff:
+                            for k, v in dict(each).items():
+                                if k == 'description':
+                                    temp.update({k: v})
+                                elif dict(every).get(k):
+                                    temp_diff = set(v) - set(dict(every).get(k))
+                                    if temp_diff:
+                                        temp.update({k: tuple(temp_diff)})
+                                else:
+                                    temp.update({k: v})
+        else:
+            for each in want_set:
+                # In case of security_group object, since the temp dict might
+                # have colliding duplicate name param it's a condition to get the
+                # security object name param and store it as security_name in the
+                # temp dict instead of overriding the value with one-another
+                if 'object_type' not in dict(each):
+                    if 'name' in dict(each) or 'tag' in dict(each):
+                        temp['security_name'] = dict(each).get('name')
+                        temp['tag'] = dict(each).get('tag')
+                    else:
+                        temp.update(dict(each))
+                else:
+                    temp.update(dict(each))
 
-        if diff:
+        if temp:
             og_name = want.get('name')
-            og_object = want.get('object')
+            og_object = want.get('object_type')
             cmd = 'object-group {0} {1}'.format(og_object, og_name)
             self.add_command_to_config_list(cmd, commands)
-            try:
-                each = dict(diff)
-            except ValueError:
-                pass
-                # each = {}
-                # for every in diff:
-                #     each.update(dict(every))
-            # if each.get('description'):
-            #     description = 'description {0}'.format(each['description'])
-            #     self.add_command_to_config_list(description, commands)
-            # if og_object == 'network':
-            #     if each.get('host'):
-            #         if each.get('ip_address'):
-            #             cmd = 'network-object host {0}'.format(each['ip_address'])
-            #             self.add_command_to_config_list(cmd, commands)
-            #         else:
-            #             self._module.fail_json(msg='IP address is needed for Network-Object host to be configured '
-            #                                        'as expected!')
-            #     elif each.get('ip_mask'):
-            #         if each.get('ip_address'):
-            #             cmd = 'network-object {0} {1}'.format(each['ip_address'], each['ip_mask'])
-            #             self.add_command_to_config_list(cmd, commands)
-            #         else:
-            #             self._module.fail_json(msg='IP address is required for Network-Object to be configured '
-            #                                        'as expected!')
-            #     elif each.get('ip_address') and dict(want_set).get('host'):
-            #         cmd = 'network-object host {0}'.format(each['ip_address'])
-            #         self.add_command_to_config_list(cmd, commands)
-            # elif og_object == 'icmp_type':
-            #     icmp_object = each.get('icmp_object')
-            #     if icmp_object:
-            #         for every in icmp_object:
-            #             cmd = 'icmp-object {0}'.format(every)
-            #             self.add_command_to_config_list(cmd, commands)
-            # elif og_object == 'protocol':
-            #     protocol_object = each.get('protocol')
-            #     if protocol_object:
-            #         for every in protocol_object:
-            #             cmd = 'protocol-object {0}'.format(every)
-            #             self.add_command_to_config_list(cmd, commands)
-            # elif og_object == 'security':
-            #     name = each.get('name')
-            #     tag = each.get('tag')
-            #     if name:
-            #         cmd = 'security-group name {0}'.format(name)
-            #         self.add_command_to_config_list(cmd, commands)
-            #     if tag:
-            #         cmd = 'security-group tag {0}'.format(tag)
-            #         self.add_command_to_config_list(cmd, commands)
-            # elif og_object == 'service':
-            #     service_object = each.get('protocol')
-            #     if service_object:
-            #         for every in service_object:
-            #             cmd = 'service-object {0}'.format(every)
-            #             self.add_command_to_config_list(cmd, commands)
-            # elif og_object == 'user' and not each.get('object'):
-            #     name = each.get('name')
-            #     q(name, each.get('user_group'))
-            #     if name:
-            #         cmd = 'user-group name {0}'.format(name)
-            #         self.add_command_to_config_list(cmd, commands)
-            # if 'group_object' in each:
-            #     description = 'group-object {0}'.format(each['group_object'])
-            #     self.add_command_to_config_list(description, commands)
+            description = temp.get('description')
+            if description:
+                cmd = 'description {0}'.format(description)
+                self.add_command_to_config_list(cmd, commands)
+            if og_object == 'icmp-type':
+                icmp_type = temp.get('icmp_type')
+                if icmp_type:
+                    for each in icmp_type:
+                        cmd = 'icmp-object {0}'.format(each)
+                        self.add_command_to_config_list(cmd, commands)
+            elif og_object == 'network':
+                host = temp.get('host')
+                address = temp.get('address')
+                ipv6_address = temp.get('ipv6_address')
+                group_object = temp.get('group_object')
+                if host:
+                    for each in host:
+                        cmd = 'network-object host {0}'.format(each)
+                        self.add_command_to_config_list(cmd, commands)
+                if address:
+                    for each in address:
+                        cmd = 'network-object {0}'.format(each)
+                        self.add_command_to_config_list(cmd, commands)
+                if ipv6_address:
+                    for each in ipv6_address:
+                        cmd = 'network-object {0}'.format(each)
+                        self.add_command_to_config_list(cmd, commands)
+                if group_object:
+                    cmd = 'group-object {0}'.format(group_object)
+                    self.add_command_to_config_list(cmd, commands)
+            elif og_object == 'protocol':
+                protocol = temp.get('protocol')
+                if protocol:
+                    for each in protocol:
+                        cmd = 'protocol-object {0}'.format(each)
+                        self.add_command_to_config_list(cmd, commands)
+            elif og_object == 'security':
+                security_name = temp.get('security_name')
+                if security_name:
+                    name = security_name
+                elif temp.get('name') != want.get('name'):
+                    name = temp.get('name')
+                else:
+                    name = []
+                tag = temp.get('tag')
+                if name:
+                    for each in name:
+                        cmd = 'security-group name {0}'.format(each)
+                        self.add_command_to_config_list(cmd, commands)
+                if tag:
+                    for each in tag:
+                        cmd = 'security-group tag {0}'.format(each)
+                        self.add_command_to_config_list(cmd, commands)
+            elif og_object == 'service':
+                protocol = temp.get('protocol')
+                for each in protocol:
+                    cmd = 'service-object {0}'.format(each)
+                    self.add_command_to_config_list(cmd, commands)
+            elif og_object == 'user':
+                user = temp.get('user')
+                user_group = temp.get('user_group')
+                if user:
+                    for each in user:
+                        cmd = 'user {0}'.format(each)
+                        self.add_command_to_config_list(cmd, commands)
+                if user_group:
+                    for each in user_group:
+                        cmd = 'user-group {0}'.format(each)
+                        self.add_command_to_config_list(cmd, commands)
 
         return commands
 
@@ -356,7 +431,24 @@ class OGs(ConfigBase):
         if cmd not in commands:
             commands.append('no %s' % cmd)
 
-    def _clear_config(self, want, have):
+    def common_config_compute(self, want, have, object, commands, state, key=False):
+        # Common code used to delete objects from available object-groups
+        cmd = ''
+        valid_state = False
+        for k, v in iteritems(want):
+            if have.get(k):
+                if all(elem in have.get(k) for elem in want[k]):
+                    for each in want[k]:
+                        if key and k != 'address' and k != 'ipv6_address':
+                            cmd = '{0} {1} {2}'.format(object, k, each)
+                        else:
+                            cmd = '{0} {1}'.format(object, each)
+                        self.remove_command_from_config_list(cmd, commands)
+                elif state == 'replaced' or state == 'overridden':
+                    valid_state = True
+        return cmd, valid_state
+
+    def _clear_config(self, want, have, state=''):
         """ Function that deletes the acl config based on the want and have config
         :param acl: acl config
         :param config: config
@@ -366,112 +458,77 @@ class OGs(ConfigBase):
         commands = []
 
         if want:
-            object = want.get('object')
-            if object == 'icmp_type':
-                object = 'icmp-type'
+            object = want.get('object_type')
             name = want.get('name')
         else:
-            object = have.get('object')
-            if object == 'icmp_type':
-                object = 'icmp-type'
+            object = have.get('object_type')
             name = have.get('name')
         top_cmd = "object-group {0} {1}".format(object, name)
 
+        valid_state = False
         granular_delete = False
+        cmd = ''
+        w_description = want.get('description')
+        h_description = have.get('description')
+        if w_description and h_description and (w_description != h_description or state == 'deleted'):
+            cmd = 'description {0}'.format(w_description)
+            commands.insert(0, top_cmd)
+            self.remove_command_from_config_list(cmd, commands)
+            granular_delete = True
+
         if want.get('icmp_object') and have.get('icmp_object'):
             w_icmp_object = want.get('icmp_object')
             h_icmp_object = have.get('icmp_object')
-
-            if h_icmp_object.get('icmp_type'):
-                granular_delete = True
-                for each in h_icmp_object.get('icmp_type'):
-                    for every in w_icmp_object.get('icmp_type'):
-                        if every == each:
-                            cmd = 'icmp-object {0}'.format(every)
-                            self.remove_command_from_config_list(cmd, commands)
+            if w_icmp_object != h_icmp_object:
+                cmd, valid_state = self.common_config_compute(w_icmp_object, h_icmp_object, 'icmp-object', commands, state, False)
+            granular_delete = True
         elif want.get('network_object') and have.get('network_object'):
             w_network_object = want.get('network_object')
             h_network_object = have.get('network_object')
-
-            if h_network_object:
-                granular_delete = True
-                for each in h_network_object:
-                    for every in w_network_object:
-                        if every.get('host') and every.get('host') == each.get('host') and \
-                                every.get('ip_address') == each.get('ip_address'):
-                            cmd = "network-object host {0}".format(every.get('ip_address'))
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
-                        if every.get('ip_address') and every.get('ip_address') == each.get('ip_address') and \
-                                every.get('ip_mask') == each.get('ip_mask'):
-                            cmd = "network-object {0} {1}".format(every.get('ip_address'), every.get('ip_mask'))
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
-                        if every.get('ipv6_address') == each.get('ipv6_address') and every.get('ipv6_address'):
-                            cmd = "network-object {0}".format(every.get('ipv6_address'))
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
-                        if every.get('object') and every.get('object') == each.get('object'):
-                            cmd = "network-object object {0}".format(every.get('object'))
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
+            if w_network_object != h_network_object:
+                cmd, valid_state = self.common_config_compute(w_network_object, h_network_object, 'network-object', commands, state, True)
+            granular_delete = True
         elif want.get('protocol_object') and have.get('protocol_object'):
             w_protocol_object = want.get('protocol_object')
             h_protocol_object = have.get('protocol_object')
-
-            if h_protocol_object.get('protocol'):
-                granular_delete = True
-                for each in h_protocol_object.get('protocol'):
-                    for every in w_protocol_object.get('protocol'):
-                        if every == each:
-                            cmd = 'protocol-object {0}'.format(every)
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
+            if w_protocol_object != h_protocol_object:
+                cmd, valid_state = self.common_config_compute(w_protocol_object, h_protocol_object, 'protocol-object', commands, state, False)
+            granular_delete = True
         elif want.get('security_group') and have.get('security_group'):
             w_security_group = want.get('security_group')
             h_security_group = have.get('security_group')
-
-            if h_security_group.get('name'):
-                granular_delete = True
-                for each in h_security_group:
-                    for every in w_security_group:
-                        if every.get('name') == each.get('name'):
-                            cmd = "security-group name {0}".format(every.get('name'))
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
-                        if every.get('tag') == each.get('tag'):
-                            cmd = "security-group tag {0}".format(every.get('tag'))
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
+            if w_security_group != h_security_group:
+                cmd, valid_state = self.common_config_compute(w_security_group, h_security_group, 'security-group', commands, state, True)
+            granular_delete = True
         elif want.get('service_object') and have.get('service_object'):
             w_service_object = want.get('service_object')
             h_service_object = have.get('service_object')
+            if w_service_object != h_service_object:
+                cmd, valid_state = self.common_config_compute(w_service_object, h_service_object, 'service-object', commands, state, False)
+            granular_delete = True
+        elif want.get('user_object') and have.get('user_object'):
+            w_user_object = want.get('user_object')
+            h_user_object = have.get('user_object')
+            if w_user_object != h_user_object:
+                for k, v in iteritems(w_user_object):
+                    if h_user_object.get(k):
+                        if all(elem in h_user_object.get(k) for elem in w_user_object[k]):
+                            for each in w_user_object[k]:
+                                cmd = '{0} {1}'.format(k, each)
+                                self.remove_command_from_config_list(cmd, commands)
+                        elif state == 'replaced' or state == 'overridden':
+                            valid_state = True
+            granular_delete = True
 
-            if h_service_object.get('protocol'):
-                granular_delete = True
-                for each in h_service_object.get('protocol'):
-                    for every in w_service_object.get('protocol'):
-                        if every == each:
-                            cmd = 'service-object {0}'.format(every)
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
-        elif want.get('user_group') and have.get('user_group'):
-            w_user_group = want.get('user_group')
-            h_user_group = have.get('user_group')
-            if h_user_group.get('name') and w_user_group.get('name') == h_user_group.get('name'):
-                granular_delete = True
-                for each in h_user_group.get('name'):
-                    for every in w_user_group.get('name'):
-                        if every == each:
-                            cmd = 'user-group {0}'.format(every)
-                            self.remove_command_from_config_list(cmd, commands)
-                            break
-
-        if granular_delete:
+        if cmd:
             if len(commands) > 0:
                 commands.insert(0, top_cmd)
-        elif want or have and not granular_delete:
+        elif (want or have) and not granular_delete:
+            commands = []
             self.remove_command_from_config_list(top_cmd, commands)
-
+        elif valid_state and (state == 'replaced' or state == 'overridden'):
+            if commands:
+                commands = []
+            self.remove_command_from_config_list(top_cmd, commands)
 
         return commands

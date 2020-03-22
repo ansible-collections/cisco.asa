@@ -23,7 +23,7 @@
 #############################################
 
 """
-The module file for ios_acl_interfaces
+The module file for asa_ogs
 """
 
 from __future__ import absolute_import, division, print_function
@@ -177,313 +177,419 @@ EXAMPLES = """
 # ciscoasa# sh running-config object-group
 # object-group network test_og_network
 #  description test network og
-#  network-object host 192.168.1.1
-# object-group service test_og_service
+#  network-object host 192.0.3.1
 
-- name: Merge provided OG configuration with device configuration
-  asa_ogs:
+- name: "Merge module attributes of given object-group"
+  cisco.asa.asa_ogs:
     config:
+      - name: test_og_network
+        object_type: network
+        description: test_og_network
+        network_object:
+          host:
+            - 192.0.2.1
+            - 192.0.2.2
+          address:
+            - 192.0.2.0 255.255.255.0
+            - 198.51.100.0 255.255.255.0
       - name: test_network_og
-        object: network
+        object_type: network
         description: test network og
         network_object:
-          - host: true
-            ip_address: 192.0.2.1
-          - ip_address: 198.51.100.0
-            ip_mask: 255.255.255.0
+          host:
+            - 192.0.3.1
+            - 192.0.3.2
+          ipv6_address:
+            - 2001:db8:0:3::/64
         group_object: test_og_network
-      - name: test_og_service
-        object: service
-        description: test service og
-        service_object:
-          - protocol: ipinip
-          - protocol: tcp-udp
+      - name: test_og_security
+        object_type: security
+        description: test_security
+        security_group:
+          name:
+            - test_1
+            - test_2
+          tag:
+            - 10
+            - 20
+      - name: test_og_user
+        object_type: user
+        description: test_user
+        user_object:
+          user:
+            - new_user_1
+            - new_user_2
     state: merged
 
 # Commands fired:
 # ---------------
 #
+# object-group network test_og_network
+# description test_og_network
+# network-object host 192.0.2.1
+# network-object host 192.0.2.2
+# network-object 192.0.2.0 255.255.255.0
+# network-object 198.51.100.0 255.255.255.0
 # object-group network test_network_og
 # description test network og
-# network-object host 192.0.2.1
-# network-object 198.51.100.0 255.255.255.0
+# network-object host 192.0.3.1
+# network-object host 192.0.3.2
+# network-object 2001:db8:0:3::/64
 # group-object test_og_network
-# object-group service test_og_service
-# description test service og
-# service-object ipinip
-# service-object tcp-udp
+# object-group security test_og_security
+# description test_security
+# security-group name test_1
+# security-group name test_2
+# security-group tag 10
+# security-group tag 20
+# object-group user test_og_user
+# user new_user_1
+# user new_user_2
 
 # After state:
 # ------------
 #
 # ciscoasa# sh running-config object-group
 # object-group network test_og_network
-#  description test network og
-#  network-object host 192.168.1.1
+#  description test_og_network
+#  network-object host 192.0.2.1
+#  network-object host 192.0.2.2
+#  network-object 192.0.2.0 255.255.255.0
+#  network-object 198.51.100.0 255.255.255.0
+#  network-object host 192.0.3.1
 # object-group network test_network_og
 #  description test network og
-#  network-object 192.0.2.0 255.255.255.0
-#  network-object 192.51.110.0 255.255.255.0
+#  network-object host 192.0.3.1
+#  network-object host 192.0.3.2
+#  network-object 2001:db8:0:3::/64
 #  group-object test_og_network
-# object-group service test_og_service
-#  description test service og
-#  service-object ipinip
-#  service-object tcp-udp
+# object-group security test_og_security
+#  security-group name test_1
+#  security-group name test_2
+#  security-group tag 10
+#  security-group tag 20
+# object-group user test_og_user
+#  user LOCAL\\new_user_1
+#  user LOCAL\\new_user_2
 
 # Using Replaced
 
 # Before state:
 # -------------
 #
-# vios#sh running-config | include interface|ip access-group|ipv6 traffic-filter
-# interface Loopback888
-# interface GigabitEthernet0/0
-# interface GigabitEthernet0/1
-#  ip access-group 110 in
-#  ip access-group 123 out
-#  ipv6 traffic-filter test_v6 out
-#  ipv6 traffic-filter temp_v6 in
-# interface GigabitEthernet0/2
-#  ip access-group 110 in
-#  ip access-group 123 out
+# ciscoasa# sh running-config object-group
+# object-group network test_og_network
+#  description test_og_network
+#  network-object host 192.0.2.1
+#  network-object host 192.0.2.2
+#  network-object 192.0.2.0 255.255.255.0
+#  network-object 198.51.100.0 255.255.255.0
+# object-group network test_network_og
+#  description test network og
+#  network-object host 192.0.3.1
+#  network-object host 192.0.3.2
+#  network-object 2001:db8:0:3::/64
+#  group-object test_og_network
+# object-group security test_og_security
+#  security-group name test_1
+#  security-group name test_2
+#  security-group tag 10
+#  security-group tag 20
+# object-group user test_og_user
+#  user LOCAL\\new_user_1
+#  user LOCAL\\new_user_2
 
-- name: "Replace module attributes of given access-groups"
-  ios_acl_interfaces:
+- name: "Replace module attributes of given object-group"
+  cisco.asa.asa_ogs:
     config:
-      - name: GigabitEthernet0/1
-        access_groups:
-          - afi: ipv4
-            acls:
-              - name: 100
-                direction: out
-              - name: 110
-                direction: in
+      - name: test_og_network
+        object_type: network
+        description: test_og_network_replace
+        network_object:
+          host:
+            - 192.0.3.1
+          address:
+            - 192.0.3.0 255.255.255.0
+      - name: test_og_protocol
+        object_type: protocol
+        description: test_og_protocol
+        protocol_object:
+          protocol:
+            - tcp
+            - udp
     state: replaced
 
 # Commands Fired:
 # ---------------
 #
-# interface GigabitEthernet0/1
-# no ip access-group 123 out
-# no ipv6 traffic-filter temp_v6 in
-# no ipv6 traffic-filter test_v6 out
-# ip access-group 100 out
+# no object-group network test_og_network
+# object-group network test_og_network
+# description test_og_network_replace
+# network-object host 192.0.3.1
+# network-object 192.0.3.0 255.255.255.0
+# object-group protocol test_og_protocol
+# description test_og_protocol
+# protocol-object tcp
+# protocol-object udp
 
 # After state:
 # -------------
 #
-# vios#sh running-config | include interface|ip access-group|ipv6 traffic-filter
-# interface Loopback888
-# interface GigabitEthernet0/0
-# interface GigabitEthernet0/1
-#  ip access-group 100 out
-#  ip access-group 110 in
-# interface GigabitEthernet0/2
-#  ip access-group 110 in
-#  ip access-group 123 out
+# ciscoasa# sh running-config object-group
+# object-group network test_og_network
+#  description test_og_network_replace
+#  network-object host 192.0.3.1
+#  network-object 192.0.3.0 255.255.255.0
+# object-group network test_network_og
+#  description test network og
+#  network-object host 192.0.3.1
+#  network-object host 192.0.3.2
+#  network-object 2001:db8:0:3::/64
+#  group-object test_og_network
+# object-group security test_og_security
+#  security-group name test_1
+#  security-group name test_2
+#  security-group tag 10
+#  security-group tag 20
+# object-group user test_og_user
+#  user LOCAL\\new_user_1
+#  user LOCAL\\new_user_2
+# object-group protocol test_og_protocol
+#  protocol-object tcp
+#  protocol-object udp
 
 # Using Overridden
 
 # Before state:
 # -------------
 #
-# vios#sh running-config | include interface|ip access-group|ipv6 traffic-filter
-# interface Loopback888
-# interface GigabitEthernet0/0
-# interface GigabitEthernet0/1
-#  ip access-group 110 in
-#  ip access-group 123 out
-#  ipv6 traffic-filter test_v6 out
-#  ipv6 traffic-filter temp_v6 in
-# interface GigabitEthernet0/2
-#  ip access-group 110 in
-#  ip access-group 123 out
+# ciscoasa# sh running-config object-group
+# object-group network test_og_network
+#  description test_og_network
+#  network-object host 192.0.2.1
+#  network-object host 192.0.2.2
+#  network-object 192.0.2.0 255.255.255.0
+#  network-object 198.51.100.0 255.255.255.0
+# object-group network test_network_og
+#  description test network og
+#  network-object host 192.0.3.1
+#  network-object host 192.0.3.2
+#  network-object 2001:db8:0:3::/64
+#  group-object test_og_network
+# object-group security test_og_security
+#  security-group name test_1
+#  security-group name test_2
+#  security-group tag 10
+#  security-group tag 20
+# object-group user test_og_user
+#  user LOCAL\\new_user_1
+#  user LOCAL\\new_user_2
 
-- name: "Overridden module attributes of given access-groups"
-  ios_acl_interfaces:
+- name: "Overridden module attributes of given object-group"
+  cisco.asa.asa_ogs:
     config:
-      - name: GigabitEthernet0/1
-        access_groups:
-          - afi: ipv4
-            acls:
-              - name: 100
-                direction: out
-              - name: 110
-                direction: in
+      - name: test_og_network
+        object_type: network
+        description: test_og_network_override
+        network_object:
+          host:
+            - 192.0.3.1
+          address:
+            - 192.0.3.0 255.255.255.0
+      - name: test_og_protocol
+        object_type: protocol
+        description: test_og_protocol
+        protocol_object:
+          protocol:
+            - tcp
+            - udp
     state: overridden
 
 # Commands Fired:
 # ---------------
 #
-# interface GigabitEthernet0/1
-# no ip access-group 123 out
-# no ipv6 traffic-filter test_v6 out
-# no ipv6 traffic-filter temp_v6 in
-# ip access-group 100 out
-# interface GigabitEthernet0/2
-# no ip access-group 110 in
-# no ip access-group 123 out
+# no object-group network test_og_network
+# object-group network test_og_network
+# description test_og_network_override
+# network-object host 192.0.3.1
+# network-object 192.0.3.0 255.255.255.0
+# no object-group network test_network_og
+# no object-group security test_og_security
+# no object-group user test_og_user
+# object-group protocol test_og_protocol
+# description test_og_protocol
+# protocol-object tcp
+# protocol-object udp
 
 # After state:
 # -------------
 #
-# vios#sh running-config | include interface|ip access-group|ipv6 traffic-filter
-# interface Loopback888
-# interface GigabitEthernet0/0
-# interface GigabitEthernet0/1
-#  ip access-group 100 out
-#  ip access-group 110 in
-# interface GigabitEthernet0/2
+# ciscoasa# sh running-config object-group
+# object-group network test_og_network
+#  description test_og_network_override
+#  network-object host 192.0.3.1
+#  network-object 192.0.3.0 255.255.255.0
+# object-group protocol test_og_protocol
+#  protocol-object tcp
+#  protocol-object udp
 
 # Using Deleted
 
 # Before state:
 # -------------
 #
-# vios#sh running-config | include interface|ip access-group|ipv6 traffic-filter
-# interface Loopback888
-# interface GigabitEthernet0/0
-# interface GigabitEthernet0/1
-#  ip access-group 110 in
-#  ip access-group 123 out
-#  ipv6 traffic-filter test_v6 out
-#  ipv6 traffic-filter temp_v6 in
-# interface GigabitEthernet0/2
-#  ip access-group 110 in
-#  ip access-group 123 out
+# ciscoasa# sh running-config object-group
+# object-group network test_og_network
+#  description test_og_network
+#  network-object host 192.0.2.1
+#  network-object host 192.0.2.2
+#  network-object 192.0.2.0 255.255.255.0
+#  network-object 198.51.100.0 255.255.255.0
+# object-group network test_network_og
+#  description test network og
+#  network-object host 192.0.3.1
+#  network-object host 192.0.3.2
+#  network-object 2001:db8:0:3::/64
+#  group-object test_og_network
+# object-group security test_og_security
+#  security-group name test_1
+#  security-group name test_2
+#  security-group tag 10
+#  security-group tag 20
+# object-group user test_og_user
+#  user LOCAL\\new_user_1
+#  user LOCAL\\new_user_2
 
-- name: "Delete module attributes of given Interface"
-  ios_acl_interfaces:
+- name: "Delete given module attributes"
+  cisco.asa.asa_ogs:
     config:
-      - name: GigabitEthernet0/1
+      - name: test_og_network
+        object_type: network
+        network_object:
+          host:
+            - 192.0.2.2
+          address:
+             - 198.51.100.0 255.255.255.0
+      - name: test_network_og
+        object_type: network
+        description: test network og
+        network_object:
+           host:
+             - 192.0.3.1
+      - name: test_og_security
+        object_type: security
+        security_group:
+          name:
+            - test_1
+      - name: test_og_user
+        object_type: user
     state: deleted
 
 # Commands Fired:
 # ---------------
 #
-# interface GigabitEthernet0/1
-# no ip access-group 110 in
-# no ip access-group 123 out
-# no ipv6 traffic-filter test_v6 out
-# no ipv6 traffic-filter temp_v6 in
+# object-group network test_og_network
+# no network-object host 192.0.2.2
+# no network-object 198.51.100.0 255.255.255.0
+# object-group network test_network_og
+# no description test network og
+# no network-object host 192.0.3.1
+# object-group security test_og_security
+# no security-group name test_1
+# no object-group user test_og_user
 
 # After state:
 # -------------
 #
-# vios#sh running-config | include interface|ip access-group|ipv6 traffic-filter
-# interface Loopback888
-# interface GigabitEthernet0/0
-# interface GigabitEthernet0/1
-# interface GigabitEthernet0/2
-#  ip access-group 110 in
-#  ip access-group 123 out
-
-# Before state:
-# -------------
-#
-# vios#sh running-config | include interface|ip access-group|ipv6 traffic-filter
-# interface Loopback888
-# interface GigabitEthernet0/0
-# interface GigabitEthernet0/1
-#  ip access-group 110 in
-#  ip access-group 123 out
-#  ipv6 traffic-filter test_v6 out
-#  ipv6 traffic-filter temp_v6 in
-# interface GigabitEthernet0/2
-#  ip access-group 110 in
-#  ip access-group 123 out
-
-- name: "Delete module attributes of given Interface based on AFI"
-  ios_acl_interfaces:
-    config:
-      - name: GigabitEthernet0/1
-        access_groups:
-          - afi: ipv4
-    state: deleted
-
-# Commands Fired:
-# ---------------
-#
-# interface GigabitEthernet0/1
-# no ip access-group 110 in
-# no ip access-group 123 out
-
-# After state:
-# -------------
-#
-# vios#sh running-config | include interface|ip access-group|ipv6 traffic-filter
-# interface Loopback888
-# interface GigabitEthernet0/0
-# interface GigabitEthernet0/1
-#  ipv6 traffic-filter test_v6 out
-#  ipv6 traffic-filter temp_v6 in
-# interface GigabitEthernet0/2
-#  ip access-group 110 in
-#  ip access-group 123 out
+# ciscoasa# sh running-config object-group
+# object-group network test_og_network
+#  description test_og_network
+#  network-object host 192.0.2.1
+#  network-object 192.0.2.0 255.255.255.0
+# object-group network test_network_og
+#  network-object host 192.0.3.2
+#  network-object 2001:db8:0:3::/64
+#  group-object test_og_network
+# object-group security test_og_security
+#  security-group name test_2
+#  security-group tag 10
+#  security-group tag 20
 
 # Using DELETED without any config passed
-#"(NOTE: This will delete all of configured resource module attributes from each configured interface)"
+#"(NOTE: This will delete all of configured resource module attributes)"
 
 # Before state:
 # -------------
 #
-# vios#sh running-config | include interface|ip access-group|ipv6 traffic-filter
-# interface Loopback888
-# interface GigabitEthernet0/0
-# interface GigabitEthernet0/1
-#  ip access-group 110 in
-#  ip access-group 123 out
-#  ipv6 traffic-filter test_v6 out
-#  ipv6 traffic-filter temp_v6 in
-# interface GigabitEthernet0/2
-#  ip access-group 110 in
-#  ip access-group 123 out
+# ciscoasa# sh running-config object-group
+# object-group network test_og_network
+#  description test_og_network
+#  network-object host 192.0.2.1
+#  network-object host 192.0.2.2
+#  network-object 192.0.2.0 255.255.255.0
+#  network-object 198.51.100.0 255.255.255.0
+# object-group network test_network_og
+#  description test network og
+#  network-object host 192.0.3.1
+#  network-object host 192.0.3.2
+#  network-object 2001:db8:0:3::/64
+#  group-object test_og_network
+# object-group security test_og_security
+#  security-group name test_1
+#  security-group name test_2
+#  security-group tag 10
+#  security-group tag 20
+# object-group user test_og_user
+#  user LOCAL\\new_user_1
+#  user LOCAL\\new_user_2
 
-- name: "Delete module attributes of given access-groups from ALL Interfaces"
-  ios_acl_interfaces:
+- name: "Delete ALL configured module attributes"
+  cisco.asa.asa_ogs:
     config:
     state: deleted
 
 # Commands Fired:
 # ---------------
 #
-# interface GigabitEthernet0/1
-# no ip access-group 110 in
-# no ip access-group 123 out
-# no ipv6 traffic-filter test_v6 out
-# no ipv6 traffic-filter temp_v6 in
-# interface GigabitEthernet0/2
-# no ip access-group 110 out
-# no ip access-group 123 out
+# no object-group network test_og_network
+# no object-group network test_network_og
+# no object-group security test_og_security
+# no object-group user test_og_user
 
 # After state:
 # -------------
 #
-# vios#sh running-config | include interface|ip access-group|ipv6 traffic-filter
-# interface Loopback888
-# interface GigabitEthernet0/0
-# interface GigabitEthernet0/1
-# interface GigabitEthernet0/2
+# ciscoasa# sh running-config object-group
 
 # Using Gathered
 
 # Before state:
 # -------------
 #
-# vios#sh running-config | include interface|ip access-group|ipv6 traffic-filter
-# interface Loopback888
-# interface GigabitEthernet0/0
-# interface GigabitEthernet0/1
-#  ip access-group 110 in
-#  ip access-group 123 out
-#  ipv6 traffic-filter test_v6 out
-#  ipv6 traffic-filter temp_v6 in
-# interface GigabitEthernet0/2
-#  ip access-group 110 in
-#  ip access-group 123 out
+# ciscoasa# sh running-config object-group
+# object-group network test_og_network
+#  description test_og_network
+#  network-object host 192.0.2.1
+#  network-object host 192.0.2.2
+#  network-object 192.0.2.0 255.255.255.0
+#  network-object 198.51.100.0 255.255.255.0
+# object-group network test_network_og
+#  description test network og
+#  network-object host 192.0.3.1
+#  network-object host 192.0.3.2
+#  network-object 2001:db8:0:3::/64
+#  group-object test_og_network
+# object-group security test_og_security
+#  security-group name test_1
+#  security-group name test_2
+#  security-group tag 10
+#  security-group tag 20
+# object-group user test_og_user
+#  user LOCAL\\new_user_1
+#  user LOCAL\\new_user_2
 
-- name: Gather listed acl interfaces with provided configurations
-  ios_acl_interfaces:
+- name: Gather listed OGs with provided configurations
+  cisco.asa.asa_ogs:
     config:
     state: gathered
 
@@ -491,150 +597,193 @@ EXAMPLES = """
 # ------------------------
 #
 # "gathered": [
-#         {
-#             "name": "Loopback888"
-#         },
-#         {
-#             "name": "GigabitEthernet0/0"
-#         },
-#         {
-#             "access_groups": [
-#                 {
-#                     "acls": [
-#                         {
-#                             "direction": "in",
-#                             "name": "110"
-#                         },
-#                         {
-#                             "direction": "out",
-#                             "name": "123"
-#                         }
-#                     ],
-#                     "afi": "ipv4"
-#                 },
-#                 {
-#                     "acls": [
-#                         {
-#                             "direction": "in",
-#                             "name": "temp_v6"
-#                         },
-#                         {
-#                             "direction": "out",
-#                             "name": "test_v6"
-#                         }
-#                     ],
-#                     "afi": "ipv6"
-#                 }
-#             ],
-#             "name": "GigabitEthernet0/1"
-#         },
-#         {
-#             "access_groups": [
-#                 {
-#                     "acls": [
-#                         {
-#                             "direction": "in",
-#                             "name": "100"
-#                         },
-#                         {
-#                             "direction": "out",
-#                             "name": "123"
-#                         }
-#                     ],
-#                     "afi": "ipv4"
-#                 }
-#             ],
-#             "name": "GigabitEthernet0/2"
-#         }
-#     ]
+#        {
+#            "description": "test_og_network",
+#            "name": "test_og_network",
+#            "network_object": {
+#                "address": [
+#                    "192.0.2.0 255.255.255.0",
+#                    "198.51.100.0 255.255.255.0"
+#                ],
+#                "host": [
+#                    "192.0.2.1",
+#                    "192.0.2.2"
+#                ]
+#            },
+#            "object_type": "network"
+#        },
+#        {
+#            "description": "test network og",
+#            "group_object": "test_og_network",
+#            "name": "test_network_og",
+#            "network_object": {
+#                "host": [
+#                    "192.0.3.1",
+#                    "192.0.3.2"
+#                ],
+#                "ipv6_address": [
+#                    "2001:db8:0:3::/64"
+#                ]
+#            },
+#            "object_type": "network"
+#        },
+#        {
+#            "name": "test_og_security",
+#            "object_type": "security",
+#            "security_group": {
+#                "name": [
+#                    "test_1",
+#                    "test_2"
+#                ],
+#                "tag": [
+#                    "10",
+#                    "20"
+#                ]
+#            }
+#        },
+#        {
+#            "name": "test_og_user",
+#            "object_type": "user",
+#            "user_object": {
+#                "user": [
+#                    "new_user_1",
+#                    "new_user_2"
+#                ]
+#            }
+#        }
+#    ]
 
 # After state:
 # ------------
 #
-# vios#sh running-config | include interface|ip access-group|ipv6 traffic-filter
-# interface Loopback888
-# interface GigabitEthernet0/0
-# interface GigabitEthernet0/1
-#  ip access-group 110 in
-#  ip access-group 123 out
-#  ipv6 traffic-filter test_v6 out
-#  ipv6 traffic-filter temp_v6 in
-# interface GigabitEthernet0/2
-#  ip access-group 110 in
-#  ip access-group 123 out
+# ciscoasa# sh running-config object-group
+# object-group network test_og_network
+#  description test_og_network
+#  network-object host 192.0.2.1
+#  network-object host 192.0.2.2
+#  network-object 192.0.2.0 255.255.255.0
+#  network-object 198.51.100.0 255.255.255.0
+# object-group network test_network_og
+#  description test network og
+#  network-object host 192.0.3.1
+#  network-object host 192.0.3.2
+#  network-object 2001:db8:0:3::/64
+#  group-object test_og_network
+# object-group security test_og_security
+#  security-group name test_1
+#  security-group name test_2
+#  security-group tag 10
+#  security-group tag 20
+# object-group user test_og_user
+#  user LOCAL\\new_user_1
+#  user LOCAL\\new_user_2
 
 # Using Rendered
 
 - name: Render the commands for provided  configuration
-  ios_acl_interfaces:
+  cisco.asa.asa_ogs:
     config:
-      - name: GigabitEthernet0/1
-        access_groups:
-          - afi: ipv4
-            acls:
-              - name: 110
-                direction: in
-              - name: 123
-                direction: out
-          - afi: ipv6
-            acls:
-              - name: test_v6
-                direction: out
-              - name: temp_v6
-                direction: in
+      - name: test_og_network
+        object_type: network
+        description: test_og_network
+        network_object:
+          host:
+            - 192.0.2.1
+            - 192.0.2.2
+          address:
+            - 192.0.2.0 255.255.255.0
+            - 198.51.100.0 255.255.255.0
+      - name: test_network_og
+        object_type: network
+        description: test network og
+        network_object:
+          host:
+            - 192.0.3.1
+            - 192.0.3.2
+          ipv6_address:
+            - 2001:db8:0:3::/64
+        group_object: test_og_network
+      - name: test_og_service
+        object_type: service
+        description: test_service
+        service_object:
+          protocol:
+            - ipinip
+            - tcp-udp
     state: rendered
 
 # Module Execution Result:
 # ------------------------
 #
 # "rendered": [
-#         "interface GigabitEthernet0/1",
-#         "ip access-group 110 in",
-#         "ip access-group 123 out",
-#         "ipv6 traffic-filter temp_v6 in",
-#         "ipv6 traffic-filter test_v6 out"
+#         "object-group network test_og_network",
+#         "description test_og_network",
+#         "network-object host 192.0.2.1",
+#         "network-object host 192.0.2.2",
+#         "network-object 192.0.2.0 255.255.255.0",
+#         "network-object 198.51.100.0 255.255.255.0",
+#         "object-group network test_network_og",
+#         "description test network og",
+#         "network-object host 192.0.3.1",
+#         "network-object host 192.0.3.2",
+#         "network-object 2001:db8:0:3::/64",
+#         "group-object test_og_network",
+#         "object-group service test_og_service",
+#         "service-object ipinip",
+#         "service-object tcp-udp"
 #     ]
 
 # Using Parsed
 
 - name: Parse the commands for provided configuration
-  ios_acl_interfaces:
+  cisco.asa.asa_ogs:
     running_config:
-      "interface GigabitEthernet0/1
-       ip access-group 110 in
-       ip access-group 123 out
-       ipv6 traffic-filter temp_v6 in
-       ipv6 traffic-filter test_v6 out"
+      "object-group network test_og_network\ndescription test_og_network\nnetwork-object host 192.0.2.1
+      \nnetwork-object host 192.0.2.2\nnetwork-object 192.0.2.0 255.255.255.0
+      \nobject-group network test_network_og\nnetwork-object 2001:db8:0:3::/64
+      \ngroup-object test_og_network\nobject-group service test_og_service
+      \nservice-object ipinip\nservice-object tcp-udp"
     state: parsed
 
 # Module Execution Result:
 # ------------------------
 #
 # "parsed": [
-#         {
-#             "access_groups": [
-#                 {
-#                     "acls": [
-#                         {
-#                             "direction": "in",
-#                             "name": "110"
-#                         }
-#                     ],
-#                     "afi": "ipv4"
-#                 },
-#                 {
-#                     "acls": [
-#                         {
-#                             "direction": "in",
-#                             "name": "temp_v6"
-#                         }
-#                     ],
-#                     "afi": "ipv6"
-#                 }
-#             ],
-#             "name": "GigabitEthernet0/1"
-#         }
-#     ]
+#        {
+#            "description": "test_og_network",
+#            "name": "test_og_network",
+#            "network_object": {
+#                "address": [
+#                    "192.0.2.0 255.255.255.0 "
+#                ],
+#                "host": [
+#                    "192.0.2.1",
+#                    "192.0.2.2"
+#                ]
+#            },
+#            "object_type": "network"
+#        },
+#        {
+#            "group_object": "test_og_network",
+#            "name": "test_network_og",
+#            "network_object": {
+#                "ipv6_address": [
+#                    "2001:db8:0:3::/64 "
+#                ]
+#            },
+#            "object_type": "network"
+#        },
+#        {
+#            "name": "test_og_service",
+#            "object_type": "service",
+#            "service_object": {
+#                "protocol": [
+#                    "ipinip",
+#                   "tcp-udp"
+#                ]
+#            }
+#        }
+#    ]
 
 """
 
@@ -657,16 +806,20 @@ commands:
 """
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.network.asa.argspec.ogs.ogs import OGsArgs
-# from ansible.module_utils.network.asa.config.ogs.ogs import OGs
-import q
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.ogs.ogs import (
+    OGsArgs,
+)
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.config.ogs.ogs import (
+    OGs,
+)
+
 
 def main():
     """
     Main entry point for module execution
     :returns: the result form module invocation
     """
-    q("start")
+
     required_if = [('state', 'merged', ('config',)),
                    ('state', 'replaced', ('config',)),
                    ('state', 'overridden', ('config',)),
@@ -679,9 +832,8 @@ def main():
                            required_if=required_if,
                            mutually_exclusive=mutually_exclusive,
                            supports_check_mode=True)
-    q("start")
     result = OGs(module).execute_module()
-    q(result)
+
     module.exit_json(**result)
 
 

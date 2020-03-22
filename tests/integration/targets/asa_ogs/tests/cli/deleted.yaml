@@ -9,40 +9,47 @@
 
 - block:
 
-    - name: Delete module attributes of given Interface based on AFI
+    - name: Delete given module attributes
       register: result
-      cisco.asa.asa_ogs:
+      cisco.asa.asa_ogs: &id001
         config:
-
-          - name: GigabitEthernet0/1
-            access_groups:
-
-              - afi: ipv6
+          - name: test_og_network
+            object_type: network
+            network_object:
+              host:
+                - 192.0.2.2
+              address:
+                - 198.51.100.0 255.255.255.0
+          - name: test_network_og
+            object_type: network
+            description: test network og
+            network_object:
+               host:
+                 - 192.0.3.1
+          - name: test_og_security
+            object_type: security
+            security_group:
+              name:
+                - test_1
+          - name: test_og_user
+            object_type: user
         state: deleted
 
     - assert:
         that:
-          - result.commands|length == 3
+          - result.commands|length == 9
           - result.changed == true
-          - "'no ipv6 traffic-filter temp_v6 in' in result.commands"
-          - "'no ipv6 traffic-filter test_v6 out' in result.commands"
+          - result.commands|symmetric_difference(deleted.commands) == []
 
-    - name: Delete module attributes of given Interface based on AFI (IDEMPOTENT)
+    - name: Delete given module attributes (IDEMPOTENT)
       register: result
-      cisco.asa.asa_ogs:
-        config:
-
-          - name: GigabitEthernet0/1
-            access_groups:
-
-              - afi: ipv6
-        state: deleted
+      cisco.asa.asa_ogs: *id001
 
     - assert:
         that:
           - result.changed == false
 
-    - name: Delete module attributes of given Interface.
+    - name: Delete ALL configured module attributes
       register: result
       cisco.asa.asa_ogs:
         config:
@@ -50,12 +57,11 @@
 
     - assert:
         that:
-          - result.commands|length == 3
+          - result.commands|length == 4
           - result.changed == true
-          - "'no ip access-group 110 in' in result.commands"
-          - "'no ip access-group 123 out' in result.commands"
+          - result.commands|symmetric_difference(deleted_all.commands) == []
 
-    - name: Delete module attributes of given Interface (IDEMPOTENT)
+    - name: Delete ALL configured module attributes (IDEMPOTENT)
       register: result
       cisco.asa.asa_ogs:
         config:
