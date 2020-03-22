@@ -1,0 +1,45 @@
+---
+- debug:
+    msg: Start asa_ogs rendered integration tests ansible_connection={{
+      ansible_connection }}
+
+- block:
+
+    - name: Render the commands for provided  configuration
+      become: true
+      register: result
+      cisco.asa.asa_ogs:
+        config:
+          - name: test_og_network
+            object_type: network
+            description: test_og_network
+            network_object:
+              host:
+                - 192.0.2.1
+                - 192.0.2.2
+              address:
+                - 192.0.2.0 255.255.255.0
+                - 198.51.100.0 255.255.255.0
+          - name: test_network_og
+            object_type: network
+            description: test network og
+            network_object:
+              host:
+                - 192.0.3.1
+                - 192.0.3.2
+              ipv6_address:
+                - 2001:db8:0:3::/64
+            group_object: test_og_network
+          - name: test_og_service
+            object_type: service
+            description: test_service
+            service_object:
+              protocol:
+                - ipinip
+                - tcp-udp
+        state: rendered
+
+    - assert:
+        that:
+          - result.changed == false
+          - result.rendered|symmetric_difference(rendered.commands) == []

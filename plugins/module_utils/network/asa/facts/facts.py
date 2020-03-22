@@ -20,6 +20,9 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.f
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.acls.acls import (
     AclsFacts,
 )
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.ogs.ogs import (
+    OGsFacts,
+)
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.legacy.base import (
     Default,
     Hardware,
@@ -29,7 +32,7 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.legacy
 
 FACT_LEGACY_SUBSETS = dict(default=Default, hardware=Hardware, config=Config)
 
-FACT_RESOURCE_SUBSETS = dict(acls=AclsFacts)
+FACT_RESOURCE_SUBSETS = dict(acls=AclsFacts, ogs=OGsFacts)
 
 
 class Facts(FactsBase):
