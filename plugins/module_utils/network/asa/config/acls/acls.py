@@ -165,21 +165,8 @@ class Acls(ConfigBase):
         for config_want in want:
             for acls_want in config_want.get("acls"):
                 if acls_want.get("rename"):
-                    rename = False
-                    for config_have in have:
-                        for acls_have in config_have.get("acls"):
-                            commands.extend(
-                                self.common_rename_config(
-                                    acls_want.get("name"),
-                                    acls_have.get("name"),
-                                    acls_want.get("rename"),
-                                )
-                            )
-                            rename = True
-                        if rename:
-                            break
-                    if rename:
-                        break
+                    commands.extend(self.common_rename_config(acls_want.get("name"), acls_want.get("rename"), have))
+                    rename = True
                 else:
                     for ace_want in acls_want.get("aces"):
                         check = False
@@ -226,12 +213,13 @@ class Acls(ConfigBase):
                             commands.extend(
                                 self._set_config(ace_want, {}, acls_want)
                             )
-        # Arranging the cmds suct that all delete cmds are fired before all set cmds
-        # and reversing the negate/no access-list as otherwise if deleted from top the
-        # next ace takes the line position of deleted ace from top and results in unexpected output
-        commands = [each for each in commands if "no" in each][::-1] + [
-            each for each in commands if "no" not in each
-        ]
+        if not rename:
+            # Arranging the cmds suct that all delete cmds are fired before all set cmds
+            # and reversing the negate/no access-list as otherwise if deleted from top the
+            # next ace takes the line position of deleted ace from top and results in unexpected output
+            commands = [each for each in commands if "no" in each][::-1] + [
+                each for each in commands if "no" not in each
+            ]
 
         return commands
 
@@ -249,25 +237,14 @@ class Acls(ConfigBase):
         temp_want = copy.deepcopy(want)
 
         rename = False
-        for config_have in have:
-            for acls_have in config_have.get("acls"):
+        for config_want in temp_want:
+            for acls_want in config_want.get("acls"):
                 if acls_want.get("rename"):
-                    rename = False
-                    for config_have in have:
-                        for acls_have in config_have.get("acls"):
-                            commands.extend(
-                                self.common_rename_config(
-                                    acls_want.get("name"),
-                                    acls_have.get("name"),
-                                    acls_want.get("rename"),
-                                )
-                            )
-                            rename = True
-                        if rename:
-                            break
-                    if rename:
-                        break
-                else:
+                    commands.extend(self.common_rename_config(acls_want.get("name"), acls_want.get("rename"), have))
+                    rename = True
+        if not rename:
+            for config_have in have:
+                for acls_have in config_have.get("acls"):
                     for ace_have in acls_have.get("aces"):
                         check = False
                         for config_want in temp_want:
@@ -321,22 +298,21 @@ class Acls(ConfigBase):
                             if temp and temp[0] not in commands:
                                 commands.extend(temp)
 
-        if not rename:
-            # For configuring any non-existing want config
-            for config_want in temp_want:
-                for acls_want in config_want.get("acls"):
-                    for ace_want in acls_want.get("aces"):
-                        ace_want = remove_empties(ace_want)
-                        temp = self._set_config(ace_want, {}, acls_want)
-                        if temp and temp[0] not in commands:
-                            commands.extend(temp)
+                # For configuring any non-existing want config
+                for config_want in temp_want:
+                    for acls_want in config_want.get("acls"):
+                        for ace_want in acls_want.get("aces"):
+                            ace_want = remove_empties(ace_want)
+                            temp = self._set_config(ace_want, {}, acls_want)
+                            if temp and temp[0] not in commands:
+                                commands.extend(temp)
 
-        # Arranging the cmds suct that all delete cmds are fired before all set cmds
-        # and reversing the negate/no access-list as otherwise if deleted from top the
-        # next ace takes the line position of deleted ace from top and results in unexpected output
-        commands = [each for each in commands if "no" in each][::-1] + [
-            each for each in commands if "no" not in each
-        ]
+            # Arranging the cmds such that all delete cmds are fired before all set cmds
+            # and reversing the negate/no access-list as otherwise if deleted from top the
+            # next ace takes the line position of deleted ace from top and results in unexpected output
+            commands = [each for each in commands if "no" in each][::-1] + [
+                each for each in commands if "no" not in each
+            ]
 
         return commands
 
@@ -353,21 +329,7 @@ class Acls(ConfigBase):
         for config_want in want:
             for acls_want in config_want.get("acls"):
                 if acls_want.get("rename"):
-                    rename = False
-                    for config_have in have:
-                        for acls_have in config_have.get("acls"):
-                            commands.extend(
-                                self.common_rename_config(
-                                    acls_want.get("name"),
-                                    acls_have.get("name"),
-                                    acls_want.get("rename"),
-                                )
-                            )
-                            rename = True
-                        if rename:
-                            break
-                    if rename:
-                        break
+                    commands.extend(self.common_rename_config(acls_want.get("name"), acls_want.get("rename"), have))
                 else:
                     for ace_want in acls_want.get("aces"):
                         check = False
@@ -462,18 +424,31 @@ class Acls(ConfigBase):
         return commands
 
     def add_config_cmd(self, cmd, commands):
+        # To set the passed config
         if cmd and cmd[0] not in commands:
             commands.extend(cmd)
         return commands
 
-    def common_rename_config(self, want_name, have_name, new_want_name):
+    def common_rename_config(self, want_name, new_want_name, have):
+        """ Fn used to generate the rename cmd if user need to rename the
+            existing ACLs name with new
+        :param want_name: acl want name
+        :param new_want_name: acl want new name that need to be replaced with existing
+        :param have: have config
+        :rtype: A list
+        :returns: cmd generated for renaming
+        """
         cmd = []
-        if want_name == have_name:
-            cmd.append(
-                "access-list {0} rename {1}".format(want_name, new_want_name)
-            )
-        elif new_want_name == have_name:
-            return cmd
+        for config_have in have:
+            for acls_have in config_have.get("acls"):
+                have_name = acls_have.get('name')
+                if want_name == have_name:
+                    cmd.append(
+                        "access-list {0} rename {1}".format(want_name, new_want_name)
+                    )
+                elif new_want_name == have_name:
+                    return cmd
+
         return cmd
 
     def common_condition_check(
