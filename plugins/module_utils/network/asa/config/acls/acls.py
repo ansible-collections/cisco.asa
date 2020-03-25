@@ -164,49 +164,68 @@ class Acls(ConfigBase):
 
         for config_want in want:
             for acls_want in config_want.get("acls"):
-                for ace_want in acls_want.get("aces"):
-                    check = False
+                if acls_want.get("rename"):
+                    rename = False
                     for config_have in have:
                         for acls_have in config_have.get("acls"):
-                            for ace_have in acls_have.get("aces"):
-                                if acls_want.get("name") == acls_have.get(
-                                    "name"
-                                ):
-                                    ace_want = remove_empties(ace_want)
-                                    acls_want = remove_empties(acls_want)
-                                    cmd = self._set_config(
-                                        ace_want, ace_have, acls_want
-                                    )
-                                    if cmd:
-                                        for temp_acls_have in config_have.get(
-                                            "acls"
-                                        ):
+                            commands.extend(
+                                self.common_rename_config(
+                                    acls_want.get("name"),
+                                    acls_have.get("name"),
+                                    acls_want.get("rename"),
+                                )
+                            )
+                            rename = True
+                        if rename:
+                            break
+                    if rename:
+                        break
+                else:
+                    for ace_want in acls_want.get("aces"):
+                        check = False
+                        for config_have in have:
+                            for acls_have in config_have.get("acls"):
+                                for ace_have in acls_have.get("aces"):
+                                    if acls_want.get("name") == acls_have.get(
+                                        "name"
+                                    ):
+                                        ace_want = remove_empties(ace_want)
+                                        acls_want = remove_empties(acls_want)
+                                        cmd = self._set_config(
+                                            ace_want, ace_have, acls_want
+                                        )
+                                        if cmd:
                                             for (
-                                                temp_ace_have
-                                            ) in temp_acls_have.get("aces"):
-                                                if acls_want.get(
-                                                    "name"
-                                                ) == temp_acls_have.get(
-                                                    "name"
+                                                temp_acls_have
+                                            ) in config_have.get("acls"):
+                                                for (
+                                                    temp_ace_have
+                                                ) in temp_acls_have.get(
+                                                    "aces"
                                                 ):
-                                                    commands.extend(
-                                                        self._clear_config(
-                                                            temp_ace_have,
-                                                            temp_acls_have,
+                                                    if acls_want.get(
+                                                        "name"
+                                                    ) == temp_acls_have.get(
+                                                        "name"
+                                                    ):
+                                                        commands.extend(
+                                                            self._clear_config(
+                                                                temp_ace_have,
+                                                                temp_acls_have,
+                                                            )
                                                         )
-                                                    )
-                                        commands.extend(cmd)
-                                    check = True
+                                            commands.extend(cmd)
+                                        check = True
+                                if check:
+                                    break
                             if check:
                                 break
-                        if check:
-                            break
-                    if not check:
-                        # For configuring any non-existing want config
-                        ace_want = remove_empties(ace_want)
-                        commands.extend(
-                            self._set_config(ace_want, {}, acls_want)
-                        )
+                        if not check:
+                            # For configuring any non-existing want config
+                            ace_want = remove_empties(ace_want)
+                            commands.extend(
+                                self._set_config(ace_want, {}, acls_want)
+                            )
         # Arranging the cmds suct that all delete cmds are fired before all set cmds
         # and reversing the negate/no access-list as otherwise if deleted from top the
         # next ace takes the line position of deleted ace from top and results in unexpected output
@@ -229,65 +248,88 @@ class Acls(ConfigBase):
         # performed during override want n have comparison
         temp_want = copy.deepcopy(want)
 
+        rename = False
         for config_have in have:
             for acls_have in config_have.get("acls"):
-                for ace_have in acls_have.get("aces"):
-                    check = False
-                    for config_want in temp_want:
-                        for acls_want in config_want.get("acls"):
-                            for ace_want in acls_want.get("aces"):
-                                if acls_want.get("name") == acls_have.get(
-                                    "name"
-                                ):
-                                    ace_want = remove_empties(ace_want)
-                                    acls_want = remove_empties(acls_want)
-                                    cmd = self._set_config(
-                                        ace_want, ace_have, acls_want
-                                    )
-                                    if cmd:
-                                        for temp_acls_have in config_have.get(
-                                            "acls"
-                                        ):
-                                            for (
-                                                temp_ace_have
-                                            ) in temp_acls_have.get("aces"):
-                                                if acls_want.get(
-                                                    "name"
-                                                ) == temp_acls_have.get(
-                                                    "name"
-                                                ):
-                                                    temp = self._clear_config(
-                                                        temp_ace_have,
-                                                        temp_acls_have,
-                                                    )
-                                                    if (
-                                                        temp
-                                                        and temp[0]
-                                                        not in commands
-                                                    ):
-                                                        commands.extend(temp)
-                                        if cmd and cmd[0] not in commands:
-                                            commands.extend(cmd)
-                                    check = True
-                                    del config_want.get("acls")[0].get("aces")[
-                                        0
-                                    ]
-                        if check:
+                if acls_want.get("rename"):
+                    rename = False
+                    for config_have in have:
+                        for acls_have in config_have.get("acls"):
+                            commands.extend(
+                                self.common_rename_config(
+                                    acls_want.get("name"),
+                                    acls_have.get("name"),
+                                    acls_want.get("rename"),
+                                )
+                            )
+                            rename = True
+                        if rename:
                             break
-                    if not check:
-                        # Delete the config not present in want config
-                        temp = self._clear_config(ace_have, acls_have)
+                    if rename:
+                        break
+                else:
+                    for ace_have in acls_have.get("aces"):
+                        check = False
+                        for config_want in temp_want:
+                            for acls_want in config_want.get("acls"):
+                                for ace_want in acls_want.get("aces"):
+                                    if acls_want.get("name") == acls_have.get(
+                                        "name"
+                                    ):
+                                        ace_want = remove_empties(ace_want)
+                                        acls_want = remove_empties(acls_want)
+                                        cmd = self._set_config(
+                                            ace_want, ace_have, acls_want
+                                        )
+                                        if cmd:
+                                            for (
+                                                temp_acls_have
+                                            ) in config_have.get("acls"):
+                                                for (
+                                                    temp_ace_have
+                                                ) in temp_acls_have.get(
+                                                    "aces"
+                                                ):
+                                                    if acls_want.get(
+                                                        "name"
+                                                    ) == temp_acls_have.get(
+                                                        "name"
+                                                    ):
+                                                        temp = self._clear_config(
+                                                            temp_ace_have,
+                                                            temp_acls_have,
+                                                        )
+                                                        if (
+                                                            temp
+                                                            and temp[0]
+                                                            not in commands
+                                                        ):
+                                                            commands.extend(
+                                                                temp
+                                                            )
+                                            if cmd and cmd[0] not in commands:
+                                                commands.extend(cmd)
+                                        check = True
+                                        del config_want.get("acls")[0].get(
+                                            "aces"
+                                        )[0]
+                            if check:
+                                break
+                        if not check:
+                            # Delete the config not present in want config
+                            temp = self._clear_config(ace_have, acls_have)
+                            if temp and temp[0] not in commands:
+                                commands.extend(temp)
+
+        if not rename:
+            # For configuring any non-existing want config
+            for config_want in temp_want:
+                for acls_want in config_want.get("acls"):
+                    for ace_want in acls_want.get("aces"):
+                        ace_want = remove_empties(ace_want)
+                        temp = self._set_config(ace_want, {}, acls_want)
                         if temp and temp[0] not in commands:
                             commands.extend(temp)
-
-        # For configuring any non-existing want config
-        for config_want in temp_want:
-            for acls_want in config_want.get("acls"):
-                for ace_want in acls_want.get("aces"):
-                    ace_want = remove_empties(ace_want)
-                    temp = self._set_config(ace_want, {}, acls_want)
-                    if temp and temp[0] not in commands:
-                        commands.extend(temp)
 
         # Arranging the cmds suct that all delete cmds are fired before all set cmds
         # and reversing the negate/no access-list as otherwise if deleted from top the
@@ -310,54 +352,71 @@ class Acls(ConfigBase):
 
         for config_want in want:
             for acls_want in config_want.get("acls"):
-                for ace_want in acls_want.get("aces"):
-                    check = False
+                if acls_want.get("rename"):
+                    rename = False
                     for config_have in have:
                         for acls_have in config_have.get("acls"):
-                            for ace_have in acls_have.get("aces"):
-                                if acls_want.get("name") == acls_have.get(
-                                    "name"
-                                ) and ace_want.get("line") == ace_have.get(
-                                    "line"
-                                ):
-                                    ace_want = remove_empties(ace_want)
-                                    cmd = self._set_config(
-                                        ace_want, ace_have, acls_want
-                                    )
-                                    commands = self.add_config_cmd(
-                                        cmd, commands
-                                    )
-                                    check = True
-                                if not ace_want.get("line"):
+                            commands.extend(
+                                self.common_rename_config(
+                                    acls_want.get("name"),
+                                    acls_have.get("name"),
+                                    acls_want.get("rename"),
+                                )
+                            )
+                            rename = True
+                        if rename:
+                            break
+                    if rename:
+                        break
+                else:
+                    for ace_want in acls_want.get("aces"):
+                        check = False
+                        for config_have in have:
+                            for acls_have in config_have.get("acls"):
+                                for ace_have in acls_have.get("aces"):
                                     if acls_want.get("name") == acls_have.get(
                                         "name"
+                                    ) and ace_want.get("line") == ace_have.get(
+                                        "line"
                                     ):
                                         ace_want = remove_empties(ace_want)
-                                        cmd, check = self.common_condition_check(
-                                            ace_want,
-                                            ace_have,
-                                            acls_want,
-                                            config_want,
-                                            check,
-                                            acls_have,
+                                        cmd = self._set_config(
+                                            ace_want, ace_have, acls_want
                                         )
-                                        if (
-                                            acls_have.get("acl_type")
-                                            == "standard"
-                                        ):
-                                            check = True
                                         commands = self.add_config_cmd(
                                             cmd, commands
                                         )
+                                        check = True
+                                    if not ace_want.get("line"):
+                                        if acls_want.get(
+                                            "name"
+                                        ) == acls_have.get("name"):
+                                            ace_want = remove_empties(ace_want)
+                                            cmd, check = self.common_condition_check(
+                                                ace_want,
+                                                ace_have,
+                                                acls_want,
+                                                config_want,
+                                                check,
+                                                acls_have,
+                                            )
+                                            if (
+                                                acls_have.get("acl_type")
+                                                == "standard"
+                                            ):
+                                                check = True
+                                            commands = self.add_config_cmd(
+                                                cmd, commands
+                                            )
+                                if check:
+                                    break
                             if check:
                                 break
-                        if check:
-                            break
-                    if not check:
-                        # For configuring any non-existing want config
-                        ace_want = remove_empties(ace_want)
-                        cmd = self._set_config(ace_want, {}, acls_want)
-                        commands = self.add_config_cmd(cmd, commands)
+                        if not check:
+                            # For configuring any non-existing want config
+                            ace_want = remove_empties(ace_want)
+                            cmd = self._set_config(ace_want, {}, acls_want)
+                            commands = self.add_config_cmd(cmd, commands)
 
         return commands
 
@@ -406,6 +465,16 @@ class Acls(ConfigBase):
         if cmd and cmd[0] not in commands:
             commands.extend(cmd)
         return commands
+
+    def common_rename_config(self, want_name, have_name, new_want_name):
+        cmd = []
+        if want_name == have_name:
+            cmd.append(
+                "access-list {0} rename {1}".format(want_name, new_want_name)
+            )
+        elif new_want_name == have_name:
+            return cmd
+        return cmd
 
     def common_condition_check(
         self, ace_want, ace_have, acls_want, config_want, check, state=""
