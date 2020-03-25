@@ -165,9 +165,16 @@ class Acls(ConfigBase):
         for config_want in want:
             for acls_want in config_want.get("acls"):
                 if acls_want.get("rename"):
-                    commands.extend(self.common_rename_config(acls_want.get("name"), acls_want.get("rename"), have))
+                    commands.extend(
+                        self.common_rename_config(
+                            acls_want.get("name"),
+                            acls_want.get("rename"),
+                            have,
+                        )
+                    )
                     rename = True
                 else:
+                    rename = False
                     for ace_want in acls_want.get("aces"):
                         check = False
                         for config_have in have:
@@ -240,7 +247,13 @@ class Acls(ConfigBase):
         for config_want in temp_want:
             for acls_want in config_want.get("acls"):
                 if acls_want.get("rename"):
-                    commands.extend(self.common_rename_config(acls_want.get("name"), acls_want.get("rename"), have))
+                    commands.extend(
+                        self.common_rename_config(
+                            acls_want.get("name"),
+                            acls_want.get("rename"),
+                            have,
+                        )
+                    )
                     rename = True
         if not rename:
             for config_have in have:
@@ -329,7 +342,13 @@ class Acls(ConfigBase):
         for config_want in want:
             for acls_want in config_want.get("acls"):
                 if acls_want.get("rename"):
-                    commands.extend(self.common_rename_config(acls_want.get("name"), acls_want.get("rename"), have))
+                    commands.extend(
+                        self.common_rename_config(
+                            acls_want.get("name"),
+                            acls_want.get("rename"),
+                            have,
+                        )
+                    )
                 else:
                     for ace_want in acls_want.get("aces"):
                         check = False
@@ -441,10 +460,12 @@ class Acls(ConfigBase):
         cmd = []
         for config_have in have:
             for acls_have in config_have.get("acls"):
-                have_name = acls_have.get('name')
+                have_name = acls_have.get("name")
                 if want_name == have_name:
                     cmd.append(
-                        "access-list {0} rename {1}".format(want_name, new_want_name)
+                        "access-list {0} rename {1}".format(
+                            want_name, new_want_name
+                        )
                     )
                 elif new_want_name == have_name:
                     return cmd
