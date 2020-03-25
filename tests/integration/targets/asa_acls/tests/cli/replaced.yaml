@@ -1,0 +1,54 @@
+---
+- debug:
+    msg: START Replaced asa_acls state for integration tests on connection={{ ansible_connection
+      }}
+
+- include_tasks: _remove_config.yaml
+
+- include_tasks: _populate_config.yaml
+
+- block:
+
+    - name: Replaces device configuration of listed interfaces with provided configuration
+      register: result
+      cisco.asa.asa_acls: &id001
+        config:
+          - acls:
+            - name: test_global_access
+              acl_type: extended
+              aces:
+                - grant: deny
+                  line: 1
+                  protocol_options:
+                    tcp: true
+                  source:
+                    address: 192.0.4.0
+                    netmask: 255.255.255.0
+                    port_protocol:
+                      eq: telnet
+                  destination:
+                    address: 192.0.5.0
+                    netmask: 255.255.255.0
+                    port_protocol:
+                      eq: www
+        state: replaced
+
+    - assert:
+        that:
+          - result.commands|length == 2
+          - result.changed == true
+          - result.commands|symmetric_difference(replaced.commands) == []
+
+    - name: Replaces device configuration of listed interfaces with provided configuration
+        (IDEMPOTENT)
+      register: result
+      cisco.asa.asa_acls: *id001
+
+    - name: Assert that task was idempotent
+      assert:
+        that:
+          - result.commands|length == 0
+          - result['changed'] == false
+  always:
+
+    - include_tasks: _remove_config.yaml

@@ -8,8 +8,11 @@
 - name: set test_items
   set_fact: test_items="{{ test_cases.files | map(attribute='path') | list }}"
 
-- name: run test case
+- name: Run test case (connection=ansible.netcommon.network_cli)
   include: '{{ test_case_to_run }}'
+  vars:
+    ansible_connection: ansible.netcommon.network_cli
   with_items: '{{ test_items }}'
   loop_control:
     loop_var: test_case_to_run
+  tags: connection_network_cli

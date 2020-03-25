@@ -1,6 +1,5 @@
 ---
-- debug: msg="START cli/sublevel_strict_mul_parents.yaml on connection={{ ansible_connection
-    }}"
+- debug: msg="START cli/sublevel_strict_mul_parents.yaml on connection={{ ansible_connection}}"
 
 - name: setup
   cisco.asa.asa_config:
@@ -9,9 +8,6 @@
       - match default-inspection-traffic
       - policy-map p1
       - class c1
-    before:
-      - no policy-map p1
-      - no class-map c1
     match: none
 
 - name: configure sub level command using strict match

@@ -1,0 +1,36 @@
+---
+- debug: msg="START cli/invalid_subset.yaml on connection={{ ansible_connection
+    }}"
+
+- name: test invalid subset (foobar)
+  register: result
+  ignore_errors: true
+  cisco.asa.asa_facts:
+    gather_subset:
+      - foobar
+    provider: '{{ cli }}'
+
+- assert:
+    that:
+      - result.changed == false
+      - result.failed == true
+      - result.msg == 'Subset must be one of [config, default, hardware],
+        got foobar'
+
+- name: test subset specified multiple times
+  register: result
+  ignore_errors: true
+  cisco.asa.asa_facts:
+    gather_subset:
+      - '!hardware'
+      - hardware
+    provider: '{{ cli }}'
+
+- assert:
+    that:
+      - result.changed == false
+      - result.failed == true
+      - result.msg == 'Bad subset'
+  ignore_errors: true
+
+- debug: msg="END cli/invalid_subset.yaml on connection={{ ansible_connection }}"

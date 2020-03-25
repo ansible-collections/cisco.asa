@@ -1,0 +1,49 @@
+---
+- debug:
+    msg: Start asa_ogs overridden integration tests ansible_connection={{
+      ansible_connection }}
+
+- include_tasks: _populate_config.yaml
+
+- block:
+
+    - name: Overridden module attributes of given object-group
+      become: true
+      register: result
+      cisco.asa.asa_ogs: &id001
+        config:
+          - name: test_og_network
+            object_type: network
+            description: test_og_network_override
+            network_object:
+              host:
+                - 192.0.3.1
+              address:
+                - 192.0.3.0 255.255.255.0
+          - name: test_og_protocol
+            object_type: protocol
+            description: test_og_protocol
+            protocol_object:
+              protocol:
+                - tcp
+                - udp
+        state: overridden
+
+    - assert:
+        that:
+          - result.commands|length == 12
+          - result.changed == true
+          - result.commands|symmetric_difference(overridden.commands) == []
+
+    - name: Overridden module attributes of given object-group (IDEMPOTENT)
+      become: true
+      register: result
+      cisco.asa.asa_ogs: *id001
+
+    - assert:
+        that:
+          - result.commands|length == 0
+          - result.changed == false
+  always:
+
+    - include_tasks: _remove_config.yaml

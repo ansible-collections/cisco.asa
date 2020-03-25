@@ -6,14 +6,12 @@
   cisco.asa.asa_config:
     commands:
       - no object-group network OG-ANSIBLE-TEMPLATE-DEFAULT
-    provider: '{{ cli }}'
 
 - name: configure device with defaults included
   register: result
   cisco.asa.asa_config:
     src: defaults/config.j2
     defaults: true
-    provider: '{{ cli }}'
 
 - debug: var=result
 
@@ -27,7 +25,6 @@
   cisco.asa.asa_config:
     src: defaults/config.j2
     defaults: true
-    provider: '{{ cli }}'
 
 - debug: var=result
 
@@ -40,6 +37,5 @@
   cisco.asa.asa_config:
     commands:
       - no object-group network OG-ANSIBLE-TEMPLATE-DEFAULT
-    provider: '{{ cli }}'
 
 - debug: msg="END cli/defaults.yaml"
