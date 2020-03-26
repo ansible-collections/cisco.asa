@@ -80,7 +80,10 @@ options:
               - extended
               - standard
           rename:
-            description: Rename an existing access-list.
+            description:
+            - Rename an existing access-list.
+            - If input to rename param is given, it'll take preference over other
+              parameters and only rename config will be matched and computed against.
             type: str
           aces:
             description: The entries within the ACL.
@@ -434,7 +437,7 @@ EXAMPLES = """
 #                        log errors interval 300 (hitcnt=0) 0x4a4660f3
 
 - name: Merge provided configuration with device configuration
-  asa_acl:
+  cisco.asa.asa_acls:
     config:
       - acls:
         - name: temp_access
@@ -526,6 +529,46 @@ EXAMPLES = """
 #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
 #                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae
 
+# Using Merged to Rename ACLs
+# Before state:
+# -------------
+#
+# vasa#sh access-lists
+# access-list global_access; 2 elements; name hash: 0xbd6c87a7
+# access-list global_access line 1 extended permit icmp any any log disable (hitcnt=0) 0xf1efa630
+# access-list global_access line 2 extended deny tcp any any eq telnet (hitcnt=0) 0xae5833af
+# access-list R1_traffic; 1 elements; name hash: 0xaf40d3c2
+# access-list R1_traffic line 1
+#                        extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www
+#                        log errors interval 300 (hitcnt=0) 0x4a4660f3
+
+- name: Rename ACL with different name using Merged state
+  cisco.asa.asa_acls:
+    config:
+      - acls:
+          - name: global_access
+            rename: global_access_renamed
+          - name: R1_traffic
+            rename: R1_traffic_renamed
+    state: merged
+
+# Commands fired:
+# ---------------
+# access-list global_access rename global_access_renamed
+# access-list R1_traffic rename R1_traffic_renamed
+
+# After state:
+# -------------
+#
+# vasa#sh access-lists
+# access-list global_access_renamed; 2 elements; name hash: 0xbd6c87a7
+# access-list global_access_renamed line 1 extended permit icmp any any log disable (hitcnt=0) 0xf1efa630
+# access-list global_access_renamed line 2 extended deny tcp any any eq telnet (hitcnt=0) 0xae5833af
+# access-list R1_traffic_renamed; 1 elements; name hash: 0xaf40d3c2
+# access-list R1_traffic_renamed line 1
+#                        extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www
+#                        log errors interval 300 (hitcnt=0) 0x4a4660f3
+
 
 # Using replaced
 
@@ -553,7 +596,7 @@ EXAMPLES = """
 #                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae
 
 - name: Replaces device configuration of listed acl with provided configuration
-  asa_acl:
+  cisco.asa.asa_acls:
     config:
       - acls:
         - name: global_access
@@ -631,7 +674,7 @@ EXAMPLES = """
 
 
 - name: Override device configuration of all acl with provided configuration
-  asa_acl:
+  cisco.asa.asa_acls:
     config:
       - acls:
         - name: global_access
@@ -701,7 +744,7 @@ EXAMPLES = """
 #                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae
 
 - name: "Delete module attributes of given acl (Note: This won't delete the interface itself)"
-  asa_acl:
+  cisco.asa.asa_acls:
     config:
       - acls:
         - name: temp_access
@@ -764,7 +807,7 @@ EXAMPLES = """
 #                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae
 
 - name: "Delete module attributes of all acl (Note: This won't delete the interface itself)"
-  asa_acl:
+  cisco.asa.asa_acls:
     state: deleted
 
 # Commands fired:
@@ -784,6 +827,331 @@ EXAMPLES = """
 # -------------
 #
 # vasa#sh access-lists
+
+# Using Gathered
+
+# Before state:
+# -------------
+#
+# access-list global_access; 3 elements; name hash: 0xbd6c87a7
+# access-list global_access line 1 extended permit icmp any any log disable (hitcnt=0) 0xf1efa630
+# access-list global_access line 2 extended deny tcp any any eq telnet (hitcnt=0) 0xae5833af
+# access-list R1_traffic; 2 elements; name hash: 0xaf40d3c2
+# access-list R1_traffic line 1
+#                        extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www
+#                        log errors interval 300 (hitcnt=0) 0x4a4660f3
+# access-list R1_traffic line 2
+#                        extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet
+#                        inactive (hitcnt=0) (inactive) 0xe922b432
+# access-list temp_access; 2 elements; name hash: 0xaf1b712e
+# access-list temp_access line 1
+#                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+#                         log default (hitcnt=0) 0xb58abb0d
+# access-list temp_access line 2
+#                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
+#                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae
+
+
+- name: Gather listed ACLs with provided configurations
+  cisco.asa.asa_acls:
+    config:
+    state: gathered
+
+# Module Execution Result:
+# ------------------------
+#
+# "gathered": [
+#         {
+#             "acls": [
+#                 {
+#                     "aces": [
+#                         {
+#                             "destination": {
+#                                 "any": true
+#                             },
+#                             "grant": "permit",
+#                             "line": 1,
+#                             "log": "disable",
+#                             "protocol": "icmp",
+#                             "source": {
+#                                 "any": true
+#                             }
+#                         },
+#                         {
+#                             "destination": {
+#                                 "any": true,
+#                                 "port_protocol": {
+#                                     "eq": "telnet"
+#                                 }
+#                             },
+#                             "grant": "deny",
+#                             "line": 2,
+#                             "protocol": "tcp",
+#                             "protocol_options": {
+#                                 "tcp": true
+#                             },
+#                             "source": {
+#                                 "any": true
+#                             }
+#                         }
+#                     ],
+#                     "acl_type": "extended",
+#                     "name": "global_access"
+#                 },
+#                 {
+#                     "aces": [
+#                         {
+#                             "destination": {
+#                                 "address": "2001:fc8:0:4::/64",
+#                                 "port_protocol": {
+#                                     "eq": "www"
+#                                 }
+#                             },
+#                             "grant": "deny",
+#                             "line": 1,
+#                             "log": "errors",
+#                             "protocol": "tcp",
+#                             "protocol_options": {
+#                                 "tcp": true
+#                             },
+#                             "source": {
+#                                 "address": "2001:db8:0:3::/64",
+#                                 "port_protocol": {
+#                                     "eq": "telnet"
+#                                 }
+#                             }
+#                         },
+#                         {
+#                             "destination": {
+#                                 "address": "2001:fc8:0:4::/64",
+#                                 "port_protocol": {
+#                                     "eq": "telnet"
+#                                 }
+#                             },
+#                             "grant": "deny",
+#                             "inactive": true,
+#                             "line": 2,
+#                             "protocol": "tcp",
+#                             "protocol_options": {
+#                                 "tcp": true
+#                             },
+#                             "source": {
+#                                 "address": "2001:db8:0:3::/64",
+#                                 "port_protocol": {
+#                                     "eq": "www"
+#                                 }
+#                             }
+#                         }
+#                     ],
+#                     "acl_type": "extended",
+#                     "name": "R1_traffic"
+#                 },
+#                 {
+#                     "aces": [
+#                         {
+#                             "destination": {
+#                                 "address": "192.0.3.0",
+#                                 "netmask": "255.255.255.0",
+#                                 "port_protocol": {
+#                                     "eq": "www"
+#                                 }
+#                             },
+#                             "grant": "deny",
+#                             "line": 1,
+#                             "log": "default",
+#                             "protocol": "tcp",
+#                             "protocol_options": {
+#                                 "tcp": true
+#                             },
+#                             "source": {
+#                                 "address": "192.0.2.0",
+#                                 "netmask": "255.255.255.0"
+#                             }
+#                         },
+#                         {
+#                             "destination": {
+#                                 "address": "198.51.110.0",
+#                                 "netmask": "255.255.255.0"
+#                             },
+#                             "grant": "deny",
+#                             "inactive": true,
+#                             "line": 2,
+#                             "protocol": "igrp",
+#                             "protocol_options": {
+#                                 "igrp": true
+#                             },
+#                             "source": {
+#                                 "address": "198.51.100.0",
+#                                 "netmask": "255.255.255.0"
+#                             },
+#                             "time_range": "temp"
+#                         }
+#                     ],
+#                     "acl_type": "extended",
+#                     "name": "temp_access"
+#                 }
+#             ]
+#         }
+#     ]
+
+# Using Rendered
+
+- name: Rendered the provided configuration with the exisiting running configuration
+  cisco.asa.asa_acls:
+  config:
+    - acls:
+      - name: temp_access
+        acl_type: extended
+        aces:
+          - grant: deny
+            line: 1
+            protocol_options:
+              tcp: true
+            source:
+              address: 192.0.2.0
+              netmask: 255.255.255.0
+            destination:
+              address: 192.0.3.0
+              netmask: 255.255.255.0
+              port_protocol:
+                eq: www
+            log: default
+          - grant: deny
+            line: 2
+            protocol_options:
+              igrp: true
+            source:
+              address: 198.51.100.0
+              netmask: 255.255.255.0
+            destination:
+              address: 198.51.110.0
+              netmask: 255.255.255.0
+            time_range: temp
+      - name: R1_traffic
+        aces:
+          - grant: deny
+            protocol_options:
+              tcp: true
+            source:
+              address: 2001:db8:0:3::/64
+              port_protocol:
+                eq: www
+            destination:
+              address: 2001:fc8:0:4::/64
+              port_protocol:
+                eq: telnet
+            inactive: true
+      state: rendered
+
+# Module Execution Result:
+# ------------------------
+#
+# "rendered": [
+#         "access-list temp_access line 1
+#                                  extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0
+#                                  eq www log default"
+#         "access-list temp_access line 2
+#                                  extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
+#                                  time-range temp"
+#         "access-list R1_traffic
+#                      deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive"
+#     ]
+
+# Using Parsed
+
+- name: Parse the commands for provided configuration
+  cisco.asa.asa_acls:
+    running_config:
+      "access-list test_access line 1
+                               extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0
+                               eq www log default\n
+      access-list test_access line 2
+                              extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
+                              log errors\n
+      access-list test_R1_TRAFFIC line 1
+                                  extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64
+                                  eq telnet inactive"
+    state: parsed
+
+# Module Execution Result:
+# ------------------------
+#
+# "parsed": [
+#         {
+#             "acls": [
+#                 {
+#                     "aces": [
+#                         {
+#                             "destination": {
+#                                 "address": "192.0.3.0",
+#                                 "netmask": "255.255.255.0",
+#                                 "port_protocol": {
+#                                     "eq": "www"
+#                                 }
+#                             },
+#                             "grant": "deny",
+#                             "line": 1,
+#                             "log": "default",
+#                             "protocol": "tcp",
+#                             "protocol_options": {
+#                                 "tcp": true
+#                             },
+#                             "source": {
+#                                 "address": "192.0.2.0",
+#                                 "netmask": "255.255.255.0"
+#                             }
+#                         },
+#                         {
+#                             "destination": {
+#                                 "address": "198.51.110.0",
+#                                 "netmask": "255.255.255.0"
+#                             },
+#                             "grant": "deny",
+#                             "line": 2,
+#                             "log": "errors",
+#                             "protocol": "igrp",
+#                             "protocol_options": {
+#                                 "igrp": true
+#                             },
+#                             "source": {
+#                                 "address": "198.51.100.0",
+#                                 "netmask": "255.255.255.0"
+#                             }
+#                         }
+#                     ],
+#                     "acl_type": "extended",
+#                     "name": "test_access"
+#                 },
+#                 {
+#                     "aces": [
+#                         {
+#                             "destination": {
+#                                 "address": "2001:fc8:0:4::/64",
+#                                 "port_protocol": {
+#                                     "eq": "telnet"
+#                                 }
+#                             },
+#                             "grant": "deny",
+#                             "inactive": true,
+#                             "line": 1,
+#                             "protocol": "tcp",
+#                             "protocol_options": {
+#                                 "tcp": true
+#                             },
+#                             "source": {
+#                                 "address": "2001:db8:0:3::/64",
+#                                 "port_protocol": {
+#                                     "eq": "www"
+#                                 }
+#                             }
+#                         }
+#                     ],
+#                     "acl_type": "extended",
+#                     "name": "test_R1_TRAFFIC"
+#                 }
+#             ]
+#         }
+#     ]
 
 """
 
