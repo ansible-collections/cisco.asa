@@ -1060,7 +1060,7 @@ EXAMPLES = """
 # Using Parsed
 
 - name: Parse the commands for provided configuration
-  ios_acl:
+  cisco.asa.asa_acls:
     running_config:
       "access-list test_access line 1
                                extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0
