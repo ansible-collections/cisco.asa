@@ -348,16 +348,16 @@ class AclsFacts(object):
                 icmp6_options = [
                     "echo",
                     "echo_reply",
-                    "membership-query",
-                    "membership-reduction",
-                    "membership-report",
-                    "neighbor-advertisement",
-                    "neighbor-redirect",
-                    "neighbor-solicitation",
-                    "packet-too-big",
+                    "membership_query",
+                    "membership_reduction",
+                    "membership_report",
+                    "neighbor_advertisement",
+                    "neighbor_redirect",
+                    "neighbor_solicitation",
+                    "packet_too_big",
                     "parameter_problem",
                     "router_advertisement",
-                    "router-renumbering",
+                    "router_renumbering",
                     "router_solicitation",
                     "time_exceeded",
                     "unreachable",
@@ -371,7 +371,7 @@ class AclsFacts(object):
                             temp_flag = [
                                 each_option
                                 for each_option in icmp_options
-                                if each_option in each
+                                if each_option.replace("_", "-") in each
                             ]
                             if temp_flag:
                                 flag = temp_flag[0]
@@ -382,7 +382,7 @@ class AclsFacts(object):
                             temp_flag = [
                                 each_option
                                 for each_option in icmp6_options
-                                if each_option in each
+                                if each_option.replace("_", "-") in each
                             ]
                             if temp_flag:
                                 flag = temp_flag[0]
