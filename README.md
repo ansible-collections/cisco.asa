@@ -1,6 +1,6 @@
 # CISCO ASA Ansible Collection
 
-[![CI](https://zuul-ci.org/gated.svg)](https://github.com/ansible-collections/REPONAMEHERE/actions) [![Codecov](https://img.shields.io/codecov/c/github/ansible-collections/asa)](https://codecov.io/gh/ansible-collections/asa)
+[![CI](https://zuul-ci.org/gated.svg)](https://github.com/ansible-collections/REPONAMEHERE/actions) [![Codecov](https://img.shields.io/codecov/c/github/ansible-collections/cisco.asa)](https://codecov.io/gh/ansible-collections/cisco.asa)
 
 The Ansible Cisco ASA collection includes a variety of Ansible content to help automate the management of Cisco ASA firewall appliances.
 
@@ -144,7 +144,7 @@ The following example task replaces configuration changes in the existing config
 
 ## Contributing to this collection
 
-We welcome community contributions to this collection. If you find problems, please open an issue or create a PR against the [Cisco ASA collection repository](https://github.com/ansible-collections/asa).
+We welcome community contributions to this collection. If you find problems, please open an issue or create a PR against the [Cisco ASA collection repository](https://github.com/ansible-collections/cisco.asa).
 
 You cal also join us on:
 
