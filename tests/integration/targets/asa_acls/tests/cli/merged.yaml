@@ -30,8 +30,10 @@
                   log: default
                 - grant: deny
                   line: 2
+                  protocol: icmp
                   protocol_options:
-                    igrp: true
+                    icmp:
+                      alternate_address: true
                   source:
                     address: 198.51.100.0
                     netmask: 255.255.255.0

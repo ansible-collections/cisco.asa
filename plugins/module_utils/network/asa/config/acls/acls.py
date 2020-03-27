@@ -601,6 +601,7 @@ class Acls(ConfigBase):
         grant = want.get("grant")
         source = want.get("source")
         destination = want.get("destination")
+        protocol = want.get("protocol")
         po = want.get("protocol_options")
         log = want.get("log")
         time_range = want.get("time_range")
@@ -608,10 +609,13 @@ class Acls(ConfigBase):
 
         if grant:
             cmd = cmd + " {0}".format(grant)
+        if protocol:
+            cmd = cmd + " {0}".format(protocol)
         po_val = None
         if po and isinstance(po, dict):
-            po_key = list(po)[0]
-            cmd = cmd + " {0}".format(po_key)
+            if not protocol:
+                po_key = list(po)[0]
+                cmd = cmd + " {0}".format(po_key)
             if po.get("icmp"):
                 po_val = po.get("icmp")
             elif po.get("icmp6"):
@@ -621,7 +625,7 @@ class Acls(ConfigBase):
         if destination:
             cmd = self.source_dest_config(destination, cmd, po)
         if po_val and list(po_val)[0] != "set":
-            cmd = cmd + " {0}".format(list(po_val)[0])
+            cmd = cmd + " {0}".format(list(po_val)[0].replace("_", "-"))
         if log:
             cmd = cmd + " log {0}".format(log)
         if time_range:
