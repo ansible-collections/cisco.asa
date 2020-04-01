@@ -30,7 +30,7 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.u
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.utils.utils import (
     new_dict_to_set,
 )
-import q
+
 
 class Acls(ConfigBase):
     """
