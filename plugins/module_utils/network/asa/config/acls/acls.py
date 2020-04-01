@@ -30,7 +30,7 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.u
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.utils.utils import (
     new_dict_to_set,
 )
-
+import q
 
 class Acls(ConfigBase):
     """
@@ -185,10 +185,10 @@ class Acls(ConfigBase):
                                     ):
                                         ace_want = remove_empties(ace_want)
                                         acls_want = remove_empties(acls_want)
-                                        cmd = self._set_config(
+                                        set_cmd = self._set_config(
                                             ace_want, ace_have, acls_want
                                         )
-                                        if cmd:
+                                        if set_cmd:
                                             for (
                                                 temp_acls_have
                                             ) in config_have.get("acls"):
@@ -202,13 +202,9 @@ class Acls(ConfigBase):
                                                     ) == temp_acls_have.get(
                                                         "name"
                                                     ):
-                                                        commands.extend(
-                                                            self._clear_config(
-                                                                temp_ace_have,
-                                                                temp_acls_have,
-                                                            )
-                                                        )
-                                            commands.extend(cmd)
+                                                        clear_cmd = self._clear_config(temp_ace_have, temp_acls_have)
+                                                        commands = self.add_config_cmd(clear_cmd, commands)
+                                        commands = self.add_config_cmd(set_cmd, commands)
                                         check = True
                                 if check:
                                     break
@@ -217,9 +213,8 @@ class Acls(ConfigBase):
                         if not check:
                             # For configuring any non-existing want config
                             ace_want = remove_empties(ace_want)
-                            commands.extend(
-                                self._set_config(ace_want, {}, acls_want)
-                            )
+                            set_cmd = self._set_config(ace_want, {}, acls_want)
+                            commands = self.add_config_cmd(set_cmd, commands)
         if not rename:
             # Arranging the cmds suct that all delete cmds are fired before all set cmds
             # and reversing the negate/no access-list as otherwise if deleted from top the
@@ -227,7 +222,8 @@ class Acls(ConfigBase):
             commands = [each for each in commands if "no" in each][::-1] + [
                 each for each in commands if "no" not in each
             ]
-
+        q(commands)
+        #commands=[]
         return commands
 
     def _state_overridden(self, want, have):
@@ -268,10 +264,10 @@ class Acls(ConfigBase):
                                     ):
                                         ace_want = remove_empties(ace_want)
                                         acls_want = remove_empties(acls_want)
-                                        cmd = self._set_config(
+                                        set_cmd = self._set_config(
                                             ace_want, ace_have, acls_want
                                         )
-                                        if cmd:
+                                        if set_cmd:
                                             for (
                                                 temp_acls_have
                                             ) in config_have.get("acls"):
@@ -285,20 +281,12 @@ class Acls(ConfigBase):
                                                     ) == temp_acls_have.get(
                                                         "name"
                                                     ):
-                                                        temp = self._clear_config(
+                                                        clear_cmd = self._clear_config(
                                                             temp_ace_have,
                                                             temp_acls_have,
                                                         )
-                                                        if (
-                                                            temp
-                                                            and temp[0]
-                                                            not in commands
-                                                        ):
-                                                            commands.extend(
-                                                                temp
-                                                            )
-                                            if cmd and cmd[0] not in commands:
-                                                commands.extend(cmd)
+                                                        commands = self.add_config_cmd(clear_cmd, commands)
+                                            commands = self.add_config_cmd(set_cmd, commands)
                                         check = True
                                         del config_want.get("acls")[0].get(
                                             "aces"
@@ -307,18 +295,16 @@ class Acls(ConfigBase):
                                 break
                         if not check:
                             # Delete the config not present in want config
-                            temp = self._clear_config(ace_have, acls_have)
-                            if temp and temp[0] not in commands:
-                                commands.extend(temp)
+                            clear_cmd = self._clear_config(ace_have, acls_have)
+                            commands = self.add_config_cmd(clear_cmd, commands)
 
                 # For configuring any non-existing want config
                 for config_want in temp_want:
                     for acls_want in config_want.get("acls"):
                         for ace_want in acls_want.get("aces"):
                             ace_want = remove_empties(ace_want)
-                            temp = self._set_config(ace_want, {}, acls_want)
-                            if temp and temp[0] not in commands:
-                                commands.extend(temp)
+                            set_cmd = self._set_config(ace_want, {}, acls_want)
+                            commands = self.add_config_cmd(set_cmd, commands)
 
             # Arranging the cmds such that all delete cmds are fired before all set cmds
             # and reversing the negate/no access-list as otherwise if deleted from top the
@@ -361,11 +347,11 @@ class Acls(ConfigBase):
                                         "line"
                                     ):
                                         ace_want = remove_empties(ace_want)
-                                        cmd = self._set_config(
+                                        set_cmd = self._set_config(
                                             ace_want, ace_have, acls_want
                                         )
                                         commands = self.add_config_cmd(
-                                            cmd, commands
+                                            set_cmd, commands
                                         )
                                         check = True
                                     if not ace_want.get("line"):
@@ -396,8 +382,8 @@ class Acls(ConfigBase):
                         if not check:
                             # For configuring any non-existing want config
                             ace_want = remove_empties(ace_want)
-                            cmd = self._set_config(ace_want, {}, acls_want)
-                            commands = self.add_config_cmd(cmd, commands)
+                            set_cmd = self._set_config(ace_want, {}, acls_want)
+                            commands = self.add_config_cmd(set_cmd, commands)
 
         return commands
 
@@ -423,18 +409,14 @@ class Acls(ConfigBase):
                                     ) and ace_want.get("line") == ace_have.get(
                                         "line"
                                     ):
-                                        commands.extend(
-                                            self._clear_config(
-                                                ace_have, acls_have
-                                            )
-                                        )
+                                        clear_cmd = self._clear_config(ace_have, acls_have)
+                                        commands = self.add_config_cmd(clear_cmd, commands)
         else:
             for config_have in have:
                 for acls_have in config_have.get("acls"):
                     for ace_have in acls_have.get("aces"):
-                        commands.extend(
-                            self._clear_config(ace_have, acls_have)
-                        )
+                        clear_cmd = self._clear_config(ace_have, acls_have)
+                        commands = self.add_config_cmd(clear_cmd, commands)
         # Reversing the negate/no access-list as otherwise if deleted from top the
         # next ace takes the line position of deleted ace from top and only one ace
         # will be deleted instead of expected aces and results in unexpected output
