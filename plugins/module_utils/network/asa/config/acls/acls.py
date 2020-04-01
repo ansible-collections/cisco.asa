@@ -202,9 +202,16 @@ class Acls(ConfigBase):
                                                     ) == temp_acls_have.get(
                                                         "name"
                                                     ):
-                                                        clear_cmd = self._clear_config(temp_ace_have, temp_acls_have)
-                                                        commands = self.add_config_cmd(clear_cmd, commands)
-                                        commands = self.add_config_cmd(set_cmd, commands)
+                                                        clear_cmd = self._clear_config(
+                                                            temp_ace_have,
+                                                            temp_acls_have,
+                                                        )
+                                                        commands = self.add_config_cmd(
+                                                            clear_cmd, commands
+                                                        )
+                                        commands = self.add_config_cmd(
+                                            set_cmd, commands
+                                        )
                                         check = True
                                 if check:
                                     break
@@ -222,8 +229,7 @@ class Acls(ConfigBase):
             commands = [each for each in commands if "no" in each][::-1] + [
                 each for each in commands if "no" not in each
             ]
-        q(commands)
-        #commands=[]
+
         return commands
 
     def _state_overridden(self, want, have):
@@ -285,8 +291,12 @@ class Acls(ConfigBase):
                                                             temp_ace_have,
                                                             temp_acls_have,
                                                         )
-                                                        commands = self.add_config_cmd(clear_cmd, commands)
-                                            commands = self.add_config_cmd(set_cmd, commands)
+                                                        commands = self.add_config_cmd(
+                                                            clear_cmd, commands
+                                                        )
+                                            commands = self.add_config_cmd(
+                                                set_cmd, commands
+                                            )
                                         check = True
                                         del config_want.get("acls")[0].get(
                                             "aces"
@@ -409,8 +419,12 @@ class Acls(ConfigBase):
                                     ) and ace_want.get("line") == ace_have.get(
                                         "line"
                                     ):
-                                        clear_cmd = self._clear_config(ace_have, acls_have)
-                                        commands = self.add_config_cmd(clear_cmd, commands)
+                                        clear_cmd = self._clear_config(
+                                            ace_have, acls_have
+                                        )
+                                        commands = self.add_config_cmd(
+                                            clear_cmd, commands
+                                        )
         else:
             for config_have in have:
                 for acls_have in config_have.get("acls"):
