@@ -167,7 +167,7 @@ See the [Ansible Community Guide](https://docs.ansible.com/ansible/latest/commun
 - [Ansible Developer guide](https://docs.ansible.com/ansible/latest/dev_guide/index.html)
 - [Ansible Community code of conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html)
 
-## Licensing
+##  Licensing
 
 GNU General Public License v3.0 or later.
 
