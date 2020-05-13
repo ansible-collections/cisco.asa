@@ -62,6 +62,14 @@ options:
       the command does not pass the specified conditions, the interval indicates how
       long to wait before trying the command again.
     default: 1
+notes:
+  - When processing wait_for, each commands' output is stored as an element of the
+    I(result) array.  The allowed operators for conditional evaluation are I(eq),
+    I(==), I(neq), I(ne), I(!=), I(gt), I(>), I(ge), I(>=), I(lt), I(<), I(le),
+    I(<=), I(contains), I(matches).  Operators can be prefaced by I(not) to
+    negate their meaning.  The I(contains) operator searches for a substring
+    match (like the Python I(in) operator).  The I(matches) operator searches
+    using a regex search operation.
 """
 
 EXAMPLES = """
