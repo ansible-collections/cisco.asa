@@ -93,7 +93,7 @@ class TestAsaOGsModule(TestAsaModule):
                         object_groups=[
                             dict(
                                 name="test_network_og",
-                                description= "test network og",
+                                description="test network og",
                                 network_object=dict(
                                     host=["192.0.3.1", "192.0.3.2"],
                                     ipv6_address=["2001:db8:0:3::/64"],
@@ -136,8 +136,10 @@ class TestAsaOGsModule(TestAsaModule):
                     dict(
                         object_groups=[
                             dict(
-                                    name="test_og_service",
-                                    service_object=dict(protocol=["ipinip", "tcp-udp"]),
+                                name="test_og_service",
+                                service_object=dict(
+                                    protocol=["ipinip", "tcp-udp"]
+                                ),
                             )
                         ],
                         object_type="service",
@@ -200,8 +202,10 @@ class TestAsaOGsModule(TestAsaModule):
                     dict(
                         object_groups=[
                             dict(
-                                    name="test_og_service",
-                                    service_object=dict(protocol=["ipinip", "tcp-udp"]),
+                                name="test_og_service",
+                                service_object=dict(
+                                    protocol=["ipinip", "tcp-udp"]
+                                ),
                             )
                         ],
                         object_type="service",
@@ -265,8 +269,10 @@ class TestAsaOGsModule(TestAsaModule):
                     dict(
                         object_groups=[
                             dict(
-                                    name="test_og_service",
-                                    service_object=dict(protocol=["ipinip", "tcp-udp"]),
+                                name="test_og_service",
+                                service_object=dict(
+                                    protocol=["ipinip", "tcp-udp"]
+                                ),
                             )
                         ],
                         object_type="service",
@@ -306,8 +312,10 @@ class TestAsaOGsModule(TestAsaModule):
                     dict(
                         object_groups=[
                             dict(
-                                    name="test_og_service",
-                                    service_object=dict(protocol=["ipinip", "tcp-udp"]),
+                                name="test_og_service",
+                                service_object=dict(
+                                    protocol=["ipinip", "tcp-udp"]
+                                ),
                             )
                         ],
                         object_type="service",

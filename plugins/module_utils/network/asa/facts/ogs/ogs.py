@@ -64,46 +64,43 @@ class OGsFacts(object):
         if not data:
             data = self.get_og_data(connection)
 
-        rmmod = NetworkTemplate(
-            lines=data.splitlines(), tmplt=OGsTemplate()
-        )
+        rmmod = NetworkTemplate(lines=data.splitlines(), tmplt=OGsTemplate())
         current = rmmod.parse()
 
         ogs = []
         object_groups = {
-            'icmp-type': 'icmp_type',
-            'network': 'network_object',
-            'protocol': 'protocol_object',
-            'security': 'security_group',
-            'service': 'service_object',
-            'user': 'user_object'
+            "icmp-type": "icmp_type",
+            "network": "network_object",
+            "protocol": "protocol_object",
+            "security": "security_group",
+            "service": "service_object",
+            "user": "user_object",
         }
-        if current.get('ogs'):
-            for k, v in iteritems(current.get('ogs')):
+        if current.get("ogs"):
+            for k, v in iteritems(current.get("ogs")):
                 obj_gp = {}
                 config_dict = {}
-                config_dict['object_type'] = k
-                config_dict['object_groups'] = []
+                config_dict["object_type"] = k
+                config_dict["object_groups"] = []
                 for each in iteritems(v):
-                    obj_gp['name'] = each[1].pop('name')
-                    each[1].pop('object_type')
-                    if each[1].get('description'):
-                        obj_gp['description'] = each[1].pop('description')
-                    if each[1].get('group_object'):
-                        obj_gp['group_object'] = each[1].pop('group_object')
+                    obj_gp["name"] = each[1].pop("name")
+                    each[1].pop("object_type")
+                    if each[1].get("description"):
+                        obj_gp["description"] = each[1].pop("description")
+                    if each[1].get("group_object"):
+                        obj_gp["group_object"] = each[1].pop("group_object")
                     obj_gp[object_groups.get(k)] = each[1]
-                    config_dict['object_groups'].append(obj_gp)
+                    config_dict["object_groups"].append(obj_gp)
                     obj_gp = {}
                 config_dict["object_groups"] = sorted(
-                    config_dict["object_groups"], key=lambda k, sk="name": k[sk]
+                    config_dict["object_groups"],
+                    key=lambda k, sk="name": k[sk],
                 )
                 ogs.append(config_dict)
 
         facts = {}
         if current:
-            params = utils.validate_config(
-                self.argument_spec, {"config": ogs}
-            )
+            params = utils.validate_config(self.argument_spec, {"config": ogs})
             params = utils.remove_empties(params)
 
             facts["ogs"] = params["config"]

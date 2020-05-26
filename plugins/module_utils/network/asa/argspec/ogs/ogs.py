@@ -175,22 +175,34 @@ class OGsArgs(object):
                                     "elements": "dict",
                                     "type": "list",
                                     "options": {
-                                        "name": {"required": True, "type": "str"},
-                                        "domain": {"required": True, "type": "str"},
-                                    }
+                                        "name": {
+                                            "required": True,
+                                            "type": "str",
+                                        },
+                                        "domain": {
+                                            "required": True,
+                                            "type": "str",
+                                        },
+                                    },
                                 },
                                 "user_group": {
                                     "elements": "dict",
                                     "type": "list",
                                     "options": {
-                                        "name": {"required": True, "type": "str"},
-                                        "domain": {"required": True, "type": "str"},
-                                    }
+                                        "name": {
+                                            "required": True,
+                                            "type": "str",
+                                        },
+                                        "domain": {
+                                            "required": True,
+                                            "type": "str",
+                                        },
+                                    },
                                 },
                             },
                         },
                         "group_object": {"type": "str"},
-                    }
+                    },
                 },
             },
         },

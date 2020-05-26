@@ -9,79 +9,91 @@ def _tmplt_object_group(config_data):
     command = "object-group {object_type} {name}".format(**config_data)
     return command
 
+
 def _tmplt_icmp_object(config_data):
     commands = []
-    if config_data.get('icmp_type').get('icmp_object'):
-        for each in config_data.get('icmp_type').get('icmp_object'):
-            commands.append('icmp-object {0}'.format(each))
+    if config_data.get("icmp_type").get("icmp_object"):
+        for each in config_data.get("icmp_type").get("icmp_object"):
+            commands.append("icmp-object {0}".format(each))
         return commands
+
 
 def _tmplt_network_object(config_data):
     commands = []
-    if config_data.get('network_object').get('host'):
-        for each in config_data.get('network_object').get('host'):
-            commands.append('network-object host {0}'.format(each))
+    if config_data.get("network_object").get("host"):
+        for each in config_data.get("network_object").get("host"):
+            commands.append("network-object host {0}".format(each))
         return commands
+
 
 def _tmplt_network_object_address(config_data):
     commands = []
-    if config_data.get('network_object').get('address'):
-        for each in config_data.get('network_object').get('address'):
-            commands.append('network-object {0}'.format(each))
+    if config_data.get("network_object").get("address"):
+        for each in config_data.get("network_object").get("address"):
+            commands.append("network-object {0}".format(each))
         return commands
+
 
 def _tmplt_network_object_ipv6(config_data):
     commands = []
-    if config_data.get('network_object').get('ipv6_address'):
-        for each in config_data.get('network_object').get('ipv6_address'):
-            commands.append('network-object {0}'.format(each))
+    if config_data.get("network_object").get("ipv6_address"):
+        for each in config_data.get("network_object").get("ipv6_address"):
+            commands.append("network-object {0}".format(each))
         return commands
+
 
 def _tmplt_protocol_object(config_data):
     commands = []
-    if config_data.get('protocol_object').get('protocol'):
-        for each in config_data.get('protocol_object').get('protocol'):
-            commands.append('protocol {0}'.format(each))
+    if config_data.get("protocol_object").get("protocol"):
+        for each in config_data.get("protocol_object").get("protocol"):
+            commands.append("protocol {0}".format(each))
         return commands
+
 
 def _tmplt_sec_group_name(config_data):
     commands = []
-    if config_data.get('security_group').get('sec_name'):
-        for each in config_data.get('security_group').get('sec_name'):
-            commands.append('security-group name {0}'.format(each))
+    if config_data.get("security_group").get("sec_name"):
+        for each in config_data.get("security_group").get("sec_name"):
+            commands.append("security-group name {0}".format(each))
         return commands
+
 
 def _tmplt_sec_group_tag(config_data):
     commands = []
-    if config_data.get('security_group').get('tag'):
-        for each in config_data.get('security_group').get('tag'):
-            commands.append('security-group tag {0}'.format(each))
+    if config_data.get("security_group").get("tag"):
+        for each in config_data.get("security_group").get("tag"):
+            commands.append("security-group tag {0}".format(each))
         return commands
 
+
 def _tmplt_service_object(config_data):
-    if config_data.get('service_object').get('protocol'):
+    if config_data.get("service_object").get("protocol"):
         commands = []
-        for each in config_data.get('service_object').get('protocol'):
-            commands.append('service-object {0}'.format(each))
+        for each in config_data.get("service_object").get("protocol"):
+            commands.append("service-object {0}".format(each))
         return commands
+
 
 def _tmplt_user_object_user(config_data):
     commands = []
-    if config_data.get('user_object').get('user'):
-        for each in config_data.get('user_object').get('user'):
-            commands.append('user {domain}\\{name}'.format(**each))
+    if config_data.get("user_object").get("user"):
+        for each in config_data.get("user_object").get("user"):
+            commands.append("user {domain}\\{name}".format(**each))
     return commands
+
 
 def _tmplt_user_object_user_gp(config_data):
     commands = []
-    if config_data.get('user_object').get('user_group'):
-        for each in config_data.get('user_object').get('user_group'):
-            commands.append('user-group {domain}\\{name} {0}'.format(**each))
+    if config_data.get("user_object").get("user_group"):
+        for each in config_data.get("user_object").get("user_group"):
+            commands.append("user-group {domain}\\{name} {0}".format(**each))
     return commands
+
 
 def _tmplt_group_object(config_data):
     command = "group-object { group_object }".format(**config_data)
     return command
+
 
 class OGsTemplate(NetworkTemplate):
     def __init__(self, lines=[]):
@@ -104,7 +116,7 @@ class OGsTemplate(NetworkTemplate):
                     "{{ obj_type }}": {
                         "{{ obj_name }}": {
                             "object_type": "{{ obj_type }}",
-                            "name": "{{ obj_name }}"
+                            "name": "{{ obj_name }}",
                         }
                     }
                 }
@@ -123,10 +135,8 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {
-                            "description": "{{ description }}",
-                        }
-                    },
+                        "{{ obj_name }}": {"description": "{{ description }}"}
+                    }
                 }
             },
         },
@@ -143,9 +153,7 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {
-                            "icmp_object": ["{{ object }}"]
-                        }
+                        "{{ obj_name }}": {"icmp_object": ["{{ object }}"]}
                     }
                 }
             },
@@ -163,9 +171,7 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {
-                            "address": ["{{ address }}"],
-                        },
+                        "{{ obj_name }}": {"address": ["{{ address }}"]}
                     }
                 }
             },
@@ -184,11 +190,9 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {
-                            "host": ["{{ host_address }}"],
-                        },
+                        "{{ obj_name }}": {"host": ["{{ host_address }}"]}
                     }
-            }
+                }
             },
         },
         {
@@ -204,9 +208,7 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {
-                            "ipv6_address": ["{{ ipv6 }}"],
-                        },
+                        "{{ obj_name }}": {"ipv6_address": ["{{ ipv6 }}"]}
                     }
                 }
             },
@@ -224,10 +226,8 @@ class OGsTemplate(NetworkTemplate):
             "compval": "network_object.object",
             "result": {
                 "ogs": {
-                    "{{ obj_type }}":{
-                        "{{ obj_name }}": {
-                            "object": "{{ object }}",
-                        }
+                    "{{ obj_type }}": {
+                        "{{ obj_name }}": {"object": "{{ object }}"}
                     }
                 }
             },
@@ -244,10 +244,8 @@ class OGsTemplate(NetworkTemplate):
             "compval": "protocol_object",
             "result": {
                 "ogs": {
-                    "{{ obj_type }}":{
-                        "{{ obj_name }}": {
-                            "protocol": ["{{ protocol }}"],
-                        }
+                    "{{ obj_type }}": {
+                        "{{ obj_name }}": {"protocol": ["{{ protocol }}"]}
                     }
                 }
             },
@@ -265,10 +263,8 @@ class OGsTemplate(NetworkTemplate):
             "compval": "security_group.sec_name",
             "result": {
                 "ogs": {
-                    "{{ obj_type }}":{
-                        "{{ obj_name }}": {
-                            "sec_name": ["{{ name }}"],
-                        }
+                    "{{ obj_type }}": {
+                        "{{ obj_name }}": {"sec_name": ["{{ name }}"]}
                     }
                 }
             },
@@ -286,10 +282,8 @@ class OGsTemplate(NetworkTemplate):
             "compval": "security_group.tag",
             "result": {
                 "ogs": {
-                    "{{ obj_type }}":{
-                        "{{ obj_name }}": {
-                            "tag": ["{{ tag }}"],
-                        }
+                    "{{ obj_type }}": {
+                        "{{ obj_name }}": {"tag": ["{{ tag }}"]}
                     }
                 }
             },
@@ -306,10 +300,8 @@ class OGsTemplate(NetworkTemplate):
             "compval": "service_object",
             "result": {
                 "ogs": {
-                    "{{ obj_type }}":{
-                        "{{ obj_name }}": {
-                            "protocol": ["{{ protocol }}"],
-                        }
+                    "{{ obj_type }}": {
+                        "{{ obj_name }}": {"protocol": ["{{ protocol }}"]}
                     }
                 }
             },
@@ -326,10 +318,8 @@ class OGsTemplate(NetworkTemplate):
             "setval": "service-object object {{ object }}",
             "result": {
                 "ogs": {
-                    "{{ obj_type }}":{
-                        "{{ obj_name }}": {
-                            "object": "{{ object }}",
-                        }
+                    "{{ obj_type }}": {
+                        "{{ obj_name }}": {"object": "{{ object }}"}
                     }
                 }
             },
@@ -352,9 +342,9 @@ class OGsTemplate(NetworkTemplate):
                             "user": [
                                 {
                                     "name": "{{ user_name }}",
-                                    "domain": "{{ domain }}"
+                                    "domain": "{{ domain }}",
                                 }
-                            ],
+                            ]
                         }
                     }
                 }
@@ -373,14 +363,14 @@ class OGsTemplate(NetworkTemplate):
             "compval": "user_object",
             "result": {
                 "ogs": {
-                    "{{ obj_type }}":{
+                    "{{ obj_type }}": {
                         "{{ obj_name }}": {
                             "user_group": [
                                 {
                                     "name": "{{ user_gp }}",
-                                    "domain": "{{ domain }}"
+                                    "domain": "{{ domain }}",
                                 }
-                            ],
+                            ]
                         }
                     }
                 }
@@ -398,10 +388,8 @@ class OGsTemplate(NetworkTemplate):
             "compval": "group_object",
             "result": {
                 "ogs": {
-                    "{{ obj_type }}":{
-                        "{{ obj_name }}": {
-                            "group_object": "{{ gp_obj }}",
-                        }
+                    "{{ obj_type }}": {
+                        "{{ obj_name }}": {"group_object": "{{ gp_obj }}"}
                     }
                 }
             },
