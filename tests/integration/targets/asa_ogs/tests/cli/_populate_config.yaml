@@ -1,6 +1,6 @@
 ---
 - name: Populate Config
-  cisco.asa.asa_ogs: &id001
+  cisco.asa.asa_ogs:
     config:
       - object_type: network
         object_groups:

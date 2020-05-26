@@ -5,9 +5,47 @@
 
 - include_tasks: _remove_config.yaml
 
-- include_tasks: _populate_config.yaml
-
 - block:
+
+    - name: Populate Config for Gather facts
+      cisco.asa.asa_ogs:
+        config:
+          - object_type: network
+            object_groups:
+              - name: test_og_network
+                description: test_og_network
+                network_object:
+                  host:
+                    - 192.0.2.1
+                  address:
+                    - 192.0.2.0 255.255.255.0
+              - name: test_network_og
+                description: test_network_og
+                network_object:
+                  host:
+                    - 192.0.3.1
+                  ipv6_address:
+                    - 2001:db8:3::/64
+          - object_type: security
+            object_groups:
+              - name: test_og_security
+                description: test_security
+                security_group:
+                  sec_name:
+                    - test_1
+                  tag:
+                    - 10
+          - object_type: user
+            object_groups:
+              - name: test_og_user
+                description: test_user
+                user_object:
+                  user:
+                    - name: new_user_1
+                      domain: LOCAL
+                    - name: new_user_2
+                      domain: LOCAL
+        state: merged
 
     - name: Gather the provided configuration with the exisiting running configuration
       register: result
