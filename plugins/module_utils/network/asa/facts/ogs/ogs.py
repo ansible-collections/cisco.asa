@@ -97,7 +97,8 @@ class OGsFacts(object):
                     key=lambda k, sk="name": k[sk],
                 )
                 ogs.append(config_dict)
-
+        # sort the object group list of dict by object_type
+        ogs = sorted(ogs, key = lambda i: i["object_type"])
         facts = {}
         if current:
             params = utils.validate_config(self.argument_spec, {"config": ogs})
