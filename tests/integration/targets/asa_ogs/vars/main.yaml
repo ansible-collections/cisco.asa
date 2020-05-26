@@ -64,6 +64,25 @@ overridden:
 gathered:
   config:
     - object_groups:
+        - description: test_network_og
+          name: test_network_og
+          network_object:
+            host:
+              - 192.0.3.2
+              - 192.0.3.1
+            ipv6_address:
+              - 2001:db8:3::/64
+        - description: test_og_network
+          name: test_og_network
+          network_object:
+            address:
+              - 192.0.2.0 255.255.255.0
+              - 198.51.100.0 255.255.255.0
+            host:
+              - 192.0.2.2
+              - 192.0.2.1
+      object_type: network
+    - object_groups:
         - description: test_security
           name: test_og_security
           security_group:
@@ -74,25 +93,6 @@ gathered:
               - 10
               - 20
       object_type: security
-    - object_groups:
-        - description: test_network_og
-          name: test_network_og
-          network_object:
-            host:
-              - 192.0.3.1
-              - 192.0.3.2
-            ipv6_address:
-              - 2001:db8:3::/64
-        - description: test_og_network
-          name: test_og_network
-          network_object:
-            address:
-              - 192.0.2.0 255.255.255.0
-              - 198.51.100.0 255.255.255.0
-            host:
-              - 192.0.2.1
-              - 192.0.2.2
-      object_type: network
     - object_groups:
         - description: test_user
           name: test_og_user
@@ -122,8 +122,8 @@ parsed:
         - name: test_og_service
           service_object:
             protocol:
-              - tcp-udp
               - ipinip
+              - tcp-udp
       object_type: service
 rtt:
   commands:
