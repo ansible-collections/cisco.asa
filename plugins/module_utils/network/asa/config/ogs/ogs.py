@@ -117,7 +117,6 @@ class OGs(ResourceModule):
             self._compare(want=want, have=haved.pop(k, {}))
 
     def _compare(self, want, have):
-        parsers = ["description", "user_object.user", "user_object.user_gp"]
         if want != have:
             for k, v in iteritems(want):
                 if k != "object_type":
