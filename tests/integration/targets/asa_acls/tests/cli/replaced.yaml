@@ -14,6 +14,23 @@
       cisco.asa.asa_acls: &id001
         config:
           - acls:
+            - name: test_access
+              acl_type: extended
+              aces:
+                - grant: deny
+                  line: 1
+                  protocol: tcp
+                  protocol_options:
+                    tcp: true
+                  source:
+                    address: 192.0.3.0
+                    netmask: 255.255.255.0
+                  destination:
+                    address: 192.0.4.0
+                    netmask: 255.255.255.0
+                    port_protocol:
+                      eq: www
+                  log: default
             - name: test_global_access
               acl_type: extended
               aces:
@@ -35,7 +52,7 @@
 
     - assert:
         that:
-          - result.commands|length == 2
+          - result.commands|length == 5
           - result.changed == true
           - result.commands|symmetric_difference(replaced.commands) == []
 
