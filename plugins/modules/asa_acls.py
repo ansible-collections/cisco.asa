@@ -30,24 +30,17 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-ANSIBLE_METADATA = {
-    "metadata_version": "1.1",
-    "status": ["preview"],
-    "supported_by": "network",
-}
-
 
 DOCUMENTATION = """
----
 module: asa_acls
-version_added: '2.10'
-short_description: Manages named or numbered ACLs on ASA devices.
-description: This module configures and manages the named or numbered ACLs on ASA platforms.
+short_description: Access-Lists resource module
+description: This module configures and manages the named or numbered ACLs on ASA
+  platforms.
+version_added: 1.0.0
 author: Sumit Jaiswal (@justjais)
 notes:
 - Tested against Cisco ASA Version 9.10(1)11
-- This module works with connection C(network_cli).
-  See L(ASA Platform Options,../network/user_guide/platform_asa.html).
+- This module works with connection C(network_cli). See L(ASA Platform Options,../network/user_guide/platform_asa.html).
 options:
   config:
     description: A dictionary of ACL options.
@@ -56,15 +49,15 @@ options:
     suboptions:
       afi:
         description:
-          - The Address Family Indicator (AFI) for the Access Control Lists (ACL).
+        - The Address Family Indicator (AFI) for the Access Control Lists (ACL).
         required: true
         type: str
         choices:
-          - ipv4
-          - ipv6
+        - ipv4
+        - ipv6
       acls:
         description:
-          - A list of Access Control Lists (ACL).
+        - A list of Access Control Lists (ACL).
         type: list
         elements: dict
         suboptions:
@@ -74,11 +67,11 @@ options:
             type: str
           acl_type:
             description:
-              - ACL type
+            - ACL type
             type: str
             choices:
-              - extended
-              - standard
+            - extended
+            - standard
           rename:
             description:
             - Rename an existing access-list.
@@ -94,21 +87,20 @@ options:
                 description: Specify the action.
                 type: str
                 choices:
-                  - permit
-                  - deny
+                - permit
+                - deny
               line:
                 description:
-                  - Use this to specify line number at which ACE should be entered.
-                  - Existing ACE can be updated based on the input line number.
-                  - It's not a required param in case of configuring the acl, but in
-                    case of Delete operation it's required, else Delete operation won't
-                    work as expected.
-                  - Refer to vendor documentation for valid values.
+                - Use this to specify line number at which ACE should be entered.
+                - Existing ACE can be updated based on the input line number.
+                - It's not a required param in case of configuring the acl, but in
+                  case of Delete operation it's required, else Delete operation won't
+                  work as expected.
+                - Refer to vendor documentation for valid values.
                 type: int
               remark:
                 description:
-                  - Specify a comment (remark) for the access-list after
-                    this keyword
+                - Specify a comment (remark) for the access-list after this keyword
                 type: str
               protocol:
                 description:
@@ -298,15 +290,15 @@ options:
                     type: str
                   any:
                     description:
-                      - Match any source address.
+                    - Match any source address.
                     type: bool
                   host:
                     description: A single source host
                     type: str
                   port_protocol:
                     description:
-                      - Specify the destination port along with protocol.
-                      - Note, Valid with TCP/UDP protocol_options
+                    - Specify the destination port along with protocol.
+                    - Note, Valid with TCP/UDP protocol_options
                     type: dict
                     suboptions:
                       eq:
@@ -339,7 +331,8 @@ options:
                     description: Host address to match, or any single host address.
                     type: str
                   netmask:
-                    description: Netmask for destination IP address, valid with IPV4 address.
+                    description: Netmask for destination IP address, valid with IPV4
+                      address.
                     type: str
                   any:
                     description: Match any source address.
@@ -349,8 +342,8 @@ options:
                     type: str
                   port_protocol:
                     description:
-                      - Specify the destination port along with protocol.
-                      - Note, Valid with TCP/UDP protocol_options
+                    - Specify the destination port along with protocol.
+                    - Note, Valid with TCP/UDP protocol_options
                     type: dict
                     suboptions:
                       eq:
@@ -382,29 +375,27 @@ options:
                 description: Log matches against this entry.
                 type: str
                 choices:
-                  - default
-                  - alerts
-                  - critical
-                  - debugging
-                  - disable
-                  - emergencies
-                  - errors
-                  - informational
-                  - interval
-                  - notifications
-                  - warnings
+                - default
+                - alerts
+                - critical
+                - debugging
+                - disable
+                - emergencies
+                - errors
+                - informational
+                - interval
+                - notifications
+                - warnings
               time_range:
                 description: Specify a time-range.
                 type: str
   running_config:
     description:
-      - The module, by default, will connect to the remote device and
-        retrieve the current running-config to use as a base for comparing
-        against the contents of source. There are times when it is not
-        desirable to have the task get the current running-config for
-        every task in a playbook.  The I(running_config) argument allows the
-        implementer to pass in the configuration to use as the base
-        config for comparison.
+    - The module, by default, will connect to the remote device and retrieve the current
+      running-config to use as a base for comparing against the contents of source.
+      There are times when it is not desirable to have the task get the current running-config
+      for every task in a playbook.  The I(running_config) argument allows the implementer
+      to pass in the configuration to use as the base config for comparison.
     type: str
   state:
     choices:
@@ -419,10 +410,10 @@ options:
     description:
     - The state of the configuration after module completion
     type: str
+
 """
 
 EXAMPLES = """
----
 # Using merged
 # Before state:
 # -------------
@@ -439,63 +430,63 @@ EXAMPLES = """
 - name: Merge provided configuration with device configuration
   cisco.asa.asa_acls:
     config:
-      - acls:
-        - name: temp_access
-          acl_type: extended
-          aces:
-            - grant: deny
-              line: 1
-              protocol_options:
-                tcp: true
-              source:
-                address: 192.0.2.0
-                netmask: 255.255.255.0
-              destination:
-                address: 192.0.3.0
-                netmask: 255.255.255.0
-                port_protocol:
-                  eq: www
-              log: default
-            - grant: deny
-              line: 2
-              protocol_options:
-                igrp: true
-              source:
-                address: 198.51.100.0
-                netmask: 255.255.255.0
-              destination:
-                address: 198.51.110.0
-                netmask: 255.255.255.0
-              time_range: temp
-        - name: global_access
-          acl_type: extended
-          aces:
-            - grant: deny
-              line: 3
-              protocol_options:
-                tcp: true
-              source:
-                any: true
-              destination:
-                any: true
-                port_protocol:
-                  eq: www
-              log: errors
-        - name: R1_traffic
-          aces:
-            - grant: deny
-              line: 2
-              protocol_options:
-                tcp: true
-              source:
-                address: 2001:db8:0:3::/64
-                port_protocol:
-                  eq: www
-              destination:
-                address: 2001:fc8:0:4::/64
-                port_protocol:
-                  eq: telnet
-              inactive: true
+    - acls:
+      - name: temp_access
+        acl_type: extended
+        aces:
+        - grant: deny
+          line: 1
+          protocol_options:
+            tcp: true
+          source:
+            address: 192.0.2.0
+            netmask: 255.255.255.0
+          destination:
+            address: 192.0.3.0
+            netmask: 255.255.255.0
+            port_protocol:
+              eq: www
+          log: default
+        - grant: deny
+          line: 2
+          protocol_options:
+            igrp: true
+          source:
+            address: 198.51.100.0
+            netmask: 255.255.255.0
+          destination:
+            address: 198.51.110.0
+            netmask: 255.255.255.0
+          time_range: temp
+      - name: global_access
+        acl_type: extended
+        aces:
+        - grant: deny
+          line: 3
+          protocol_options:
+            tcp: true
+          source:
+            any: true
+          destination:
+            any: true
+            port_protocol:
+              eq: www
+          log: errors
+      - name: R1_traffic
+        aces:
+        - grant: deny
+          line: 2
+          protocol_options:
+            tcp: true
+          source:
+            address: 2001:db8:0:3::/64
+            port_protocol:
+              eq: www
+          destination:
+            address: 2001:fc8:0:4::/64
+            port_protocol:
+              eq: telnet
+          inactive: true
     state: merged
 
 # Commands fired:
@@ -545,11 +536,11 @@ EXAMPLES = """
 - name: Rename ACL with different name using Merged state
   cisco.asa.asa_acls:
     config:
-      - acls:
-          - name: global_access
-            rename: global_access_renamed
-          - name: R1_traffic
-            rename: R1_traffic_renamed
+    - acls:
+      - name: global_access
+        rename: global_access_renamed
+      - name: R1_traffic
+        rename: R1_traffic_renamed
     state: merged
 
 # Commands fired:
@@ -598,24 +589,24 @@ EXAMPLES = """
 - name: Replaces device configuration of listed acl with provided configuration
   cisco.asa.asa_acls:
     config:
-      - acls:
-        - name: global_access
-          acl_type: extended
-          aces:
-            - grant: deny
-              line: 1
-              protocol_options:
-                tcp: true
-              source:
-                address: 192.0.4.0
-                netmask: 255.255.255.0
-                port_protocol:
-                  eq: telnet
-              destination:
-                address: 192.0.5.0
-                netmask: 255.255.255.0
-                port_protocol:
-                  eq: www
+    - acls:
+      - name: global_access
+        acl_type: extended
+        aces:
+        - grant: deny
+          line: 1
+          protocol_options:
+            tcp: true
+          source:
+            address: 192.0.4.0
+            netmask: 255.255.255.0
+            port_protocol:
+              eq: telnet
+          destination:
+            address: 192.0.5.0
+            netmask: 255.255.255.0
+            port_protocol:
+              eq: www
     state: replaced
 
 # Commands fired:
@@ -676,24 +667,24 @@ EXAMPLES = """
 - name: Override device configuration of all acl with provided configuration
   cisco.asa.asa_acls:
     config:
-      - acls:
-        - name: global_access
-          acl_type: extended
-          aces:
-            - grant: deny
-              line: 1
-              protocol_options:
-                tcp: true
-              source:
-                address: 192.0.4.0
-                netmask: 255.255.255.0
-                port_protocol:
-                  eq: telnet
-              destination:
-                address: 192.0.5.0
-                netmask: 255.255.255.0
-                port_protocol:
-                  eq: www
+    - acls:
+      - name: global_access
+        acl_type: extended
+        aces:
+        - grant: deny
+          line: 1
+          protocol_options:
+            tcp: true
+          source:
+            address: 192.0.4.0
+            netmask: 255.255.255.0
+            port_protocol:
+              eq: telnet
+          destination:
+            address: 192.0.5.0
+            netmask: 255.255.255.0
+            port_protocol:
+              eq: www
     state: overridden
 
 # Commands fired:
@@ -743,31 +734,28 @@ EXAMPLES = """
 #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
 #                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae
 
-- name: "Delete module attributes of given acl (Note: This won't delete the interface itself)"
+- name: "Delete module attributes of given acl (Note: This won't delete ALL of the ACLs configured)"
   cisco.asa.asa_acls:
     config:
-      - acls:
-        - name: temp_access
-          aces:
-            - line: 2
-        - name: global_access
-          aces:
-            - line: 3
+    - acls:
+      - name: temp_access
+      - name: global_access
     state: deleted
 
 # Commands fired:
 # ---------------
 # no access-list temp_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
 #                            time-range temp inactive
+# no access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+#                            log default
 # no access-list global_access line 3 extended deny tcp any any eq www log errors interval 300
+# no access-list global_access line 2 extended deny tcp any any eq telnet
+# no access-list global_access line 1 extended permit icmp any any log disable
 
 # After state:
 # -------------
 #
 # vasa#sh access-lists
-# access-list global_access; 2 elements; name hash: 0xbd6c87a7
-# access-list global_access line 1 extended permit icmp any any log disable (hitcnt=0) 0xf1efa630
-# access-list global_access line 2 extended deny tcp any any eq telnet (hitcnt=0) 0xae5833af
 # access-list R1_traffic; 2 elements; name hash: 0xaf40d3c2
 # access-list R1_traffic line 1
 #                        extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www
@@ -775,10 +763,6 @@ EXAMPLES = """
 # access-list R1_traffic line 2
 #                        extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet
 #                        inactive (hitcnt=0) (inactive) 0xe922b432
-# access-list temp_access; 1 elements; name hash: 0xaf1b712e
-# access-list temp_access line 1
-#                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
-#                         log default (hitcnt=0) 0xb58abb0d
 
 # Using Deleted without any config passed
 #"(NOTE: This will delete all of configured resource module attributes)"
@@ -806,7 +790,7 @@ EXAMPLES = """
 #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
 #                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae
 
-- name: "Delete module attributes of all acl (Note: This won't delete the interface itself)"
+- name: "Delete ALL ACLs in one go (Note: This WILL delete the ALL of configured ACLs)"
   cisco.asa.asa_acls:
     state: deleted
 
@@ -999,49 +983,49 @@ EXAMPLES = """
 - name: Rendered the provided configuration with the exisiting running configuration
   cisco.asa.asa_acls:
   config:
-    - acls:
-      - name: temp_access
-        acl_type: extended
-        aces:
-          - grant: deny
-            line: 1
-            protocol_options:
-              tcp: true
-            source:
-              address: 192.0.2.0
-              netmask: 255.255.255.0
-            destination:
-              address: 192.0.3.0
-              netmask: 255.255.255.0
-              port_protocol:
-                eq: www
-            log: default
-          - grant: deny
-            line: 2
-            protocol_options:
-              igrp: true
-            source:
-              address: 198.51.100.0
-              netmask: 255.255.255.0
-            destination:
-              address: 198.51.110.0
-              netmask: 255.255.255.0
-            time_range: temp
-      - name: R1_traffic
-        aces:
-          - grant: deny
-            protocol_options:
-              tcp: true
-            source:
-              address: 2001:db8:0:3::/64
-              port_protocol:
-                eq: www
-            destination:
-              address: 2001:fc8:0:4::/64
-              port_protocol:
-                eq: telnet
-            inactive: true
-      state: rendered
+  - acls:
+    - name: temp_access
+      acl_type: extended
+      aces:
+      - grant: deny
+        line: 1
+        protocol_options:
+          tcp: true
+        source:
+          address: 192.0.2.0
+          netmask: 255.255.255.0
+        destination:
+          address: 192.0.3.0
+          netmask: 255.255.255.0
+          port_protocol:
+            eq: www
+        log: default
+      - grant: deny
+        line: 2
+        protocol_options:
+          igrp: true
+        source:
+          address: 198.51.100.0
+          netmask: 255.255.255.0
+        destination:
+          address: 198.51.110.0
+          netmask: 255.255.255.0
+        time_range: temp
+    - name: R1_traffic
+      aces:
+      - grant: deny
+        protocol_options:
+          tcp: true
+        source:
+          address: 2001:db8:0:3::/64
+          port_protocol:
+            eq: www
+        destination:
+          address: 2001:fc8:0:4::/64
+          port_protocol:
+            eq: telnet
+        inactive: true
+    state: rendered
 
 # Module Execution Result:
 # ------------------------
@@ -1061,16 +1045,11 @@ EXAMPLES = """
 
 - name: Parse the commands for provided configuration
   cisco.asa.asa_acls:
-    running_config:
-      "access-list test_access line 1
-                               extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0
-                               eq www log default\n
-      access-list test_access line 2
-                              extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
-                              log errors\n
-      access-list test_R1_TRAFFIC line 1
-                                  extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64
-                                  eq telnet inactive"
+    running_config: "access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0\
+      \ 192.0.3.0 255.255.255.0 eq www log default\naccess-list test_access line 2\
+      \ extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log\
+      \ errors\naccess-list test_R1_TRAFFIC line 1 extended deny tcp 2001:db8:0:3::/64\
+      \ eq www 2001:fc8:0:4::/64 eq telnet inactive"
     state: parsed
 
 # Module Execution Result:

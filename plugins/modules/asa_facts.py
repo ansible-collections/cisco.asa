@@ -19,73 +19,61 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-ANSIBLE_METADATA = {
-    "metadata_version": "1.1",
-    "status": ["preview"],
-    "supported_by": "network",
-}
-
 
 DOCUMENTATION = """
----
 module: asa_facts
-version_added: "2.10"
 author:
-  - "Sumit Jaiswal (@justjais)"
+- Sumit Jaiswal (@justjais)
 short_description: Collect facts from remote devices running Cisco ASA
 description:
-  - Collects a base set of device facts from a remote device that
-    is running ASA.  This module prepends all of the
-    base network fact keys with C(ansible_net_<fact>).  The facts
-    module will always collect a base set of facts from the device
-    and can enable or disable collection of additional facts.
-  - Note, to collects facts from ASA device properly user should
-    elevate the privilege to become.
+- Collects a base set of device facts from a remote device that is running ASA.  This
+  module prepends all of the base network fact keys with C(ansible_net_<fact>).  The
+  facts module will always collect a base set of facts from the device and can enable
+  or disable collection of additional facts.
+- Note, to collects facts from ASA device properly user should elevate the privilege
+  to become.
+version_added: 1.0.0
 extends_documentation_fragment: asa
 notes:
-  - Tested against asa 9.10(1)11
+- Tested against asa 9.10(1)11
 options:
   gather_subset:
     description:
-      - When supplied, this argument restricts the facts collected
-         to a given subset.
-      - Possible values for this argument include
-         C(all), C(min), C(hardware), C(config).
-      - Specify a list of values to include a larger subset.
-      - Use a value with an initial C(!) to collect all facts except that subset.
+    - When supplied, this argument restricts the facts collected to a given subset.
+    - Possible values for this argument include C(all), C(min), C(hardware), C(config).
+    - Specify a list of values to include a larger subset.
+    - Use a value with an initial C(!) to collect all facts except that subset.
     required: false
     type: list
     default: '!config'
   gather_network_resources:
     description:
-      - When supplied, this argument will restrict the facts collected
-        to a given subset. Possible values for this argument include
-        all and the resources like interfaces, vlans etc.
-        Can specify a list of values to include a larger subset.
-        Values can also be used with an initial C(M(!)) to specify that
-        a specific subset should not be collected.
-        Valid subsets are 'all', 'acls', 'ogs'.
+    - When supplied, this argument will restrict the facts collected to a given subset.
+      Possible values for this argument include all and the resources like interfaces,
+      vlans etc. Can specify a list of values to include a larger subset. Values can
+      also be used with an initial C(M(!)) to specify that a specific subset should
+      not be collected. Valid subsets are 'all', 'acls', 'ogs'.
     required: false
     type: list
 """
 
 EXAMPLES = """
 - name: Gather all legacy facts
-  asa_facts:
+  cisco.asa.asa_facts:
     gather_subset: all
 
 - name: Gather only the config and default facts
-  asa_facts:
+  cisco.asa.asa_facts:
     gather_subset:
-      - config
+    - config
 
 - name: Do not gather hardware facts
-  asa_facts:
+  cisco.asa.asa_facts:
     gather_subset:
-      - "!hardware"
+    - '!hardware'
 
 - name: Gather legacy and resource facts
-  asa_facts:
+  cisco.asa.asa_facts:
     gather_subset: all
 """
 

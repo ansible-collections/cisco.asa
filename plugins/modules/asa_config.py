@@ -8,20 +8,15 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {
-    "metadata_version": "1.1",
-    "status": ["preview"],
-    "supported_by": "community",
-}
-
-
-DOCUMENTATION = """module: asa_config
+DOCUMENTATION = """
+module: asa_config
 author: Peter Sprygada (@privateip), Patrick Ogenstad (@ogenstad)
 short_description: Manage configuration sections on Cisco ASA devices
 description:
 - Cisco ASA configurations use a simple block indent file syntax for segmenting configuration
   into sections.  This module provides an implementation for working with ASA configuration
   sections in a deterministic way.
+version_added: 1.0.0
 extends_documentation_fragment:
 - cisco.asa.asa
 options:
@@ -88,7 +83,7 @@ options:
       value is not given, the backup file is written to the C(backup) folder in the
       playbook root directory. If the directory does not exist, it is created.
     type: bool
-    default: 'no'
+    default: no
   config:
     description:
     - The C(config) argument allows the playbook designer to supply the base configuration
@@ -100,21 +95,21 @@ options:
       the remote device running config.  When enabled, the module will get the current
       config by issuing the command C(show running-config all).
     type: bool
-    default: 'no'
+    default: no
   passwords:
     description:
     - This argument specifies to include passwords in the config when retrieving the
       running-config from the remote device.  This includes passwords related to VPN
       endpoints.  This argument is mutually exclusive with I(defaults).
     type: bool
-    default: 'no'
+    default: no
   save:
     description:
     - The C(save) argument instructs the module to save the running- config to the
       startup-config at the conclusion of the module running.  If check mode is specified,
       this argument is ignored.
     type: bool
-    default: 'no'
+    default: no
   backup_options:
     description:
     - This is a dict object containing configurable options related to backup file
@@ -140,96 +135,81 @@ options:
 """
 
 EXAMPLES = """
-# Note: examples below use the following provider dict to handle
-#       transport and authentication to the node.
----
-vars:
-  cli:
-    host: "{{ inventory_hostname }}"
-    username: cisco
-    password: cisco
-    authorize: yes
-    auth_pass: cisco
-
----
-- asa_config:
+- cisco.asa.asa_config:
     lines:
-      - network-object host 10.80.30.18
-      - network-object host 10.80.30.19
-      - network-object host 10.80.30.20
-    parents: ['object-group network OG-MONITORED-SERVERS']
-    provider: "{{ cli }}"
+    - network-object host 10.80.30.18
+    - network-object host 10.80.30.19
+    - network-object host 10.80.30.20
+    parents: [object-group network OG-MONITORED-SERVERS]
+    provider: '{{ cli }}'
 
-- asa_config:
-    host: "{{ inventory_hostname }}"
+- cisco.asa.asa_config:
+    host: '{{ inventory_hostname }}'
     lines:
-      - message-length maximum client auto
-      - message-length maximum 512
+    - message-length maximum client auto
+    - message-length maximum 512
     match: line
-    parents: ['policy-map type inspect dns PM-DNS', 'parameters']
+    parents: [policy-map type inspect dns PM-DNS, parameters]
     authorize: yes
     auth_pass: cisco
     username: admin
     password: cisco
     context: ansible
 
-- asa_config:
+- cisco.asa.asa_config:
     lines:
-      - ikev1 pre-shared-key MyS3cretVPNK3y
+    - ikev1 pre-shared-key MyS3cretVPNK3y
     parents: tunnel-group 1.1.1.1 ipsec-attributes
     passwords: yes
-    provider: "{{ cli }}"
+    provider: '{{ cli }}'
 
 - name: attach ASA acl on interface vlan13/nameif cloud13
-  asa_config:
+  cisco.asa.asa_config:
     lines:
-      - access-group cloud-acl_access_in in interface cloud13
-    provider: "{{ cli }}"
+    - access-group cloud-acl_access_in in interface cloud13
+    provider: '{{ cli }}'
 
 - name: configure ASA (>=9.2) default BGP
-  asa_config:
+  cisco.asa.asa_config:
     lines:
-      - bgp log-neighbor-changes
-      - bgp bestpath compare-routerid
-    provider: "{{ cli }}"
+    - bgp log-neighbor-changes
+    - bgp bestpath compare-routerid
+    provider: '{{ cli }}'
     parents:
-      - router bgp 65002
+    - router bgp 65002
   register: bgp
   when: bgp_default_config is defined
-
 - name: configure ASA (>=9.2) BGP neighbor in default/single context mode
-  asa_config:
+  cisco.asa.asa_config:
     lines:
-      - "bgp router-id {{ bgp_router_id }}"
-      - "neighbor {{ bgp_neighbor_ip }} remote-as {{ bgp_neighbor_as }}"
-      - "neighbor {{ bgp_neighbor_ip }} description {{ bgp_neighbor_name }}"
-    provider: "{{ cli }}"
+    - bgp router-id {{ bgp_router_id }}
+    - neighbor {{ bgp_neighbor_ip }} remote-as {{ bgp_neighbor_as }}
+    - neighbor {{ bgp_neighbor_ip }} description {{ bgp_neighbor_name }}
+    provider: '{{ cli }}'
     parents:
-      - router bgp 65002
-      - address-family ipv4 unicast
+    - router bgp 65002
+    - address-family ipv4 unicast
   register: bgp
   when: bgp_neighbor_as is defined
-
 - name: configure ASA interface with standby
-  asa_config:
+  cisco.asa.asa_config:
     lines:
-      - description my cloud interface
-      - nameif cloud13
-      - security-level 50
-      - ip address 192.168.13.1 255.255.255.0 standby 192.168.13.2
-    provider: "{{ cli }}"
-    parents: ["interface Vlan13"]
+    - description my cloud interface
+    - nameif cloud13
+    - security-level 50
+    - ip address 192.168.13.1 255.255.255.0 standby 192.168.13.2
+    provider: '{{ cli }}'
+    parents: [interface Vlan13]
   register: interface
-
 - name: Show changes to interface from task above
   debug:
     var: interface
 
 - name: configurable backup path
-  asa_config:
+  cisco.asa.asa_config:
     lines:
-      - access-group cloud-acl_access_in in interface cloud13
-    provider: "{{ cli }}"
+    - access-group cloud-acl_access_in in interface cloud13
+    provider: '{{ cli }}'
     backup: yes
     backup_options:
       filename: backup.cfg
