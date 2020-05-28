@@ -2,3 +2,4 @@ black==19.3b0 ; python_version > '3.5'
 flake8
 mock
 pytest-xdist
+coverage==4.5.4
