@@ -13,31 +13,18 @@
       register: result
       cisco.asa.asa_ogs: &id001
         config:
-          - name: test_og_network
-            object_type: network
-            network_object:
-              host:
-                - 192.0.2.2
-              address:
-                - 198.51.100.0 255.255.255.0
-          - name: test_network_og
-            object_type: network
-            description: test network og
-            network_object:
-               host:
-                 - 192.0.3.1
-          - name: test_og_security
-            object_type: security
-            security_group:
-              name:
-                - test_1
-          - name: test_og_user
-            object_type: user
+          - object_type: network
+            object_groups:
+              - name: test_og_network
+              - name: test_network_og
+          - object_type: security
+            object_groups:
+              - name: test_og_security
         state: deleted
 
     - assert:
         that:
-          - result.commands|length == 9
+          - result.commands|length == 3
           - result.changed == true
           - result.commands|symmetric_difference(deleted.commands) == []
 
@@ -52,14 +39,13 @@
     - name: Delete ALL configured module attributes
       register: result
       cisco.asa.asa_ogs:
-        config:
         state: deleted
 
     - assert:
         that:
-          - result.commands|length == 3
+          - result.commands|length == 1
           - result.changed == true
-          - result.commands|symmetric_difference(deleted_all.commands) == []
+          - result.commands|symmetric_difference(delete_all.commands) == []
 
     - name: Delete ALL configured module attributes (IDEMPOTENT)
       register: result

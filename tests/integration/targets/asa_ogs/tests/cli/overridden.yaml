@@ -12,26 +12,28 @@
       register: result
       cisco.asa.asa_ogs: &id001
         config:
-          - name: test_og_network
-            object_type: network
-            description: test_og_network_override
-            network_object:
-              host:
-                - 192.0.3.1
-              address:
-                - 192.0.3.0 255.255.255.0
-          - name: test_og_protocol
-            object_type: protocol
-            description: test_og_protocol
-            protocol_object:
-              protocol:
-                - tcp
-                - udp
+          - object_type: network
+            object_groups:
+              - name: test_og_network
+                description: test_og_network_override
+                network_object:
+                  host:
+                    - 192.0.3.1
+                  address:
+                    - 192.0.3.0 255.255.255.0
+          - object_type: protocol
+            object_groups:
+              - name: test_og_protocol
+                description: test_og_protocol
+                protocol_object:
+                  protocol:
+                    - tcp
+                    - udp
         state: overridden
 
     - assert:
         that:
-          - result.commands|length == 12
+          - result.commands|length == 15
           - result.changed == true
           - result.commands|symmetric_difference(overridden.commands) == []
 

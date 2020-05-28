@@ -55,14 +55,10 @@ notes:
     See L(ASA Platform Options,../network/user_guide/platform_asa.html).
 options:
   config:
-    description: A dictionary of Object Group options.
+    description: A list of Object Group options.
     type: list
     elements: dict
     suboptions:
-      name:
-        description: Specifies object-group ID
-        required: true
-        type: str
       object_type:
         description: The object group type.
         type: str
@@ -74,6 +70,7 @@ options:
           - security
           - service
           - user
+<<<<<<< HEAD
       description:
         description: The description for the object-group.
         type: str
@@ -156,6 +153,106 @@ options:
           - Configure an object group as an object.
           - Specifies the ID of an existing object group of the same type as the parent object group
         type: str
+=======
+      object_groups:
+        description: The object groups.
+        type: list
+        elements: dict
+        suboptions:
+          name:
+            description: Specifies object-group ID
+            required: true
+            type: str
+          description:
+            description: The description for the object-group.
+            type: str
+          icmp_type:
+            description: Configure an ICMP-type object
+            type: dict
+            suboptions:
+              icmp_object:
+                description: Defines the ICMP types in the group.
+                type: list
+                choices: [alternate-address, conversion-error, echo, echo-reply, information-reply, information-request,
+                mask-reply, mask-request, mobile-redirect, parameter-problem, redirect, router-advertisement,
+                router-solicitation, source-quench, time-exceeded, timestamp-reply, timestamp-request, traceroute,
+                unreachable]
+          network_object:
+            description: Configure a network object
+            type: list
+            element: dict
+            suboptions:
+              host:
+                description: Set this to specify a single host object.
+                type: list
+              address:
+                description: Enter an IPv4 network address with space seperated netmask .
+                type: list
+              ipv6_address:
+                description: Enter an IPv6 prefix.
+                type: list
+          protocol_object:
+            description: Configure a protocol object
+            type: dict
+            suboptions:
+              protocol:
+                description: Defines the protocols in the group.
+                type: list
+                choices: [ah, eigrp, esp, gre, icmp, icmp6, igmp, igrp, ip, ipinip, ipsec, nos, ospf, pcp, pim, pptp,
+                sctp, snp, tcp, udp]
+          security_group:
+            description: Configure a security-group
+            type: dict
+            suboptions:
+              name:
+                description: Enter this keyword to specify a security-group name.
+                type: list
+              tag:
+                description: Enter this keyword to specify a security-group tag.
+                type: list
+          service_object:
+            description: Configure a service object
+            type: dict
+            suboptions:
+              protocol:
+                description: Defines the protocols in the group.
+                type: list
+                choices: [ah, eigrp, esp, gre, icmp, icmp6, igmp, igrp, ip, ipinip, ipsec, nos, ospf, pcp, pim, pptp,
+                sctp, snp, tcp, tcp-udp, udp]
+              object:
+                description: Enter this keyword to specify a service object
+                type: str
+          user_object:
+            description: Configures single user, local or import user group
+            type: dict
+            suboptions:
+              user:
+                description: Configure a user objectUser name to configure a user object.
+                type: list
+                elements: dict
+                suboptions:
+                  name:
+                    description: Enter the name of the user
+                    type: str
+                    required: true
+                  domain:
+                    description: User domain
+                    type: str
+                    required: true
+              user_group:
+                description: Configure a user group object.
+                type: list
+                elements: dict
+                suboptions:
+                  name:
+                    description: Enter the name of the group
+                    type: str
+                    required: true
+                  domain:
+                    description: Group domain
+                    type: str
+                    required: true
+>>>>>>> a8f0012 (Update ASA OGs module to use rm_proto code (#30))
   running_config:
     description:
       - The module, by default, will connect to the remote device and retrieve the current
@@ -190,75 +287,77 @@ EXAMPLES = """
 #
 # ciscoasa# sh running-config object-group
 # object-group network test_og_network
-#  description test network og
+#  description test_network_og
 #  network-object host 192.0.3.1
 
 - name: "Merge module attributes of given object-group"
   cisco.asa.asa_ogs:
     config:
-      - name: test_og_network
-        object_type: network
-        description: test_og_network
-        network_object:
-          host:
-            - 192.0.2.1
-            - 192.0.2.2
-          address:
-            - 192.0.2.0 255.255.255.0
-            - 198.51.100.0 255.255.255.0
-      - name: test_network_og
-        object_type: network
-        description: test network og
-        network_object:
-          host:
-            - 192.0.3.1
-            - 192.0.3.2
-          ipv6_address:
-            - 2001:db8:0:3::/64
-        group_object: test_og_network
-      - name: test_og_security
-        object_type: security
-        description: test_security
-        security_group:
-          name:
-            - test_1
-            - test_2
-          tag:
-            - 10
-            - 20
-      - name: test_og_user
-        object_type: user
-        description: test_user
-        user_object:
-          user:
-            - new_user_1
-            - new_user_2
+    - object_type: network
+      object_groups:
+        - name: test_og_network
+          description: test_og_network
+          network_object:
+            host:
+              - 192.0.2.1
+              - 192.0.2.2
+            address:
+              - 192.0.2.0 255.255.255.0
+              - 198.51.100.0 255.255.255.0
+        - name: test_network_og
+          description: test_network_og
+          network_object:
+            host:
+              - 192.0.3.1
+              - 192.0.3.2
+            ipv6_address:
+              - 2001:db8:3::/64
+    - object_type: security
+      object_groups:
+        - name: test_og_security
+          description: test_security
+          security_group:
+            sec_name:
+              - test_1
+              - test_2
+            tag:
+              - 10
+              - 20
+    - object_type: user
+      object_groups:
+        - name: test_og_user
+          description: test_user
+          user_object:
+            user:
+              - name: new_user_1
+                domain: LOCAL
+              - name: new_user_2
+                domain: LOCAL
     state: merged
 
 # Commands fired:
 # ---------------
 #
-# object-group network test_og_network
-# description test_og_network
-# network-object host 192.0.2.1
-# network-object host 192.0.2.2
-# network-object 192.0.2.0 255.255.255.0
-# network-object 198.51.100.0 255.255.255.0
-# object-group network test_network_og
-# description test network og
-# network-object host 192.0.3.1
-# network-object host 192.0.3.2
-# network-object 2001:db8:0:3::/64
-# group-object test_og_network
 # object-group security test_og_security
-# description test_security
-# security-group name test_1
-# security-group name test_2
-# security-group tag 10
-# security-group tag 20
+#  description test_security
+#  security-group name test_1
+#  security-group name test_2
+#  security-group tag 10
+#  security-group tag 20
+# object-group network test_og_network
+#  description test_og_network
+#  network-object 192.0.2.0 255.255.255.0
+#  network-object 198.51.100.0 255.255.255.0
+#  network-object host 192.0.2.1
+#  network-object host 192.0.2.2
+# object-group network test_network_og
+#  network-object host 192.0.3.1
+#  network-object host 192.0.3.2
+#  network-object 2001:db8:3::/64
 # object-group user test_og_user
-# user new_user_1
-# user new_user_2
+#  description test_user
+#  user LOCAL\\new_user_1
+#  user LOCAL\\new_user_2
 
 # After state:
 # ------------
@@ -272,7 +371,7 @@ EXAMPLES = """
 #  network-object 198.51.100.0 255.255.255.0
 #  network-object host 192.0.3.1
 # object-group network test_network_og
-#  description test network og
+#  description test_network_og
 #  network-object host 192.0.3.1
 #  network-object host 192.0.3.2
 #  network-object 2001:db8:0:3::/64
@@ -283,6 +382,7 @@ EXAMPLES = """
 #  security-group tag 10
 #  security-group tag 20
 # object-group user test_og_user
+#  description test_user
 #  user LOCAL\\new_user_1
 #  user LOCAL\\new_user_2
 
@@ -299,7 +399,7 @@ EXAMPLES = """
 #  network-object 192.0.2.0 255.255.255.0
 #  network-object 198.51.100.0 255.255.255.0
 # object-group network test_network_og
-#  description test network og
+#  description test_network_og
 #  network-object host 192.0.3.1
 #  network-object host 192.0.3.2
 #  network-object 2001:db8:0:3::/64
@@ -316,35 +416,40 @@ EXAMPLES = """
 - name: "Replace module attributes of given object-group"
   cisco.asa.asa_ogs:
     config:
-      - name: test_og_network
-        object_type: network
-        description: test_og_network_replace
-        network_object:
-          host:
-            - 192.0.3.1
-          address:
-            - 192.0.3.0 255.255.255.0
-      - name: test_og_protocol
-        object_type: protocol
-        description: test_og_protocol
-        protocol_object:
-          protocol:
-            - tcp
-            - udp
+      - object_type: network
+        object_groups:
+          - name: test_og_network
+            description: test_og_network_replace
+            network_object:
+              host:
+                - 192.0.3.1
+              address:
+                - 192.0.3.0 255.255.255.0
+      - object_type: protocol
+        object_groups:
+          - name: test_og_protocol
+            description: test_og_protocol
+            protocol_object:
+              protocol:
+                - tcp
+                - udp
     state: replaced
 
 # Commands Fired:
 # ---------------
 #
-# no object-group network test_og_network
-# object-group network test_og_network
-# description test_og_network_replace
-# network-object host 192.0.3.1
-# network-object 192.0.3.0 255.255.255.0
 # object-group protocol test_og_protocol
 # description test_og_protocol
-# protocol-object tcp
-# protocol-object udp
+# protocol tcp
+# protocol udp
+# object-group network test_og_network
+# description test_og_network_replace
+# no network-object 192.0.2.0 255.255.255.0
+# no network-object 198.51.100.0 255.255.255.0
+# network-object 192.0.3.0 255.255.255.0
+# no network-object host 192.0.2.1
+# no network-object host 192.0.2.2
+# network-object host 192.0.3.1
 
 # After state:
 # -------------
@@ -355,7 +460,7 @@ EXAMPLES = """
 #  network-object host 192.0.3.1
 #  network-object 192.0.3.0 255.255.255.0
 # object-group network test_network_og
-#  description test network og
+#  description test_network_og
 #  network-object host 192.0.3.1
 #  network-object host 192.0.3.2
 #  network-object 2001:db8:0:3::/64
@@ -385,7 +490,7 @@ EXAMPLES = """
 #  network-object 192.0.2.0 255.255.255.0
 #  network-object 198.51.100.0 255.255.255.0
 # object-group network test_network_og
-#  description test network og
+#  description test_network_og
 #  network-object host 192.0.3.1
 #  network-object host 192.0.3.2
 #  network-object 2001:db8:0:3::/64
@@ -422,18 +527,21 @@ EXAMPLES = """
 # Commands Fired:
 # ---------------
 #
-# no object-group network test_og_network
-# object-group network test_og_network
-# description test_og_network_override
-# network-object host 192.0.3.1
-# network-object 192.0.3.0 255.255.255.0
-# no object-group network test_network_og
 # no object-group security test_og_security
 # no object-group user test_og_user
 # object-group protocol test_og_protocol
 # description test_og_protocol
-# protocol-object tcp
-# protocol-object udp
+# protocol tcp
+# protocol udp
+# object-group network test_og_network
+# description test_og_network_override
+# no network-object 192.0.2.0 255.255.255.0
+# no network-object 198.51.100.0 255.255.255.0
+# network-object 192.0.3.0 255.255.255.0
+# no network-object host 192.0.2.1
+# no network-object host 192.0.2.2
+# network-object host 192.0.3.1
+# no object-group network test_network_og
 
 # After state:
 # -------------
@@ -460,7 +568,7 @@ EXAMPLES = """
 #  network-object 192.0.2.0 255.255.255.0
 #  network-object 198.51.100.0 255.255.255.0
 # object-group network test_network_og
-#  description test network og
+#  description test_network_og
 #  network-object host 192.0.3.1
 #  network-object host 192.0.3.2
 #  network-object 2001:db8:0:3::/64
@@ -477,57 +585,29 @@ EXAMPLES = """
 - name: "Delete given module attributes"
   cisco.asa.asa_ogs:
     config:
-      - name: test_og_network
-        object_type: network
-        network_object:
-          host:
-            - 192.0.2.2
-          address:
-             - 198.51.100.0 255.255.255.0
-      - name: test_network_og
-        object_type: network
-        description: test network og
-        network_object:
-           host:
-             - 192.0.3.1
-      - name: test_og_security
-        object_type: security
-        security_group:
-          name:
-            - test_1
-      - name: test_og_user
-        object_type: user
+      - object_type: network
+        object_groups:
+          - name: test_og_network
+          - name: test_network_og
+      - object_type: security
+        object_groups:
+          - name: test_og_security
     state: deleted
 
 # Commands Fired:
 # ---------------
 #
-# object-group network test_og_network
-# no network-object host 192.0.2.2
-# no network-object 198.51.100.0 255.255.255.0
-# object-group network test_network_og
-# no description test network og
-# no network-object host 192.0.3.1
-# object-group security test_og_security
-# no security-group name test_1
-# no object-group user test_og_user
+# no object-group network test_og_network
+# no object-group network test_network_og
+# no object-group security test_og_security
 
 # After state:
 # -------------
 #
 # ciscoasa# sh running-config object-group
-# object-group network test_og_network
-#  description test_og_network
-#  network-object host 192.0.2.1
-#  network-object 192.0.2.0 255.255.255.0
-# object-group network test_network_og
-#  network-object host 192.0.3.2
-#  network-object 2001:db8:0:3::/64
-#  group-object test_og_network
-# object-group security test_og_security
-#  security-group name test_2
-#  security-group tag 10
-#  security-group tag 20
+# object-group user test_og_user
+#  user LOCAL\\new_user_1
+#  user LOCAL\\new_user_2
 
 # Using DELETED without any config passed
 #"(NOTE: This will delete all of configured resource module attributes)"
@@ -543,7 +623,7 @@ EXAMPLES = """
 #  network-object 192.0.2.0 255.255.255.0
 #  network-object 198.51.100.0 255.255.255.0
 # object-group network test_network_og
-#  description test network og
+#  description test_network_og
 #  network-object host 192.0.3.1
 #  network-object host 192.0.3.2
 #  network-object 2001:db8:0:3::/64
@@ -588,7 +668,7 @@ EXAMPLES = """
 #  network-object 192.0.2.0 255.255.255.0
 #  network-object 198.51.100.0 255.255.255.0
 # object-group network test_network_og
-#  description test network og
+#  description test_network_og
 #  network-object host 192.0.3.1
 #  network-object host 192.0.3.2
 #  network-object 2001:db8:0:3::/64
@@ -611,61 +691,79 @@ EXAMPLES = """
 # ------------------------
 #
 # "gathered": [
-#        {
-#            "description": "test_og_network",
-#            "name": "test_og_network",
-#            "network_object": {
-#                "address": [
-#                    "192.0.2.0 255.255.255.0",
-#                    "198.51.100.0 255.255.255.0"
-#                ],
-#                "host": [
-#                    "192.0.2.1",
-#                    "192.0.2.2"
-#                ]
-#            },
-#            "object_type": "network"
-#        },
-#        {
-#            "description": "test network og",
-#            "group_object": "test_og_network",
-#            "name": "test_network_og",
-#            "network_object": {
-#                "host": [
-#                    "192.0.3.1",
-#                    "192.0.3.2"
-#                ],
-#                "ipv6_address": [
-#                    "2001:db8:0:3::/64"
-#                ]
-#            },
-#            "object_type": "network"
-#        },
-#        {
-#            "name": "test_og_security",
-#            "object_type": "security",
-#            "security_group": {
-#                "name": [
-#                    "test_1",
-#                    "test_2"
-#                ],
-#                "tag": [
-#                    "10",
-#                    "20"
-#                ]
-#            }
-#        },
-#        {
-#            "name": "test_og_user",
-#            "object_type": "user",
-#            "user_object": {
-#                "user": [
-#                    "new_user_1",
-#                    "new_user_2"
-#                ]
-#            }
-#        }
-#    ]
+#         {
+#             "object_groups": [
+#                 {
+#                     "description": "test_security",
+#                     "name": "test_og_security",
+#                     "security_group": {
+#                         "sec_name": [
+#                             "test_2",
+#                             "test_1"
+#                         ],
+#                         "tag": [
+#                             10,
+#                             20
+#                         ]
+#                     }
+#                 }
+#             ],
+#             "object_type": "security"
+#         },
+#         {
+#             "object_groups": [
+#                 {
+#                     "description": "test_network_og",
+#                     "name": "test_network_og",
+#                     "network_object": {
+#                         "host": [
+#                             "192.0.3.1",
+#                             "192.0.3.2"
+#                         ],
+#                         "ipv6_address": [
+#                             "2001:db8:3::/64"
+#                         ]
+#                     }
+#                 },
+#                 {
+#                     "description": "test_og_network",
+#                     "name": "test_og_network",
+#                     "network_object": {
+#                         "address": [
+#                             "192.0.2.0 255.255.255.0",
+#                             "198.51.100.0 255.255.255.0"
+#                         ],
+#                         "host": [
+#                             "192.0.2.1",
+#                             "192.0.2.2"
+#                         ]
+#                     }
+#                 }
+#             ],
+#             "object_type": "network"
+#         },
+#         {
+#             "object_groups": [
+#                 {
+#                     "description": "test_user",
+#                     "name": "test_og_user",
+#                     "user_object": {
+#                         "user": [
+#                             {
+#                                 "domain": "LOCAL",
+#                                 "name": "new_user_1"
+#                             },
+#                             {
+#                                 "domain": "LOCAL",
+#                                 "name": "new_user_2"
+#                             }
+#                         ]
+#                     }
+#                 }
+#             ],
+#             "object_type": "user"
+#         }
+#     ]
 
 # After state:
 # ------------
@@ -678,7 +776,7 @@ EXAMPLES = """
 #  network-object 192.0.2.0 255.255.255.0
 #  network-object 198.51.100.0 255.255.255.0
 # object-group network test_network_og
-#  description test network og
+#  description test_network_og
 #  network-object host 192.0.3.1
 #  network-object host 192.0.3.2
 #  network-object 2001:db8:0:3::/64
@@ -697,54 +795,73 @@ EXAMPLES = """
 - name: Render the commands for provided  configuration
   cisco.asa.asa_ogs:
     config:
-      - name: test_og_network
-        object_type: network
-        description: test_og_network
-        network_object:
-          host:
-            - 192.0.2.1
-            - 192.0.2.2
-          address:
-            - 192.0.2.0 255.255.255.0
-            - 198.51.100.0 255.255.255.0
-      - name: test_network_og
-        object_type: network
-        description: test network og
-        network_object:
-          host:
-            - 192.0.3.1
-            - 192.0.3.2
-          ipv6_address:
-            - 2001:db8:0:3::/64
-        group_object: test_og_network
-      - name: test_og_service
-        object_type: service
-        description: test_service
-        service_object:
-          protocol:
-            - ipinip
-            - tcp-udp
+      - object_type: network
+            object_groups:
+              - name: test_og_network
+                description: test_og_network
+                network_object:
+                  host:
+                    - 192.0.2.1
+                    - 192.0.2.2
+                  address:
+                    - 192.0.2.0 255.255.255.0
+                    - 198.51.100.0 255.255.255.0
+              - name: test_network_og
+                description: test_network_og
+                network_object:
+                  host:
+                    - 192.0.3.1
+                    - 192.0.3.2
+                  ipv6_address:
+                    - 2001:db8:3::/64
+          - object_type: security
+            object_groups:
+              - name: test_og_security
+                description: test_security
+                security_group:
+                  sec_name:
+                    - test_1
+                    - test_2
+                  tag:
+                    - 10
+                    - 20
+          - object_type: user
+            object_groups:
+              - name: test_og_user
+                description: test_user
+                user_object:
+                  user:
+                    - name: new_user_1
+                      domain: LOCAL
+                    - name: new_user_2
+                      domain: LOCAL
     state: rendered
 
 # Module Execution Result:
 # ------------------------
 #
 # "rendered": [
+#         "object-group security test_og_security",
+#         "description test_security",
+#         "security-group name test_1",
+#         "security-group name test_2",
+#         "security-group tag 10",
+#         "security-group tag 20",
 #         "object-group network test_og_network",
 #         "description test_og_network",
-#         "network-object host 192.0.2.1",
-#         "network-object host 192.0.2.2",
 #         "network-object 192.0.2.0 255.255.255.0",
 #         "network-object 198.51.100.0 255.255.255.0",
+#         "network-object host 192.0.2.1",
+#         "network-object host 192.0.2.2",
 #         "object-group network test_network_og",
-#         "description test network og",
+#         "description test_network_og",
 #         "network-object host 192.0.3.1",
 #         "network-object host 192.0.3.2",
-#         "network-object 2001:db8:0:3::/64",
-#         "group-object test_og_network",
-#         "object-group service test_og_service",
-#         "service-object ipinip",
-#         "service-object tcp-udp"
+#         "network-object 2001:db8:3::/64",
+#         "object-group user test_og_user",
+#         "description test_user",
+#         "user LOCAL\\new_user_1",
+#         "user LOCAL\\new_user_2"
 #     ]
 
 # Using Parsed
@@ -752,52 +869,48 @@ EXAMPLES = """
 - name: Parse the commands for provided configuration
   cisco.asa.asa_ogs:
     running_config:
-      "object-group network test_og_network\ndescription test_og_network\nnetwork-object host 192.0.2.1
-      \nnetwork-object host 192.0.2.2\nnetwork-object 192.0.2.0 255.255.255.0
-      \nobject-group network test_network_og\nnetwork-object 2001:db8:0:3::/64
-      \ngroup-object test_og_network\nobject-group service test_og_service
-      \nservice-object ipinip\nservice-object tcp-udp"
+      "object-group network test_og_network\n description test_og_network\n network-object host 192.0.2.1
+      \n network-object host 192.0.2.2\n network-object 192.0.2.0 255.255.255.0
+      \nobject-group network test_network_og\n network-object 2001:db8:0:3::/64
+      \nobject-group service test_og_service\n service-object ipinip\n service-object tcp-udp"
     state: parsed
 
 # Module Execution Result:
 # ------------------------
 #
 # "parsed": [
-#        {
-#            "description": "test_og_network",
-#            "name": "test_og_network",
-#            "network_object": {
-#                "address": [
-#                    "192.0.2.0 255.255.255.0 "
-#                ],
-#                "host": [
-#                    "192.0.2.1",
-#                    "192.0.2.2"
-#                ]
-#            },
-#            "object_type": "network"
-#        },
-#        {
-#            "group_object": "test_og_network",
-#            "name": "test_network_og",
-#            "network_object": {
-#                "ipv6_address": [
-#                    "2001:db8:0:3::/64 "
-#                ]
-#            },
-#            "object_type": "network"
-#        },
-#        {
-#            "name": "test_og_service",
-#            "object_type": "service",
-#            "service_object": {
-#                "protocol": [
-#                    "ipinip",
-#                   "tcp-udp"
-#                ]
-#            }
-#        }
-#    ]
+#         {
+#             "object_groups": [
+#                 {
+#                     "name": "test_network_og"
+#                 },
+#                 {
+#                     "description": "test_og_network",
+#                     "name": "test_og_network",
+#                     "network_object": {
+#                         "host": [
+#                             "192.0.2.2"
+#                         ]
+#                     }
+#                 }
+#             ],
+#             "object_type": "network"
+#         },
+#         {
+#             "object_groups": [
+#                 {
+#                     "name": "test_og_service",
+#                     "service_object": {
+#                         "protocol": [
+#                             "tcp-udp",
+#                             "ipinip"
+#                         ]
+#                     }
+#                 }
+#             ],
+#             "object_type": "service"
+#         }
+#     ]
 
 """
 
@@ -816,7 +929,11 @@ commands:
   description: The set of commands pushed to the remote device
   returned: always
   type: list
+<<<<<<< HEAD
   sample: ['interface GigabitEthernet0/1', 'ip access-group 110 in', 'ipv6 traffic-filter test_v6 out']
+=======
+  sample: ['object-group network test_network_og', 'description test_network_og', 'network-object host 192.0.2.1']
+>>>>>>> a8f0012 (Update ASA OGs module to use rm_proto code (#30))
 """
 
 from ansible.module_utils.basic import AnsibleModule

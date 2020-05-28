@@ -52,7 +52,7 @@ class TestAsaOGsModule(TestAsaModule):
         )
 
         self.mock_get_resource_connection_facts = patch(
-            "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.facts.facts."
+            "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.resource_module."
             "get_resource_connection"
         )
         self.get_resource_connection_facts = (
@@ -90,12 +90,16 @@ class TestAsaOGsModule(TestAsaModule):
             dict(
                 config=[
                     dict(
-                        group_object="test_og_network",
-                        name="test_network_og",
-                        network_object=dict(
-                            host=["192.0.3.1"],
-                            ipv6_address=["2001:db8:0:3::/64"],
-                        ),
+                        object_groups=[
+                            dict(
+                                name="test_network_og",
+                                description="test network og",
+                                network_object=dict(
+                                    host=["192.0.3.1", "192.0.3.2"],
+                                    ipv6_address=["2001:db8:0:3::/64"],
+                                ),
+                            )
+                        ],
                         object_type="network",
                     )
                 ],
@@ -105,9 +109,10 @@ class TestAsaOGsModule(TestAsaModule):
         result = self.execute_module(changed=True)
         commands = [
             "object-group network test_network_og",
+            "description test network og",
             "network-object host 192.0.3.1",
+            "network-object host 192.0.3.2",
             "network-object 2001:db8:0:3::/64",
-            "group-object test_og_network",
         ]
         self.assertEqual(result["commands"], commands)
 
@@ -116,17 +121,27 @@ class TestAsaOGsModule(TestAsaModule):
             dict(
                 config=[
                     dict(
-                        description="test_og_network",
-                        name="test_og_network",
-                        network_object=dict(
-                            host=["192.0.2.1"],
-                            address=["192.0.2.0 255.255.255.0"],
-                        ),
+                        object_groups=[
+                            dict(
+                                description="test_og_network",
+                                name="test_og_network",
+                                network_object=dict(
+                                    host=["192.0.2.1"],
+                                    address=["192.0.2.0 255.255.255.0"],
+                                ),
+                            )
+                        ],
                         object_type="network",
                     ),
                     dict(
-                        name="test_og_service",
-                        service_object=dict(protocol=["ipinip", "tcp-udp"]),
+                        object_groups=[
+                            dict(
+                                name="test_og_service",
+                                service_object=dict(
+                                    protocol=["ipinip", "tcp-udp"]
+                                ),
+                            )
+                        ],
                         object_type="service",
                     ),
                 ],
@@ -140,12 +155,16 @@ class TestAsaOGsModule(TestAsaModule):
             dict(
                 config=[
                     dict(
-                        name="test_og_network",
-                        description="test_og_network_replace",
-                        network_object=dict(
-                            host=["192.0.3.1"],
-                            address=["192.0.3.0 255.255.255.0"],
-                        ),
+                        object_groups=[
+                            dict(
+                                name="test_og_network",
+                                description="test_og_network_replace",
+                                network_object=dict(
+                                    host=["192.0.3.1"],
+                                    address=["192.0.3.0 255.255.255.0"],
+                                ),
+                            )
+                        ],
                         object_type="network",
                     )
                 ],
@@ -154,11 +173,12 @@ class TestAsaOGsModule(TestAsaModule):
         )
         result = self.execute_module(changed=True)
         commands = [
-            "no object-group network test_og_network",
             "object-group network test_og_network",
             "description test_og_network_replace",
-            "network-object host 192.0.3.1",
+            "no network-object 192.0.2.0 255.255.255.0",
             "network-object 192.0.3.0 255.255.255.0",
+            "no network-object host 192.0.2.1",
+            "network-object host 192.0.3.1",
         ]
         self.assertEqual(result["commands"], commands)
 
@@ -167,17 +187,27 @@ class TestAsaOGsModule(TestAsaModule):
             dict(
                 config=[
                     dict(
-                        description="test_og_network",
-                        name="test_og_network",
-                        network_object=dict(
-                            host=["192.0.2.1"],
-                            address=["192.0.2.0 255.255.255.0"],
-                        ),
+                        object_groups=[
+                            dict(
+                                description="test_og_network",
+                                name="test_og_network",
+                                network_object=dict(
+                                    host=["192.0.2.1"],
+                                    address=["192.0.2.0 255.255.255.0"],
+                                ),
+                            )
+                        ],
                         object_type="network",
                     ),
                     dict(
-                        name="test_og_service",
-                        service_object=dict(protocol=["ipinip", "tcp-udp"]),
+                        object_groups=[
+                            dict(
+                                name="test_og_service",
+                                service_object=dict(
+                                    protocol=["ipinip", "tcp-udp"]
+                                ),
+                            )
+                        ],
                         object_type="service",
                     ),
                 ],
@@ -191,12 +221,16 @@ class TestAsaOGsModule(TestAsaModule):
             dict(
                 config=[
                     dict(
-                        name="test_og_network",
-                        description="test_og_network_override",
-                        network_object=dict(
-                            host=["192.0.3.1"],
-                            address=["192.0.3.0 255.255.255.0"],
-                        ),
+                        object_groups=[
+                            dict(
+                                name="test_og_network",
+                                description="test_og_network_override",
+                                network_object=dict(
+                                    host=["192.0.3.1"],
+                                    address=["192.0.3.0 255.255.255.0"],
+                                ),
+                            )
+                        ],
                         object_type="network",
                     )
                 ],
@@ -205,12 +239,13 @@ class TestAsaOGsModule(TestAsaModule):
         )
         result = self.execute_module(changed=True)
         commands = [
-            "no object-group network test_og_network",
+            "no object-group service test_og_service",
             "object-group network test_og_network",
             "description test_og_network_override",
-            "network-object host 192.0.3.1",
+            "no network-object 192.0.2.0 255.255.255.0",
             "network-object 192.0.3.0 255.255.255.0",
-            "no object-group service test_og_service",
+            "no network-object host 192.0.2.1",
+            "network-object host 192.0.3.1",
         ]
         self.assertEqual(result["commands"], commands)
 
@@ -219,17 +254,27 @@ class TestAsaOGsModule(TestAsaModule):
             dict(
                 config=[
                     dict(
-                        description="test_og_network",
-                        name="test_og_network",
-                        network_object=dict(
-                            host=["192.0.2.1"],
-                            address=["192.0.2.0 255.255.255.0"],
-                        ),
+                        object_groups=[
+                            dict(
+                                description="test_og_network",
+                                name="test_og_network",
+                                network_object=dict(
+                                    host=["192.0.2.1"],
+                                    address=["192.0.2.0 255.255.255.0"],
+                                ),
+                            )
+                        ],
                         object_type="network",
                     ),
                     dict(
-                        name="test_og_service",
-                        service_object=dict(protocol=["ipinip", "tcp-udp"]),
+                        object_groups=[
+                            dict(
+                                name="test_og_service",
+                                service_object=dict(
+                                    protocol=["ipinip", "tcp-udp"]
+                                ),
+                            )
+                        ],
                         object_type="service",
                     ),
                 ],
@@ -247,51 +292,32 @@ class TestAsaOGsModule(TestAsaModule):
         ]
         self.assertEqual(result["commands"], commands)
 
-    def test_asa_ogs_attributes_based(self):
-        set_module_args(
-            dict(
-                config=[
-                    dict(
-                        name="test_og_network",
-                        network_object=dict(
-                            address=["192.0.2.0 255.255.255.0"]
-                        ),
-                        object_type="network",
-                    ),
-                    dict(
-                        name="test_og_service",
-                        service_object=dict(protocol=["ipinip"]),
-                        object_type="service",
-                    ),
-                ],
-                state="deleted",
-            )
-        )
-        result = self.execute_module(changed=True)
-        commands = [
-            "object-group network test_og_network",
-            "no network-object 192.0.2.0 255.255.255.0",
-            "object-group service test_og_service",
-            "no service-object ipinip",
-        ]
-        self.assertEqual(result["commands"], commands)
-
     def test_asa_ogs_rendered(self):
         set_module_args(
             dict(
                 config=[
                     dict(
-                        description="test_og_network",
-                        name="test_og_network",
-                        network_object=dict(
-                            host=["192.0.2.1"],
-                            address=["192.0.2.0 255.255.255.0"],
-                        ),
+                        object_groups=[
+                            dict(
+                                description="test_og_network",
+                                name="test_og_network",
+                                network_object=dict(
+                                    host=["192.0.2.1"],
+                                    address=["192.0.2.0 255.255.255.0"],
+                                ),
+                            )
+                        ],
                         object_type="network",
                     ),
                     dict(
-                        name="test_og_service",
-                        service_object=dict(protocol=["ipinip", "tcp-udp"]),
+                        object_groups=[
+                            dict(
+                                name="test_og_service",
+                                service_object=dict(
+                                    protocol=["ipinip", "tcp-udp"]
+                                ),
+                            )
+                        ],
                         object_type="service",
                     ),
                 ],
@@ -301,8 +327,8 @@ class TestAsaOGsModule(TestAsaModule):
         commands = [
             "object-group network test_og_network",
             "description test_og_network",
-            "network-object host 192.0.2.1",
             "network-object 192.0.2.0 255.255.255.0",
+            "network-object host 192.0.2.1",
             "object-group service test_og_service",
             "service-object ipinip",
             "service-object tcp-udp",
