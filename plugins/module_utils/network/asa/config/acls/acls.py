@@ -410,21 +410,15 @@ class Acls(ConfigBase):
         if want:
             for config_want in want:
                 for acls_want in config_want.get("acls"):
-                    for ace_want in acls_want.get("aces"):
-                        for config_have in have:
-                            for acls_have in config_have.get("acls"):
-                                for ace_have in acls_have.get("aces"):
-                                    if acls_want.get("name") == acls_have.get(
-                                        "name"
-                                    ) and ace_want.get("line") == ace_have.get(
-                                        "line"
-                                    ):
-                                        clear_cmd = self._clear_config(
-                                            ace_have, acls_have
-                                        )
-                                        commands = self.add_config_cmd(
-                                            clear_cmd, commands
-                                        )
+                    for config_have in have:
+                        for acls_have in config_have.get("acls"):
+                            for ace_have in acls_have.get("aces"):
+                                if acls_want.get("name") == acls_have.get(
+                                    "name"
+                                ):
+                                    commands.extend(
+                                        self._clear_config(ace_have, acls_have)
+                                    )
         else:
             for config_have in have:
                 for acls_have in config_have.get("acls"):
@@ -574,7 +568,7 @@ class Acls(ConfigBase):
 
         return cmd
 
-    def common_config_cmd(self, want, acl_want, cmd, type=""):
+    def common_config_cmd(self, want, acl_want, cmd):
         """ Common Function that prepares the acls config cmd based on the want config
         :param want: want ace config
         :param acl_want: want acl config
@@ -585,11 +579,7 @@ class Acls(ConfigBase):
         line = want.get("line")
         if line:
             cmd = cmd + " line {0}".format(line)
-        else:
-            if type == "clear":
-                self._module.fail_json(
-                    msg="For Delete operation LINE param is required!"
-                )
+
         acl_type = acl_want.get("acl_type")
         if acl_type:
             cmd = cmd + " {0}".format(acl_type)
@@ -678,7 +668,7 @@ class Acls(ConfigBase):
         commands = []
         name = acl.get("name")
         cmd = "no access-list {0}".format(name)
-        cmd = self.common_config_cmd(ace, acl, cmd, "clear")
+        cmd = self.common_config_cmd(ace, acl, cmd)
 
         commands.append(cmd)
 
