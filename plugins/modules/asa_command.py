@@ -8,14 +8,8 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {
-    "metadata_version": "1.1",
-    "status": ["preview"],
-    "supported_by": "community",
-}
-
-
-DOCUMENTATION = """module: asa_command
+DOCUMENTATION = """
+module: asa_command
 author: Peter Sprygada (@privateip), Patrick Ogenstad (@ogenstad)
 short_description: Run arbitrary commands on Cisco ASA devices
 description:
@@ -23,6 +17,7 @@ description:
   The C(asa_command) module includes an argument that will cause the module to wait
   for a specific condition before returning or timing out if the condition is not
   met.
+version_added: 1.0.0
 extends_documentation_fragment:
 - cisco.asa.asa
 options:
@@ -63,35 +58,32 @@ options:
       long to wait before trying the command again.
     default: 1
 notes:
-  - When processing wait_for, each commands' output is stored as an element of the
-    I(result) array.  The allowed operators for conditional evaluation are I(eq),
-    I(==), I(neq), I(ne), I(!=), I(gt), I(>), I(ge), I(>=), I(lt), I(<), I(le),
-    I(<=), I(contains), I(matches).  Operators can be prefaced by I(not) to
-    negate their meaning.  The I(contains) operator searches for a substring
-    match (like the Python I(in) operator).  The I(matches) operator searches
-    using a regex search operation.
+- When processing wait_for, each commands' output is stored as an element of the I(result)
+  array.  The allowed operators for conditional evaluation are I(eq), I(==), I(neq),
+  I(ne), I(!=), I(gt), I(>), I(ge), I(>=), I(lt), I(<), I(le), I(<=), I(contains),
+  I(matches).  Operators can be prefaced by I(not) to negate their meaning.  The I(contains)
+  operator searches for a substring match (like the Python I(in) operator).  The I(matches)
+  operator searches using a regex search operation.
 """
 
 EXAMPLES = """
-
----
-- name: "Show the ASA version"
-  asa_command:
+- name: Show the ASA version
+  cisco.asa.asa_command:
     commands:
-      - show version
+    - show version
 
-- name: "Show ASA drops and memory"
-  asa_command:
+- name: Show ASA drops and memory
+  cisco.asa.asa_command:
     commands:
-      - show asp drop
-      - show memory
+    - show asp drop
+    - show memory
 
-- name: "Send repeat pings and wait for the result to pass 100%"
-  asa_command:
+- name: Send repeat pings and wait for the result to pass 100%
+  cisco.asa.asa_command:
     commands:
-      - ping 8.8.8.8 repeat 20 size 350
+    - ping 8.8.8.8 repeat 20 size 350
     wait_for:
-      - result[0] contains 100
+    - result[0] contains 100
     retries: 2
 """
 

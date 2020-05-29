@@ -8,19 +8,16 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-ANSIBLE_METADATA = {
-    "metadata_version": "1.1",
-    "status": ["deprecated"],
-    "supported_by": "community",
-}
 
-DOCUMENTATION = """module: asa_og
+DOCUMENTATION = """
+module: asa_og
 author:
 - Federico Olivieri (@Federico87)
-short_description: Manage object groups on a Cisco ASA
+short_description: (deprecated) Manage object groups on a Cisco ASA
 description:
 - This module allows you to create and update object-group network/service on Cisco
   ASA device.
+version_added: 1.0.0
 deprecated:
   removed_in: '2.13'
   alternative: asa_ogs
@@ -77,49 +74,49 @@ options:
     - present
     - absent
     - replace
+
 """
 
 EXAMPLES = """
----
 - name: configure network object-group
-  asa_og:
+  cisco.asa.asa_og:
     name: ansible_test_0
     group_type: network-object
     state: present
     description: ansible_test object-group description
     host_ip:
-      - 8.8.8.8
-      - 8.8.4.4
+    - 8.8.8.8
+    - 8.8.4.4
     ip_mask:
-      - 10.0.0.0 255.255.255.0
-      - 192.168.0.0 255.255.0.0
+    - 10.0.0.0 255.255.255.0
+    - 192.168.0.0 255.255.0.0
     group_object:
-      - awx_lon
-      - awx_ams
+    - awx_lon
+    - awx_ams
 
 - name: configure port-object object-group
-  asa_og:
+  cisco.asa.asa_og:
     name: ansible_test_1
     group_type: port-object
     state: replace
     description: ansible_test object-group description
     protocol: tcp-udp
     port_eq:
-      - 1025
-      - kerberos
+    - 1025
+    - kerberos
     port_range:
-      - 1025 5201
-      - 0 1024
+    - 1025 5201
+    - 0 1024
 
 - name: configure service-object object-group
-  asa_og:
+  cisco.asa.asa_og:
     name: ansible_test_2
     group_type: service-object
     state: absent
     description: ansible_test object-group description
     service_cfg:
-      - tcp destination eq 8080
-      - tcp destination eq www
+    - tcp destination eq 8080
+    - tcp destination eq www
 """
 
 RETURN = """

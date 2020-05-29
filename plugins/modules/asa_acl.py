@@ -8,18 +8,13 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-ANSIBLE_METADATA = {
-    "metadata_version": "1.1",
-    "status": ["deprecated"],
-    "supported_by": "community",
-}
-
-
-DOCUMENTATION = """module: asa_acl
+DOCUMENTATION = """
+module: asa_acl
 author: Patrick Ogenstad (@ogenstad)
-short_description: Manage access-lists on a Cisco ASA
+short_description: (deprecated) Manage access-lists on a Cisco ASA
 description:
 - This module allows you to work with access-lists on a Cisco ASA device.
+version_added: 1.0.0
 deprecated:
   removed_in: '2.13'
   alternative: asa_acl
@@ -76,7 +71,7 @@ options:
       running-config.  When set to true, this will cause the module to push the contents
       of I(src) into the device without first checking if already configured.
     type: bool
-    default: 'no'
+    default: no
   config:
     description:
     - The module, by default, will connect to the remote device and retrieve the current
@@ -84,40 +79,28 @@ options:
       are times when it is not desirable to have the task get the current running-config
       for every task in a playbook.  The I(config) argument allows the implementer
       to pass in the configuration to use as the base config for comparison.
+
 """
 
 EXAMPLES = """
-# Note: examples below use the following provider dict to handle
-#       transport and authentication to the node.
----
-vars:
-  cli:
-    host: "{{ inventory_hostname }}"
-    username: cisco
-    password: cisco
-    transport: cli
-    authorize: yes
-    auth_pass: cisco
-
----
-- asa_acl:
+- cisco.asa.asa_acl:
     lines:
-      - access-list ACL-ANSIBLE extended permit tcp any any eq 82
-      - access-list ACL-ANSIBLE extended permit tcp any any eq www
-      - access-list ACL-ANSIBLE extended permit tcp any any eq 97
-      - access-list ACL-ANSIBLE extended permit tcp any any eq 98
-      - access-list ACL-ANSIBLE extended permit tcp any any eq 99
+    - access-list ACL-ANSIBLE extended permit tcp any any eq 82
+    - access-list ACL-ANSIBLE extended permit tcp any any eq www
+    - access-list ACL-ANSIBLE extended permit tcp any any eq 97
+    - access-list ACL-ANSIBLE extended permit tcp any any eq 98
+    - access-list ACL-ANSIBLE extended permit tcp any any eq 99
     before: clear configure access-list ACL-ANSIBLE
     match: strict
     replace: block
-    provider: "{{ cli }}"
+    provider: '{{ cli }}'
 
-- asa_acl:
+- cisco.asa.asa_acl:
     lines:
-      - access-list ACL-OUTSIDE extended permit tcp any any eq www
-      - access-list ACL-OUTSIDE extended permit tcp any any eq https
+    - access-list ACL-OUTSIDE extended permit tcp any any eq www
+    - access-list ACL-OUTSIDE extended permit tcp any any eq https
     context: customer_a
-    provider: "{{ cli }}"
+    provider: '{{ cli }}'
 """
 
 RETURN = """
