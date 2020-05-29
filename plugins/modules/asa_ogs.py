@@ -51,12 +51,12 @@ options:
         type: str
         required: true
         choices:
-          - icmp-type
-          - network
-          - protocol
-          - security
-          - service
-          - user
+        - icmp-type
+        - network
+        - protocol
+        - security
+        - service
+        - user
       object_groups:
         description: The object groups.
         type: list
@@ -77,10 +77,10 @@ options:
                 description: Defines the ICMP types in the group.
                 type: list
                 choices: [alternate-address, conversion-error, echo, echo-reply, information-reply,
-                information-request, mask-reply, mask-request, mobile-redirect,
-                parameter-problem, redirect, router-advertisement, router-solicitation,
-                source-quench, time-exceeded, timestamp-reply, timestamp-request,
-                traceroute, unreachable]
+                  information-request, mask-reply, mask-request, mobile-redirect,
+                  parameter-problem, redirect, router-advertisement, router-solicitation,
+                  source-quench, time-exceeded, timestamp-reply, timestamp-request,
+                  traceroute, unreachable]
           network_object:
             description: Configure a network object
             type: list
@@ -103,7 +103,7 @@ options:
                 description: Defines the protocols in the group.
                 type: list
                 choices: [ah, eigrp, esp, gre, icmp, icmp6, igmp, igrp, ip, ipinip,
-                ipsec, nos, ospf, pcp, pim, pptp, sctp, snp, tcp, udp]
+                  ipsec, nos, ospf, pcp, pim, pptp, sctp, snp, tcp, udp]
           security_group:
             description: Configure a security-group
             type: dict
@@ -122,7 +122,7 @@ options:
                 description: Defines the protocols in the group.
                 type: list
                 choices: [ah, eigrp, esp, gre, icmp, icmp6, igmp, igrp, ip, ipinip,
-                ipsec, nos, ospf, pcp, pim, pptp, sctp, snp, tcp, tcp-udp, udp]
+                  ipsec, nos, ospf, pcp, pim, pptp, sctp, snp, tcp, tcp-udp, udp]
               object:
                 description: Enter this keyword to specify a service object
                 type: str
@@ -131,7 +131,8 @@ options:
             type: dict
             suboptions:
               user:
-                description: Configure a user objectUser name to configure a user object.
+                description: Configure a user objectUser name to configure a user
+                  object.
                 type: list
                 elements: dict
                 suboptions:
@@ -542,7 +543,7 @@ EXAMPLES = """
 #  user LOCAL\\new_user_1
 #  user LOCAL\\new_user_2
 
-- name: "Delete ALL configured module attributes"
+- name: Delete ALL configured module attributes
   cisco.asa.asa_ogs:
     config:
     state: deleted
@@ -771,13 +772,20 @@ EXAMPLES = """
 
 # Using Parsed
 
+# parsed.cfg
+#
+# object-group network test_og_network
+#   description test_og_network
+#   network-object host 192.0.2.1
+#   network-object 192.0.2.0 255.255.255.0
+# object-group network test_network_og
+#   network-object 2001:db8:3::/64
+# object-group service test_og_service
+#   service-object tcp-udp
+
 - name: Parse the commands for provided configuration
   cisco.asa.asa_ogs:
-    running_config:
-      "object-group network test_og_network\\n description test_og_network\\n network-object host 192.0.2.1
-      \\n network-object host 192.0.2.2\\n network-object 192.0.2.0 255.255.255.0
-      \\nobject-group network test_network_og\\n network-object 2001:db8:0:3::/64
-      \\nobject-group service test_og_service\\n service-object ipinip\\n service-object tcp-udp"
+    running_config: "{{ lookup('file', 'parsed.cfg') }}"
     state: parsed
 
 # Module Execution Result:

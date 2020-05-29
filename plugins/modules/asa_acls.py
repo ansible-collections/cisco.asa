@@ -734,7 +734,7 @@ EXAMPLES = """
 #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
 #                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae
 
-- name: "Delete module attributes of given acl (Note: This won't delete ALL of the ACLs configured)"
+- name: 'Delete module attributes of given acl (Note: This won't delete ALL of the ACLs configured)'
   cisco.asa.asa_acls:
     config:
     - acls:
@@ -790,7 +790,7 @@ EXAMPLES = """
 #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
 #                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae
 
-- name: "Delete ALL ACLs in one go (Note: This WILL delete the ALL of configured ACLs)"
+- name: 'Delete ALL ACLs in one go (Note: This WILL delete the ALL of configured ACLs)'
   cisco.asa.asa_acls:
     state: deleted
 
@@ -1043,13 +1043,17 @@ EXAMPLES = """
 
 # Using Parsed
 
+# parsed.cfg
+#
+# access-list test_access; 2 elements; name hash: 0xaf1b712e
+# access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default
+# access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors
+# access-list test_R1_traffic; 1 elements; name hash: 0xaf40d3c2
+# access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive
+
 - name: Parse the commands for provided configuration
   cisco.asa.asa_acls:
-    running_config: "access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0\
-      \ 192.0.3.0 255.255.255.0 eq www log default\naccess-list test_access line 2\
-      \ extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log\
-      \ errors\naccess-list test_R1_TRAFFIC line 1 extended deny tcp 2001:db8:0:3::/64\
-      \ eq www 2001:fc8:0:4::/64 eq telnet inactive"
+    running_config: "{{ lookup('file', 'parsed.cfg') }}"
     state: parsed
 
 # Module Execution Result:
