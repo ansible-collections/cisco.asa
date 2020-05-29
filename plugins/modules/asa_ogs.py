@@ -30,23 +30,16 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-ANSIBLE_METADATA = {
-    "metadata_version": "1.1",
-    "status": ["preview"],
-    "supported_by": "security",
-}
 
 DOCUMENTATION = """
----
 module: asa_ogs
-version_added: 2.10
-short_description: Manages and configures Objects and Groups and it's attributes.
+short_description: Object Group resource module
 description: This module configures and manages Objects and Groups on ASA platforms.
+version_added: 1.0.0
 author: Sumit Jaiswal (@justjais)
 notes:
-  - Tested against Cisco ASA Version 9.10(1)11
-  - This module works with connection C(network_cli).
-    See L(ASA Platform Options,../network/user_guide/platform_asa.html).
+- Tested against Cisco ASA Version 9.10(1)11
+- This module works with connection C(network_cli). See L(ASA Platform Options,../network/user_guide/platform_asa.html).
 options:
   config:
     description: A list of Object Group options.
@@ -58,12 +51,12 @@ options:
         type: str
         required: true
         choices:
-          - icmp-type
-          - network
-          - protocol
-          - security
-          - service
-          - user
+        - icmp-type
+        - network
+        - protocol
+        - security
+        - service
+        - user
       object_groups:
         description: The object groups.
         type: list
@@ -83,10 +76,11 @@ options:
               icmp_object:
                 description: Defines the ICMP types in the group.
                 type: list
-                choices: [alternate-address, conversion-error, echo, echo-reply, information-reply, information-request,
-                mask-reply, mask-request, mobile-redirect, parameter-problem, redirect, router-advertisement,
-                router-solicitation, source-quench, time-exceeded, timestamp-reply, timestamp-request, traceroute,
-                unreachable]
+                choices: [alternate-address, conversion-error, echo, echo-reply, information-reply,
+                  information-request, mask-reply, mask-request, mobile-redirect,
+                  parameter-problem, redirect, router-advertisement, router-solicitation,
+                  source-quench, time-exceeded, timestamp-reply, timestamp-request,
+                  traceroute, unreachable]
           network_object:
             description: Configure a network object
             type: list
@@ -96,7 +90,7 @@ options:
                 description: Set this to specify a single host object.
                 type: list
               address:
-                description: Enter an IPv4 network address with space seperated netmask .
+                description: Enter an IPv4 network address with space seperated netmask.
                 type: list
               ipv6_address:
                 description: Enter an IPv6 prefix.
@@ -108,8 +102,8 @@ options:
               protocol:
                 description: Defines the protocols in the group.
                 type: list
-                choices: [ah, eigrp, esp, gre, icmp, icmp6, igmp, igrp, ip, ipinip, ipsec, nos, ospf, pcp, pim, pptp,
-                sctp, snp, tcp, udp]
+                choices: [ah, eigrp, esp, gre, icmp, icmp6, igmp, igrp, ip, ipinip,
+                  ipsec, nos, ospf, pcp, pim, pptp, sctp, snp, tcp, udp]
           security_group:
             description: Configure a security-group
             type: dict
@@ -127,8 +121,8 @@ options:
               protocol:
                 description: Defines the protocols in the group.
                 type: list
-                choices: [ah, eigrp, esp, gre, icmp, icmp6, igmp, igrp, ip, ipinip, ipsec, nos, ospf, pcp, pim, pptp,
-                sctp, snp, tcp, tcp-udp, udp]
+                choices: [ah, eigrp, esp, gre, icmp, icmp6, igmp, igrp, ip, ipinip,
+                  ipsec, nos, ospf, pcp, pim, pptp, sctp, snp, tcp, tcp-udp, udp]
               object:
                 description: Enter this keyword to specify a service object
                 type: str
@@ -137,7 +131,8 @@ options:
             type: dict
             suboptions:
               user:
-                description: Configure a user objectUser name to configure a user object.
+                description: Configure a user objectUser name to configure a user
+                  object.
                 type: list
                 elements: dict
                 suboptions:
@@ -164,12 +159,13 @@ options:
                     required: true
   running_config:
     description:
-      - The module, by default, will connect to the remote device and retrieve the current
-        running-config to use as a base for comparing against the contents of source.
-        There are times when it is not desirable to have the task get the current running-config
-        for every task in a playbook.  The I(running_config) argument allows the implementer to
-        pass in the configuration to use as the base config for comparison. This value of this
-        option should be the output received from device by executing command.
+    - The module, by default, will connect to the remote device and retrieve the current
+      running-config to use as a base for comparing against the contents of source.
+      There are times when it is not desirable to have the task get the current running-config
+      for every task in a playbook.  The I(running_config) argument allows the implementer
+      to pass in the configuration to use as the base config for comparison. This
+      value of this option should be the output received from device by executing
+      command.
     type: str
   state:
     description:
@@ -187,7 +183,6 @@ options:
 """
 
 EXAMPLES = """
----
 
 # Using merged
 
@@ -416,21 +411,23 @@ EXAMPLES = """
 - name: "Overridden module attributes of given object-group"
   cisco.asa.asa_ogs:
     config:
-      - name: test_og_network
-        object_type: network
-        description: test_og_network_override
-        network_object:
-          host:
-            - 192.0.3.1
-          address:
-            - 192.0.3.0 255.255.255.0
-      - name: test_og_protocol
-        object_type: protocol
-        description: test_og_protocol
-        protocol_object:
-          protocol:
-            - tcp
-            - udp
+      - object_type: network
+        object_groups:
+          - name: test_og_network
+            description: test_og_network_override
+            network_object:
+              host:
+                - 192.0.3.1
+              address:
+                - 192.0.3.0 255.255.255.0
+      - object_type: protocol
+        object_groups:
+          - name: test_og_protocol
+            description: test_og_protocol
+            protocol_object:
+              protocol:
+                - tcp
+                - udp
     state: overridden
 
 # Commands Fired:
@@ -546,7 +543,7 @@ EXAMPLES = """
 #  user LOCAL\\new_user_1
 #  user LOCAL\\new_user_2
 
-- name: "Delete ALL configured module attributes"
+- name: Delete ALL configured module attributes
   cisco.asa.asa_ogs:
     config:
     state: deleted
@@ -775,13 +772,20 @@ EXAMPLES = """
 
 # Using Parsed
 
+# parsed.cfg
+#
+# object-group network test_og_network
+#   description test_og_network
+#   network-object host 192.0.2.1
+#   network-object 192.0.2.0 255.255.255.0
+# object-group network test_network_og
+#   network-object 2001:db8:3::/64
+# object-group service test_og_service
+#   service-object tcp-udp
+
 - name: Parse the commands for provided configuration
   cisco.asa.asa_ogs:
-    running_config:
-      "object-group network test_og_network\n description test_og_network\n network-object host 192.0.2.1
-      \n network-object host 192.0.2.2\n network-object 192.0.2.0 255.255.255.0
-      \nobject-group network test_network_og\n network-object 2001:db8:0:3::/64
-      \nobject-group service test_og_service\n service-object ipinip\n service-object tcp-udp"
+    running_config: "{{ lookup('file', 'parsed.cfg') }}"
     state: parsed
 
 # Module Execution Result:
