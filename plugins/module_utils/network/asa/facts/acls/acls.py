@@ -94,23 +94,23 @@ class AclsFacts(object):
         operators = ["eq", "gt", "lt", "neq", "range"]
         for item in operators:
             if item in each_list:
-                index = each_list.index(item)
                 if (
-                    source.get("address")
-                    or source.get("any")
-                    or source.get("host")
-                    and not source.get("port_protocol")
+                        source.get("address")
+                        or source.get("any")
+                        or source.get("host")
+                        and not source.get("port_protocol")
                 ):
+                    index = each_list.index(item)
                     try:
                         source_index = each_list.index(source.get("address"))
                     except ValueError:
                         try:
-                            source_index = each_list.index("any")
+                            source_index = each_list.index(source.get("host"))
                         except ValueError:
-                            source_index = each_list.index("host")
+                            source_index = each_list.index("any")
                     if source.get("address"):
                         if (
-                            source_index + 2
+                                source_index + 2
                         ) == index and ":" not in source.get("address"):
                             source["port_protocol"] = {
                                 item: each_list[index + 1]
@@ -118,7 +118,7 @@ class AclsFacts(object):
                             each_list.remove(item)
                             del each_list[index]
                         elif (source_index + 1) == index and ":" in source.get(
-                            "address"
+                                "address"
                         ):
                             source["port_protocol"] = {
                                 item: each_list[index + 1]
@@ -143,22 +143,23 @@ class AclsFacts(object):
                             del each_list[index - 1]
                         del each_list[source_index]
                 if (
-                    destination.get("address")
-                    or source.get("any")
-                    or destination.get("host")
+                        destination.get("address")
+                        or destination.get("any")
+                        or destination.get("host")
                 ):
+                    index = each_list.index(item)
                     try:
                         destination_index = each_list.index(
                             destination.get("address")
                         )
                     except ValueError:
                         try:
-                            destination_index = each_list.index("any")
-                        except ValueError:
-                            destination_index = each_list.index("host") + 1
+                            destination_index = each_list.index(destination.get("host")) + 1
                             index -= 1
+                        except ValueError:
+                            destination_index = each_list.index("any")
                     if (destination_index + 1) == index or (
-                        destination_index + 2
+                            destination_index + 2
                     ) == index:
                         destination["port_protocol"] = {
                             item: each_list[index + 1]
@@ -176,13 +177,24 @@ class AclsFacts(object):
             self.populate_port_protocol(source, destination, each_list)
 
     def populate_source_destination(self, each, source, destination):
+        each_list = each.split(' ')
+        if 'permit' in each:
+            grant_index = each_list.index('permit')
+        elif 'deny' in each:
+            grant_index = each_list.index('deny')
         if "any" in each:
-            any = re.findall("any", each)
-            if len(any) == 2:
+            any = len(re.findall("any", each))
+            if any == 2:
                 source["any"] = True
                 destination["any"] = True
-        elif "host" in each:
-            host = re.findall("host", each)
+            elif any == 1:
+                any_index = each_list.index('any')
+                if grant_index == any_index+2:
+                    source["any"] = True
+                else:
+                    destination["any"] = True
+        if "host" in each:
+            host = re.findall("host\s[0-9]+(?:\.[0-9]+){3}", each)
             if len(host) == 2:
                 host_index = each.index("host")
                 source["host"] = each[host_index + 1]
@@ -190,68 +202,49 @@ class AclsFacts(object):
                 host_index = each.index("host")
                 destination["host"] = each[host_index + 1]
             else:
-                ip_n_wildcard_bits = re.findall(r"[0-9]+(?:\.[0-9]+){3}", each)
-                ip_index = None
-                if ip_n_wildcard_bits:
-                    ip_index = each.index(ip_n_wildcard_bits[0])
-                host_index = each.index("host")
-                if ip_index:
-                    if host_index < ip_index:
-                        source["host"] = each(host_index + 1)
-                        destination["address"] = ip_n_wildcard_bits[0]
-                        destination["netmask"] = ip_n_wildcard_bits[1]
-                    elif host_index > ip_index:
-                        destination["host"] = each(host_index + 1)
-                        source["address"] = ip_n_wildcard_bits[0]
-                        source["netmask"] = ip_n_wildcard_bits[1]
-        else:
-            if ":" in each:
-                temp_ipv6 = []
-                each = each.split(" ")
-                check_n_return_valid_ipv6_addr(self._module, each, temp_ipv6)
-                count = 0
-                for every in each:
-                    if len(temp_ipv6) == 2:
-                        if temp_ipv6[0] in every or temp_ipv6[1] in every:
-                            temp_ipv6[count] = every
-                            count += 1
-                    elif len(temp_ipv6) == 1:
-                        if temp_ipv6[0] in every:
-                            temp_ipv6[count] = every
-                if "any" in each:
-                    if each.index("any") > each.index(temp_ipv6[0]):
-                        source["address"] = temp_ipv6[0]
-                        destination["any"] = True
-                    elif each.index("any") < each.index(temp_ipv6[0]):
-                        source["any"] = True
-                        destination["address"] = temp_ipv6[0]
-                elif len(temp_ipv6) == 2:
+                host_ip = host[0].split(' ')[1]
+                host_index = each_list.index("host")
+                if host_index == (grant_index + 2):
+                    source["host"] = host_ip
+                else:
+                    destination["host"] = host_ip
+        if ":" in each:
+            temp_ipv6 = []
+            check_n_return_valid_ipv6_addr(self._module, each_list, temp_ipv6)
+            count = 0
+            for every in each_list:
+                if len(temp_ipv6) == 2:
+                    if temp_ipv6[0] in every or temp_ipv6[1] in every:
+                        temp_ipv6[count] = every
+                        count += 1
+                elif len(temp_ipv6) == 1:
+                    if temp_ipv6[0] in every:
+                        temp_ipv6[count] = every
+            if "any" in each_list:
+                if destination["any"]:
                     source["address"] = temp_ipv6[0]
-                    destination["address"] = temp_ipv6[1]
-            else:
-                ip_n_netmask = re.findall(r"[0-9]+(?:\.[0-9]+){3}", each)
-                if len(ip_n_netmask) == 0 and len(any) == 1:
-                    source["any"] = True
-                elif len(ip_n_netmask) == 1:
-                    source["address"] = ip_n_netmask[0]
-                elif len(ip_n_netmask) == 2:
-                    if "any" in each:
-                        if each.index("any") > each.index(ip_n_netmask[0]):
-                            source["address"] = ip_n_netmask[0]
-                            source["netmask"] = ip_n_netmask[1]
-                            destination["any"] = True
-                        elif each.index("any") < each.index(ip_n_netmask[0]):
-                            source["any"] = True
-                            destination["address"] = ip_n_netmask[0]
-                            destination["netmask"] = ip_n_netmask[1]
-                    else:
-                        source["address"] = ip_n_netmask[0]
-                        source["netmask"] = ip_n_netmask[1]
-                elif len(ip_n_netmask) == 4:
+                elif source["any"]:
+                    destination["address"] = temp_ipv6[0]
+            elif len(temp_ipv6) == 2:
+                source["address"] = temp_ipv6[0]
+                destination["address"] = temp_ipv6[1]
+        else:
+            ip_n_netmask = re.findall(r"[0-9]+(?:\.[0-9]+){3}", each)
+            if len(ip_n_netmask) == 2:
+                if destination["any"] or destination["host"]:
                     source["address"] = ip_n_netmask[0]
                     source["netmask"] = ip_n_netmask[1]
-                    destination["address"] = ip_n_netmask[2]
-                    destination["netmask"] = ip_n_netmask[3]
+                elif source["any"] or source["host"]:
+                    destination["address"] = ip_n_netmask[0]
+                    destination["netmask"] = ip_n_netmask[1]
+                else:
+                    source["address"] = ip_n_netmask[0]
+                    source["netmask"] = ip_n_netmask[1]
+            elif len(ip_n_netmask) == 4:
+                source["address"] = ip_n_netmask[0]
+                source["netmask"] = ip_n_netmask[1]
+                destination["address"] = ip_n_netmask[2]
+                destination["netmask"] = ip_n_netmask[3]
 
     def render_config(self, spec, have_config):
         """
