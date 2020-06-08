@@ -95,10 +95,10 @@ class AclsFacts(object):
         for item in operators:
             if item in each_list:
                 if (
-                        source.get("address")
-                        or source.get("any")
-                        or source.get("host")
-                        and not source.get("port_protocol")
+                    source.get("address")
+                    or source.get("any")
+                    or source.get("host")
+                    and not source.get("port_protocol")
                 ):
                     index = each_list.index(item)
                     try:
@@ -110,7 +110,7 @@ class AclsFacts(object):
                             source_index = each_list.index("any")
                     if source.get("address"):
                         if (
-                                source_index + 2
+                            source_index + 2
                         ) == index and ":" not in source.get("address"):
                             source["port_protocol"] = {
                                 item: each_list[index + 1]
@@ -118,7 +118,7 @@ class AclsFacts(object):
                             each_list.remove(item)
                             del each_list[index]
                         elif (source_index + 1) == index and ":" in source.get(
-                                "address"
+                            "address"
                         ):
                             source["port_protocol"] = {
                                 item: each_list[index + 1]
@@ -143,9 +143,9 @@ class AclsFacts(object):
                             del each_list[index - 1]
                         del each_list[source_index]
                 if (
-                        destination.get("address")
-                        or destination.get("any")
-                        or destination.get("host")
+                    destination.get("address")
+                    or destination.get("any")
+                    or destination.get("host")
                 ):
                     index = each_list.index(item)
                     try:
@@ -154,12 +154,14 @@ class AclsFacts(object):
                         )
                     except ValueError:
                         try:
-                            destination_index = each_list.index(destination.get("host")) + 1
+                            destination_index = (
+                                each_list.index(destination.get("host")) + 1
+                            )
                             index -= 1
                         except ValueError:
                             destination_index = each_list.index("any")
                     if (destination_index + 1) == index or (
-                            destination_index + 2
+                        destination_index + 2
                     ) == index:
                         destination["port_protocol"] = {
                             item: each_list[index + 1]
@@ -177,19 +179,19 @@ class AclsFacts(object):
             self.populate_port_protocol(source, destination, each_list)
 
     def populate_source_destination(self, each, source, destination):
-        each_list = each.split(' ')
-        if 'permit' in each:
-            grant_index = each_list.index('permit')
-        elif 'deny' in each:
-            grant_index = each_list.index('deny')
+        each_list = each.split(" ")
+        if "permit" in each:
+            grant_index = each_list.index("permit")
+        elif "deny" in each:
+            grant_index = each_list.index("deny")
         if "any" in each:
             any = len(re.findall("any", each))
             if any == 2:
                 source["any"] = True
                 destination["any"] = True
             elif any == 1:
-                any_index = each_list.index('any')
-                if grant_index == any_index+2:
+                any_index = each_list.index("any")
+                if grant_index == any_index + 2:
                     source["any"] = True
                 else:
                     destination["any"] = True
@@ -202,7 +204,7 @@ class AclsFacts(object):
                 host_index = each.index("host")
                 destination["host"] = each[host_index + 1]
             else:
-                host_ip = host[0].split(' ')[1]
+                host_ip = host[0].split(" ")[1]
                 host_index = each_list.index("host")
                 if host_index == (grant_index + 2):
                     source["host"] = host_ip
