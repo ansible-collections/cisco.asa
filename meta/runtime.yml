@@ -34,12 +34,12 @@ plugin_routing:
     acl:
       redirect: cisco.asa.asa_acl
       deprecation:
-        warning_text: cisco.asa.acl has been deprecated and will be removed in a release
-          after 2022-6-01. See the plugin documentation for more details
+        removal_date: '2022-06-01'
+        warning_text: See the plugin documentation for more details
     asa_acl:
       deprecation:
-        warning_text: cisco.asa.asa_acl has been deprecated and will be removed in
-          a release after 2022-6-01. See the plugin documentation for more details
+        removal_date: '2022-06-01'
+        warning_text: See the plugin documentation for more details
     acls:
       redirect: cisco.asa.asa_acls
     command:
@@ -51,11 +51,11 @@ plugin_routing:
     og:
       redirect: cisco.asa.asa_og
       deprecation:
-        warning_text: cisco.asa.og has been deprecated and will be removed in a release
-          after 2022-6-01. See the plugin documentation for more details
+        removal_date: '2022-06-01'
+        warning_text: See the plugin documentation for more details
     asa_og:
       deprecation:
-        warning_text: cisco.asa.asa_og has been deprecated and will be removed in
-          a release after 2022-6-01. See the plugin documentation for more details
+        removal_date: '2022-06-01'
+        warning_text: See the plugin documentation for more details
     ogs:
       redirect: cisco.asa.asa_ogs
