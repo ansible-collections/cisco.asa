@@ -196,7 +196,7 @@ class AclsFacts(object):
                 else:
                     destination["any"] = True
         if "host" in each:
-            host = re.findall("host\s[0-9]+(?:\.[0-9]+){3}", each)
+            host = re.findall(r"host\s[0-9]+(?:\.[0-9]+){3}", each)
             if len(host) == 2:
                 host_index = each.index("host")
                 source["host"] = each[host_index + 1]
