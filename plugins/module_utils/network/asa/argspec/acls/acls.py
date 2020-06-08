@@ -73,6 +73,8 @@ class AclsArgs(object):
                                         "netmask": {"type": "str"},
                                         "any": {"type": "bool"},
                                         "host": {"type": "str"},
+                                        "interface": {"type": "str"},
+                                        "object_group_network": {"type": "str"},
                                         "port_protocol": {
                                             "type": "dict",
                                             "options": {
@@ -104,6 +106,8 @@ class AclsArgs(object):
                                         "netmask": {"type": "str"},
                                         "any": {"type": "bool"},
                                         "host": {"type": "str"},
+                                        "interface": {"type": "str"},
+                                        "object_group_network": {"type": "str"},
                                         "port_protocol": {
                                             "type": "dict",
                                             "options": {

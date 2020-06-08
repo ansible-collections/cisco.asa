@@ -1,3 +1,4 @@
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # Copyright 2019 Red Hat
@@ -67,16 +68,16 @@ options:
             type: str
           acl_type:
             description:
-            - ACL type
+              - ACL type
             type: str
             choices:
-            - extended
-            - standard
+              - extended
+              - standard
           rename:
             description:
-            - Rename an existing access-list.
-            - If input to rename param is given, it'll take preference over other
-              parameters and only rename config will be matched and computed against.
+              - Rename an existing access-list.
+              - If input to rename param is given, it'll take preference over other
+                parameters and only rename config will be matched and computed against.
             type: str
           aces:
             description: The entries within the ACL.
@@ -87,16 +88,16 @@ options:
                 description: Specify the action.
                 type: str
                 choices:
-                - permit
-                - deny
+                  - permit
+                  - deny
               line:
                 description:
-                - Use this to specify line number at which ACE should be entered.
-                - Existing ACE can be updated based on the input line number.
-                - It's not a required param in case of configuring the acl, but in
-                  case of Delete operation it's required, else Delete operation won't
-                  work as expected.
-                - Refer to vendor documentation for valid values.
+                  - Use this to specify line number at which ACE should be entered.
+                  - Existing ACE can be updated based on the input line number.
+                  - It's not a required param in case of configuring the acl, but in
+                    case of Delete operation it's required, else Delete operation won't
+                    work as expected.
+                  - Refer to vendor documentation for valid values.
                 type: int
               remark:
                 description:
@@ -104,8 +105,8 @@ options:
                 type: str
               protocol:
                 description:
-                - Specify the protocol to match.
-                - Refer to vendor documentation for valid values.
+                  - Specify the protocol to match.
+                  - Refer to vendor documentation for valid values.
                 type: str
               protocol_options:
                 description: protocol type.
@@ -290,15 +291,21 @@ options:
                     type: str
                   any:
                     description:
-                    - Match any source address.
+                      - Match any source address.
                     type: bool
                   host:
                     description: A single source host
                     type: str
+                  interface:
+                    description: Use interface address as source address
+                    type: str
+                  object_group_network:
+                    description: Network object-group for source address
+                    type: str
                   port_protocol:
                     description:
-                    - Specify the destination port along with protocol.
-                    - Note, Valid with TCP/UDP protocol_options
+                      - Specify the destination port along with protocol.
+                      - Note, Valid with TCP/UDP protocol_options
                     type: dict
                     suboptions:
                       eq:
@@ -340,10 +347,16 @@ options:
                   host:
                     description: A single source host
                     type: str
+                  interface:
+                    description: Use interface address as destination address
+                    type: str
+                  object_group_network:
+                    description: Network object-group for destination address
+                    type: str
                   port_protocol:
                     description:
-                    - Specify the destination port along with protocol.
-                    - Note, Valid with TCP/UDP protocol_options
+                      - Specify the destination port along with protocol.
+                      - Note, Valid with TCP/UDP protocol_options
                     type: dict
                     suboptions:
                       eq:
@@ -375,17 +388,17 @@ options:
                 description: Log matches against this entry.
                 type: str
                 choices:
-                - default
-                - alerts
-                - critical
-                - debugging
-                - disable
-                - emergencies
-                - errors
-                - informational
-                - interval
-                - notifications
-                - warnings
+                  - default
+                  - alerts
+                  - critical
+                  - debugging
+                  - disable
+                  - emergencies
+                  - errors
+                  - informational
+                  - interval
+                  - notifications
+                  - warnings
               time_range:
                 description: Specify a time-range.
                 type: str

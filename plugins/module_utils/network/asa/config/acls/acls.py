@@ -334,7 +334,7 @@ class Acls(ConfigBase):
                   the current configuration
         """
         commands = []
-
+        q(want, have)
         for config_want in want:
             for acls_want in config_want.get("acls"):
                 if acls_want.get("rename"):
@@ -394,7 +394,8 @@ class Acls(ConfigBase):
                             ace_want = remove_empties(ace_want)
                             set_cmd = self._set_config(ace_want, {}, acls_want)
                             commands = self.add_config_cmd(set_cmd, commands)
-
+        q(commands)
+        commands = []
         return commands
 
     def _state_deleted(self, want, have):
@@ -631,6 +632,7 @@ class Acls(ConfigBase):
         :returns: the commands generated based on input want/have params
         """
         commands = []
+        q(want, have, acl_want)
         # To change the want IPV6 address to lower case, as Cisco ASA configures the IPV6
         # access-list always in Lowercase even if the input is given in Uppercase
         if (
