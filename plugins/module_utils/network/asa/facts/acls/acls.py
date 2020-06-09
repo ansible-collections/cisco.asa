@@ -92,16 +92,15 @@ class AclsFacts(object):
         :returns: the commands generated based on source and destination params
         """
         operators = ["eq", "gt", "lt", "neq", "range"]
-    #   q(source, destination, each_list)
         for item in operators:
             if item in each_list:
                 if (
-                        source.get("address")
-                        or source.get("any")
-                        or source.get("host")
-                        and not source.get("port_protocol")
-                        or source.get("object_group_network")
-                        or source.get("interface")
+                    source.get("address")
+                    or source.get("any")
+                    or source.get("host")
+                    and not source.get("port_protocol")
+                    or source.get("object_group_network")
+                    or source.get("interface")
                 ):
                     index = each_list.index(item)
                     try:
@@ -111,10 +110,14 @@ class AclsFacts(object):
                             source_index = each_list.index(source.get("host"))
                         except ValueError:
                             try:
-                                source_index = each_list.index(source.get("object_group_network"))
+                                source_index = each_list.index(
+                                    source.get("object_group_network")
+                                )
                             except ValueError:
                                 try:
-                                    source_index = each_list.index(source.get("interface"))
+                                    source_index = each_list.index(
+                                        source.get("interface")
+                                    )
                                 except:
                                     source_index = each_list.index("any")
                     if source.get("address"):
@@ -143,15 +146,19 @@ class AclsFacts(object):
                             each_list.remove(item)
                     if source.get("any"):
                         del each_list[source_index]
-                    elif source.get("host") or source.get("object_group_network") or source.get("interface"):
+                    elif (
+                        source.get("host")
+                        or source.get("object_group_network")
+                        or source.get("interface")
+                    ):
                         del each_list[source_index]
                         del each_list[source_index - 1]
                 if (
-                        destination.get("address")
-                        or destination.get("any")
-                        or destination.get("host")
-                        or destination.get("object_group_network")
-                        or destination.get("interface")
+                    destination.get("address")
+                    or destination.get("any")
+                    or destination.get("host")
+                    or destination.get("object_group_network")
+                    or destination.get("interface")
                 ):
                     index = each_list.index(item)
                     try:
@@ -160,18 +167,24 @@ class AclsFacts(object):
                         )
                     except ValueError:
                         try:
-                            destination_index = each_list.index(destination.get("host")) + 1
+                            destination_index = (
+                                each_list.index(destination.get("host")) + 1
+                            )
                             index -= 1
                         except ValueError:
                             try:
-                                destination_index = each_list.index(destination.get("object_group_network"))
+                                destination_index = each_list.index(
+                                    destination.get("object_group_network")
+                                )
                             except ValueError:
                                 try:
-                                    destination_index = each_list.index(destination.get("interface"))
+                                    destination_index = each_list.index(
+                                        destination.get("interface")
+                                    )
                                 except:
                                     destination_index = each_list.index("any")
                     if (destination_index + 1) == index or (
-                            destination_index + 2
+                        destination_index + 2
                     ) == index:
                         destination["port_protocol"] = {
                             item: each_list[index + 1]
@@ -189,19 +202,19 @@ class AclsFacts(object):
             self.populate_port_protocol(source, destination, each_list)
 
     def populate_source_destination(self, each, source, destination):
-        each_list = each.split(' ')
-        if 'permit' in each:
-            grant_index = each_list.index('permit')
-        elif 'deny' in each:
-            grant_index = each_list.index('deny')
+        each_list = each.split(" ")
+        if "permit" in each:
+            grant_index = each_list.index("permit")
+        elif "deny" in each:
+            grant_index = each_list.index("deny")
         if "any" in each:
             any = len(re.findall("any", each))
             if any == 2:
                 source["any"] = True
                 destination["any"] = True
             elif any == 1:
-                any_index = each_list.index('any')
-                if any_index == grant_index +2:
+                any_index = each_list.index("any")
+                if any_index == grant_index + 2:
                     source["any"] = True
                 else:
                     destination["any"] = True
@@ -214,7 +227,7 @@ class AclsFacts(object):
                 host_index = each.index("host")
                 destination["host"] = each[host_index + 1]
             else:
-                host_ip = host[0].split(' ')[1]
+                host_ip = host[0].split(" ")[1]
                 host_index = each_list.index("host")
                 if host_index == (grant_index + 2):
                     source["host"] = host_ip
@@ -224,24 +237,32 @@ class AclsFacts(object):
             object_group_network = re.findall(r"object-group\s\S+", each)
             if object_group_network:
                 if len(object_group_network) == 2:
-                    source['object_group_network'] = object_group_network[0].split(' ')[1]
-                    destination['object_group_network'] = object_group_network[1].split(' ')[1]
+                    source["object_group_network"] = object_group_network[
+                        0
+                    ].split(" ")[1]
+                    destination["object_group_network"] = object_group_network[
+                        1
+                    ].split(" ")[1]
                 elif len(object_group_network) == 1:
-                    if each.index('object-group') == grant_index + 2:
-                        source['object_group_network'] = object_group_network[0].split(' ')[1]
+                    if each.index("object-group") == grant_index + 2:
+                        source["object_group_network"] = object_group_network[
+                            0
+                        ].split(" ")[1]
                     else:
-                        destination['object_group_network'] = object_group_network[0].split(' ')[1]
-        if 'interface' in each:
+                        destination[
+                            "object_group_network"
+                        ] = object_group_network[0].split(" ")[1]
+        if "interface" in each:
             interface = re.findall(r"interface\s\S+", each)
             if interface:
                 if len(interface) == 2:
-                    source['interface'] = interface[0].split(' ')[1]
-                    destination['interface'] = interface[1].split(' ')[1]
+                    source["interface"] = interface[0].split(" ")[1]
+                    destination["interface"] = interface[1].split(" ")[1]
                 elif len(interface) == 1:
-                    if each.index('interface') == grant_index + 2:
-                        source['interface'] = interface[0].split(' ')[1]
+                    if each.index("interface") == grant_index + 2:
+                        source["interface"] = interface[0].split(" ")[1]
                     else:
-                        destination['interface'] = interface[0].split(' ')[1]
+                        destination["interface"] = interface[0].split(" ")[1]
         if ":" in each:
             temp_ipv6 = []
             each = each.split(" ")
@@ -442,7 +463,7 @@ class AclsFacts(object):
                         msg="Source and Destination address cannot be same!"
                     )
                 elif source and destination:
-                    self.populate_port_protocol(source, destination, each_list)                    
+                    self.populate_port_protocol(source, destination, each_list)
 
                 if source:
                     ace_options["source"] = source

@@ -1,4 +1,3 @@
-
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # Copyright 2019 Red Hat
@@ -471,6 +470,28 @@ EXAMPLES = """
             address: 198.51.110.0
             netmask: 255.255.255.0
           time_range: temp
+        - grant: deny
+          line: 3
+          protocol_options:
+            tcp: true
+          source:
+            interface: management
+          destination:
+            interface: management
+            port_protocol:
+              eq: www
+          log: warnings
+        - grant: deny
+          line: 4
+          protocol_options:
+            tcp: true
+          source:
+            object_group_network: test_og_network
+          destination:
+            object_group_network: test_network_og
+            port_protocol:
+              eq: www
+          log: default
       - name: global_access
         acl_type: extended
         aces:

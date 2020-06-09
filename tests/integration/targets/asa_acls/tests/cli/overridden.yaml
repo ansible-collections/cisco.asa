@@ -31,11 +31,22 @@
                     netmask: 255.255.255.0
                     port_protocol:
                       eq: www
+                - grant: deny
+                  line: 2
+                  protocol_options:
+                    tcp: true
+                  source:
+                    object_group_network: test_og_network
+                  destination:
+                    object_group_network: test_network_og
+                    port_protocol:
+                      eq: www
+                  log: default
         state: overridden
 
     - assert:
         that:
-          - result.commands|length == 5
+          - result.commands|length == 6
           - result.changed == true
           - result.commands|symmetric_difference(overridden.commands) == []
 

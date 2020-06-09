@@ -50,6 +50,15 @@
                     host: 198.51.110.0
                   destination:
                     any: true
+                - grant: deny
+                  line: 4
+                  protocol: tcp
+                  protocol_options:
+                    tcp: true
+                  source:
+                    object_group_network: test_og_network
+                  destination:
+                    object_group_network: test_network_og
                     port_protocol:
                       eq: www
                   log: default
@@ -67,6 +76,17 @@
                     port_protocol:
                       eq: www
                   log: errors
+                - grant: deny
+                  line: 2
+                  protocol_options:
+                    tcp: true
+                  source:
+                    interface: management
+                  destination:
+                    interface: management
+                    port_protocol:
+                      eq: www
+                  log: warnings
             - name: test_R1_traffic
               acl_type: extended
               aces:
@@ -87,7 +107,7 @@
 
     - assert:
         that:
-          - result.commands|length == 5
+          - result.commands|length == 7
           - result.changed == true
           - result.commands|symmetric_difference(merged.commands) == []
 
