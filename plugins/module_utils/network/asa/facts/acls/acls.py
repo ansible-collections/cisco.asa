@@ -265,7 +265,6 @@ class AclsFacts(object):
                         destination["interface"] = interface[0].split(" ")[1]
         if ":" in each:
             temp_ipv6 = []
-            each = each.split(" ")
             check_n_return_valid_ipv6_addr(self._module, each_list, temp_ipv6)
             count = 0
             for every in each_list:

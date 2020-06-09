@@ -51,6 +51,9 @@
                     host: 198.51.110.0
                   destination:
                     any: true
+                    port_protocol:
+                      eq: www
+                  log: default
                 - grant: deny
                   line: 4
                   protocol: tcp
