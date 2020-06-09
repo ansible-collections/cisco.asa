@@ -118,7 +118,7 @@ class AclsFacts(object):
                                     source_index = each_list.index(
                                         source.get("interface")
                                     )
-                                except:
+                                except ValueError:
                                     source_index = each_list.index("any")
                     if source.get("address"):
                         if (
@@ -181,7 +181,7 @@ class AclsFacts(object):
                                     destination_index = each_list.index(
                                         destination.get("interface")
                                     )
-                                except:
+                                except ValueError:
                                     destination_index = each_list.index("any")
                     if (destination_index + 1) == index or (
                         destination_index + 2
