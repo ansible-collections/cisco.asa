@@ -11,14 +11,15 @@ __metaclass__ = type
 DOCUMENTATION = """
 module: asa_acl
 author: Patrick Ogenstad (@ogenstad)
-short_description: (deprecated) Manage access-lists on a Cisco ASA
+short_description: (deprecated, removed after 2022-06-01) Manage access-lists on a
+  Cisco ASA
 description:
 - This module allows you to work with access-lists on a Cisco ASA device.
 version_added: 1.0.0
 deprecated:
-  removed_in: '2.13'
   alternative: asa_acl
   why: Newer and updated modules released with more functionality in Ansible 2.10
+  removed_at_date: '2022-06-01'
 extends_documentation_fragment:
 - cisco.asa.asa
 options:
@@ -79,6 +80,7 @@ options:
       are times when it is not desirable to have the task get the current running-config
       for every task in a playbook.  The I(config) argument allows the implementer
       to pass in the configuration to use as the base config for comparison.
+
 
 """
 

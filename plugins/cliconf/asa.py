@@ -21,13 +21,12 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 DOCUMENTATION = """
----
 cliconf: asa
 short_description: Use asa cliconf to run command on Cisco ASA platform
 description:
-  - This asa plugin provides low level abstraction apis for
-    sending and receiving CLI commands from Cisco ASA network devices.
-version_added: 2.4
+- This asa plugin provides low level abstraction apis for sending and receiving CLI
+  commands from Cisco ASA network devices.
+version_added: 1.0.0
 """
 
 import re

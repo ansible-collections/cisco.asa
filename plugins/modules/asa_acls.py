@@ -411,6 +411,7 @@ options:
     - The state of the configuration after module completion
     type: str
 
+
 """
 
 EXAMPLES = """
