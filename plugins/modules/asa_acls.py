@@ -281,6 +281,7 @@ options:
               source:
                 description: Specify the packet source.
                 type: dict
+                required: true
                 suboptions:
                   address:
                     description: Source network address.
@@ -332,6 +333,7 @@ options:
               destination:
                 description: Specify the packet destination.
                 type: dict
+                required: true
                 suboptions:
                   address:
                     description: Host address to match, or any single host address.
@@ -530,6 +532,10 @@ EXAMPLES = """
 # access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default
 # access-list temp_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
 #                         time-range temp inactive
+# access-list temp_access line 2 extended deny tcp interface management interface management
+#                         eq www log warnings
+# access-list test_access line 3 extended deny tcp object-group test_og_network object-group test_network_og
+#                         eq www log default
 
 # After state:
 # ------------
@@ -553,6 +559,17 @@ EXAMPLES = """
 # access-list temp_access line 2
 #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
 #                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae
+# access-list test_access line 3
+#                         extended deny tcp interface management interface management eq www log warnings
+#                         interval 300 (hitcnt=0) 0x78aa233d
+# access-list test_access line 2 extended deny tcp object-group test_og_network object-group test_network_og
+#                         eq www log default (hitcnt=0) 0x477aec1e
+#    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 192.0.3.1 eq www
+#                            log default (hitcnt=0) 0xdc7edff8
+#    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 192.0.3.2 eq www
+#                            log default (hitcnt=0) 0x7b0e9fde
+#    access-list test_access line 2 extended deny tcp 198.51.100.0 255.255.255.0 2001:db8:3::/64 eq www
+#                            log default (hitcnt=0) 0x97c75adc
 
 # Using Merged to Rename ACLs
 # Before state:

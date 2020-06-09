@@ -4,7 +4,7 @@
       }}
 
 - include_tasks: _remove_config.yaml
-
+- include_tasks: _populate_network_og.yaml
 - include_tasks: _populate_config.yaml
 
 - block:
@@ -80,3 +80,4 @@
   always:
 
     - include_tasks: _remove_config.yaml
+    - include_tasks: _remove_og_config.yaml
