@@ -155,6 +155,7 @@ rendered:
     - access-list test_R1_traffic deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive
 rtt:
   commands:
+    - no access-list test_access line 2 extended deny tcp object-group test_og_network object-group test_network_og eq www log default
     - no access-list test_access line 1 extended deny tcp 192.0.4.0 255.255.255.0 eq telnet 192.0.5.0 255.255.255.0 eq www
     - access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default
     - access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors

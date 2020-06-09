@@ -485,7 +485,9 @@ class AclsFacts(object):
                     else:
                         protocol_options[temp_option] = True
                     ace_options["protocol_options"] = protocol_options
-                if not ace_options.get("source") and not ace_options.get("destination"):
+                if not ace_options.get("source") and not ace_options.get(
+                    "destination"
+                ):
                     continue
                 aces.append(ace_options)
                 acls["aces"] = aces

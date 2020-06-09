@@ -305,21 +305,6 @@ class TestAsaAclsModule(TestAsaModule):
         ]
         self.assertEqual(result["commands"], commands)
 
-    def test_asa_acls_deleted_line_based(self):
-        set_module_args(
-            dict(
-                config=[
-                    dict(acls=[dict(name="test_access", aces=[dict(line=1)])])
-                ],
-                state="deleted",
-            )
-        )
-        result = self.execute_module(changed=True)
-        commands = [
-            "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default"
-        ]
-        self.assertEqual(result["commands"], commands)
-
     def test_asa_acls_rendered(self):
         set_module_args(
             dict(
