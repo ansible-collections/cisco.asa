@@ -74,7 +74,9 @@ class AclsFacts(object):
 
         if objs:
             facts["acls"] = []
-            params = utils.validate_config(self.argument_spec, {"config": objs})
+            params = utils.validate_config(
+                self.argument_spec, {"config": objs}
+            )
             for cfg in params["config"]:
                 facts["acls"].append(utils.remove_empties(cfg))
         ansible_facts["ansible_network_resources"].update(facts)
@@ -107,28 +109,36 @@ class AclsFacts(object):
                         except ValueError:
                             source_index = each_list.index("any")
                     if source.get("address"):
-                        if (source_index + 2) == index and ":" not in source.get(
-                            "address"
-                        ):
-                            source["port_protocol"] = {item: each_list[index + 1]}
+                        if (
+                            source_index + 2
+                        ) == index and ":" not in source.get("address"):
+                            source["port_protocol"] = {
+                                item: each_list[index + 1]
+                            }
                             each_list.remove(item)
                             del each_list[index]
                         elif (source_index + 1) == index and ":" in source.get(
                             "address"
                         ):
-                            source["port_protocol"] = {item: each_list[index + 1]}
+                            source["port_protocol"] = {
+                                item: each_list[index + 1]
+                            }
                             each_list.remove(item)
                             del each_list[source_index]
                             del each_list[index - 1]
                     elif source.get("any"):
                         if (source_index + 1) == index:
-                            source["port_protocol"] = {item: each_list[index + 1]}
+                            source["port_protocol"] = {
+                                item: each_list[index + 1]
+                            }
                             each_list.remove(item)
                             del each_list[source_index]
                             del each_list[index - 1]
                     elif source.get("host"):
                         if (source_index + 1) == index:
-                            source["port_protocol"] = {item: each_list[index + 1]}
+                            source["port_protocol"] = {
+                                item: each_list[index + 1]
+                            }
                             each_list.remove(item)
                             del each_list[index - 1]
                         del each_list[source_index]
@@ -139,7 +149,9 @@ class AclsFacts(object):
                 ):
                     index = each_list.index(item)
                     try:
-                        destination_index = each_list.index(destination.get("address"))
+                        destination_index = each_list.index(
+                            destination.get("address")
+                        )
                     except ValueError:
                         try:
                             destination_index = (
@@ -151,7 +163,9 @@ class AclsFacts(object):
                     if (destination_index + 1) == index or (
                         destination_index + 2
                     ) == index:
-                        destination["port_protocol"] = {item: each_list[index + 1]}
+                        destination["port_protocol"] = {
+                            item: each_list[index + 1]
+                        }
                         each_list.remove(item)
                         del each_list[index]
                 break
@@ -382,9 +396,9 @@ class AclsFacts(object):
                 destination = {}
                 self.populate_source_destination(each, source, destination)
 
-                if source.get("address") and source.get("address") == destination.get(
+                if source.get("address") and source.get(
                     "address"
-                ):
+                ) == destination.get("address"):
                     self._module.fail_json(
                         msg="Source and Destination address cannot be same!"
                     )
