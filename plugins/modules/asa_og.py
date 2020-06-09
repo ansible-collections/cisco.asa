@@ -76,7 +76,6 @@ options:
     - absent
     - replace
 
-
 """
 
 EXAMPLES = """

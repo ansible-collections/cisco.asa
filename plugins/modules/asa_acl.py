@@ -81,7 +81,6 @@ options:
       for every task in a playbook.  The I(config) argument allows the implementer
       to pass in the configuration to use as the base config for comparison.
 
-
 """
 
 EXAMPLES = """
