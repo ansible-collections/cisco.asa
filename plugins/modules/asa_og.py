@@ -13,15 +13,16 @@ DOCUMENTATION = """
 module: asa_og
 author:
 - Federico Olivieri (@Federico87)
-short_description: (deprecated) Manage object groups on a Cisco ASA
+short_description: (deprecated, removed after 2022-06-01) Manage object groups on
+  a Cisco ASA
 description:
 - This module allows you to create and update object-group network/service on Cisco
   ASA device.
 version_added: 1.0.0
 deprecated:
-  removed_in: '2.13'
   alternative: asa_ogs
   why: Newer and updated modules released with more functionality in Ansible 2.10
+  removed_at_date: '2022-06-01'
 options:
   name:
     description:
