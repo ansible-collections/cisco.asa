@@ -4,7 +4,7 @@
       }}
 
 - include_tasks: _remove_config.yaml
-
+- include_tasks: _populate_network_og.yaml
 - include_tasks: _populate_config.yaml
 
 - block:
@@ -31,6 +31,17 @@
                     port_protocol:
                       eq: www
                   log: default
+                - grant: deny
+                  line: 2
+                  protocol_options:
+                    tcp: true
+                  source:
+                    object_group_network: test_og_network
+                  destination:
+                    object_group_network: test_network_og
+                    port_protocol:
+                      eq: www
+                  log: default
             - name: test_global_access
               acl_type: extended
               aces:
@@ -52,7 +63,7 @@
 
     - assert:
         that:
-          - result.commands|length == 5
+          - result.commands|length == 6
           - result.changed == true
           - result.commands|symmetric_difference(replaced.commands) == []
 
@@ -69,3 +80,4 @@
   always:
 
     - include_tasks: _remove_config.yaml
+    - include_tasks: _remove_og_config.yaml

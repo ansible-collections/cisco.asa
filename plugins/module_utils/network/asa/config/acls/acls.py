@@ -180,38 +180,70 @@ class Acls(ConfigBase):
                         for config_have in have:
                             for acls_have in config_have.get("acls"):
                                 for ace_have in acls_have.get("aces"):
-                                    if acls_want.get("name") == acls_have.get(
-                                        "name"
+                                    if (
+                                        acls_want.get("name")
+                                        == acls_have.get("name")
+                                        and ace_want.get("line")
+                                        == ace_have.get("line")
+                                        and ace_have.get("source")
                                     ):
                                         ace_want = remove_empties(ace_want)
                                         acls_want = remove_empties(acls_want)
                                         set_cmd = self._set_config(
                                             ace_want, ace_have, acls_want
                                         )
-                                        if set_cmd:
-                                            for (
-                                                temp_acls_have
-                                            ) in config_have.get("acls"):
-                                                for (
-                                                    temp_ace_have
-                                                ) in temp_acls_have.get(
-                                                    "aces"
-                                                ):
-                                                    if acls_want.get(
-                                                        "name"
-                                                    ) == temp_acls_have.get(
-                                                        "name"
-                                                    ):
-                                                        clear_cmd = self._clear_config(
-                                                            temp_ace_have,
-                                                            temp_acls_have,
-                                                        )
-                                                        commands = self.add_config_cmd(
-                                                            clear_cmd, commands
-                                                        )
                                         commands = self.add_config_cmd(
                                             set_cmd, commands
                                         )
+                                        check = True
+                                    if not ace_want.get(
+                                        "line"
+                                    ) and ace_have.get("source"):
+                                        if acls_want.get(
+                                            "name"
+                                        ) == acls_have.get("name"):
+                                            ace_want = remove_empties(ace_want)
+                                            set_cmd, check = self.common_condition_check(
+                                                ace_want,
+                                                ace_have,
+                                                acls_want,
+                                                config_want,
+                                                check,
+                                                acls_have,
+                                            )
+                                            if (
+                                                acls_have.get("acl_type")
+                                                == "standard"
+                                            ):
+                                                check = True
+                                            commands = self.add_config_cmd(
+                                                set_cmd, commands
+                                            )
+                                    if set_cmd:
+                                        for temp_acls_have in config_have.get(
+                                            "acls"
+                                        ):
+                                            for (
+                                                temp_ace_have
+                                            ) in temp_acls_have.get("aces"):
+                                                if acls_want.get(
+                                                    "name"
+                                                ) == temp_acls_have.get(
+                                                    "name"
+                                                ) and temp_ace_have.get(
+                                                    "source"
+                                                ):
+                                                    clear_cmd = self._clear_config(
+                                                        temp_ace_have,
+                                                        temp_acls_have,
+                                                    )
+                                                    commands = self.add_config_cmd(
+                                                        clear_cmd, commands
+                                                    )
+                                        commands = self.add_config_cmd(
+                                            set_cmd, commands
+                                        )
+                                        set_cmd = []
                                         check = True
                                 if check:
                                     break
@@ -267,7 +299,7 @@ class Acls(ConfigBase):
                                 for ace_want in acls_want.get("aces"):
                                     if acls_want.get("name") == acls_have.get(
                                         "name"
-                                    ):
+                                    ) and ace_have.get("source"):
                                         ace_want = remove_empties(ace_want)
                                         acls_want = remove_empties(acls_want)
                                         set_cmd = self._set_config(
@@ -305,9 +337,13 @@ class Acls(ConfigBase):
                                 break
                         if not check:
                             # Delete the config not present in want config
-                            clear_cmd = self._clear_config(ace_have, acls_have)
-                            commands = self.add_config_cmd(clear_cmd, commands)
-
+                            if ace_have.get("source"):
+                                clear_cmd = self._clear_config(
+                                    ace_have, acls_have
+                                )
+                                commands = self.add_config_cmd(
+                                    clear_cmd, commands
+                                )
                 # For configuring any non-existing want config
                 for config_want in temp_want:
                     for acls_want in config_want.get("acls"):
@@ -351,10 +387,12 @@ class Acls(ConfigBase):
                         for config_have in have:
                             for acls_have in config_have.get("acls"):
                                 for ace_have in acls_have.get("aces"):
-                                    if acls_want.get("name") == acls_have.get(
-                                        "name"
-                                    ) and ace_want.get("line") == ace_have.get(
-                                        "line"
+                                    if (
+                                        acls_want.get("name")
+                                        == acls_have.get("name")
+                                        and ace_want.get("line")
+                                        == ace_have.get("line")
+                                        and ace_have.get("source")
                                     ):
                                         ace_want = remove_empties(ace_want)
                                         set_cmd = self._set_config(
@@ -364,7 +402,9 @@ class Acls(ConfigBase):
                                             set_cmd, commands
                                         )
                                         check = True
-                                    if not ace_want.get("line"):
+                                    if not ace_want.get(
+                                        "line"
+                                    ) and ace_have.get("source"):
                                         if acls_want.get(
                                             "name"
                                         ) == acls_have.get("name"):
@@ -415,7 +455,7 @@ class Acls(ConfigBase):
                             for ace_have in acls_have.get("aces"):
                                 if acls_want.get("name") == acls_have.get(
                                     "name"
-                                ):
+                                ) and ace_have.get("source"):
                                     commands.extend(
                                         self._clear_config(ace_have, acls_have)
                                     )
@@ -423,8 +463,9 @@ class Acls(ConfigBase):
             for config_have in have:
                 for acls_have in config_have.get("acls"):
                     for ace_have in acls_have.get("aces"):
-                        clear_cmd = self._clear_config(ace_have, acls_have)
-                        commands = self.add_config_cmd(clear_cmd, commands)
+                        if ace_have.get("source"):
+                            clear_cmd = self._clear_config(ace_have, acls_have)
+                            commands = self.add_config_cmd(clear_cmd, commands)
         # Reversing the negate/no access-list as otherwise if deleted from top the
         # next ace takes the line position of deleted ace from top and only one ace
         # will be deleted instead of expected aces and results in unexpected output
@@ -544,6 +585,8 @@ class Acls(ConfigBase):
         netmask = config.get("netmask")
         any = config.get("any")
         host = config.get("host")
+        interface = config.get("interface")
+        object_group_network = config.get("object_group_network")
         if address and netmask:
             cmd = cmd + " {0} {1}".format(address, netmask)
         elif address:
@@ -552,6 +595,10 @@ class Acls(ConfigBase):
             cmd = cmd + " {0}".format("any")
         elif host:
             cmd = cmd + " host {0}".format(host)
+        elif interface:
+            cmd = cmd + " interface {0}".format(interface)
+        elif object_group_network:
+            cmd = cmd + " object-group {0}".format(object_group_network)
         port_protocol = config.get("port_protocol")
         if port_protocol and (
             protocol_option.get("tcp") or protocol_option.get("udp")
@@ -631,6 +678,7 @@ class Acls(ConfigBase):
         :returns: the commands generated based on input want/have params
         """
         commands = []
+
         # To change the want IPV6 address to lower case, as Cisco ASA configures the IPV6
         # access-list always in Lowercase even if the input is given in Uppercase
         if (
