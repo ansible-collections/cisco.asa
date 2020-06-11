@@ -214,7 +214,7 @@ class AclsFacts(object):
                 destination["any"] = True
             elif any == 1:
                 any_index = each_list.index("any")
-                if any_index == grant_index + 2:
+                if grant_index + 2 == any_index:
                     source["any"] = True
                 else:
                     destination["any"] = True
@@ -336,6 +336,9 @@ class AclsFacts(object):
                 line = utils.parse_conf_arg(each, "line")
                 if line:
                     ace_options["line"] = line.split(" ")[0]
+                remark = utils.parse_conf_arg(each, "remark")
+                if remark:
+                    ace_options["remark"] = remark.split(" ")[0]
                 if "extended" in each:
                     acls["acl_type"] = "extended"
                 elif "standard" in each:

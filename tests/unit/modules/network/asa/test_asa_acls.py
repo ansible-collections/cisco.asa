@@ -134,6 +134,22 @@ class TestAsaAclsModule(TestAsaModule):
                             )
                         ]
                     ),
+                    dict(
+                        acls=[
+                            dict(
+                                name="merge_v6_acl",
+                                aces=[
+                                    dict(
+                                        destination=dict(
+                                            host="192.0.2.2",
+                                        ),
+                                        line=2,
+                                        ),
+                                    )
+                                ],
+                            )
+                        ]
+                    ),
                 ],
                 state="merged",
             )
