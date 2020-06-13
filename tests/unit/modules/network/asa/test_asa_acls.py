@@ -137,14 +137,14 @@ class TestAsaAclsModule(TestAsaModule):
                     dict(
                         acls=[
                             dict(
-                                name="merge_v6_acl",
+                                name="test_access",
                                 aces=[
                                     dict(
-                                        destination=dict(
+                                        source=dict(
                                             host="192.0.2.2",
                                         ),
                                         line=2,
-                                        ),
+                                        remark="test_merge_host"
                                     )
                                 ],
                             )
@@ -158,6 +158,8 @@ class TestAsaAclsModule(TestAsaModule):
         commands = [
             "access-list test_global_access line 1 extended deny tcp any any eq www log errors",
             "access-list merge_v6_acl deny tcp 2001:db8:0:5::/64 eq www 2001:fc8:0:6::/64 eq telnet inactive",
+            "no access-list test_access line 2 remark host1 extended deny tcp host 192.0.2.1 any eq www log default",
+            "access-list test_access line 2 remark test_merge_host deny tcp host 192.0.2.2 any eq www log default",
         ]
         self.assertEqual(result["commands"], commands)
 
@@ -184,7 +186,35 @@ class TestAsaAclsModule(TestAsaModule):
                                             address="192.0.2.0",
                                             netmask="255.255.255.0",
                                         ),
-                                    )
+                                    ),
+                                    dict(
+                                        destination=dict(
+                                            any="true",
+                                            port_protocol=dict(eq="www"),
+                                        ),
+                                        grant="deny",
+                                        line=2,
+                                        log="default",
+                                        protocol="tcp",
+                                        protocol_options=dict(tcp="true"),
+                                        remark="host1",
+                                        source=dict(
+                                            host="192.0.2.1",
+                                        ),
+                                    ),
+                                    dict(
+                                        destination=dict(
+                                            any="true",
+                                        ),
+                                        grant="permit",
+                                        line=3,
+                                        protocol="ip",
+                                        protocol_options=dict(ip="true"),
+                                        remark="host2",
+                                        source=dict(
+                                            host="192.0.2.2",
+                                        ),
+                                    ),
                                 ],
                                 name="test_access",
                                 acl_type="extended",
@@ -233,6 +263,8 @@ class TestAsaAclsModule(TestAsaModule):
         )
         result = self.execute_module(changed=True)
         commands = [
+            "no access-list test_access line 3 remark host2 extended permit ip host 192.0.2.2 any",
+            "no access-list test_access line 2 remark host1 extended deny tcp host 192.0.2.1 any eq www log default",
             "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default",
             "access-list test_access line 1 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log default time-range temp",
         ]
@@ -307,6 +339,8 @@ class TestAsaAclsModule(TestAsaModule):
         result = self.execute_module(changed=True)
         commands = [
             "no access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive",
+            "no access-list test_access line 3 remark host2 extended permit ip host 192.0.2.2 any",
+            "no access-list test_access line 2 remark host1 extended deny tcp host 192.0.2.1 any eq www log default",
             "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default",
             "access-list test_global_access line 1 extended deny tcp any any eq www log errors",
         ]
@@ -317,6 +351,8 @@ class TestAsaAclsModule(TestAsaModule):
         result = self.execute_module(changed=True)
         commands = [
             "no access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive",
+            "no access-list test_access line 3 remark host2 extended permit ip host 192.0.2.2 any",
+            "no access-list test_access line 2 remark host1 extended deny tcp host 192.0.2.1 any eq www log default",
             "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default",
         ]
         self.assertEqual(result["commands"], commands)

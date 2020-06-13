@@ -197,7 +197,7 @@ class Acls(ConfigBase):
                                             set_cmd, commands
                                         )
                                         check = True
-                                    if not ace_want.get(
+                                    elif not ace_want.get(
                                         "line"
                                     ) and ace_have.get("source"):
                                         if acls_want.get(
@@ -400,13 +400,13 @@ class Acls(ConfigBase):
                                         set_cmd = self._set_config(
                                             ace_want, ace_have, acls_want
                                         )
+                                        if set_cmd:
+                                            commands.extend(self._clear_config(ace_have, acls_have))
                                         commands = self.add_config_cmd(
                                             set_cmd, commands
                                         )
                                         check = True
-                                    if not ace_want.get(
-                                        "line"
-                                    ) and ace_have.get("source"):
+                                    elif not ace_want.get("line"):
                                         if acls_want.get(
                                             "name"
                                         ) == acls_have.get("name"):

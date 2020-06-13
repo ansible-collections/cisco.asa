@@ -226,7 +226,7 @@ class AclsFacts(object):
                 del each[host_index]
                 host_index = each.index("host")
                 destination["host"] = each[host_index + 1]
-            else:
+            elif len(host) == 1:
                 host_ip = host[0].split(" ")[1]
                 host_index = each_list.index("host")
                 if host_index == (grant_index + 2):
@@ -286,10 +286,10 @@ class AclsFacts(object):
         else:
             ip_n_netmask = re.findall(r"[0-9]+(?:\.[0-9]+){3}", each)
             if len(ip_n_netmask) == 2:
-                if destination["any"] or destination["host"]:
+                if destination.get("any") or destination.get("host"):
                     source["address"] = ip_n_netmask[0]
                     source["netmask"] = ip_n_netmask[1]
-                elif source["any"] or source["host"]:
+                elif source.get("any") or source.get("host"):
                     destination["address"] = ip_n_netmask[0]
                     destination["netmask"] = ip_n_netmask[1]
                 else:
