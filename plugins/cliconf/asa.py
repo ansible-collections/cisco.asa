@@ -21,6 +21,8 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 DOCUMENTATION = """
+---
+author: Ansible Security Team
 cliconf: asa
 short_description: Use asa cliconf to run command on Cisco ASA platform
 description:
