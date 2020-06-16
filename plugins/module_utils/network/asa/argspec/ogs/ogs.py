@@ -96,7 +96,6 @@ class OGsArgs(object):
                                 "host": {"type": "list"},
                                 "address": {"type": "list"},
                                 "ipv6_address": {"type": "list"},
-                                "object": {"type": "str"},
                             },
                         },
                         "protocol_object": {
@@ -201,7 +200,6 @@ class OGsArgs(object):
                                 },
                             },
                         },
-                        "group_object": {"type": "str"},
                     },
                 },
             },

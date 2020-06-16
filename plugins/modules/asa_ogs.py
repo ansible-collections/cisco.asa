@@ -1,5 +1,5 @@
 # pylint: skip-file
-# !/usr/bin/python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 # Copyright 2019 Red Hat
 # GNU General Public License v3.0+
@@ -109,7 +109,7 @@ options:
             description: Configure a security-group
             type: dict
             suboptions:
-              name:
+              sec_name:
                 description: Enter this keyword to specify a security-group name.
                 type: list
               tag:
