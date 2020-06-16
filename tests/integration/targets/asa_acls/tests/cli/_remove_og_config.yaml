@@ -1,0 +1,4 @@
+---
+- name: Remove configured Object group
+  cisco.asa.asa_ogs:
+    state: deleted

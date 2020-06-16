@@ -67,16 +67,16 @@ options:
             type: str
           acl_type:
             description:
-            - ACL type
+              - ACL type
             type: str
             choices:
-            - extended
-            - standard
+              - extended
+              - standard
           rename:
             description:
-            - Rename an existing access-list.
-            - If input to rename param is given, it'll take preference over other
-              parameters and only rename config will be matched and computed against.
+              - Rename an existing access-list.
+              - If input to rename param is given, it'll take preference over other
+                parameters and only rename config will be matched and computed against.
             type: str
           aces:
             description: The entries within the ACL.
@@ -87,16 +87,16 @@ options:
                 description: Specify the action.
                 type: str
                 choices:
-                - permit
-                - deny
+                  - permit
+                  - deny
               line:
                 description:
-                - Use this to specify line number at which ACE should be entered.
-                - Existing ACE can be updated based on the input line number.
-                - It's not a required param in case of configuring the acl, but in
-                  case of Delete operation it's required, else Delete operation won't
-                  work as expected.
-                - Refer to vendor documentation for valid values.
+                  - Use this to specify line number at which ACE should be entered.
+                  - Existing ACE can be updated based on the input line number.
+                  - It's not a required param in case of configuring the acl, but in
+                    case of Delete operation it's required, else Delete operation won't
+                    work as expected.
+                  - Refer to vendor documentation for valid values.
                 type: int
               remark:
                 description:
@@ -104,8 +104,8 @@ options:
                 type: str
               protocol:
                 description:
-                - Specify the protocol to match.
-                - Refer to vendor documentation for valid values.
+                  - Specify the protocol to match.
+                  - Refer to vendor documentation for valid values.
                 type: str
               protocol_options:
                 description: protocol type.
@@ -281,6 +281,7 @@ options:
               source:
                 description: Specify the packet source.
                 type: dict
+                required: true
                 suboptions:
                   address:
                     description: Source network address.
@@ -290,15 +291,21 @@ options:
                     type: str
                   any:
                     description:
-                    - Match any source address.
+                      - Match any source address.
                     type: bool
                   host:
                     description: A single source host
                     type: str
+                  interface:
+                    description: Use interface address as source address
+                    type: str
+                  object_group_network:
+                    description: Network object-group for source address
+                    type: str
                   port_protocol:
                     description:
-                    - Specify the destination port along with protocol.
-                    - Note, Valid with TCP/UDP protocol_options
+                      - Specify the destination port along with protocol.
+                      - Note, Valid with TCP/UDP protocol_options
                     type: dict
                     suboptions:
                       eq:
@@ -326,6 +333,7 @@ options:
               destination:
                 description: Specify the packet destination.
                 type: dict
+                required: true
                 suboptions:
                   address:
                     description: Host address to match, or any single host address.
@@ -340,10 +348,16 @@ options:
                   host:
                     description: A single source host
                     type: str
+                  interface:
+                    description: Use interface address as destination address
+                    type: str
+                  object_group_network:
+                    description: Network object-group for destination address
+                    type: str
                   port_protocol:
                     description:
-                    - Specify the destination port along with protocol.
-                    - Note, Valid with TCP/UDP protocol_options
+                      - Specify the destination port along with protocol.
+                      - Note, Valid with TCP/UDP protocol_options
                     type: dict
                     suboptions:
                       eq:
@@ -375,17 +389,17 @@ options:
                 description: Log matches against this entry.
                 type: str
                 choices:
-                - default
-                - alerts
-                - critical
-                - debugging
-                - disable
-                - emergencies
-                - errors
-                - informational
-                - interval
-                - notifications
-                - warnings
+                  - default
+                  - alerts
+                  - critical
+                  - debugging
+                  - disable
+                  - emergencies
+                  - errors
+                  - informational
+                  - interval
+                  - notifications
+                  - warnings
               time_range:
                 description: Specify a time-range.
                 type: str
@@ -458,6 +472,28 @@ EXAMPLES = """
             address: 198.51.110.0
             netmask: 255.255.255.0
           time_range: temp
+        - grant: deny
+          line: 3
+          protocol_options:
+            tcp: true
+          source:
+            interface: management
+          destination:
+            interface: management
+            port_protocol:
+              eq: www
+          log: warnings
+        - grant: deny
+          line: 4
+          protocol_options:
+            tcp: true
+          source:
+            object_group_network: test_og_network
+          destination:
+            object_group_network: test_network_og
+            port_protocol:
+              eq: www
+          log: default
       - name: global_access
         acl_type: extended
         aces:
@@ -496,6 +532,10 @@ EXAMPLES = """
 # access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default
 # access-list temp_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
 #                         time-range temp inactive
+# access-list temp_access line 2 extended deny tcp interface management interface management
+#                         eq www log warnings
+# access-list test_access line 3 extended deny tcp object-group test_og_network object-group test_network_og
+#                         eq www log default
 
 # After state:
 # ------------
@@ -519,6 +559,17 @@ EXAMPLES = """
 # access-list temp_access line 2
 #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
 #                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae
+# access-list test_access line 3
+#                         extended deny tcp interface management interface management eq www log warnings
+#                         interval 300 (hitcnt=0) 0x78aa233d
+# access-list test_access line 2 extended deny tcp object-group test_og_network object-group test_network_og
+#                         eq www log default (hitcnt=0) 0x477aec1e
+#    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 192.0.3.1 eq www
+#                            log default (hitcnt=0) 0xdc7edff8
+#    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 192.0.3.2 eq www
+#                            log default (hitcnt=0) 0x7b0e9fde
+#    access-list test_access line 2 extended deny tcp 198.51.100.0 255.255.255.0 2001:db8:3::/64 eq www
+#                            log default (hitcnt=0) 0x97c75adc
 
 # Using Merged to Rename ACLs
 # Before state:
