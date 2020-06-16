@@ -24,6 +24,7 @@ plugins/modules/asa_og.py validate-modules:parameter-type-not-in-doc
 plugins/action/asa.py action-plugin-docs # base class for deprecated network platform modules using `connection: local`
 plugins/doc_fragments/asa.py future-import-boilerplate
 plugins/doc_fragments/asa.py metaclass-boilerplate
+plugins/modules/asa_facts.py validate-modules:doc-missing-type
 tests/unit/mock/path.py future-import-boilerplate
 tests/unit/mock/path.py metaclass-boilerplate
 tests/unit/mock/yaml_helper.py future-import-boilerplate
