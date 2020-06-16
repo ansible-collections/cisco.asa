@@ -1,6 +1,6 @@
 # CISCO ASA Ansible Collection
 
-[![CI](https://zuul-ci.org/gated.svg)](https://github.com/ansible-collections/REPONAMEHERE/actions) [![Codecov](https://img.shields.io/codecov/c/github/ansible-collections/cisco.asa)](https://codecov.io/gh/ansible-collections/cisco.asa)
+[![CI](https://zuul-ci.org/gated.svg)](https://dashboard.zuul.ansible.com/t/ansible/project/github.com/ansible-collections/cisco.asa) <!--[![Codecov](https://img.shields.io/codecov/c/github/ansible-collections/cisco)](https://codecov.io/gh/ansible-collections/cisco.asa)-->
 
 The Ansible Cisco ASA collection includes a variety of Ansible content to help automate the management of Cisco ASA firewall appliances.
 
