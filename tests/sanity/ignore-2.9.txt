@@ -25,6 +25,7 @@ plugins/doc_fragments/asa.py metaclass-boilerplate
 plugins/modules/asa_facts.py validate-modules:doc-missing-type
 plugins/modules/asa_facts.py validate-modules:parameter-type-not-in-doc
 plugins/modules/asa_facts.py validate-modules:undocumented-parameter
+plugins/modules/asa_facts.py validate-modules:doc-default-does-not-match-spec
 tests/unit/mock/path.py future-import-boilerplate
 tests/unit/mock/path.py metaclass-boilerplate
 tests/unit/mock/yaml_helper.py future-import-boilerplate
