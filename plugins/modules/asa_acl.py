@@ -1,4 +1,4 @@
-# !/usr/bin/python
+#!/usr/bin/python
 # pylint: skip-file
 #
 # Copyright: Ansible Project

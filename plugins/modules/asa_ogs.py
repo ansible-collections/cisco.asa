@@ -84,8 +84,7 @@ options:
                   traceroute, unreachable]
           network_object:
             description: Configure a network object
-            type: list
-            element: dict
+            type: dict
             suboptions:
               host:
                 description: Set this to specify a single host object.
@@ -703,45 +702,45 @@ EXAMPLES = """
   cisco.asa.asa_ogs:
     config:
       - object_type: network
-            object_groups:
-              - name: test_og_network
-                description: test_og_network
-                network_object:
-                  host:
-                    - 192.0.2.1
-                    - 192.0.2.2
-                  address:
-                    - 192.0.2.0 255.255.255.0
-                    - 198.51.100.0 255.255.255.0
-              - name: test_network_og
-                description: test_network_og
-                network_object:
-                  host:
-                    - 192.0.3.1
-                    - 192.0.3.2
-                  ipv6_address:
-                    - 2001:db8:3::/64
-          - object_type: security
-            object_groups:
-              - name: test_og_security
-                description: test_security
-                security_group:
-                  sec_name:
-                    - test_1
-                    - test_2
-                  tag:
-                    - 10
-                    - 20
-          - object_type: user
-            object_groups:
-              - name: test_og_user
-                description: test_user
-                user_object:
-                  user:
-                    - name: new_user_1
-                      domain: LOCAL
-                    - name: new_user_2
-                      domain: LOCAL
+        object_groups:
+          - name: test_og_network
+            description: test_og_network
+            network_object:
+              host:
+                - 192.0.2.1
+                - 192.0.2.2
+              address:
+                - 192.0.2.0 255.255.255.0
+                - 198.51.100.0 255.255.255.0
+          - name: test_network_og
+            description: test_network_og
+            network_object:
+              host:
+                - 192.0.3.1
+                - 192.0.3.2
+              ipv6_address:
+                - 2001:db8:3::/64
+      - object_type: security
+        object_groups:
+          - name: test_og_security
+            description: test_security
+            security_group:
+              sec_name:
+                - test_1
+                - test_2
+              tag:
+                - 10
+                - 20
+      - object_type: user
+        object_groups:
+          - name: test_og_user
+            description: test_user
+            user_object:
+              user:
+                - name: new_user_1
+                  domain: LOCAL
+                - name: new_user_2
+                  domain: LOCAL
     state: rendered
 
 # Module Execution Result:

@@ -780,7 +780,7 @@ EXAMPLES = """
 #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
 #                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae
 
-- name: 'Delete module attributes of given acl (Note: This won't delete ALL of the ACLs configured)'
+- name: "Delete module attributes of given acl (Note: This won't delete ALL of the ACLs configured)"
   cisco.asa.asa_acls:
     config:
     - acls:
