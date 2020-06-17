@@ -63,7 +63,6 @@ class AclsArgs(object):
                                 "line": {"type": "int"},
                                 "remark": {"type": "str"},
                                 "source": {
-                                    "required": True,
                                     "type": "dict",
                                     "mutually_exclusive": [
                                         ["address", "any"],
@@ -100,7 +99,6 @@ class AclsArgs(object):
                                 },
                                 "destination": {
                                     "type": "dict",
-                                    "required": True,
                                     "mutually_exclusive": [
                                         ["address", "any"],
                                         ["wildcard_bits", "any"],

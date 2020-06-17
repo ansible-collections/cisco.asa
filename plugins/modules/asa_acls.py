@@ -281,7 +281,6 @@ options:
               source:
                 description: Specify the packet source.
                 type: dict
-                required: true
                 suboptions:
                   address:
                     description: Source network address.
@@ -333,7 +332,6 @@ options:
               destination:
                 description: Specify the packet destination.
                 type: dict
-                required: true
                 suboptions:
                   address:
                     description: Host address to match, or any single host address.

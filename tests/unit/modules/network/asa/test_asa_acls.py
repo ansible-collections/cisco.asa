@@ -140,11 +140,9 @@ class TestAsaAclsModule(TestAsaModule):
                                 name="test_access",
                                 aces=[
                                     dict(
-                                        source=dict(
-                                            host="192.0.2.2",
-                                        ),
+                                        source=dict(host="192.0.2.2"),
                                         line=2,
-                                        remark="test_merge_host"
+                                        remark="test_merge_host",
                                     )
                                 ],
                             )
@@ -198,22 +196,16 @@ class TestAsaAclsModule(TestAsaModule):
                                         protocol="tcp",
                                         protocol_options=dict(tcp="true"),
                                         remark="host1",
-                                        source=dict(
-                                            host="192.0.2.1",
-                                        ),
+                                        source=dict(host="192.0.2.1"),
                                     ),
                                     dict(
-                                        destination=dict(
-                                            any="true",
-                                        ),
+                                        destination=dict(any="true"),
                                         grant="permit",
                                         line=3,
                                         protocol="ip",
                                         protocol_options=dict(ip="true"),
                                         remark="host2",
-                                        source=dict(
-                                            host="192.0.2.2",
-                                        ),
+                                        source=dict(host="192.0.2.2"),
                                     ),
                                 ],
                                 name="test_access",

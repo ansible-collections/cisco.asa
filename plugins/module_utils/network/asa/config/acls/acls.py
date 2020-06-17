@@ -26,7 +26,7 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.facts 
 )
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
     remove_empties,
-    dict_merge
+    dict_merge,
 )
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.utils.utils import (
     new_dict_to_set,
@@ -396,12 +396,18 @@ class Acls(ConfigBase):
                                         and ace_have.get("source")
                                     ):
                                         ace_want = remove_empties(ace_want)
-                                        ace_want = dict_merge(ace_have, ace_want)
+                                        ace_want = dict_merge(
+                                            ace_have, ace_want
+                                        )
                                         set_cmd = self._set_config(
                                             ace_want, ace_have, acls_want
                                         )
                                         if set_cmd:
-                                            commands.extend(self._clear_config(ace_have, acls_have))
+                                            commands.extend(
+                                                self._clear_config(
+                                                    ace_have, acls_have
+                                                )
+                                            )
                                         commands = self.add_config_cmd(
                                             set_cmd, commands
                                         )
@@ -411,7 +417,9 @@ class Acls(ConfigBase):
                                             "name"
                                         ) == acls_have.get("name"):
                                             ace_want = remove_empties(ace_want)
-                                            ace_want = dict_merge(ace_have, ace_want)
+                                            ace_want = dict_merge(
+                                                ace_have, ace_want
+                                            )
                                             cmd, check = self.common_condition_check(
                                                 ace_want,
                                                 ace_have,
@@ -527,12 +535,13 @@ class Acls(ConfigBase):
             and ace_have.get("source")
         ):
             if (
-                (ace_want.get("destination").get("address")
+                ace_want.get("destination").get("address")
                 and ace_want.get("destination").get("address")
-                == ace_have.get("destination").get("address"))
-                and (ace_want.get("source").get("address")
+                == ace_have.get("destination").get("address")
+            ) and (
+                ace_want.get("source").get("address")
                 and ace_want.get("source").get("address")
-                == ace_have.get("source").get("address"))
+                == ace_have.get("source").get("address")
             ):
                 cmd = self._set_config(ace_want, ace_have, acls_want)
                 commands.extend(cmd)
@@ -540,22 +549,26 @@ class Acls(ConfigBase):
             elif (
                 ace_want.get("destination").get("any")
                 == ace_have.get("destination").get("any")
-                and (ace_want.get("source").get("address") and 
-                ace_want.get("source").get("address")
-                == ace_have.get("source").get("address") or
-                ace_want.get("source").get("host")
-                == ace_have.get("source").get("host"))
+                and (
+                    ace_want.get("source").get("address")
+                    and ace_want.get("source").get("address")
+                    == ace_have.get("source").get("address")
+                    or ace_want.get("source").get("host")
+                    == ace_have.get("source").get("host")
+                )
                 and ace_want.get("destination").get("any")
             ):
                 cmd = self._set_config(ace_want, ace_have, acls_want)
                 commands.extend(cmd)
                 check = True
             elif (
-                (ace_want.get("destination").get("address") and
-                ace_want.get("destination").get("address")
-                == ace_have.get("destination").get("address") or
-                ace_want.get("destination").get("host")
-                == ace_have.get("destination").get("host"))
+                (
+                    ace_want.get("destination").get("address")
+                    and ace_want.get("destination").get("address")
+                    == ace_have.get("destination").get("address")
+                    or ace_want.get("destination").get("host")
+                    == ace_have.get("destination").get("host")
+                )
                 and ace_want.get("source").get("any")
                 == ace_have.get("source").get("any")
                 and ace_want.get("source").get("any")
@@ -564,12 +577,13 @@ class Acls(ConfigBase):
                 commands.extend(cmd)
                 check = True
             elif (
-                (ace_want.get("destination").get("any") and
                 ace_want.get("destination").get("any")
-                == ace_have.get("destination").get("any"))
-                and (ace_want.get("source").get("any") and
+                and ace_want.get("destination").get("any")
+                == ace_have.get("destination").get("any")
+            ) and (
                 ace_want.get("source").get("any")
-                == ace_have.get("source").get("any"))
+                and ace_want.get("source").get("any")
+                == ace_have.get("source").get("any")
             ):
                 cmd = self._set_config(ace_want, ace_have, acls_want)
                 commands.extend(cmd)
