@@ -47,14 +47,6 @@ options:
     type: list
     elements: dict
     suboptions:
-      afi:
-        description:
-        - The Address Family Indicator (AFI) for the Access Control Lists (ACL).
-        required: true
-        type: str
-        choices:
-        - ipv4
-        - ipv6
       acls:
         description:
         - A list of Access Control Lists (ACL).
@@ -114,7 +106,7 @@ options:
                   protocol_number:
                     description: An IP protocol number
                     type: int
-                  ah:
+                  ahp:
                     description: Authentication Header Protocol.
                     type: bool
                   eigrp:
@@ -171,6 +163,9 @@ options:
                         type: bool
                       source_quench:
                         description: Source quenches
+                        type: bool
+                      source_route_failed:
+                        description: Source route
                         type: bool
                       time_exceeded:
                         description: All time exceededs
@@ -785,12 +780,12 @@ EXAMPLES = """
 #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
 #                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae
 
-- name: 'Delete module attributes of given acl (Note: This won't delete ALL of the ACLs configured)'
+- name: "Delete module attributes of given acl (Note: This won't delete ALL of the ACLs configured)"
   cisco.asa.asa_acls:
     config:
     - acls:
-      - name: temp_access
-      - name: global_access
+        - name: temp_access
+        - name: global_access
     state: deleted
 
 # Commands fired:
