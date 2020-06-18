@@ -1,3 +1,7 @@
+from __future__ import absolute_import, division, print_function
+
+__metaclass__ = type
+
 import re
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.network_template import (
     NetworkTemplate,
@@ -95,7 +99,7 @@ def _tmplt_group_object(config_data):
 
 
 class OGsTemplate(NetworkTemplate):
-    def __init__(self, lines=[]):
+    def __init__(self, lines=None):
         super(OGsTemplate, self).__init__(lines=lines, tmplt=self)
 
     PARSERS = [
