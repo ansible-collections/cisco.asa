@@ -1,5 +1,3 @@
-:orphan:
-
 .. _cisco.asa.asa_og_module:
 
 
@@ -7,7 +5,7 @@
 cisco.asa.asa_og
 ****************
 
-**(deprecated) Manage object groups on a Cisco ASA**
+**(deprecated, removed after 2022-06-01) Manage object groups on a Cisco ASA**
 
 
 Version added: 1.0.0
@@ -18,7 +16,7 @@ Version added: 1.0.0
 
 DEPRECATED
 ----------
-:Removed in collection release after 
+:Removed in collection release after 2022-06-01
 :Why: Newer and updated modules released with more functionality in Ansible 2.10
 :Alternative: asa_ogs
 
@@ -314,7 +312,7 @@ Status
 ------
 
 
-- This module will be removed in version 2.13. *[deprecated]*
+- This module will be removed in version . *[deprecated]*
 - For more information see `DEPRECATED`_.
 
 
@@ -323,6 +321,3 @@ Authors
 
 - Federico Olivieri (@Federico87)
 
-
-.. hint::
-    Configuration entries for each entry type have a low to high priority order. For example, a variable that is lower in the list will override a variable that is higher up.

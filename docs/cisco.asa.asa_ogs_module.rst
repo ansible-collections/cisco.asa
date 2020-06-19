@@ -1,5 +1,3 @@
-:orphan:
-
 .. _cisco.asa.asa_ogs_module:
 
 
@@ -165,7 +163,7 @@ Parameters
                     <b>network_object</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">list</span>
+                        <span style="color: purple">dictionary</span>
                                                                     </div>
                                     </td>
                                 <td>
@@ -310,7 +308,7 @@ Parameters
                                     <td class="elbow-placeholder"></td>
                                                 <td colspan="2">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>name</b>
+                    <b>sec_name</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">list</span>
@@ -1153,45 +1151,45 @@ Examples
       cisco.asa.asa_ogs:
         config:
           - object_type: network
-                object_groups:
-                  - name: test_og_network
-                    description: test_og_network
-                    network_object:
-                      host:
-                        - 192.0.2.1
-                        - 192.0.2.2
-                      address:
-                        - 192.0.2.0 255.255.255.0
-                        - 198.51.100.0 255.255.255.0
-                  - name: test_network_og
-                    description: test_network_og
-                    network_object:
-                      host:
-                        - 192.0.3.1
-                        - 192.0.3.2
-                      ipv6_address:
-                        - 2001:db8:3::/64
-              - object_type: security
-                object_groups:
-                  - name: test_og_security
-                    description: test_security
-                    security_group:
-                      sec_name:
-                        - test_1
-                        - test_2
-                      tag:
-                        - 10
-                        - 20
-              - object_type: user
-                object_groups:
-                  - name: test_og_user
-                    description: test_user
-                    user_object:
-                      user:
-                        - name: new_user_1
-                          domain: LOCAL
-                        - name: new_user_2
-                          domain: LOCAL
+            object_groups:
+              - name: test_og_network
+                description: test_og_network
+                network_object:
+                  host:
+                    - 192.0.2.1
+                    - 192.0.2.2
+                  address:
+                    - 192.0.2.0 255.255.255.0
+                    - 198.51.100.0 255.255.255.0
+              - name: test_network_og
+                description: test_network_og
+                network_object:
+                  host:
+                    - 192.0.3.1
+                    - 192.0.3.2
+                  ipv6_address:
+                    - 2001:db8:3::/64
+          - object_type: security
+            object_groups:
+              - name: test_og_security
+                description: test_security
+                security_group:
+                  sec_name:
+                    - test_1
+                    - test_2
+                  tag:
+                    - 10
+                    - 20
+          - object_type: user
+            object_groups:
+              - name: test_og_user
+                description: test_user
+                user_object:
+                  user:
+                    - name: new_user_1
+                      domain: LOCAL
+                    - name: new_user_2
+                      domain: LOCAL
         state: rendered
 
     # Module Execution Result:
@@ -1356,6 +1354,3 @@ Authors
 
 - Sumit Jaiswal (@justjais)
 
-
-.. hint::
-    Configuration entries for each entry type have a low to high priority order. For example, a variable that is lower in the list will override a variable that is higher up.
