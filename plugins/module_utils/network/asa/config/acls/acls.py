@@ -26,6 +26,7 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.facts 
 )
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
     remove_empties,
+    dict_merge,
 )
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.utils.utils import (
     new_dict_to_set,
@@ -196,7 +197,7 @@ class Acls(ConfigBase):
                                             set_cmd, commands
                                         )
                                         check = True
-                                    if not ace_want.get(
+                                    elif not ace_want.get(
                                         "line"
                                     ) and ace_have.get("source"):
                                         if acls_want.get(
@@ -395,20 +396,30 @@ class Acls(ConfigBase):
                                         and ace_have.get("source")
                                     ):
                                         ace_want = remove_empties(ace_want)
+                                        ace_want = dict_merge(
+                                            ace_have, ace_want
+                                        )
                                         set_cmd = self._set_config(
                                             ace_want, ace_have, acls_want
                                         )
+                                        if set_cmd:
+                                            commands.extend(
+                                                self._clear_config(
+                                                    ace_have, acls_have
+                                                )
+                                            )
                                         commands = self.add_config_cmd(
                                             set_cmd, commands
                                         )
                                         check = True
-                                    if not ace_want.get(
-                                        "line"
-                                    ) and ace_have.get("source"):
+                                    elif not ace_want.get("line"):
                                         if acls_want.get(
                                             "name"
                                         ) == acls_have.get("name"):
                                             ace_want = remove_empties(ace_want)
+                                            ace_want = dict_merge(
+                                                ace_have, ace_want
+                                            )
                                             cmd, check = self.common_condition_check(
                                                 ace_want,
                                                 ace_have,
@@ -525,11 +536,12 @@ class Acls(ConfigBase):
         ):
             if (
                 ace_want.get("destination").get("address")
+                and ace_want.get("destination").get("address")
                 == ace_have.get("destination").get("address")
+            ) and (
+                ace_want.get("source").get("address")
                 and ace_want.get("source").get("address")
                 == ace_have.get("source").get("address")
-                and ace_want.get("protocol_options")
-                == ace_have.get("protocol_options")
             ):
                 cmd = self._set_config(ace_want, ace_have, acls_want)
                 commands.extend(cmd)
@@ -537,35 +549,41 @@ class Acls(ConfigBase):
             elif (
                 ace_want.get("destination").get("any")
                 == ace_have.get("destination").get("any")
-                and ace_want.get("source").get("address")
-                == ace_have.get("source").get("address")
+                and (
+                    ace_want.get("source").get("address")
+                    and ace_want.get("source").get("address")
+                    == ace_have.get("source").get("address")
+                    or ace_want.get("source").get("host")
+                    == ace_have.get("source").get("host")
+                )
                 and ace_want.get("destination").get("any")
-                and ace_want.get("protocol_options")
-                == ace_have.get("protocol_options")
             ):
                 cmd = self._set_config(ace_want, ace_have, acls_want)
                 commands.extend(cmd)
                 check = True
             elif (
-                ace_want.get("destination").get("address")
-                == ace_have.get("destination").get("address")
+                (
+                    ace_want.get("destination").get("address")
+                    and ace_want.get("destination").get("address")
+                    == ace_have.get("destination").get("address")
+                    or ace_want.get("destination").get("host")
+                    == ace_have.get("destination").get("host")
+                )
                 and ace_want.get("source").get("any")
                 == ace_have.get("source").get("any")
                 and ace_want.get("source").get("any")
-                and ace_want.get("protocol_options")
-                == ace_have.get("protocol_options")
             ):
                 cmd = self._set_config(ace_want, ace_have, acls_want)
                 commands.extend(cmd)
                 check = True
             elif (
                 ace_want.get("destination").get("any")
+                and ace_want.get("destination").get("any")
                 == ace_have.get("destination").get("any")
+            ) and (
+                ace_want.get("source").get("any")
                 and ace_want.get("source").get("any")
                 == ace_have.get("source").get("any")
-                and ace_want.get("destination").get("any")
-                and ace_want.get("protocol_options")
-                == ace_have.get("protocol_options")
             ):
                 cmd = self._set_config(ace_want, ace_have, acls_want)
                 commands.extend(cmd)
@@ -626,7 +644,9 @@ class Acls(ConfigBase):
         line = want.get("line")
         if line:
             cmd = cmd + " line {0}".format(line)
-
+        remark = want.get("remark")
+        if remark:
+            cmd = cmd + " remark {0}".format(remark)
         acl_type = acl_want.get("acl_type")
         if acl_type:
             cmd = cmd + " {0}".format(acl_type)
