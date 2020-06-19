@@ -1,5 +1,3 @@
-:orphan:
-
 .. _cisco.asa.asa_acls_module:
 
 
@@ -93,7 +91,7 @@ Parameters
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">dictionary</span>
-                                                                    </div>
+                                                 / <span style="color: red">required</span>                    </div>
                                     </td>
                                 <td>
                                                                                                                                                             </td>
@@ -169,6 +167,25 @@ Parameters
                                     <td class="elbow-placeholder"></td>
                                                 <td colspan="3">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>interface</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">string</span>
+                                                                    </div>
+                                    </td>
+                                <td>
+                                                                                                                                                            </td>
+                                                                <td>
+                                            <div>Use interface address as destination address</div>
+                                                        </td>
+            </tr>
+                                <tr>
+                                                    <td class="elbow-placeholder"></td>
+                                    <td class="elbow-placeholder"></td>
+                                    <td class="elbow-placeholder"></td>
+                                    <td class="elbow-placeholder"></td>
+                                                <td colspan="3">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
                     <b>netmask</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
@@ -179,6 +196,25 @@ Parameters
                                                                                                                                                             </td>
                                                                 <td>
                                             <div>Netmask for destination IP address, valid with IPV4 address.</div>
+                                                        </td>
+            </tr>
+                                <tr>
+                                                    <td class="elbow-placeholder"></td>
+                                    <td class="elbow-placeholder"></td>
+                                    <td class="elbow-placeholder"></td>
+                                    <td class="elbow-placeholder"></td>
+                                                <td colspan="3">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>object_group_network</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">string</span>
+                                                                    </div>
+                                    </td>
+                                <td>
+                                                                                                                                                            </td>
+                                                                <td>
+                                            <div>Network object-group for destination address</div>
                                                         </td>
             </tr>
                                 <tr>
@@ -486,7 +522,7 @@ Parameters
                                     <td class="elbow-placeholder"></td>
                                                 <td colspan="3">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>ah</b>
+                    <b>ahp</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">boolean</span>
@@ -924,6 +960,30 @@ Parameters
                                                                             </td>
                                                                 <td>
                                             <div>Source quenches</div>
+                                                        </td>
+            </tr>
+                                <tr>
+                                                    <td class="elbow-placeholder"></td>
+                                    <td class="elbow-placeholder"></td>
+                                    <td class="elbow-placeholder"></td>
+                                    <td class="elbow-placeholder"></td>
+                                    <td class="elbow-placeholder"></td>
+                                                <td colspan="2">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>source_route_failed</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">boolean</span>
+                                                                    </div>
+                                    </td>
+                                <td>
+                                                                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
+                                                                                                                                                                <li>no</li>
+                                                                                                                                                                                                <li>yes</li>
+                                                                                    </ul>
+                                                                            </td>
+                                                                <td>
+                                            <div>Source route</div>
                                                         </td>
             </tr>
                                 <tr>
@@ -1797,7 +1857,7 @@ Parameters
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">dictionary</span>
-                                                                    </div>
+                                                 / <span style="color: red">required</span>                    </div>
                                     </td>
                                 <td>
                                                                                                                                                             </td>
@@ -1873,6 +1933,25 @@ Parameters
                                     <td class="elbow-placeholder"></td>
                                                 <td colspan="3">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>interface</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">string</span>
+                                                                    </div>
+                                    </td>
+                                <td>
+                                                                                                                                                            </td>
+                                                                <td>
+                                            <div>Use interface address as source address</div>
+                                                        </td>
+            </tr>
+                                <tr>
+                                                    <td class="elbow-placeholder"></td>
+                                    <td class="elbow-placeholder"></td>
+                                    <td class="elbow-placeholder"></td>
+                                    <td class="elbow-placeholder"></td>
+                                                <td colspan="3">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
                     <b>netmask</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
@@ -1883,6 +1962,25 @@ Parameters
                                                                                                                                                             </td>
                                                                 <td>
                                             <div>Netmask for source IP address, valid with IPV4 address.</div>
+                                                        </td>
+            </tr>
+                                <tr>
+                                                    <td class="elbow-placeholder"></td>
+                                    <td class="elbow-placeholder"></td>
+                                    <td class="elbow-placeholder"></td>
+                                    <td class="elbow-placeholder"></td>
+                                                <td colspan="3">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>object_group_network</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">string</span>
+                                                                    </div>
+                                    </td>
+                                <td>
+                                                                                                                                                            </td>
+                                                                <td>
+                                            <div>Network object-group for source address</div>
                                                         </td>
             </tr>
                                 <tr>
@@ -2126,27 +2224,7 @@ Parameters
                                                         </td>
             </tr>
                     
-                                                <tr>
-                                                    <td class="elbow-placeholder"></td>
-                                                <td colspan="6">
-                    <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>afi</b>
-                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
-                    <div style="font-size: small">
-                        <span style="color: purple">string</span>
-                                                 / <span style="color: red">required</span>                    </div>
-                                    </td>
-                                <td>
-                                                                                                                            <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                                <li>ipv4</li>
-                                                                                                                                                                                                <li>ipv6</li>
-                                                                                    </ul>
-                                                                            </td>
-                                                                <td>
-                                            <div>The Address Family Indicator (AFI) for the Access Control Lists (ACL).</div>
-                                                        </td>
-            </tr>
-                    
+                                    
                                                 <tr>
                                                                 <td colspan="7">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
@@ -2249,6 +2327,28 @@ Examples
                 address: 198.51.110.0
                 netmask: 255.255.255.0
               time_range: temp
+            - grant: deny
+              line: 3
+              protocol_options:
+                tcp: true
+              source:
+                interface: management
+              destination:
+                interface: management
+                port_protocol:
+                  eq: www
+              log: warnings
+            - grant: deny
+              line: 4
+              protocol_options:
+                tcp: true
+              source:
+                object_group_network: test_og_network
+              destination:
+                object_group_network: test_network_og
+                port_protocol:
+                  eq: www
+              log: default
           - name: global_access
             acl_type: extended
             aces:
@@ -2287,6 +2387,10 @@ Examples
     # access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default
     # access-list temp_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
     #                         time-range temp inactive
+    # access-list temp_access line 2 extended deny tcp interface management interface management
+    #                         eq www log warnings
+    # access-list test_access line 3 extended deny tcp object-group test_og_network object-group test_network_og
+    #                         eq www log default
 
     # After state:
     # ------------
@@ -2310,6 +2414,17 @@ Examples
     # access-list temp_access line 2
     #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
     #                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae
+    # access-list test_access line 3
+    #                         extended deny tcp interface management interface management eq www log warnings
+    #                         interval 300 (hitcnt=0) 0x78aa233d
+    # access-list test_access line 2 extended deny tcp object-group test_og_network object-group test_network_og
+    #                         eq www log default (hitcnt=0) 0x477aec1e
+    #    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 192.0.3.1 eq www
+    #                            log default (hitcnt=0) 0xdc7edff8
+    #    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 192.0.3.2 eq www
+    #                            log default (hitcnt=0) 0x7b0e9fde
+    #    access-list test_access line 2 extended deny tcp 198.51.100.0 255.255.255.0 2001:db8:3::/64 eq www
+    #                            log default (hitcnt=0) 0x97c75adc
 
     # Using Merged to Rename ACLs
     # Before state:
@@ -2525,12 +2640,12 @@ Examples
     #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
     #                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae
 
-    - name: 'Delete module attributes of given acl (Note: This won't delete ALL of the ACLs configured)'
+    - name: "Delete module attributes of given acl (Note: This won't delete ALL of the ACLs configured)"
       cisco.asa.asa_acls:
         config:
         - acls:
-          - name: temp_access
-          - name: global_access
+            - name: temp_access
+            - name: global_access
         state: deleted
 
     # Commands fired:
@@ -3007,6 +3122,3 @@ Authors
 
 - Sumit Jaiswal (@justjais)
 
-
-.. hint::
-    Configuration entries for each entry type have a low to high priority order. For example, a variable that is lower in the list will override a variable that is higher up.

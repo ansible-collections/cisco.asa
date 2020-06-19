@@ -4,6 +4,16 @@
 
 The Ansible Cisco ASA collection includes a variety of Ansible content to help automate the management of Cisco ASA firewall appliances.
 
+<!--start requires_ansible-->
+## Ansible version compatibility
+
+This collection has been tested against following Ansible versions: **>=2.9.10,<2.11**.
+
+Plugins and modules within a collection may be tested with only specific Ansible versions.
+A collection may contain metadata that identifies these versions.
+PEP440 is the schema used to describe the versions of Ansible.
+<!--end requires_ansible-->
+
 ## Tested with Ansible
 
 This collection has been tested against Cisco ASA 9.10(1)11 and Cisco ASA image configured over Zuul with version 9.12.3.
@@ -14,24 +24,25 @@ This collection has been tested against Cisco ASA 9.10(1)11 and Cisco ASA image 
 ### Supported connections
 The Cisco ASA collection supports ``network_cli`` connections.
 
+## Included content
+
 <!--start collection content-->
-## Cliconf plugins
+### Cliconf plugins
 Name | Description
 --- | ---
-[cisco.asa.asa](https://github.com/ansible-collections/cisco.asa/blob/master/docs/cisco.asa.asa.rst)|Use asa cliconf to run command on Cisco ASA platform
-## Terminal plugins
+[cisco.asa.asa](https://github.com/ansible-collections/cisco.asa/blob/master/docs/cisco.asa.asa_cliconf.rst)|Use asa cliconf to run command on Cisco ASA platform
+
+### Modules
 Name | Description
 --- | ---
-## Modules
-Name | Description
---- | ---
-[cisco.asa.asa_acl](https://github.com/ansible-collections/cisco.asa/blob/master/docs/cisco.asa.asa_acl.rst)|(deprecated) Manage access-lists on a Cisco ASA
-[cisco.asa.asa_acls](https://github.com/ansible-collections/cisco.asa/blob/master/docs/cisco.asa.asa_acls.rst)|Access-Lists resource module
-[cisco.asa.asa_command](https://github.com/ansible-collections/cisco.asa/blob/master/docs/cisco.asa.asa_command.rst)|Run arbitrary commands on Cisco ASA devices
-[cisco.asa.asa_config](https://github.com/ansible-collections/cisco.asa/blob/master/docs/cisco.asa.asa_config.rst)|Manage configuration sections on Cisco ASA devices
-[cisco.asa.asa_facts](https://github.com/ansible-collections/cisco.asa/blob/master/docs/cisco.asa.asa_facts.rst)|Collect facts from remote devices running Cisco ASA
-[cisco.asa.asa_og](https://github.com/ansible-collections/cisco.asa/blob/master/docs/cisco.asa.asa_og.rst)|(deprecated) Manage object groups on a Cisco ASA
-[cisco.asa.asa_ogs](https://github.com/ansible-collections/cisco.asa/blob/master/docs/cisco.asa.asa_ogs.rst)|Object Group resource module
+[cisco.asa.asa_acl](https://github.com/ansible-collections/cisco.asa/blob/master/docs/cisco.asa.asa_acl_module.rst)|(deprecated, removed after 2022-06-01) Manage access-lists on a Cisco ASA
+[cisco.asa.asa_acls](https://github.com/ansible-collections/cisco.asa/blob/master/docs/cisco.asa.asa_acls_module.rst)|Access-Lists resource module
+[cisco.asa.asa_command](https://github.com/ansible-collections/cisco.asa/blob/master/docs/cisco.asa.asa_command_module.rst)|Run arbitrary commands on Cisco ASA devices
+[cisco.asa.asa_config](https://github.com/ansible-collections/cisco.asa/blob/master/docs/cisco.asa.asa_config_module.rst)|Manage configuration sections on Cisco ASA devices
+[cisco.asa.asa_facts](https://github.com/ansible-collections/cisco.asa/blob/master/docs/cisco.asa.asa_facts_module.rst)|Collect facts from remote devices running Cisco ASA
+[cisco.asa.asa_og](https://github.com/ansible-collections/cisco.asa/blob/master/docs/cisco.asa.asa_og_module.rst)|(deprecated, removed after 2022-06-01) Manage object groups on a Cisco ASA
+[cisco.asa.asa_ogs](https://github.com/ansible-collections/cisco.asa/blob/master/docs/cisco.asa.asa_ogs_module.rst)|Object Group resource module
+
 <!--end collection content-->
 
 ## Installing this collection
