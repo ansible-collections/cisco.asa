@@ -1,13 +1,11 @@
-:orphan:
-
-.. _cisco.asa.asa_command_module:
+.. _cisco.asa.asa_facts_module:
 
 
-*********************
-cisco.asa.asa_command
-*********************
+*******************
+cisco.asa.asa_facts
+*******************
 
-**Run arbitrary commands on Cisco ASA devices**
+**Collect facts from remote devices running Cisco ASA**
 
 
 Version added: 1.0.0
@@ -19,7 +17,8 @@ Version added: 1.0.0
 
 Synopsis
 --------
-- Sends arbitrary commands to an ASA node and returns the results read from the device. The ``asa_command`` module includes an argument that will cause the module to wait for a specific condition before returning or timing out if the condition is not met.
+- Collects a base set of device facts from a remote device that is running ASA.  This module prepends all of the base network fact keys with ``ansible_net_<fact>``.  The facts module will always collect a base set of facts from the device and can enable or disable collection of additional facts.
+- Note, to collects facts from ASA device properly user should elevate the privilege to become.
 
 
 
@@ -61,21 +60,6 @@ Parameters
                                 <tr>
                                                                 <td colspan="2">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>commands</b>
-                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
-                    <div style="font-size: small">
-                        <span style="color: purple">-</span>
-                                                 / <span style="color: red">required</span>                    </div>
-                                    </td>
-                                <td>
-                                                                                                                                                            </td>
-                                                                <td>
-                                            <div>List of commands to send to the remote device over the configured provider. The resulting output from the command is returned. If the <em>wait_for</em> argument is provided, the module is not returned until the condition is satisfied or the number of retires as expired.</div>
-                                                        </td>
-            </tr>
-                                <tr>
-                                                                <td colspan="2">
-                    <div class="ansibleOptionAnchor" id="parameter-"></div>
                     <b>context</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
@@ -91,36 +75,35 @@ Parameters
                                 <tr>
                                                                 <td colspan="2">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>interval</b>
+                    <b>gather_network_resources</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">-</span>
+                        <span style="color: purple">list</span>
                                                                     </div>
                                     </td>
                                 <td>
-                                                                                                                                                                    <b>Default:</b><br/><div style="color: blue">1</div>
-                                    </td>
+                                                                                                                                                            </td>
                                                                 <td>
-                                            <div>Configures the interval in seconds to wait between retries of the command. If the command does not pass the specified conditions, the interval indicates how long to wait before trying the command again.</div>
+                                            <div>When supplied, this argument will restrict the facts collected to a given subset. Possible values for this argument include all and the resources like interfaces, vlans etc. Can specify a list of values to include a larger subset. Values can also be used with an initial <code><span class='module'>!</span></code> to specify that a specific subset should not be collected. Valid subsets are &#x27;all&#x27;, &#x27;acls&#x27;, &#x27;ogs&#x27;.</div>
                                                         </td>
             </tr>
                                 <tr>
                                                                 <td colspan="2">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>match</b>
+                    <b>gather_subset</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">-</span>
+                        <span style="color: purple">list</span>
                                                                     </div>
                                     </td>
                                 <td>
-                                                                                                                            <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                                <li>any</li>
-                                                                                                                                                                                                <li><div style="color: blue"><b>all</b>&nbsp;&larr;</div></li>
-                                                                                    </ul>
-                                                                            </td>
+                                                                                                                                                                    <b>Default:</b><br/><div style="color: blue">"!config"</div>
+                                    </td>
                                                                 <td>
-                                            <div>The <em>match</em> argument is used in conjunction with the <em>wait_for</em> argument to specify the match policy.  Valid values are <code>all</code> or <code>any</code>.  If the value is set to <code>all</code> then all conditionals in the wait_for must be satisfied.  If the value is set to <code>any</code> then only one of the values must be satisfied.</div>
+                                            <div>When supplied, this argument restricts the facts collected to a given subset.</div>
+                                            <div>Possible values for this argument include <code>all</code>, <code>min</code>, <code>hardware</code>, <code>config</code>.</div>
+                                            <div>Specify a list of values to include a larger subset.</div>
+                                            <div>Use a value with an initial <code>!</code> to collect all facts except that subset.</div>
                                                         </td>
             </tr>
                                 <tr>
@@ -277,39 +260,7 @@ Parameters
                                                         </td>
             </tr>
                     
-                                                <tr>
-                                                                <td colspan="2">
-                    <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>retries</b>
-                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
-                    <div style="font-size: small">
-                        <span style="color: purple">-</span>
-                                                                    </div>
-                                    </td>
-                                <td>
-                                                                                                                                                                    <b>Default:</b><br/><div style="color: blue">10</div>
-                                    </td>
-                                                                <td>
-                                            <div>Specifies the number of retries a command should by tried before it is considered failed. The command is run on the target device every retry and evaluated against the <em>wait_for</em> conditions.</div>
-                                                        </td>
-            </tr>
-                                <tr>
-                                                                <td colspan="2">
-                    <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>wait_for</b>
-                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
-                    <div style="font-size: small">
-                        <span style="color: purple">-</span>
-                                                                    </div>
-                                    </td>
-                                <td>
-                                                                                                                                                            </td>
-                                                                <td>
-                                            <div>List of conditions to evaluate against the output of the command. The task will wait for each condition to be true before moving forward. If the conditional is not true within the configured number of retries, the task fails. See examples.</div>
-                                                                <div style="font-size: small; color: darkgreen"><br/>aliases: waitfor</div>
-                                    </td>
-            </tr>
-                        </table>
+                                        </table>
     <br/>
 
 
@@ -317,7 +268,7 @@ Notes
 -----
 
 .. note::
-   - When processing wait_for, each commands' output is stored as an element of the *result* array.  The allowed operators for conditional evaluation are *eq*, *==*, *neq*, *ne*, *!=*, *gt*, *>*, *ge*, *>=*, *lt*, *<*, *le*, *<=*, *contains*, *matches*.  Operators can be prefaced by *not* to negate their meaning.  The *contains* operator searches for a substring match (like the Python *in* operator).  The *matches* operator searches using a regex search operation.
+   - Tested against asa 9.10(1)11
    - For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
 
 
@@ -328,24 +279,23 @@ Examples
 .. code-block:: yaml+jinja
 
     
-    - name: Show the ASA version
-      cisco.asa.asa_command:
-        commands:
-        - show version
+    - name: Gather all legacy facts
+      cisco.asa.asa_facts:
+        gather_subset: all
 
-    - name: Show ASA drops and memory
-      cisco.asa.asa_command:
-        commands:
-        - show asp drop
-        - show memory
+    - name: Gather only the config and default facts
+      cisco.asa.asa_facts:
+        gather_subset:
+        - config
 
-    - name: Send repeat pings and wait for the result to pass 100%
-      cisco.asa.asa_command:
-        commands:
-        - ping 8.8.8.8 repeat 20 size 350
-        wait_for:
-        - result[0] contains 100
-        retries: 2
+    - name: Do not gather hardware facts
+      cisco.asa.asa_facts:
+        gather_subset:
+        - '!hardware'
+
+    - name: Gather legacy and resource facts
+      cisco.asa.asa_facts:
+        gather_subset: all
 
 
 
@@ -365,24 +315,112 @@ Common return values are documented `here <https://docs.ansible.com/ansible/late
                     <tr>
                                 <td colspan="1">
                     <div class="ansibleOptionAnchor" id="return-"></div>
-                    <b>failed_conditions</b>
+                    <b>ansible_net_api</b>
                     <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
                     <div style="font-size: small">
-                      <span style="color: purple">list</span>
+                      <span style="color: purple">string</span>
                                           </div>
                                     </td>
-                <td>failed</td>
+                <td>always</td>
                 <td>
-                                                                        <div>the conditionals that failed</div>
+                                                                        <div>The name of the transport</div>
                                                                 <br/>
-                                            <div style="font-size: smaller"><b>Sample:</b></div>
-                                                <div style="font-size: smaller; color: blue; word-wrap: break-word; word-break: break-all;">[&#x27;...&#x27;, &#x27;...&#x27;]</div>
                                     </td>
             </tr>
                                 <tr>
                                 <td colspan="1">
                     <div class="ansibleOptionAnchor" id="return-"></div>
-                    <b>stdout</b>
+                    <b>ansible_net_asatype</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">string</span>
+                                          </div>
+                                    </td>
+                <td>always</td>
+                <td>
+                                                                        <div>The operating system type (Cisco ASA) running on the remote device.</div>
+                                                                <br/>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>ansible_net_config</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">string</span>
+                                          </div>
+                                    </td>
+                <td>when config is configured</td>
+                <td>
+                                                                        <div>The current active config from the device</div>
+                                                                <br/>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>ansible_net_device_mgr_version</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">string</span>
+                                          </div>
+                                    </td>
+                <td>always</td>
+                <td>
+                                                                        <div>The Device manager version running on the remote device.</div>
+                                                                <br/>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>ansible_net_filesystems</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">list</span>
+                                          </div>
+                                    </td>
+                <td>when hardware is configured</td>
+                <td>
+                                                                        <div>All file system names available on the device</div>
+                                                                <br/>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>ansible_net_filesystems_info</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">dictionary</span>
+                                          </div>
+                                    </td>
+                <td>when hardware is configured</td>
+                <td>
+                                                                        <div>A hash of all file systems containing info about each file system (e.g. free and total space)</div>
+                                                                <br/>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>ansible_net_firepower_version</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">string</span>
+                                          </div>
+                                    </td>
+                <td>always</td>
+                <td>
+                                                                        <div>The Firepower operating system version running on the remote device.</div>
+                                                                <br/>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>ansible_net_gather_subset</b>
                     <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
                     <div style="font-size: small">
                       <span style="color: purple">list</span>
@@ -390,27 +428,173 @@ Common return values are documented `here <https://docs.ansible.com/ansible/late
                                     </td>
                 <td>always</td>
                 <td>
-                                                                        <div>the set of responses from the commands</div>
+                                                                        <div>The list of fact subsets collected from the device</div>
                                                                 <br/>
-                                            <div style="font-size: smaller"><b>Sample:</b></div>
-                                                <div style="font-size: smaller; color: blue; word-wrap: break-word; word-break: break-all;">[&#x27;...&#x27;, &#x27;...&#x27;]</div>
                                     </td>
             </tr>
                                 <tr>
                                 <td colspan="1">
                     <div class="ansibleOptionAnchor" id="return-"></div>
-                    <b>stdout_lines</b>
+                    <b>ansible_net_hostname</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">string</span>
+                                          </div>
+                                    </td>
+                <td>always</td>
+                <td>
+                                                                        <div>The configured hostname of the device</div>
+                                                                <br/>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>ansible_net_image</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">string</span>
+                                          </div>
+                                    </td>
+                <td>always</td>
+                <td>
+                                                                        <div>The image file the device is running</div>
+                                                                <br/>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>ansible_net_memfree_mb</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">integer</span>
+                                          </div>
+                                    </td>
+                <td>when hardware is configured</td>
+                <td>
+                                                                        <div>The available free memory on the remote device in Mb</div>
+                                                                <br/>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>ansible_net_memtotal_mb</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">integer</span>
+                                          </div>
+                                    </td>
+                <td>when hardware is configured</td>
+                <td>
+                                                                        <div>The total memory on the remote device in Mb</div>
+                                                                <br/>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>ansible_net_memused_mb</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">integer</span>
+                                          </div>
+                                    </td>
+                <td>when hardware is configured</td>
+                <td>
+                                                                        <div>The used memory on the remote device in Mb</div>
+                                                                <br/>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>ansible_net_model</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">string</span>
+                                          </div>
+                                    </td>
+                <td>always</td>
+                <td>
+                                                                        <div>The model name returned from the device</div>
+                                                                <br/>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>ansible_net_python_version</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">string</span>
+                                          </div>
+                                    </td>
+                <td>always</td>
+                <td>
+                                                                        <div>The Python version Ansible controller is using</div>
+                                                                <br/>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>ansible_net_serialnum</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">string</span>
+                                          </div>
+                                    </td>
+                <td>always</td>
+                <td>
+                                                                        <div>The serial number of the remote device</div>
+                                                                <br/>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>ansible_net_stacked_models</b>
                     <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
                     <div style="font-size: small">
                       <span style="color: purple">list</span>
                                           </div>
                                     </td>
+                <td>when multiple devices are configured in a stack</td>
+                <td>
+                                                                        <div>The model names of each device in the stack</div>
+                                                                <br/>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>ansible_net_stacked_serialnums</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">list</span>
+                                          </div>
+                                    </td>
+                <td>when multiple devices are configured in a stack</td>
+                <td>
+                                                                        <div>The serial numbers of each device in the stack</div>
+                                                                <br/>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>ansible_net_version</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">string</span>
+                                          </div>
+                                    </td>
                 <td>always</td>
                 <td>
-                                                                        <div>The value of stdout split into a list</div>
+                                                                        <div>The operating system version running on the remote device</div>
                                                                 <br/>
-                                            <div style="font-size: smaller"><b>Sample:</b></div>
-                                                <div style="font-size: smaller; color: blue; word-wrap: break-word; word-break: break-all;">[[&#x27;...&#x27;, &#x27;...&#x27;], [&#x27;...&#x27;], [&#x27;...&#x27;]]</div>
                                     </td>
             </tr>
                         </table>
@@ -424,8 +608,5 @@ Status
 Authors
 ~~~~~~~
 
-- Peter Sprygada (@privateip), Patrick Ogenstad (@ogenstad)
+- Sumit Jaiswal (@justjais)
 
-
-.. hint::
-    Configuration entries for each entry type have a low to high priority order. For example, a variable that is lower in the list will override a variable that is higher up.

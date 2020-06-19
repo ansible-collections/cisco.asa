@@ -1,13 +1,11 @@
-:orphan:
-
-.. _cisco.asa.asa_acl_module:
+.. _cisco.asa.asa_command_module:
 
 
-*****************
-cisco.asa.asa_acl
-*****************
+*********************
+cisco.asa.asa_command
+*********************
 
-**(deprecated) Manage access-lists on a Cisco ASA**
+**Run arbitrary commands on Cisco ASA devices**
 
 
 Version added: 1.0.0
@@ -16,17 +14,10 @@ Version added: 1.0.0
    :local:
    :depth: 1
 
-DEPRECATED
-----------
-:Removed in collection release after 
-:Why: Newer and updated modules released with more functionality in Ansible 2.10
-:Alternative: asa_acl
-
-
 
 Synopsis
 --------
-- This module allows you to work with access-lists on a Cisco ASA device.
+- Sends arbitrary commands to an ASA node and returns the results read from the device. The ``asa_command`` module includes an argument that will cause the module to wait for a specific condition before returning or timing out if the condition is not met.
 
 
 
@@ -43,21 +34,6 @@ Parameters
                         <th width="100%">Comments</th>
         </tr>
                     <tr>
-                                                                <td colspan="2">
-                    <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>after</b>
-                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
-                    <div style="font-size: small">
-                        <span style="color: purple">-</span>
-                                                                    </div>
-                                    </td>
-                                <td>
-                                                                                                                                                            </td>
-                                                                <td>
-                                            <div>The ordered set of commands to append to the end of the command stack if a changed needs to be made.  Just like with <em>before</em> this allows the playbook designer to append a set of commands to be executed after the command set.</div>
-                                                        </td>
-            </tr>
-                                <tr>
                                                                 <td colspan="2">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
                     <b>authorize</b>
@@ -83,31 +59,16 @@ Parameters
                                 <tr>
                                                                 <td colspan="2">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>before</b>
+                    <b>commands</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">-</span>
-                                                                    </div>
+                                                 / <span style="color: red">required</span>                    </div>
                                     </td>
                                 <td>
                                                                                                                                                             </td>
                                                                 <td>
-                                            <div>The ordered set of commands to push on to the command stack if a change needs to be made.  This allows the playbook designer the opportunity to perform configuration commands prior to pushing any changes without affecting how the set of commands are matched against the system.</div>
-                                                        </td>
-            </tr>
-                                <tr>
-                                                                <td colspan="2">
-                    <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>config</b>
-                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
-                    <div style="font-size: small">
-                        <span style="color: purple">-</span>
-                                                                    </div>
-                                    </td>
-                                <td>
-                                                                                                                                                            </td>
-                                                                <td>
-                                            <div>The module, by default, will connect to the remote device and retrieve the current running-config to use as a base for comparing against the contents of source.  There are times when it is not desirable to have the task get the current running-config for every task in a playbook.  The <em>config</em> argument allows the implementer to pass in the configuration to use as the base config for comparison.</div>
+                                            <div>List of commands to send to the remote device over the configured provider. The resulting output from the command is returned. If the <em>wait_for</em> argument is provided, the module is not returned until the condition is satisfied or the number of retires as expired.</div>
                                                         </td>
             </tr>
                                 <tr>
@@ -128,37 +89,18 @@ Parameters
                                 <tr>
                                                                 <td colspan="2">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>force</b>
-                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
-                    <div style="font-size: small">
-                        <span style="color: purple">boolean</span>
-                                                                    </div>
-                                    </td>
-                                <td>
-                                                                                                                                                                                                                    <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                                <li><div style="color: blue"><b>no</b>&nbsp;&larr;</div></li>
-                                                                                                                                                                                                <li>yes</li>
-                                                                                    </ul>
-                                                                            </td>
-                                                                <td>
-                                            <div>The force argument instructs the module to not consider the current devices running-config.  When set to true, this will cause the module to push the contents of <em>src</em> into the device without first checking if already configured.</div>
-                                                        </td>
-            </tr>
-                                <tr>
-                                                                <td colspan="2">
-                    <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>lines</b>
+                    <b>interval</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">-</span>
-                                                 / <span style="color: red">required</span>                    </div>
+                                                                    </div>
                                     </td>
                                 <td>
-                                                                                                                                                            </td>
-                                                                <td>
-                                            <div>The ordered set of commands that should be configured in the section.  The commands must be the exact same commands as found in the device running-config.  Be sure to note the configuration command syntax as some commands are automatically modified by the device config parser.</div>
-                                                                <div style="font-size: small; color: darkgreen"><br/>aliases: commands</div>
+                                                                                                                                                                    <b>Default:</b><br/><div style="color: blue">1</div>
                                     </td>
+                                                                <td>
+                                            <div>Configures the interval in seconds to wait between retries of the command. If the command does not pass the specified conditions, the interval indicates how long to wait before trying the command again.</div>
+                                                        </td>
             </tr>
                                 <tr>
                                                                 <td colspan="2">
@@ -171,13 +113,12 @@ Parameters
                                     </td>
                                 <td>
                                                                                                                             <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                                <li><div style="color: blue"><b>line</b>&nbsp;&larr;</div></li>
-                                                                                                                                                                                                <li>strict</li>
-                                                                                                                                                                                                <li>exact</li>
+                                                                                                                                                                <li>any</li>
+                                                                                                                                                                                                <li><div style="color: blue"><b>all</b>&nbsp;&larr;</div></li>
                                                                                     </ul>
                                                                             </td>
                                                                 <td>
-                                            <div>Instructs the module on the way to perform the matching of the set of commands against the current device config.  If match is set to <em>line</em>, commands are matched line by line.  If match is set to <em>strict</em>, command lines are matched with respect to position.  Finally if match is set to <em>exact</em>, command lines must be an equal match.</div>
+                                            <div>The <em>match</em> argument is used in conjunction with the <em>wait_for</em> argument to specify the match policy.  Valid values are <code>all</code> or <code>any</code>.  If the value is set to <code>all</code> then all conditionals in the wait_for must be satisfied.  If the value is set to <code>any</code> then only one of the values must be satisfied.</div>
                                                         </td>
             </tr>
                                 <tr>
@@ -337,21 +278,34 @@ Parameters
                                                 <tr>
                                                                 <td colspan="2">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>replace</b>
+                    <b>retries</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">-</span>
                                                                     </div>
                                     </td>
                                 <td>
-                                                                                                                            <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                                                                                                                                                <li><div style="color: blue"><b>line</b>&nbsp;&larr;</div></li>
-                                                                                                                                                                                                <li>block</li>
-                                                                                    </ul>
-                                                                            </td>
+                                                                                                                                                                    <b>Default:</b><br/><div style="color: blue">10</div>
+                                    </td>
                                                                 <td>
-                                            <div>Instructs the module on the way to perform the configuration on the device.  If the replace argument is set to <em>line</em> then the modified lines are pushed to the device in configuration mode.  If the replace argument is set to <em>block</em> then the entire command block is pushed to the device in configuration mode if any line is not correct.</div>
+                                            <div>Specifies the number of retries a command should by tried before it is considered failed. The command is run on the target device every retry and evaluated against the <em>wait_for</em> conditions.</div>
                                                         </td>
+            </tr>
+                                <tr>
+                                                                <td colspan="2">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>wait_for</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">-</span>
+                                                                    </div>
+                                    </td>
+                                <td>
+                                                                                                                                                            </td>
+                                                                <td>
+                                            <div>List of conditions to evaluate against the output of the command. The task will wait for each condition to be true before moving forward. If the conditional is not true within the configured number of retries, the task fails. See examples.</div>
+                                                                <div style="font-size: small; color: darkgreen"><br/>aliases: waitfor</div>
+                                    </td>
             </tr>
                         </table>
     <br/>
@@ -361,6 +315,7 @@ Notes
 -----
 
 .. note::
+   - When processing wait_for, each commands' output is stored as an element of the *result* array.  The allowed operators for conditional evaluation are *eq*, *==*, *neq*, *ne*, *!=*, *gt*, *>*, *ge*, *>=*, *lt*, *<*, *le*, *<=*, *contains*, *matches*.  Operators can be prefaced by *not* to negate their meaning.  The *contains* operator searches for a substring match (like the Python *in* operator).  The *matches* operator searches using a regex search operation.
    - For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
 
 
@@ -371,24 +326,24 @@ Examples
 .. code-block:: yaml+jinja
 
     
-    - cisco.asa.asa_acl:
-        lines:
-        - access-list ACL-ANSIBLE extended permit tcp any any eq 82
-        - access-list ACL-ANSIBLE extended permit tcp any any eq www
-        - access-list ACL-ANSIBLE extended permit tcp any any eq 97
-        - access-list ACL-ANSIBLE extended permit tcp any any eq 98
-        - access-list ACL-ANSIBLE extended permit tcp any any eq 99
-        before: clear configure access-list ACL-ANSIBLE
-        match: strict
-        replace: block
-        provider: '{{ cli }}'
+    - name: Show the ASA version
+      cisco.asa.asa_command:
+        commands:
+        - show version
 
-    - cisco.asa.asa_acl:
-        lines:
-        - access-list ACL-OUTSIDE extended permit tcp any any eq www
-        - access-list ACL-OUTSIDE extended permit tcp any any eq https
-        context: customer_a
-        provider: '{{ cli }}'
+    - name: Show ASA drops and memory
+      cisco.asa.asa_command:
+        commands:
+        - show asp drop
+        - show memory
+
+    - name: Send repeat pings and wait for the result to pass 100%
+      cisco.asa.asa_command:
+        commands:
+        - ping 8.8.8.8 repeat 20 size 350
+        wait_for:
+        - result[0] contains 100
+        retries: 2
 
 
 
@@ -408,7 +363,24 @@ Common return values are documented `here <https://docs.ansible.com/ansible/late
                     <tr>
                                 <td colspan="1">
                     <div class="ansibleOptionAnchor" id="return-"></div>
-                    <b>updates</b>
+                    <b>failed_conditions</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">list</span>
+                                          </div>
+                                    </td>
+                <td>failed</td>
+                <td>
+                                                                        <div>the conditionals that failed</div>
+                                                                <br/>
+                                            <div style="font-size: smaller"><b>Sample:</b></div>
+                                                <div style="font-size: smaller; color: blue; word-wrap: break-word; word-break: break-all;">[&#x27;...&#x27;, &#x27;...&#x27;]</div>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>stdout</b>
                     <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
                     <div style="font-size: small">
                       <span style="color: purple">list</span>
@@ -416,10 +388,27 @@ Common return values are documented `here <https://docs.ansible.com/ansible/late
                                     </td>
                 <td>always</td>
                 <td>
-                                                                        <div>The set of commands that will be pushed to the remote device</div>
+                                                                        <div>the set of responses from the commands</div>
                                                                 <br/>
                                             <div style="font-size: smaller"><b>Sample:</b></div>
-                                                <div style="font-size: smaller; color: blue; word-wrap: break-word; word-break: break-all;">[&#x27;access-list ACL-OUTSIDE extended permit tcp any any eq www&#x27;]</div>
+                                                <div style="font-size: smaller; color: blue; word-wrap: break-word; word-break: break-all;">[&#x27;...&#x27;, &#x27;...&#x27;]</div>
+                                    </td>
+            </tr>
+                                <tr>
+                                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>stdout_lines</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">list</span>
+                                          </div>
+                                    </td>
+                <td>always</td>
+                <td>
+                                                                        <div>The value of stdout split into a list</div>
+                                                                <br/>
+                                            <div style="font-size: smaller"><b>Sample:</b></div>
+                                                <div style="font-size: smaller; color: blue; word-wrap: break-word; word-break: break-all;">[[&#x27;...&#x27;, &#x27;...&#x27;], [&#x27;...&#x27;], [&#x27;...&#x27;]]</div>
                                     </td>
             </tr>
                         </table>
@@ -430,15 +419,8 @@ Status
 ------
 
 
-- This module will be removed in version 2.13. *[deprecated]*
-- For more information see `DEPRECATED`_.
-
-
 Authors
 ~~~~~~~
 
-- Patrick Ogenstad (@ogenstad)
+- Peter Sprygada (@privateip), Patrick Ogenstad (@ogenstad)
 
-
-.. hint::
-    Configuration entries for each entry type have a low to high priority order. For example, a variable that is lower in the list will override a variable that is higher up.
