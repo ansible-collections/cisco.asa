@@ -1,0 +1,33 @@
+ancestor: null
+releases:
+  1.0.0:
+    modules:
+    - description: (deprecated, removed after 2022-06-01) Manage access-lists on a
+        Cisco ASA
+      name: asa_acl
+      namespace: ''
+    - description: Access-Lists resource module
+      name: asa_acls
+      namespace: ''
+    - description: Run arbitrary commands on Cisco ASA devices
+      name: asa_command
+      namespace: ''
+    - description: Manage configuration sections on Cisco ASA devices
+      name: asa_config
+      namespace: ''
+    - description: Collect facts from remote devices running Cisco ASA
+      name: asa_facts
+      namespace: ''
+    - description: (deprecated, removed after 2022-06-01) Manage object groups on
+        a Cisco ASA
+      name: asa_og
+      namespace: ''
+    - description: Object Group resource module
+      name: asa_ogs
+      namespace: ''
+    plugins:
+      cliconf:
+      - description: Use asa cliconf to run command on Cisco ASA platform
+        name: asa
+        namespace: null
+    release_date: '2020-06-23'
