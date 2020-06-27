@@ -388,7 +388,9 @@ def replace(want_dict, have):
                                 commands.append(
                                     "object-group network {0}".format(name)
                                 )
-                            remove_lines.append("no network-object host %s" % i)
+                            remove_lines.append(
+                                "no network-object host %s" % i
+                            )
 
             if description:
                 if description != have_description:
