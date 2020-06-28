@@ -204,7 +204,10 @@ class Acls(ConfigBase):
                                             "name"
                                         ) == acls_have.get("name"):
                                             ace_want = remove_empties(ace_want)
-                                            set_cmd, check = self.common_condition_check(
+                                            (
+                                                set_cmd,
+                                                check,
+                                            ) = self.common_condition_check(
                                                 ace_want,
                                                 ace_have,
                                                 acls_want,
@@ -420,7 +423,10 @@ class Acls(ConfigBase):
                                             ace_want = dict_merge(
                                                 ace_have, ace_want
                                             )
-                                            cmd, check = self.common_condition_check(
+                                            (
+                                                cmd,
+                                                check,
+                                            ) = self.common_condition_check(
                                                 ace_want,
                                                 ace_have,
                                                 acls_want,

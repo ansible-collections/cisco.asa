@@ -290,7 +290,9 @@ def map_config_to_obj(module):
     have_host_ip = Parser(sh_run_group_type, protocol).parse_host()
     obj_dict["have_host_ip"] = have_host_ip
 
-    have_group_object = Parser(sh_run_group_type, protocol).parse_group_object()
+    have_group_object = Parser(
+        sh_run_group_type, protocol
+    ).parse_group_object()
     obj_dict["have_group_object"] = have_group_object
 
     have_ip_mask = Parser(sh_run_group_type, protocol).parse_address()
@@ -369,50 +371,86 @@ def replace(want_dict, have):
                 if sorted(host) != sorted(have_host_ip):
                     for i in host:
                         if i not in have_host_ip:
-                            if "object-group network {0}".format(name) not in commands:
-                                commands.append("object-group network {0}".format(name))
+                            if (
+                                "object-group network {0}".format(name)
+                                not in commands
+                            ):
+                                commands.append(
+                                    "object-group network {0}".format(name)
+                                )
                             add_lines.append("network-object host %s" % i)
                     for i in have_host_ip:
                         if i not in host:
-                            if "object-group network {0}".format(name) not in commands:
-                                commands.append("object-group network {0}".format(name))
-                            remove_lines.append("no network-object host %s" % i)
+                            if (
+                                "object-group network {0}".format(name)
+                                not in commands
+                            ):
+                                commands.append(
+                                    "object-group network {0}".format(name)
+                                )
+                            remove_lines.append(
+                                "no network-object host %s" % i
+                            )
 
             if description:
                 if description != have_description:
                     if "object-group network {0}".format(name) not in commands:
-                        commands.append("object-group network {0}".format(name))
+                        commands.append(
+                            "object-group network {0}".format(name)
+                        )
                     add_lines.append("description {0}".format(description))
 
             if group_object:
                 if sorted(group_object) != sorted(have_group_object):
                     for i in group_object:
                         if i not in have_group_object:
-                            if "object-group network {0}".format(name) not in commands:
-                                commands.append("object-group network {0}".format(name))
+                            if (
+                                "object-group network {0}".format(name)
+                                not in commands
+                            ):
+                                commands.append(
+                                    "object-group network {0}".format(name)
+                                )
                             add_lines.append("group-object %s" % i)
                     for i in have_group_object:
                         if i not in group_object:
-                            if "object-group network {0}".format(name) not in commands:
-                                commands.append("object-group network {0}".format(name))
+                            if (
+                                "object-group network {0}".format(name)
+                                not in commands
+                            ):
+                                commands.append(
+                                    "object-group network {0}".format(name)
+                                )
                             remove_lines.append("no group-object %s" % i)
             if address:
                 if sorted(address) != sorted(have_ip_mask):
                     for i in address:
                         if i not in have_ip_mask:
-                            if "object-group network {0}".format(name) not in commands:
-                                commands.append("object-group network {0}".format(name))
+                            if (
+                                "object-group network {0}".format(name)
+                                not in commands
+                            ):
+                                commands.append(
+                                    "object-group network {0}".format(name)
+                                )
                             add_lines.append("network-object %s" % i)
                     for i in have_ip_mask:
                         if i not in address:
-                            if "object-group network {0}".format(name) not in commands:
-                                commands.append("object-group network {0}".format(name))
+                            if (
+                                "object-group network {0}".format(name)
+                                not in commands
+                            ):
+                                commands.append(
+                                    "object-group network {0}".format(name)
+                                )
                             remove_lines.append("no network-object %s" % i)
 
     elif "port-object" in group_type:
 
         if have_group_type is None and have_protocol != protocol:
-            commands.append("object-group service {0} {1}".format(name, protocol))
+            commands.append(
+                "object-group service {0} {1}".format(name, protocol)
+            )
 
             if port_range:
                 for i in port_range:
@@ -430,7 +468,9 @@ def replace(want_dict, have):
                     for i in port_range:
                         if i not in have_port_range:
                             if (
-                                "object-group service {0} {1}".format(name, protocol)
+                                "object-group service {0} {1}".format(
+                                    name, protocol
+                                )
                                 not in commands
                             ):
                                 commands.append(
@@ -442,7 +482,9 @@ def replace(want_dict, have):
                     for i in have_port_range:
                         if i not in port_range:
                             if (
-                                "object-group service {0} {1}".format(name, protocol)
+                                "object-group service {0} {1}".format(
+                                    name, protocol
+                                )
                                 not in commands
                             ):
                                 commands.append(
@@ -456,7 +498,9 @@ def replace(want_dict, have):
                     for i in port_eq:
                         if i not in have_port_eq:
                             if (
-                                "object-group service {0} {1}".format(name, protocol)
+                                "object-group service {0} {1}".format(
+                                    name, protocol
+                                )
                                 not in commands
                             ):
                                 commands.append(
@@ -468,7 +512,9 @@ def replace(want_dict, have):
                     for i in have_port_eq:
                         if i not in port_eq:
                             if (
-                                "object-group service {0} {1}".format(name, protocol)
+                                "object-group service {0} {1}".format(
+                                    name, protocol
+                                )
                                 not in commands
                             ):
                                 commands.append(
@@ -484,7 +530,9 @@ def replace(want_dict, have):
                         not in commands
                     ):
                         commands.append(
-                            "object-group service {0} {1}".format(name, protocol)
+                            "object-group service {0} {1}".format(
+                                name, protocol
+                            )
                         )
                     commands.append("description {0}".format(description))
 
@@ -504,18 +552,30 @@ def replace(want_dict, have):
             if description:
                 if description != have_description:
                     if "object-group service {0}".format(name) not in commands:
-                        commands.append("object-group service {0}".format(name))
+                        commands.append(
+                            "object-group service {0}".format(name)
+                        )
                     commands.append("description {0}".format(description))
             if service_cfg:
                 for i in service_cfg:
                     if i not in have_service_cfg:
-                        if "object-group service {0}".format(name) not in commands:
-                            commands.append("object-group service {0}".format(name))
+                        if (
+                            "object-group service {0}".format(name)
+                            not in commands
+                        ):
+                            commands.append(
+                                "object-group service {0}".format(name)
+                            )
                         add_lines.append("service %s" % i)
                 for i in have_service_cfg:
                     if i not in service_cfg:
-                        if "object-group service {0}".format(name) not in commands:
-                            commands.append("object-group service {0}".format(name))
+                        if (
+                            "object-group service {0}".format(name)
+                            not in commands
+                        ):
+                            commands.append(
+                                "object-group service {0}".format(name)
+                            )
                         remove_lines.append("no service %s" % i)
 
     set_add_lines = set(add_lines)
@@ -575,31 +635,50 @@ def present(want_dict, have):
             if host:
                 for i in host:
                     if i not in have_host_ip:
-                        if "object-group network {0}".format(name) not in commands:
-                            commands.append("object-group network {0}".format(name))
+                        if (
+                            "object-group network {0}".format(name)
+                            not in commands
+                        ):
+                            commands.append(
+                                "object-group network {0}".format(name)
+                            )
                         commands.append("network-object host %s" % i)
             if description:
                 if description != have_description:
                     if "object-group network {0}".format(name) not in commands:
-                        commands.append("object-group network {0}".format(name))
+                        commands.append(
+                            "object-group network {0}".format(name)
+                        )
                     commands.append("description {0}".format(description))
             if group_object:
                 for i in group_object:
                     if i not in have_group_object:
-                        if "object-group network {0}".format(name) not in commands:
-                            commands.append("object-group network {0}".format(name))
+                        if (
+                            "object-group network {0}".format(name)
+                            not in commands
+                        ):
+                            commands.append(
+                                "object-group network {0}".format(name)
+                            )
                         commands.append("group-object %s" % i)
             if address:
                 for i in address:
                     if i not in have_ip_mask:
-                        if "object-group network {0}".format(name) not in commands:
-                            commands.append("object-group network {0}".format(name))
+                        if (
+                            "object-group network {0}".format(name)
+                            not in commands
+                        ):
+                            commands.append(
+                                "object-group network {0}".format(name)
+                            )
                         commands.append("network-object %s" % i)
 
     elif "port-object" in group_type:
 
         if have_group_type is None and have_protocol != protocol:
-            commands.append("object-group service {0} {1}".format(name, protocol))
+            commands.append(
+                "object-group service {0} {1}".format(name, protocol)
+            )
 
             if port_range:
                 for i in port_range:
@@ -616,22 +695,30 @@ def present(want_dict, have):
                 for i in port_range:
                     if i not in have_port_range:
                         if (
-                            "object-group service {0} {1}".format(name, protocol)
+                            "object-group service {0} {1}".format(
+                                name, protocol
+                            )
                             not in commands
                         ):
                             commands.append(
-                                "object-group service {0} {1}".format(name, protocol)
+                                "object-group service {0} {1}".format(
+                                    name, protocol
+                                )
                             )
                         commands.append("port-object range %s" % i)
             if port_eq:
                 for i in port_eq:
                     if i not in have_port_eq:
                         if (
-                            "object-group service {0} {1}".format(name, protocol)
+                            "object-group service {0} {1}".format(
+                                name, protocol
+                            )
                             not in commands
                         ):
                             commands.append(
-                                "object-group service {0} {1}".format(name, protocol)
+                                "object-group service {0} {1}".format(
+                                    name, protocol
+                                )
                             )
                         commands.append("port-object eq %s" % i)
             if description:
@@ -641,7 +728,9 @@ def present(want_dict, have):
                         not in commands
                     ):
                         commands.append(
-                            "object-group service {0} {1}".format(name, protocol)
+                            "object-group service {0} {1}".format(
+                                name, protocol
+                            )
                         )
                     commands.append("description {0}".format(description))
 
@@ -662,13 +751,20 @@ def present(want_dict, have):
             if description:
                 if description != have_description:
                     if "object-group service {0}".format(name) not in commands:
-                        commands.append("object-group service {0}".format(name))
+                        commands.append(
+                            "object-group service {0}".format(name)
+                        )
                     commands.append("description {0}".format(description))
             if service_cfg:
                 for i in service_cfg:
                     if i not in have_service_cfg:
-                        if "object-group service {0}".format(name) not in commands:
-                            commands.append("object-group service {0}".format(name))
+                        if (
+                            "object-group service {0}".format(name)
+                            not in commands
+                        ):
+                            commands.append(
+                                "object-group service {0}".format(name)
+                            )
                         commands.append("service %s" % i)
 
     return commands
@@ -709,25 +805,42 @@ def absent(want_dict, have):
             if host:
                 for i in host:
                     if i in have_host_ip:
-                        if "object-group network {0}".format(name) not in commands:
-                            commands.append("object-group network {0}".format(name))
+                        if (
+                            "object-group network {0}".format(name)
+                            not in commands
+                        ):
+                            commands.append(
+                                "object-group network {0}".format(name)
+                            )
                         commands.append("no network-object host %s" % i)
             if description:
                 if description == have_description:
                     if "object-group network {0}".format(name) not in commands:
-                        commands.append("object-group network {0}".format(name))
+                        commands.append(
+                            "object-group network {0}".format(name)
+                        )
                     commands.append("no description {0}".format(description))
             if group_object:
                 for i in group_object:
                     if i in have_group_object:
-                        if "object-group network {0}".format(name) not in commands:
-                            commands.append("object-group network {0}".format(name))
+                        if (
+                            "object-group network {0}".format(name)
+                            not in commands
+                        ):
+                            commands.append(
+                                "object-group network {0}".format(name)
+                            )
                         commands.append("no group-object %s" % i)
             if address:
                 for i in address:
                     if i in have_ip_mask:
-                        if "object-group network {0}".format(name) not in commands:
-                            commands.append("object-group network {0}".format(name))
+                        if (
+                            "object-group network {0}".format(name)
+                            not in commands
+                        ):
+                            commands.append(
+                                "object-group network {0}".format(name)
+                            )
                         commands.append("no network-object %s" % i)
 
     elif "port-object" in group_type:
@@ -741,22 +854,30 @@ def absent(want_dict, have):
                 for i in port_range:
                     if i in have_port_range:
                         if (
-                            "object-group service {0} {1}".format(name, protocol)
+                            "object-group service {0} {1}".format(
+                                name, protocol
+                            )
                             not in commands
                         ):
                             commands.append(
-                                "object-group service {0} {1}".format(name, protocol)
+                                "object-group service {0} {1}".format(
+                                    name, protocol
+                                )
                             )
                         commands.append("no port-object range %s" % i)
             if port_eq:
                 for i in port_eq:
                     if i in have_port_eq:
                         if (
-                            "object-group service {0} {1}".format(name, protocol)
+                            "object-group service {0} {1}".format(
+                                name, protocol
+                            )
                             not in commands
                         ):
                             commands.append(
-                                "object-group service {0} {1}".format(name, protocol)
+                                "object-group service {0} {1}".format(
+                                    name, protocol
+                                )
                             )
                         commands.append("no port-object eq %s" % i)
             if description:
@@ -766,7 +887,9 @@ def absent(want_dict, have):
                         not in commands
                     ):
                         commands.append(
-                            "object-group service {0} {1}".format(name, protocol)
+                            "object-group service {0} {1}".format(
+                                name, protocol
+                            )
                         )
                     commands.append("no description {0}".format(description))
 
@@ -779,13 +902,20 @@ def absent(want_dict, have):
             if description:
                 if description == have_description:
                     if "object-group service {0}".format(name) not in commands:
-                        commands.append("object-group service {0}".format(name))
+                        commands.append(
+                            "object-group service {0}".format(name)
+                        )
                     commands.append("no description {0}".format(description))
             if service_cfg:
                 for i in service_cfg:
                     if i in have_service_cfg:
-                        if "object-group service {0}".format(name) not in commands:
-                            commands.append("object-group service {0}".format(name))
+                        if (
+                            "object-group service {0}".format(name)
+                            not in commands
+                        ):
+                            commands.append(
+                                "object-group service {0}".format(name)
+                            )
                         commands.append("no service %s" % i)
 
     return commands
@@ -845,7 +975,8 @@ def main():
     argument_spec = dict(
         name=dict(required=True),
         group_type=dict(
-            choices=["network-object", "service-object", "port-object"], required=True,
+            choices=["network-object", "service-object", "port-object"],
+            required=True,
         ),
         protocol=dict(choices=["udp", "tcp", "tcp-udp"]),
         host_ip=dict(type="list"),
@@ -855,7 +986,9 @@ def main():
         port_range=dict(type="list"),
         port_eq=dict(type="list"),
         service_cfg=dict(type="list"),
-        state=dict(choices=["present", "absent", "replace"], default="present"),
+        state=dict(
+            choices=["present", "absent", "replace"], default="present"
+        ),
     )
 
     required_if = [
@@ -864,7 +997,9 @@ def main():
     ]
 
     module = AnsibleModule(
-        argument_spec=argument_spec, required_if=required_if, supports_check_mode=True,
+        argument_spec=argument_spec,
+        required_if=required_if,
+        supports_check_mode=True,
     )
 
     result = {"changed": False}
