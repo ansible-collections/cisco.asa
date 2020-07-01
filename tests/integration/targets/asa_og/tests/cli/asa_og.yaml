@@ -232,6 +232,7 @@
         port_eq:
           - www
           - '1024'
+          - 1212
         description: th1s_IS-a_D3scrIPt10n_3xaMple-
         port_range:
           - 1024 10024
