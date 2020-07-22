@@ -95,7 +95,10 @@ class OGsArgs(object):
                             "options": {
                                 "host": {"type": "list", "elements": "str"},
                                 "address": {"type": "list", "elements": "str"},
-                                "ipv6_address": {"type": "list", "elements": "str"},
+                                "ipv6_address": {
+                                    "type": "list",
+                                    "elements": "str",
+                                },
                             },
                         },
                         "protocol_object": {
@@ -132,7 +135,10 @@ class OGsArgs(object):
                         "security_group": {
                             "type": "dict",
                             "options": {
-                                "sec_name": {"type": "list", "elements": "str"},
+                                "sec_name": {
+                                    "type": "list",
+                                    "elements": "str",
+                                },
                                 "tag": {"type": "list", "elements": "str"},
                             },
                         },

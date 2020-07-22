@@ -70,7 +70,9 @@ asa_argument_spec = {
 }
 
 asa_top_spec = {
-    "authorize": dict(fallback=(env_fallback, ["ANSIBLE_NET_AUTHORIZE"]), type="bool"),
+    "authorize": dict(
+        fallback=(env_fallback, ["ANSIBLE_NET_AUTHORIZE"]), type="bool"
+    ),
     "context": dict(type="str"),
     "passwords": dict(type="bool"),
 }

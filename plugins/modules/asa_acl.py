@@ -176,10 +176,14 @@ def parse_acl_name(module):
 def main():
 
     argument_spec = dict(
-        lines=dict(aliases=["commands"], required=True, type="list", elements="str"),
+        lines=dict(
+            aliases=["commands"], required=True, type="list", elements="str"
+        ),
         before=dict(type="list", elements="str"),
         after=dict(type="list", elements="str"),
-        match=dict(default="line", choices=["line", "strict", "exact"], type="str"),
+        match=dict(
+            default="line", choices=["line", "strict", "exact"], type="str"
+        ),
         replace=dict(default="line", choices=["line", "block"], type="str"),
         force=dict(default=False, type="bool"),
         config=dict(type="str"),
