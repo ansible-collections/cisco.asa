@@ -65,6 +65,7 @@ class OGsArgs(object):
                             "options": {
                                 "icmp_object": {
                                     "type": "list",
+                                    "elements": "str",
                                     "choices": [
                                         "alternate-address",
                                         "conversion-error",
@@ -92,9 +93,9 @@ class OGsArgs(object):
                         "network_object": {
                             "type": "dict",
                             "options": {
-                                "host": {"type": "list"},
-                                "address": {"type": "list"},
-                                "ipv6_address": {"type": "list"},
+                                "host": {"type": "list", "elements": "str"},
+                                "address": {"type": "list", "elements": "str"},
+                                "ipv6_address": {"type": "list", "elements": "str"},
                             },
                         },
                         "protocol_object": {
@@ -102,6 +103,7 @@ class OGsArgs(object):
                             "options": {
                                 "protocol": {
                                     "type": "list",
+                                    "elements": "str",
                                     "choices": [
                                         "ah",
                                         "eigrp",
@@ -130,8 +132,8 @@ class OGsArgs(object):
                         "security_group": {
                             "type": "dict",
                             "options": {
-                                "sec_name": {"type": "list"},
-                                "tag": {"type": "list"},
+                                "sec_name": {"type": "list", "elements": "str"},
+                                "tag": {"type": "list", "elements": "str"},
                             },
                         },
                         "service_object": {
@@ -139,6 +141,7 @@ class OGsArgs(object):
                             "options": {
                                 "protocol": {
                                     "type": "list",
+                                    "elements": "str",
                                     "choices": [
                                         "ah",
                                         "eigrp",

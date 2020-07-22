@@ -30,6 +30,11 @@ class ModuleDocFragment(object):
     - Specifies which context to target if you are running in the ASA in multiple
       context mode. Defaults to the current context you login to.
     type: str
+  passwords:
+    description:
+    - Specifies which context to target if you are running in the ASA in multiple
+      context mode. Defaults to the current context you login to.
+    type: bool
   provider:
     description:
     - B(Deprecated)
@@ -37,6 +42,7 @@ class ModuleDocFragment(object):
     - For more information please see the L(Network Guide, ../network/getting_started/network_differences.html#multiple-communication-protocols).
     - HORIZONTALLINE
     - A dict object containing connection details.
+    type: dict
     suboptions:
       host:
         description:
@@ -48,7 +54,6 @@ class ModuleDocFragment(object):
         description:
         - Specifies the port to use when building the connection to the remote device.
         type: int
-        default: 22
       username:
         description:
         - Configures the username to use to authenticate the connection to the remote
@@ -91,7 +96,6 @@ class ModuleDocFragment(object):
         - Specifies idle timeout in seconds for the connection, in seconds. Useful
           if the console freezes before continuing. For example when saving configurations.
         type: int
-        default: 10
 notes:
 - For more information on using Ansible to manage network devices see the :ref:`Ansible
   Network Guide <network_guide>`

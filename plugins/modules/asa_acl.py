@@ -32,17 +32,23 @@ options:
     required: true
     aliases:
     - commands
+    type: list
+    elements: str
   before:
     description:
     - The ordered set of commands to push on to the command stack if a change needs
       to be made.  This allows the playbook designer the opportunity to perform configuration
       commands prior to pushing any changes without affecting how the set of commands
       are matched against the system.
+    type: list
+    elements: str
   after:
     description:
     - The ordered set of commands to append to the end of the command stack if a changed
       needs to be made.  Just like with I(before) this allows the playbook designer
       to append a set of commands to be executed after the command set.
+    type: list
+    elements: str
   match:
     description:
     - Instructs the module on the way to perform the matching of the set of commands
@@ -55,6 +61,7 @@ options:
     - line
     - strict
     - exact
+    type: str
   replace:
     description:
     - Instructs the module on the way to perform the configuration on the device.  If
@@ -66,6 +73,7 @@ options:
     choices:
     - line
     - block
+    type: str
   force:
     description:
     - The force argument instructs the module to not consider the current devices
@@ -80,7 +88,7 @@ options:
       are times when it is not desirable to have the task get the current running-config
       for every task in a playbook.  The I(config) argument allows the implementer
       to pass in the configuration to use as the base config for comparison.
-
+    type: str
 """
 
 EXAMPLES = """
@@ -168,13 +176,13 @@ def parse_acl_name(module):
 def main():
 
     argument_spec = dict(
-        lines=dict(aliases=["commands"], required=True, type="list"),
-        before=dict(type="list"),
-        after=dict(type="list"),
-        match=dict(default="line", choices=["line", "strict", "exact"]),
-        replace=dict(default="line", choices=["line", "block"]),
+        lines=dict(aliases=["commands"], required=True, type="list", elements="str"),
+        before=dict(type="list", elements="str"),
+        after=dict(type="list", elements="str"),
+        match=dict(default="line", choices=["line", "strict", "exact"], type="str"),
+        replace=dict(default="line", choices=["line", "block"], type="str"),
         force=dict(default=False, type="bool"),
-        config=dict(),
+        config=dict(type="str"),
     )
 
     argument_spec.update(asa_argument_spec)

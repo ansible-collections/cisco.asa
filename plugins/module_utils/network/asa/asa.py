@@ -58,27 +58,21 @@ asa_provider_spec = {
         fallback=(env_fallback, ["ANSIBLE_NET_AUTH_PASS"]), no_log=True
     ),
     "timeout": dict(type="int"),
-    "context": dict(),
-    "passwords": dict(),
 }
 
 asa_argument_spec = {
     "provider": dict(
-        type="dict", options=asa_provider_spec, removed_in_version=2.14
+        type="dict",
+        options=asa_provider_spec,
+        removed_at_date="2022-06-01",
+        removed_from_collection="cisco.asa",
     )
 }
 
 asa_top_spec = {
-    "host": dict(removed_in_version=2.9),
-    "port": dict(removed_in_version=2.9, type="int"),
-    "username": dict(removed_in_version=2.9),
-    "password": dict(removed_in_version=2.9, no_log=True),
-    "ssh_keyfile": dict(removed_in_version=2.9, type="path"),
-    "authorize": dict(type="bool"),
-    "auth_pass": dict(removed_in_version=2.9, no_log=True),
-    "timeout": dict(removed_in_version=2.9, type="int"),
-    "context": dict(),
-    "passwords": dict(),
+    "authorize": dict(fallback=(env_fallback, ["ANSIBLE_NET_AUTHORIZE"]), type="bool"),
+    "context": dict(type="str"),
+    "passwords": dict(type="bool"),
 }
 asa_argument_spec.update(asa_top_spec)
 

@@ -63,10 +63,6 @@ class AclsArgs(object):
                                 "remark": {"type": "str"},
                                 "source": {
                                     "type": "dict",
-                                    "mutually_exclusive": [
-                                        ["address", "any"],
-                                        ["wildcard_bits", "any"],
-                                    ],
                                     "options": {
                                         "address": {"type": "str"},
                                         "netmask": {"type": "str"},
@@ -98,10 +94,6 @@ class AclsArgs(object):
                                 },
                                 "destination": {
                                     "type": "dict",
-                                    "mutually_exclusive": [
-                                        ["address", "any"],
-                                        ["wildcard_bits", "any"],
-                                    ],
                                     "options": {
                                         "address": {"type": "str"},
                                         "netmask": {"type": "str"},
