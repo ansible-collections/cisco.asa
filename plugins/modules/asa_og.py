@@ -28,6 +28,7 @@ options:
     description:
     - Name of the object group.
     required: true
+    type: str
   group_type:
     description:
     - The object group type.
@@ -36,6 +37,7 @@ options:
     - service-object
     - port-object
     required: true
+    type: str
   protocol:
     description:
     - The protocol for object-group service with port-object.
@@ -43,33 +45,45 @@ options:
     - udp
     - tcp
     - tcp-udp
+    type: str
   host_ip:
     description:
     - The host IP address for object-group network.
     type: list
+    elements: str
   description:
     description:
     - The description for the object-group.
+    type: str
   group_object:
     description:
     - The group-object for network object-group.
     type: list
+    elements: str
   ip_mask:
     description:
     - The IP address and mask for network object-group.
     type: list
+    elements: str
   port_range:
     description:
     - The port range for port-object.
+    type: list
+    elements: str
   port_eq:
     description:
     - The single port for port-object.
+    type: list
+    elements: str
   service_cfg:
     description:
     - The service-object configuration protocol, direction, range or port.
+    type: list
+    elements: str
   state:
     description:
     - Manage the state of the resource.
+    type: str
     default: present
     choices:
     - present
@@ -977,13 +991,13 @@ def main():
             required=True,
         ),
         protocol=dict(choices=["udp", "tcp", "tcp-udp"]),
-        host_ip=dict(type="list"),
+        host_ip=dict(type="list", elements="str"),
         description=dict(),
-        group_object=dict(type="list"),
-        ip_mask=dict(type="list"),
+        group_object=dict(type="list", elements="str"),
+        ip_mask=dict(type="list", elements="str"),
         port_range=dict(type="list"),
-        port_eq=dict(type="list"),
-        service_cfg=dict(type="list"),
+        port_eq=dict(type="list", elements="str"),
+        service_cfg=dict(type="list", elements="str"),
         state=dict(
             choices=["present", "absent", "replace"], default="present"
         ),
