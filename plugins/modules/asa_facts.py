@@ -33,7 +33,8 @@ description:
 - Note, to collects facts from ASA device properly user should elevate the privilege
   to become.
 version_added: 1.0.0
-extends_documentation_fragment: asa
+extends_documentation_fragment:
+- cisco.asa.asa
 notes:
 - Tested against asa 9.10(1)11
 options:
@@ -45,6 +46,7 @@ options:
     - Use a value with an initial C(!) to collect all facts except that subset.
     required: false
     type: list
+    elements: str
     default: '!config'
   gather_network_resources:
     description:
@@ -55,6 +57,7 @@ options:
       not be collected. Valid subsets are 'all', 'acls', 'ogs'.
     required: false
     type: list
+    elements: str
 """
 
 EXAMPLES = """

@@ -76,6 +76,7 @@ options:
               icmp_object:
                 description: Defines the ICMP types in the group.
                 type: list
+                elements: str
                 choices: [alternate-address, conversion-error, echo, echo-reply, information-reply,
                   information-request, mask-reply, mask-request, mobile-redirect,
                   parameter-problem, redirect, router-advertisement, router-solicitation,
@@ -88,12 +89,15 @@ options:
               host:
                 description: Set this to specify a single host object.
                 type: list
+                elements: str
               address:
                 description: Enter an IPv4 network address with space seperated netmask.
                 type: list
+                elements: str
               ipv6_address:
                 description: Enter an IPv6 prefix.
                 type: list
+                elements: str
           protocol_object:
             description: Configure a protocol object
             type: dict
@@ -101,6 +105,7 @@ options:
               protocol:
                 description: Defines the protocols in the group.
                 type: list
+                elements: str
                 choices: [ah, eigrp, esp, gre, icmp, icmp6, igmp, igrp, ip, ipinip,
                   ipsec, nos, ospf, pcp, pim, pptp, sctp, snp, tcp, udp]
           security_group:
@@ -110,9 +115,11 @@ options:
               sec_name:
                 description: Enter this keyword to specify a security-group name.
                 type: list
+                elements: str
               tag:
                 description: Enter this keyword to specify a security-group tag.
                 type: list
+                elements: str
           service_object:
             description: Configure a service object
             type: dict
@@ -120,6 +127,7 @@ options:
               protocol:
                 description: Defines the protocols in the group.
                 type: list
+                elements: str
                 choices: [ah, eigrp, esp, gre, icmp, icmp6, igmp, igrp, ip, ipinip,
                   ipsec, nos, ospf, pcp, pim, pptp, sctp, snp, tcp, tcp-udp, udp]
               object:

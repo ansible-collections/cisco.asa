@@ -28,6 +28,8 @@ options:
       is provided, the module is not returned until the condition is satisfied or
       the number of retires as expired.
     required: true
+    type: list
+    elements: str
   wait_for:
     description:
     - List of conditions to evaluate against the output of the command. The task will
@@ -35,6 +37,8 @@ options:
       is not true within the configured number of retries, the task fails. See examples.
     aliases:
     - waitfor
+    type: list
+    elements: str
   match:
     description:
     - The I(match) argument is used in conjunction with the I(wait_for) argument to
@@ -45,18 +49,21 @@ options:
     choices:
     - any
     - all
+    type: str
   retries:
     description:
     - Specifies the number of retries a command should by tried before it is considered
       failed. The command is run on the target device every retry and evaluated against
       the I(wait_for) conditions.
     default: 10
+    type: int
   interval:
     description:
     - Configures the interval in seconds to wait between retries of the command. If
       the command does not pass the specified conditions, the interval indicates how
       long to wait before trying the command again.
     default: 1
+    type: int
 notes:
 - When processing wait_for, each commands' output is stored as an element of the I(result)
   array.  The allowed operators for conditional evaluation are I(eq), I(==), I(neq),
@@ -132,9 +139,9 @@ def to_lines(stdout):
 def main():
     spec = dict(
         # { command: <str>, prompt: <str>, response: <str> }
-        commands=dict(type="list", required=True),
-        wait_for=dict(type="list", aliases=["waitfor"]),
-        match=dict(default="all", choices=["all", "any"]),
+        commands=dict(type="list", required=True, elements="str"),
+        wait_for=dict(type="list", aliases=["waitfor"], elements="str"),
+        match=dict(default="all", choices=["all", "any"], type="str"),
         retries=dict(default=10, type="int"),
         interval=dict(default=1, type="int"),
     )

@@ -28,28 +28,37 @@ options:
       modified by the device config parser.
     aliases:
     - commands
+    type: list
+    elements: str
   parents:
     description:
     - The ordered set of parents that uniquely identify the section or hierarchy the
       commands should be checked against.  If the parents argument is omitted, the
       commands are checked against the set of top level or global commands.
+    type: list
+    elements: str
   src:
     description:
     - Specifies the source path to the file that contains the configuration or configuration
       template to load.  The path to the source file can either be the full path on
       the Ansible control host or a relative path from the playbook or role root directory.  This
       argument is mutually exclusive with I(lines), I(parents).
+    type: path
   before:
     description:
     - The ordered set of commands to push on to the command stack if a change needs
       to be made.  This allows the playbook designer the opportunity to perform configuration
       commands prior to pushing any changes without affecting how the set of commands
       are matched against the system.
+    type: list
+    elements: str
   after:
     description:
     - The ordered set of commands to append to the end of the command stack if a change
       needs to be made.  Just like with I(before) this allows the playbook designer
       to append a set of commands to be executed after the command set.
+    type: list
+    elements: str
   match:
     description:
     - Instructs the module on the way to perform the matching of the set of commands
@@ -65,6 +74,7 @@ options:
     - strict
     - exact
     - none
+    type: str
   replace:
     description:
     - Instructs the module on the way to perform the configuration on the device.  If
@@ -76,6 +86,7 @@ options:
     choices:
     - line
     - block
+    type: str
   backup:
     description:
     - This argument will cause the module to create a full backup of the current C(running-config)
@@ -89,6 +100,7 @@ options:
     - The C(config) argument allows the playbook designer to supply the base configuration
       to be used to validate configuration changes necessary.  If this argument is
       provided, the module will not download the running-config from the remote node.
+    type: str
   defaults:
     description:
     - This argument specifies whether or not to collect all defaults when getting
@@ -102,7 +114,7 @@ options:
       running-config from the remote device.  This includes passwords related to VPN
       endpoints.  This argument is mutually exclusive with I(defaults).
     type: bool
-    default: no
+    default: false
   save:
     description:
     - The C(save) argument instructs the module to save the running- config to the
@@ -121,6 +133,7 @@ options:
         - The filename to be used to store the backup configuration. If the filename
           is not given it will be generated based on the hostname, current time and
           date in format defined by <hostname>_config.<current-date>@<current-time>
+        type: str
       dir_path:
         description:
         - This option provides the path ending with directory name in which the backup
@@ -302,10 +315,10 @@ def main():
     backup_spec = dict(filename=dict(), dir_path=dict(type="path"))
     argument_spec = dict(
         src=dict(type="path"),
-        lines=dict(aliases=["commands"], type="list"),
-        parents=dict(type="list"),
-        before=dict(type="list"),
-        after=dict(type="list"),
+        lines=dict(aliases=["commands"], type="list", elements="str"),
+        parents=dict(type="list", elements="str"),
+        before=dict(type="list", elements="str"),
+        after=dict(type="list", elements="str"),
         match=dict(
             default="line", choices=["line", "strict", "exact", "none"]
         ),

@@ -86,7 +86,7 @@ gathered:
             sec_name:
               - test_1
             tag:
-              - 10
+              - "10"
       object_type: security
     - object_groups:
         - description: test_user
