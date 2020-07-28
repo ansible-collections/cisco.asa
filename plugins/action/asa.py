@@ -43,7 +43,9 @@ class ActionModule(ActionNetworkModule):
         del tmp  # tmp no longer has any effect
 
         module_name = self._task.action.split(".")[-1]
-        self._config_module = True if module_name == "asa_config" else False
+        self._config_module = (
+            True if module_name in ["asa_config", "config"] else False
+        )
 
         if self._play_context.connection == "local":
             provider = load_provider(asa_provider_spec, self._task.args)
