@@ -46,7 +46,7 @@ Parameters
                     <b>description</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">-</span>
+                        <span style="color: purple">string</span>
                                                                     </div>
                                     </td>
                                 <td>
@@ -62,7 +62,7 @@ Parameters
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">list</span>
-                                                                    </div>
+                         / <span style="color: purple">elements=string</span>                                            </div>
                                     </td>
                                 <td>
                                                                                                                                                             </td>
@@ -76,7 +76,7 @@ Parameters
                     <b>group_type</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">-</span>
+                        <span style="color: purple">string</span>
                                                  / <span style="color: red">required</span>                    </div>
                                     </td>
                                 <td>
@@ -97,7 +97,7 @@ Parameters
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">list</span>
-                                                                    </div>
+                         / <span style="color: purple">elements=string</span>                                            </div>
                                     </td>
                                 <td>
                                                                                                                                                             </td>
@@ -112,7 +112,7 @@ Parameters
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">list</span>
-                                                                    </div>
+                         / <span style="color: purple">elements=string</span>                                            </div>
                                     </td>
                                 <td>
                                                                                                                                                             </td>
@@ -126,7 +126,7 @@ Parameters
                     <b>name</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">-</span>
+                        <span style="color: purple">string</span>
                                                  / <span style="color: red">required</span>                    </div>
                                     </td>
                                 <td>
@@ -141,8 +141,8 @@ Parameters
                     <b>port_eq</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">-</span>
-                                                                    </div>
+                        <span style="color: purple">list</span>
+                         / <span style="color: purple">elements=string</span>                                            </div>
                                     </td>
                                 <td>
                                                                                                                                                             </td>
@@ -156,8 +156,8 @@ Parameters
                     <b>port_range</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">-</span>
-                                                                    </div>
+                        <span style="color: purple">list</span>
+                         / <span style="color: purple">elements=string</span>                                            </div>
                                     </td>
                                 <td>
                                                                                                                                                             </td>
@@ -171,7 +171,7 @@ Parameters
                     <b>protocol</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">-</span>
+                        <span style="color: purple">string</span>
                                                                     </div>
                                     </td>
                                 <td>
@@ -191,8 +191,8 @@ Parameters
                     <b>service_cfg</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">-</span>
-                                                                    </div>
+                        <span style="color: purple">list</span>
+                         / <span style="color: purple">elements=string</span>                                            </div>
                                     </td>
                                 <td>
                                                                                                                                                             </td>
@@ -206,7 +206,7 @@ Parameters
                     <b>state</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">-</span>
+                        <span style="color: purple">string</span>
                                                                     </div>
                                     </td>
                                 <td>
@@ -320,4 +320,5 @@ Authors
 ~~~~~~~
 
 - Federico Olivieri (@Federico87)
+
 

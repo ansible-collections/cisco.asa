@@ -79,7 +79,7 @@ Parameters
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">list</span>
-                                                                    </div>
+                         / <span style="color: purple">elements=string</span>                                            </div>
                                     </td>
                                 <td>
                                                                                                                                                             </td>
@@ -94,7 +94,7 @@ Parameters
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">list</span>
-                                                                    </div>
+                         / <span style="color: purple">elements=string</span>                                            </div>
                                     </td>
                                 <td>
                                                                                                                                                                     <b>Default:</b><br/><div style="color: blue">"!config"</div>
@@ -109,10 +109,29 @@ Parameters
                                 <tr>
                                                                 <td colspan="2">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>passwords</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">boolean</span>
+                                                                    </div>
+                                    </td>
+                                <td>
+                                                                                                                                                                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
+                                                                                                                                                                <li>no</li>
+                                                                                                                                                                                                <li>yes</li>
+                                                                                    </ul>
+                                                                            </td>
+                                                                <td>
+                                            <div>Specifies which context to target if you are running in the ASA in multiple context mode. Defaults to the current context you login to.</div>
+                                                        </td>
+            </tr>
+                                <tr>
+                                                                <td colspan="2">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
                     <b>provider</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">-</span>
+                        <span style="color: purple">dictionary</span>
                                                                     </div>
                                     </td>
                                 <td>
@@ -204,8 +223,7 @@ Parameters
                                                                     </div>
                                     </td>
                                 <td>
-                                                                                                                                                                    <b>Default:</b><br/><div style="color: blue">22</div>
-                                    </td>
+                                                                                                                                                            </td>
                                                                 <td>
                                             <div>Specifies the port to use when building the connection to the remote device.</div>
                                                         </td>
@@ -237,8 +255,7 @@ Parameters
                                                                     </div>
                                     </td>
                                 <td>
-                                                                                                                                                                    <b>Default:</b><br/><div style="color: blue">10</div>
-                                    </td>
+                                                                                                                                                            </td>
                                                                 <td>
                                             <div>Specifies idle timeout in seconds for the connection, in seconds. Useful if the console freezes before continuing. For example when saving configurations.</div>
                                                         </td>
@@ -609,4 +626,5 @@ Authors
 ~~~~~~~
 
 - Sumit Jaiswal (@justjais)
+
 
