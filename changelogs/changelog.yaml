@@ -31,3 +31,26 @@ releases:
         name: asa
         namespace: null
     release_date: '2020-06-23'
+  1.0.1:
+    changes:
+      bugfixes:
+      - Make `src`, `backup` and `backup_options` in asa_config work when module alias
+        is used (https://github.com/ansible-collections/cisco.asa/pull/61).
+      minor_changes:
+      - Add changelogs for 1.0.0 release (https://github.com/ansible-collections/cisco.asa/pull/48)
+      - Removes Cisco ASA sanity ignores and sync for argspec and docstring
+        (https://github.com/ansible-collections/cisco.asa/pull/59).
+      - Updated docs.
+    fragments:
+    - 48-add-change-log-1.0.0.yaml
+    - 1.1.0_update_docs.yaml
+    - fix_config_module_src_backup.yaml
+    - remove_asa_ignore.yaml
+    release_date: '2020-08-03'
+  1.0.2:
+    changes:
+      release_summary:
+      - Re-releasing 1.0.2 with updated changelog.
+    fragments:
+    - 1.0.2.yaml
+    release_date: '2020-08-07'
