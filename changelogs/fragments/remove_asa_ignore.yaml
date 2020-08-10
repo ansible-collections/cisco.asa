@@ -1,3 +1,0 @@
----
-bugfixes:
-  - Removes Cisco ASA sanity ignores and sync for argspec and docstring (https://github.com/ansible-collections/cisco.asa/pull/59).
