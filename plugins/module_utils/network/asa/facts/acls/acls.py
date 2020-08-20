@@ -170,7 +170,6 @@ class AclsFacts(object):
                             destination_index = each_list.index(
                                 destination.get("host")
                             )
-                            # index -= 1
                         except ValueError:
                             try:
                                 destination_index = each_list.index(
