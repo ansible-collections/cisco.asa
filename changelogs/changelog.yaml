@@ -53,3 +53,10 @@ releases:
     fragments:
     - 1.0.2.yaml
     release_date: '2020-08-07'
+  1.0.3:
+    changes:
+      bugfixes:
+      - Unexpected set of CMDs fired when source and destination were both set to hosts acl (https://github.com/ansible-collections/cisco.asa/pull/69).
+    fragments:
+    - 69-asa-acls-bugfix.yaml
+    release_date: '2020-08-28'
