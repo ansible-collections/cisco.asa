@@ -4,6 +4,19 @@ Cisco Asa Collection Release Notes
 
 .. contents:: Topics
 
+v1.0.3
+======
+
+Release Summary
+---------------
+
+- Releasing 1.0.3 with updated readme with changelog link, galaxy description, and bugfix.
+
+Bugfixes
+--------
+
+- Unexpected set of CMDs fired when source and destination were both set to hosts acl. (https://github.com/ansible-collections/cisco.asa/pull/69).
+
 v1.0.2
 ======
 
