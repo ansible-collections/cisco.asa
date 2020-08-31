@@ -167,10 +167,9 @@ class AclsFacts(object):
                         )
                     except ValueError:
                         try:
-                            destination_index = (
-                                each_list.index(destination.get("host")) + 1
+                            destination_index = each_list.index(
+                                destination.get("host")
                             )
-                            index -= 1
                         except ValueError:
                             try:
                                 destination_index = each_list.index(
@@ -221,11 +220,12 @@ class AclsFacts(object):
         if "host" in each:
             host = re.findall(r"host\s[0-9]+(?:\.[0-9]+){3}", each)
             if len(host) == 2:
-                host_index = each.index("host")
-                source["host"] = each[host_index + 1]
-                del each[host_index]
-                host_index = each.index("host")
-                destination["host"] = each[host_index + 1]
+                each_split = each.split(" ")
+                host_index = each_split.index("host")
+                source["host"] = each_split[host_index + 1]
+                del each_split[host_index]
+                host_index = each_split.index("host")
+                destination["host"] = each_split[host_index + 1]
             elif len(host) == 1:
                 host_ip = host[0].split(" ")[1]
                 host_index = each_list.index("host")
@@ -286,15 +286,16 @@ class AclsFacts(object):
         else:
             ip_n_netmask = re.findall(r"[0-9]+(?:\.[0-9]+){3}", each)
             if len(ip_n_netmask) == 2:
-                if destination.get("any") or destination.get("host"):
+                if (
+                    destination.get("any") or destination.get("host")
+                ) and not (source.get("any") or source.get("host")):
                     source["address"] = ip_n_netmask[0]
                     source["netmask"] = ip_n_netmask[1]
-                elif source.get("any") or source.get("host"):
+                elif (source.get("any") or source.get("host")) and not (
+                    source.get("any") or source.get("host")
+                ):
                     destination["address"] = ip_n_netmask[0]
                     destination["netmask"] = ip_n_netmask[1]
-                else:
-                    source["address"] = ip_n_netmask[0]
-                    source["netmask"] = ip_n_netmask[1]
             elif len(ip_n_netmask) == 4:
                 source["address"] = ip_n_netmask[0]
                 source["netmask"] = ip_n_netmask[1]
