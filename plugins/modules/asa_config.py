@@ -122,6 +122,9 @@ options:
       this argument is ignored.
     type: bool
     default: no
+    deprecated:
+      alternative: save_when
+      removed_at_date: '2022-10-10'
   backup_options:
     description:
     - This is a dict object containing configurable options related to backup file
@@ -145,6 +148,26 @@ options:
           in C(filename) within I(backup) directory.
         type: path
     type: dict
+  save_when:
+    description:
+    - When changes are made to the device running-configuration, the changes are not
+      copied to non-volatile storage by default.  Using this argument will change
+      that before.  If the argument is set to I(always), then the running-config will
+      always be copied to the startup-config and the I(modified) flag will always
+      be set to True.  If the argument is set to I(modified), then the running-config
+      will only be copied to the startup-config if it has changed since the last save
+      to startup-config.  If the argument is set to I(never), the running-config will
+      never be copied to the startup-config.  If the argument is set to I(changed),
+      then the running-config will only be copied to the startup-config if the task
+      has made a change. I(changed) was added in Ansible 2.5.
+    default: never
+    version_added: 1.1.0
+    choices:
+    - always
+    - never
+    - modified
+    - changed
+    type: str
 """
 
 EXAMPLES = """
@@ -227,6 +250,10 @@ EXAMPLES = """
     backup_options:
       filename: backup.cfg
       dir_path: /home/user
+
+- name: save running to startup when modified
+  cisco.asa.asa_config:
+    save_when: modified
 """
 
 RETURN = """
@@ -267,6 +294,12 @@ def get_candidate(module):
     return candidate
 
 
+def save_config(module, result):
+    result["changed"] = True
+    if not module.check_mode:
+        run_commands(module, "write mem")
+
+
 def run(module, result):
     match = module.params["match"]
     replace = module.params["replace"]
@@ -304,9 +337,23 @@ def run(module, result):
         result["changed"] = True
 
     if module.params["save"]:
-        if not module.check_mode:
-            run_commands(module, "write mem")
-        result["changed"] = True
+        module.warn(
+            "module param save is deprecated, please use newer and updated param save_when instead which is released with more functionality!"
+        )
+        save_config(module, result)
+    if module.params["save_when"] == "always":
+        save_config(module, result)
+    elif module.params["save_when"] == "modified":
+        running_config_checksum = run_commands(
+            module, "show running-config | include checksum:"
+        )
+        startup_config_checksum = run_commands(
+            module, "show startup-config | include checksum:"
+        )
+        if running_config_checksum != startup_config_checksum:
+            save_config(module, result)
+    elif module.params["save_when"] == "changed" and result["changed"]:
+        save_config(module, result)
 
 
 def main():
@@ -329,6 +376,9 @@ def main():
         passwords=dict(type="bool", default=False),
         backup=dict(type="bool", default=False),
         save=dict(type="bool", default=False),
+        save_when=dict(
+            choices=["always", "never", "modified", "changed"], default="never"
+        ),
     )
 
     argument_spec.update(asa_argument_spec)
