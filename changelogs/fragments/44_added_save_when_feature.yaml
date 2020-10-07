@@ -1,0 +1,4 @@
+---
+minor change:
+  - Added save_when param support in asa_config module (https://github.com/ansible-collections/cisco.asa/issues/44).
+
