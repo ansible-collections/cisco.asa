@@ -2,11 +2,12 @@
 deleted:
   commands:
     - no object-group network test_og_network
-    - no object-group network test_network_og
     - no object-group security test_og_security
 delete_all:
   commands:
-    - no object-group user test_og_user
+    - no object-group network test_og_network
+    - no object-group network test_network_og
+    - no object-group security test_og_security
 merged:
   commands:
     - object-group security test_og_security
