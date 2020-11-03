@@ -99,11 +99,10 @@ class OGsFacts(object):
         # sort the object group list of dict by object_type
         ogs = sorted(ogs, key=lambda i: i["object_type"])
         facts = {}
-        if current:
-            params = utils.validate_config(self.argument_spec, {"config": ogs})
-            params = utils.remove_empties(params)
+        params = utils.remove_empties(
+            utils.validate_config(self.argument_spec, {"config": ogs})
+        )
+        facts["ogs"] = params.get("config")
 
-            facts["ogs"] = params["config"]
-
-            ansible_facts["ansible_network_resources"].update(facts)
+        ansible_facts["ansible_network_resources"].update(facts)
         return ansible_facts
