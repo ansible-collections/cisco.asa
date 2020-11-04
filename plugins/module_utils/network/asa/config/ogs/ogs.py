@@ -91,6 +91,10 @@ class OGs(ResourceModule):
         if obj_gp:
             haved = obj_gp
 
+        # if state is merged, merge want onto have
+        if self.state == "merged":
+            wantd = dict_merge(haved, wantd)
+
         # if state is deleted, empty out wantd and set haved to wantd
         if self.state == "deleted":
             temp = {}
@@ -103,10 +107,6 @@ class OGs(ResourceModule):
                     temp.update({k: temp_have})
             haved = temp
             wantd = {}
-
-        # if state is merged, merge want onto have
-        if self.state == "merged":
-            wantd = dict_merge(haved, wantd)
 
         # delete processes first so we do run into "more than one" errors
         if self.state in ["overridden", "deleted"]:
