@@ -91,6 +91,19 @@ class OGs(ResourceModule):
         if obj_gp:
             haved = obj_gp
 
+        # if state is deleted, empty out wantd and set haved to wantd
+        if self.state == "deleted":
+            temp = {}
+            for k, v in iteritems(haved):
+                temp_have = {}
+                if k in wantd or not wantd:
+                    for key, val in iteritems(v):
+                        if not wantd or key in wantd[k]:
+                            temp_have.update({key: val})
+                    temp.update({k: temp_have})
+            haved = temp
+            wantd = {}
+
         # if state is merged, merge want onto have
         if self.state == "merged":
             wantd = dict_merge(haved, wantd)
@@ -119,7 +132,7 @@ class OGs(ResourceModule):
                     if k != "object_type":
                         v.update({"object_type": want.get("object_type")})
 
-            object_type = want.pop("object_type")
+            object_type = want.get("object_type")
             if object_type == "icmp-type":
                 self._icmp_object_compare(want, have)
             if object_type == "network":
@@ -141,14 +154,6 @@ class OGs(ResourceModule):
         ]
         return diff
 
-    def check_for_want_delete(self, want, have):
-        if isinstance(want, dict) and isinstance(have, dict):
-            if want.get("name") == have.get("name"):
-                self.addcmd(want, "og_name", True)
-                return True
-            else:
-                return False
-
     def check_for_have_and_overidden(self, have):
         if have and self.state == "overridden":
             for name, entry in iteritems(have):
@@ -159,9 +164,6 @@ class OGs(ResourceModule):
         icmp_obj = "icmp_type"
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
-            if self.state == "deleted":
-                self.check_for_want_delete(entry, h_item)
-                break
             if (
                 entry != h_item
                 and name != "object_type"
@@ -196,9 +198,6 @@ class OGs(ResourceModule):
         add_obj_cmd = False
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
-            if self.state == "deleted":
-                self.check_for_want_delete(entry, h_item)
-                break
             if entry != h_item and name != "object_type":
                 if h_item:
                     self._add_object_cmd(
@@ -265,9 +264,6 @@ class OGs(ResourceModule):
         protocol_obj = "protocol_object"
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
-            if self.state == "deleted":
-                self.check_for_want_delete(entry, h_item)
-                break
             if entry != h_item and name != "object_type":
                 if h_item:
                     self._add_object_cmd(
@@ -293,9 +289,6 @@ class OGs(ResourceModule):
         add_obj_cmd = False
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
-            if self.state == "deleted":
-                self.check_for_want_delete(entry, h_item)
-                break
             if entry != h_item and name != "object_type":
                 if h_item:
                     self._add_object_cmd(
@@ -343,9 +336,6 @@ class OGs(ResourceModule):
         service_obj = "service_object"
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
-            if self.state == "deleted":
-                self.check_for_want_delete(entry, h_item)
-                break
             if entry != h_item and name != "object_type":
                 if h_item:
                     self._add_object_cmd(
@@ -371,9 +361,6 @@ class OGs(ResourceModule):
         add_obj_cmd = False
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
-            if self.state == "deleted":
-                self.check_for_want_delete(entry, h_item)
-                break
             if entry != h_item and name != "object_type":
                 if h_item:
                     self._add_object_cmd(
