@@ -40,7 +40,6 @@ class AclsArgs(object):
     argument_spec = {
         "config": {
             "type": "dict",
-            # "elements": "dict",
             "options": {
                 "acls": {
                     "elements": "dict",
@@ -273,7 +272,6 @@ class AclsArgs(object):
                     },
                 }
             },
-            # "type": "list",
         },
         "running_config": {"type": "str"},
         "state": {
