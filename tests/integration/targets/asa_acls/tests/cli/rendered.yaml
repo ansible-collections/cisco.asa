@@ -9,7 +9,7 @@
       register: result
       cisco.asa.asa_acls:
         config:
-          - acls:
+          acls:
             - name: test_access
               acl_type: extended
               aces:
@@ -28,8 +28,10 @@
                   log: default
                 - grant: deny
                   line: 2
+                  protocol: icmp
                   protocol_options:
-                    igrp: true
+                    icmp:
+                      alternate_address: true
                   source:
                     address: 198.51.100.0
                     netmask: 255.255.255.0
@@ -37,9 +39,60 @@
                     address: 198.51.110.0
                     netmask: 255.255.255.0
                   log: errors
-            - name: test_R1_traffic
+                - grant: deny
+                  line: 3
+                  protocol: tcp
+                  protocol_options:
+                    tcp: true
+                  source:
+                    host: 198.51.110.0
+                  destination:
+                    any: true
+                    port_protocol:
+                      eq: www
+                  log: default
+                - grant: deny
+                  line: 4
+                  protocol: tcp
+                  protocol_options:
+                    tcp: true
+                  source:
+                    object_group: test_og_network
+                  destination:
+                    object_group: test_network_og
+                    port_protocol:
+                      eq: www
+                  log: default
+            - name: test_global_access
+              acl_type: extended
               aces:
                 - grant: deny
+                  line: 1
+                  protocol_options:
+                    tcp: true
+                  source:
+                    any: true
+                  destination:
+                    any: true
+                    port_protocol:
+                      eq: www
+                  log: errors
+                - grant: deny
+                  line: 2
+                  protocol_options:
+                    tcp: true
+                  source:
+                    interface: management
+                  destination:
+                    interface: management
+                    port_protocol:
+                      eq: www
+                  log: warnings
+            - name: test_R1_traffic
+              acl_type: extended
+              aces:
+                - grant: deny
+                  line: 1
                   protocol_options:
                     tcp: true
                   source:
@@ -56,4 +109,4 @@
     - assert:
         that:
           - result.changed == false
-          - result.rendered|symmetric_difference(rendered.commands) == []
+          - result.rendered|symmetric_difference(merged.commands) == []

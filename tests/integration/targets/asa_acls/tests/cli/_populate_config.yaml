@@ -2,7 +2,7 @@
 - name: Populate Config
   cisco.asa.asa_acls: &id001
     config:
-      - acls:
+      acls:
         - name: test_access
           acl_type: extended
           aces:
@@ -47,6 +47,7 @@
         - name: test_R1_traffic
           aces:
             - grant: deny
+              line: 1
               protocol_options:
                 tcp: true
               source:

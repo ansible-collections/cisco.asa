@@ -39,7 +39,8 @@ class AclsArgs(object):
 
     argument_spec = {
         "config": {
-            "elements": "dict",
+            "type": "dict",
+            # "elements": "dict",
             "options": {
                 "acls": {
                     "elements": "dict",
@@ -67,11 +68,11 @@ class AclsArgs(object):
                                         "address": {"type": "str"},
                                         "netmask": {"type": "str"},
                                         "any": {"type": "bool"},
+                                        "any4": {"type": "bool"},
+                                        "any6": {"type": "bool"},
                                         "host": {"type": "str"},
                                         "interface": {"type": "str"},
-                                        "object_group_network": {
-                                            "type": "str"
-                                        },
+                                        "object_group": {"type": "str"},
                                         "port_protocol": {
                                             "type": "dict",
                                             "options": {
@@ -98,11 +99,11 @@ class AclsArgs(object):
                                         "address": {"type": "str"},
                                         "netmask": {"type": "str"},
                                         "any": {"type": "bool"},
+                                        "any4": {"type": "bool"},
+                                        "any6": {"type": "bool"},
                                         "host": {"type": "str"},
                                         "interface": {"type": "str"},
-                                        "object_group_network": {
-                                            "type": "str"
-                                        },
+                                        "object_group": {"type": "str"},
                                         "port_protocol": {
                                             "type": "dict",
                                             "options": {
@@ -272,7 +273,7 @@ class AclsArgs(object):
                     },
                 }
             },
-            "type": "list",
+            # "type": "list",
         },
         "running_config": {"type": "str"},
         "state": {
