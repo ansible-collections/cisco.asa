@@ -286,6 +286,14 @@ options:
                     description:
                       - Match any source address.
                     type: bool
+                  any4:
+                    description:
+                      - Match any ipv4 source address.
+                    type: bool
+                  any6:
+                    description:
+                      - Match any ipv6 source address.
+                    type: bool
                   host:
                     description: A single source host
                     type: str
@@ -335,10 +343,18 @@ options:
                       address.
                     type: str
                   any:
-                    description: Match any source address.
+                    description: Match any destination address.
+                    type: bool
+                  any4:
+                    description:
+                      - Match any ipv4 destination address.
+                    type: bool
+                  any6:
+                    description:
+                      - Match any ipv6 destination address.
                     type: bool
                   host:
-                    description: A single source host
+                    description: A single destination host
                     type: str
                   interface:
                     description: Use interface address as destination address
