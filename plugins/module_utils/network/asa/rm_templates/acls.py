@@ -10,7 +10,6 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.n
 
 def _tmplt_access_list_name(config_data):
     command = "access-list {acls_name} ".format(**config_data)
-    print(command)
     return command
 
 
@@ -181,7 +180,8 @@ class AclsTemplate(NetworkTemplate):
                                 "protocol_number": "{{ protocol_num if protocol_num is defined }}",
                                 "icmp_icmp6_protocol": "{{ icmp_icmp6_protocol if icmp_icmp6_protocol is defined else None }}",
                                 "source": {
-                                    "address": "{% if source is defined and '.' in source and 'host' not in source %}{{ source.split(' ')[0] }}{% elif source is defined and '::' in source %}{{ source }}{% endif %}",
+                                    "address": "{% if source is defined and '.' in source and 'host' not in source %}{{ source.split(' ')[0] }}\
+                                        {% elif source is defined and '::' in source %}{{ source }}{% endif %}",
                                     "netmask": "{{ source.split(' ')[1] if source is defined and '.' in source and 'host' not in source else None }}",
                                     "any4": "{{ True if source is defined and source == 'any4' else None }}",
                                     "any6": "{{ True if source is defined and source == 'any6' else None }}",
@@ -194,12 +194,17 @@ class AclsTemplate(NetworkTemplate):
                                     },
                                 },
                                 "destination": {
-                                    "address": "{% if destination is defined and '.' in destination %}{{ destination.split(' ')[0] }}{% elif std_dest is defined and '.' in std_dest and 'host' not in std_dest %}{{ std_dest.split(' ')[0] }}{% elif destination is defined and '::' in destination %}{{ destination }}{% endif %}",
-                                    "netmask": "{% if destination is defined and '.' in destination %}{{ destination.split(' ')[1] }}{% elif std_dest is defined and '.' in std_dest and 'host' not in std_dest %}{{ std_dest.split(' ')[1] }}{% endif %}",
-                                    "any4": "{% if destination is defined and destination == 'any4' %}{{ True }}{% elif std_dest is defined and std_dest == 'any4' %}{{ True }}{% endif %}",
+                                    "address": "{% if destination is defined and '.' in destination %}{{ destination.split(' ')[0] }}\
+                                        {% elif std_dest is defined and '.' in std_dest and 'host' not in std_dest %}{{ std_dest.split(' ')[0] }}\
+                                            {% elif destination is defined and '::' in destination %}{{ destination }}{% endif %}",
+                                    "netmask": "{% if destination is defined and '.' in destination %}{{ destination.split(' ')[1] }}\
+                                        {% elif std_dest is defined and '.' in std_dest and 'host' not in std_dest %}{{ std_dest.split(' ')[1] }}{% endif %}",
+                                    "any4": "{% if destination is defined and destination == 'any4' %}{{ True }}\
+                                        {% elif std_dest is defined and std_dest == 'any4' %}{{ True }}{% endif %}",
                                     "any6": "{{ True if destination is defined and destination == 'any6' else None }}",
                                     "any": "{{ True if destination is defined and destination == 'any' else None }}",
-                                    "host": "{% if destination is defined and 'host' in destination %}{{ source_host.split(' ')[1] }}{% elif std_dest is defined and 'host' in std_dest %}{{ std_dest.split(' ')[1] }}{% endif %}",
+                                    "host": "{% if destination is defined and 'host' in destination %}{{ source_host.split(' ')[1] }}\
+                                        {% elif std_dest is defined and 'host' in std_dest %}{{ std_dest.split(' ')[1] }}{% endif %}",
                                     "interface": "{{ destination.split(' ')[1] if destination is defined and 'interface' in destination else None }}",
                                     "object_group": "{{ destination.split(' ')[1] if destination is defined and 'object-group' in destination else None }}",
                                     "port_protocol": {
