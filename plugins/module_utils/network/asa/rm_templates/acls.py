@@ -191,7 +191,9 @@ class AclsTemplate(NetworkTemplate):
                                     "interface": "{{ source.split(' ')[1] if source is defined and 'interface' in source else None }}",
                                     "object_group": "{{ source.split(' ')[1] if source is defined and 'object-group' in source else None }}",
                                     "port_protocol": {
-                                        "{{ source_port_protocol.split(' ')[0] if source_port_protocol is defined else None }}": "{{ source_port_protocol.split(' ')[1] if source_port_protocol is defined else None }}"
+                                        "{{ source_port_protocol.split(' ')[0] if source_port_protocol\
+                                            is defined else None }}": "{{ source_port_protocol.split(' ')[1]\
+                                                if source_port_protocol is defined else None }}"
                                     },
                                 },
                                 "destination": {
@@ -212,7 +214,9 @@ class AclsTemplate(NetworkTemplate):
                                     "interface": "{{ destination.split(' ')[1] if destination is defined and 'interface' in destination else None }}",
                                     "object_group": "{{ destination.split(' ')[1] if destination is defined and 'object-group' in destination else None }}",
                                     "port_protocol": {
-                                        "{{ dest_port_protocol.split(' ')[0] if dest_port_protocol is defined else None }}": "{{ dest_port_protocol.split(' ')[1] if dest_port_protocol is defined else None }}"
+                                        "{{ dest_port_protocol.split(' ')[0] if dest_port_protocol\
+                                            is defined else None }}": "{{ dest_port_protocol.split(' ')[1]\
+                                                if dest_port_protocol is defined else None }}"
                                     },
                                 },
                                 "inactive": "{{ True if inactive is defined }}",
