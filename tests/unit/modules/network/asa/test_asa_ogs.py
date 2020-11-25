@@ -283,6 +283,22 @@ class TestAsaOGsModule(TestAsaModule):
         )
         self.execute_module(changed=False, commands=[], sort=True)
 
+    def test_asa_ogs_delete_by_name(self):
+        set_module_args(
+            dict(
+                config=[
+                    dict(
+                        object_groups=[dict(name="test_og_network")],
+                        object_type="network",
+                    )
+                ],
+                state="deleted",
+            )
+        )
+        result = self.execute_module(changed=True)
+        commands = ["no object-group network test_og_network"]
+        self.assertEqual(result["commands"], commands)
+
     def test_asa_ogs_deleted_all(self):
         set_module_args(dict(state="deleted"))
         result = self.execute_module(changed=True)
