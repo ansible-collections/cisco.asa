@@ -71,8 +71,8 @@ class OGs(ResourceModule):
             haved = {(entry["object_type"]): entry for entry in self.have}
         else:
             haved = {}
-        obj_gp = {}
 
+        obj_gp = {}
         for k, v in wantd.items():
             temp = {}
             for each in v.get("object_groups"):
@@ -90,16 +90,22 @@ class OGs(ResourceModule):
                 obj_gp[k] = temp
         if obj_gp:
             haved = obj_gp
+
         # if state is merged, merge want onto have
         if self.state == "merged":
             wantd = dict_merge(haved, wantd)
 
-        # if state is deleted, limit the have to anything in want
-        # set want to nothing
+        # if state is deleted, empty out wantd and set haved to wantd
         if self.state == "deleted":
-            haved = {
-                k: v for k, v in iteritems(haved) if k in wantd or not wantd
-            }
+            temp = {}
+            for k, v in iteritems(haved):
+                temp_have = {}
+                if k in wantd or not wantd:
+                    for key, val in iteritems(v):
+                        if not wantd or key in wantd[k]:
+                            temp_have.update({key: val})
+                    temp.update({k: temp_have})
+            haved = temp
             wantd = {}
 
         # delete processes first so we do run into "more than one" errors
@@ -148,6 +154,12 @@ class OGs(ResourceModule):
         ]
         return diff
 
+    def check_for_have_and_overidden(self, have):
+        if have and self.state == "overridden":
+            for name, entry in iteritems(have):
+                if name != "object_type":
+                    self.addcmd(entry, "og_name", True)
+
     def _icmp_object_compare(self, want, have):
         icmp_obj = "icmp_type"
         for name, entry in iteritems(want):
@@ -174,9 +186,7 @@ class OGs(ResourceModule):
                     li_diff = entry[icmp_obj].get("icmp_object")
                 entry[icmp_obj]["icmp_object"] = li_diff
                 self.addcmd(entry, "icmp_type", False)
-        if have and self.state == "overridden":
-            for name, entry in iteritems(have):
-                self.addcmd(entry, "og_name", True)
+        self.check_for_have_and_overidden(have)
 
     def _network_object_compare(self, want, have):
         network_obj = "network_object"
@@ -248,9 +258,7 @@ class OGs(ResourceModule):
                     if not add_obj_cmd:
                         self.addcmd(entry, "og_name", False)
                     self.compare(parsers, {}, h_item)
-        if have and self.state == "overridden":
-            for name, entry in iteritems(have):
-                self.addcmd(entry, "og_name", True)
+        self.check_for_have_and_overidden(have)
 
     def _protocol_object_compare(self, want, have):
         protocol_obj = "protocol_object"
@@ -273,9 +281,7 @@ class OGs(ResourceModule):
                         [protocol_obj],
                         protocol_obj,
                     )
-        if have and self.state == "overridden":
-            for name, entry in iteritems(have):
-                self.addcmd(entry, "og_name", True)
+        self.check_for_have_and_overidden(have)
 
     def _security_object_compare(self, want, have):
         security_obj = "security_group"
@@ -324,9 +330,7 @@ class OGs(ResourceModule):
                     if not add_obj_cmd:
                         self.addcmd(entry, "og_name", False)
                     self.compare(parsers, {}, h_item)
-        if have and self.state == "overridden":
-            for name, entry in iteritems(have):
-                self.addcmd(entry, "og_name", True)
+        self.check_for_have_and_overidden(have)
 
     def _service_object_compare(self, want, have):
         service_obj = "service_object"
@@ -349,9 +353,7 @@ class OGs(ResourceModule):
                         ["service_object"],
                         service_obj,
                     )
-        if have and self.state == "overridden":
-            for name, entry in iteritems(have):
-                self.addcmd(entry, "og_name", True)
+        self.check_for_have_and_overidden(have)
 
     def _user_object_compare(self, want, have):
         user_obj = "user_object"
@@ -398,9 +400,7 @@ class OGs(ResourceModule):
                     if not add_obj_cmd:
                         self.addcmd(entry, "og_name", False)
                     self.compare(parsers, {}, h_item)
-        if have and self.state == "overridden":
-            for name, entry in iteritems(have):
-                self.addcmd(entry, "og_name", True)
+        self.check_for_have_and_overidden(have)
 
     def _add_object_cmd(self, want, have, object, object_elements):
         obj_cmd_added = False
