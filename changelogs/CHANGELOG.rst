@@ -4,6 +4,21 @@ Cisco Asa Collection Release Notes
 
 .. contents:: Topics
 
+v1.1.0
+======
+
+Release Summary
+---------------
+
+- Releasing 1.1.0 with updated readme with changelog link, galaxy description, and bugfix.
+
+Bugfixes
+--------
+
+- Update asa acls RM to use newer RM design approach and addeed support for any4/any6 feature (https://github.com/ansible-collections/cisco.asa/pull/64).
+- Add version key to galaxy.yaml to work around ansible-galaxy bug
+- To fix ASA OGs module where delete by name was not resulting to an expected behaviour (https://github.com/ansible-collections/cisco.asa/pull/77).
+
 v1.0.3
 ======
 
