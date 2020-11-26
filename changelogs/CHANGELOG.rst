@@ -4,13 +4,13 @@ Cisco Asa Collection Release Notes
 
 .. contents:: Topics
 
-v1.1.0
+v1.0.4
 ======
 
 Release Summary
 ---------------
 
-- Releasing 1.1.0 with updated readme with changelog link, galaxy description, and bugfix.
+- Releasing 1.0.4 with updated readme with changelog link, galaxy description, and bugfix.
 
 Bugfixes
 --------

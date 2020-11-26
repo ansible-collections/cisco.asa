@@ -60,7 +60,7 @@ releases:
     fragments:
     - 69-asa-acls-bugfix.yaml
     release_date: '2020-08-28'
-  1.1.0:
+  1.0.4:
     changes:
       bugfixes:
       - Update asa acls RM to use newer RM design approach and addeed support for any4/any6 feature (https://github.com/ansible-collections/cisco.asa/pull/64).
