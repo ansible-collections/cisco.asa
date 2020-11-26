@@ -13,9 +13,9 @@
       register: result
       cisco.asa.asa_acls: &id001
         config:
-          - acls:
-              - name: test_access
-              - name: test_global_access
+          acls:
+            - name: test_access
+            - name: test_global_access
         state: deleted
 
     - assert:

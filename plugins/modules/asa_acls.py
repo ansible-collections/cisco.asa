@@ -44,8 +44,7 @@ notes:
 options:
   config:
     description: A dictionary of ACL options.
-    type: list
-    elements: dict
+    type: dict
     suboptions:
       acls:
         description:
@@ -287,13 +286,21 @@ options:
                     description:
                       - Match any source address.
                     type: bool
+                  any4:
+                    description:
+                      - Match any ipv4 source address.
+                    type: bool
+                  any6:
+                    description:
+                      - Match any ipv6 source address.
+                    type: bool
                   host:
                     description: A single source host
                     type: str
                   interface:
                     description: Use interface address as source address
                     type: str
-                  object_group_network:
+                  object_group:
                     description: Network object-group for source address
                     type: str
                   port_protocol:
@@ -336,15 +343,23 @@ options:
                       address.
                     type: str
                   any:
-                    description: Match any source address.
+                    description: Match any destination address.
+                    type: bool
+                  any4:
+                    description:
+                      - Match any ipv4 destination address.
+                    type: bool
+                  any6:
+                    description:
+                      - Match any ipv6 destination address.
                     type: bool
                   host:
-                    description: A single source host
+                    description: A single destination host
                     type: str
                   interface:
                     description: Use interface address as destination address
                     type: str
-                  object_group_network:
+                  object_group:
                     description: Network object-group for destination address
                     type: str
                   port_protocol:
@@ -437,90 +452,96 @@ EXAMPLES = """
 - name: Merge provided configuration with device configuration
   cisco.asa.asa_acls:
     config:
-    - acls:
-      - name: temp_access
-        acl_type: extended
-        aces:
-        - grant: deny
-          line: 1
-          protocol_options:
-            tcp: true
-          source:
-            address: 192.0.2.0
-            netmask: 255.255.255.0
-          destination:
-            address: 192.0.3.0
-            netmask: 255.255.255.0
-            port_protocol:
-              eq: www
-          log: default
-        - grant: deny
-          line: 2
-          protocol_options:
-            igrp: true
-          source:
-            address: 198.51.100.0
-            netmask: 255.255.255.0
-          destination:
-            address: 198.51.110.0
-            netmask: 255.255.255.0
-          time_range: temp
-        - grant: deny
-          line: 3
-          protocol_options:
-            tcp: true
-          source:
-            interface: management
-          destination:
-            interface: management
-            port_protocol:
-              eq: www
-          log: warnings
-        - grant: deny
-          line: 4
-          protocol_options:
-            tcp: true
-          source:
-            object_group_network: test_og_network
-          destination:
-            object_group_network: test_network_og
-            port_protocol:
-              eq: www
-          log: default
-      - name: global_access
-        acl_type: extended
-        aces:
-        - grant: deny
-          line: 3
-          protocol_options:
-            tcp: true
-          source:
-            any: true
-          destination:
-            any: true
-            port_protocol:
-              eq: www
-          log: errors
-      - name: R1_traffic
-        aces:
-        - grant: deny
-          line: 2
-          protocol_options:
-            tcp: true
-          source:
-            address: 2001:db8:0:3::/64
-            port_protocol:
-              eq: www
-          destination:
-            address: 2001:fc8:0:4::/64
-            port_protocol:
-              eq: telnet
-          inactive: true
+      acls:
+        - name: temp_access
+          acl_type: extended
+          aces:
+          - grant: deny
+            line: 1
+            protocol_options:
+              tcp: true
+            source:
+              address: 192.0.2.0
+              netmask: 255.255.255.0
+            destination:
+              address: 192.0.3.0
+              netmask: 255.255.255.0
+              port_protocol:
+                eq: www
+            log: default
+          - grant: deny
+            line: 2
+            protocol_options:
+              igrp: true
+            source:
+              address: 198.51.100.0
+              netmask: 255.255.255.0
+            destination:
+              address: 198.51.110.0
+              netmask: 255.255.255.0
+            time_range: temp
+          - grant: deny
+            line: 3
+            protocol_options:
+              tcp: true
+            source:
+              interface: management
+            destination:
+              interface: management
+              port_protocol:
+                eq: www
+            log: warnings
+          - grant: deny
+            line: 4
+            protocol_options:
+              tcp: true
+            source:
+              object_group: test_og_network
+            destination:
+              object_group: test_network_og
+              port_protocol:
+                eq: www
+            log: default
+        - name: global_access
+          acl_type: extended
+          aces:
+          - line: 3
+            remark: test global access
+          - grant: deny
+            line: 4
+            protocol_options:
+              tcp: true
+            source:
+              any: true
+            destination:
+              any: true
+              port_protocol:
+                eq: www
+            log: errors
+        - name: R1_traffic
+          aces:
+          - line: 1
+            remark: test_v6_acls
+          - grant: deny
+            line: 2
+            protocol_options:
+              tcp: true
+            source:
+              address: 2001:db8:0:3::/64
+              port_protocol:
+                eq: www
+            destination:
+              address: 2001:fc8:0:4::/64
+              port_protocol:
+                eq: telnet
+            inactive: true
     state: merged
 
 # Commands fired:
 # ---------------
-# access-list global_access line 3 extended deny tcp any any eq www log errors interval 300
+# access-list global_access line 3 remark test global access
+# access-list global_access line 4 extended deny tcp any any eq www log errors interval 300
+# access-list R1_traffic line 1 remark test_v6_acls
 # access-list R1_traffic line 2 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive
 # access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default
 # access-list temp_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
@@ -537,11 +558,10 @@ EXAMPLES = """
 # access-list global_access; 3 elements; name hash: 0xbd6c87a7
 # access-list global_access line 1 extended permit icmp any any log disable (hitcnt=0) 0xf1efa630
 # access-list global_access line 2 extended deny tcp any any eq telnet (hitcnt=0) 0xae5833af
-# access-list global_access line 3 extended deny tcp any any eq www log errors interval 300 (hitcnt=0) 0x605f2421
+# access-list global_access line 3 remark test global access (hitcnt=0) 0xae78337e
+# access-list global_access line 4 extended deny tcp any any eq www log errors interval 300 (hitcnt=0) 0x605f2421
 # access-list R1_traffic; 2 elements; name hash: 0xaf40d3c2
-# access-list R1_traffic line 1
-#                        extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www
-#                        log errors interval 300 (hitcnt=0) 0x4a4660f3
+# access-list R1_traffic line 1 remark test_v6_acls
 # access-list R1_traffic line 2
 #                        extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet
 #                        inactive (hitcnt=0) (inactive) 0xe922b432
@@ -580,11 +600,11 @@ EXAMPLES = """
 - name: Rename ACL with different name using Merged state
   cisco.asa.asa_acls:
     config:
-    - acls:
-      - name: global_access
-        rename: global_access_renamed
-      - name: R1_traffic
-        rename: R1_traffic_renamed
+      acls:
+        - name: global_access
+          rename: global_access_renamed
+        - name: R1_traffic
+          rename: R1_traffic_renamed
     state: merged
 
 # Commands fired:
@@ -633,24 +653,24 @@ EXAMPLES = """
 - name: Replaces device configuration of listed acl with provided configuration
   cisco.asa.asa_acls:
     config:
-    - acls:
-      - name: global_access
-        acl_type: extended
-        aces:
-        - grant: deny
-          line: 1
-          protocol_options:
-            tcp: true
-          source:
-            address: 192.0.4.0
-            netmask: 255.255.255.0
-            port_protocol:
-              eq: telnet
-          destination:
-            address: 192.0.5.0
-            netmask: 255.255.255.0
-            port_protocol:
-              eq: www
+      acls:
+        - name: global_access
+          acl_type: extended
+          aces:
+          - grant: deny
+            line: 1
+            protocol_options:
+              tcp: true
+            source:
+              address: 192.0.4.0
+              netmask: 255.255.255.0
+              port_protocol:
+                eq: telnet
+            destination:
+              address: 192.0.5.0
+              netmask: 255.255.255.0
+              port_protocol:
+                eq: www
     state: replaced
 
 # Commands fired:
@@ -711,24 +731,24 @@ EXAMPLES = """
 - name: Override device configuration of all acl with provided configuration
   cisco.asa.asa_acls:
     config:
-    - acls:
-      - name: global_access
-        acl_type: extended
-        aces:
-        - grant: deny
-          line: 1
-          protocol_options:
-            tcp: true
-          source:
-            address: 192.0.4.0
-            netmask: 255.255.255.0
-            port_protocol:
-              eq: telnet
-          destination:
-            address: 192.0.5.0
-            netmask: 255.255.255.0
-            port_protocol:
-              eq: www
+      acls:
+        - name: global_access
+          acl_type: extended
+          aces:
+          - grant: deny
+            line: 1
+            protocol_options:
+              tcp: true
+            source:
+              address: 192.0.4.0
+              netmask: 255.255.255.0
+              port_protocol:
+                eq: telnet
+            destination:
+              address: 192.0.5.0
+              netmask: 255.255.255.0
+              port_protocol:
+                eq: www
     state: overridden
 
 # Commands fired:
@@ -781,7 +801,7 @@ EXAMPLES = """
 - name: "Delete module attributes of given acl (Note: This won't delete ALL of the ACLs configured)"
   cisco.asa.asa_acls:
     config:
-    - acls:
+      acls:
         - name: temp_access
         - name: global_access
     state: deleted
@@ -1027,48 +1047,48 @@ EXAMPLES = """
 - name: Rendered the provided configuration with the exisiting running configuration
   cisco.asa.asa_acls:
   config:
-  - acls:
-    - name: temp_access
-      acl_type: extended
-      aces:
-      - grant: deny
-        line: 1
-        protocol_options:
-          tcp: true
-        source:
-          address: 192.0.2.0
-          netmask: 255.255.255.0
-        destination:
-          address: 192.0.3.0
-          netmask: 255.255.255.0
-          port_protocol:
-            eq: www
-        log: default
-      - grant: deny
-        line: 2
-        protocol_options:
-          igrp: true
-        source:
-          address: 198.51.100.0
-          netmask: 255.255.255.0
-        destination:
-          address: 198.51.110.0
-          netmask: 255.255.255.0
-        time_range: temp
-    - name: R1_traffic
-      aces:
-      - grant: deny
-        protocol_options:
-          tcp: true
-        source:
-          address: 2001:db8:0:3::/64
-          port_protocol:
-            eq: www
-        destination:
-          address: 2001:fc8:0:4::/64
-          port_protocol:
-            eq: telnet
-        inactive: true
+    acls:
+      - name: temp_access
+        acl_type: extended
+        aces:
+        - grant: deny
+          line: 1
+          protocol_options:
+            tcp: true
+          source:
+            address: 192.0.2.0
+            netmask: 255.255.255.0
+          destination:
+            address: 192.0.3.0
+            netmask: 255.255.255.0
+            port_protocol:
+              eq: www
+          log: default
+        - grant: deny
+          line: 2
+          protocol_options:
+            igrp: true
+          source:
+            address: 198.51.100.0
+            netmask: 255.255.255.0
+          destination:
+            address: 198.51.110.0
+            netmask: 255.255.255.0
+          time_range: temp
+      - name: R1_traffic
+        aces:
+        - grant: deny
+          protocol_options:
+            tcp: true
+          source:
+            address: 2001:db8:0:3::/64
+            port_protocol:
+              eq: www
+          destination:
+            address: 2001:fc8:0:4::/64
+            port_protocol:
+              eq: telnet
+          inactive: true
     state: rendered
 
 # Module Execution Result:

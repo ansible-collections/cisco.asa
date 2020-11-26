@@ -17,7 +17,7 @@
 
     - assert:
         that:
-          - gathered['config'] | symmetric_difference(result.gathered) == []
+          - gathered['config']['acls'] | symmetric_difference(result.gathered.acls) == []
           - result['changed'] == false
   always:
 
