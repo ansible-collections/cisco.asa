@@ -41,6 +41,8 @@ class TerminalModule(TerminalBase):
         re.compile(br"^Command authorization failed\r?$", re.MULTILINE),
     ]
 
+    terminal_config_prompt = re.compile(r"^.+\(config(-.*)?\)#$")
+
     def on_open_shell(self):
         if self._get_prompt().strip().endswith(b"#"):
             self.disable_pager()
