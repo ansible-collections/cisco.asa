@@ -64,11 +64,17 @@ class Acls(ResourceModule):
                   to the desired configuration
         """
         if self.want:
-            wantd = {(entry["name"]): entry for entry in self.want["acls"]}
+            temp = {}
+            for entry in self.want["acls"]:
+                temp.update({(entry["name"]): entry})
+            wantd = temp
         else:
             wantd = {}
         if self.have:
-            haved = {(entry["name"]): entry for entry in self.have["acls"]}
+            temp = {}
+            for entry in self.have["acls"]:
+                temp.update({(entry["name"]): entry})
+            haved = temp
         else:
             haved = {}
 
@@ -97,9 +103,11 @@ class Acls(ResourceModule):
 
         # if state is deleted, empty out wantd and set haved to wantd
         if self.state == "deleted":
-            haved = {
-                k: v for k, v in iteritems(haved) if k in wantd or not wantd
-            }
+            temp = {}
+            for k, v in iteritems(haved):
+                if k in wantd or not wantd:
+                    temp.update({k: v})
+            haved = temp
             wantd = {}
 
         # remove superfluous config for overridden and deleted

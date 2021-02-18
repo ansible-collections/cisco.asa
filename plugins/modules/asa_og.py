@@ -995,7 +995,7 @@ def main():
         description=dict(),
         group_object=dict(type="list", elements="str"),
         ip_mask=dict(type="list", elements="str"),
-        port_range=dict(type="list"),
+        port_range=dict(type="list", elements="str"),
         port_eq=dict(type="list", elements="str"),
         service_cfg=dict(type="list", elements="str"),
         state=dict(
