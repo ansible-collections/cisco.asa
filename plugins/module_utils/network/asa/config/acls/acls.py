@@ -64,11 +64,17 @@ class Acls(ResourceModule):
                   to the desired configuration
         """
         if self.want:
-            wantd = {(entry["name"]): entry for entry in self.want["acls"]}
+            temp = {}
+            for entry in self.want["acls"]:
+                temp.update({(entry["name"]): entry})
+            wantd = temp
         else:
             wantd = {}
         if self.have:
-            haved = {(entry["name"]): entry for entry in self.have["acls"]}
+            temp = {}
+            for entry in self.have["acls"]:
+                temp.update({(entry["name"]): entry})
+            haved = temp
         else:
             haved = {}
 

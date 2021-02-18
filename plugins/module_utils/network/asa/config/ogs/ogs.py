@@ -64,11 +64,17 @@ class OGs(ResourceModule):
                   to the desired configuration
         """
         if self.want:
-            wantd = {(entry["object_type"]): entry for entry in self.want}
+            temp = {}
+            for entry in self.want:
+                temp.update({(entry["object_type"]): entry})
+            wantd = temp
         else:
             wantd = {}
         if self.have:
-            haved = {(entry["object_type"]): entry for entry in self.have}
+            temp = {}
+            for entry in self.have:
+                temp.update({(entry["object_type"]): entry})
+            haved = temp
         else:
             haved = {}
 
