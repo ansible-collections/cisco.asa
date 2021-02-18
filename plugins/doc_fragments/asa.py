@@ -24,7 +24,6 @@ class ModuleDocFragment(object):
       in non-privileged mode. If the value is not specified in the task, the value
       of environment variable C(ANSIBLE_NET_AUTHORIZE) will be used instead.
     type: bool
-    default: false
   context:
     description:
     - Specifies which context to target if you are running in the ASA in multiple
@@ -83,7 +82,6 @@ class ModuleDocFragment(object):
           task, the value of environment variable C(ANSIBLE_NET_AUTHORIZE) will be
           used instead.
         type: bool
-        default: false
       auth_pass:
         description:
         - Specifies the password to use if required to enter privileged mode on the
