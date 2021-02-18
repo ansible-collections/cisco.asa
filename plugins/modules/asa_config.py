@@ -114,7 +114,6 @@ options:
       running-config from the remote device.  This includes passwords related to VPN
       endpoints.  This argument is mutually exclusive with I(defaults).
     type: bool
-    default: false
   save:
     description:
     - The C(save) argument instructs the module to save the running- config to the
