@@ -152,6 +152,14 @@ class Acls(ResourceModule):
                             "destination"
                         ):
                             set_want = False
+                            if each.get("protocol") == e_have.get("protocol"):
+                                if not each.get(
+                                    "protocol_options"
+                                ) and e_have.get("protocol_options"):
+                                    del e_have["protocol_options"]
+                            if each == e_have:
+                                del have.get("aces")[temp]
+                                break
                             each.update(
                                 {
                                     "name": want.get("name"),
@@ -169,7 +177,6 @@ class Acls(ResourceModule):
                                 want={"aces": each},
                                 have={"aces": e_have},
                             )
-                            del have.get("aces")[temp]
                             break
                         temp += 1
                 else:
