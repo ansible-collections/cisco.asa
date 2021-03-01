@@ -289,7 +289,7 @@ class TestAsaAclsModule(TestAsaModule):
             "access-list test_access line 1 extended deny igrp 198.51.101.0 255.255.255.0 198.51.102.0 255.255.255.0 log default time-range temp",
             "access-list ansible_test line 1 remark HostA0",
         ]
-        self.assertEqual(result["commands"], commands)
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
 
     def test_asa_acls_replaced_idempotent(self):
         set_module_args(
@@ -447,7 +447,7 @@ class TestAsaAclsModule(TestAsaModule):
             "no access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive",
             "access-list test_global_access line 1 extended deny tcp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 eq www log errors",
         ]
-        self.assertEqual(result["commands"], commands)
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
 
     def test_asa_acls_overridden_idempotent(self):
         set_module_args(
@@ -579,7 +579,7 @@ class TestAsaAclsModule(TestAsaModule):
             "no access-list test_global_access line 2 remark test global remark",
             "no access-list test_global_access line 1 extended deny tcp any any eq www log errors",
         ]
-        self.assertEqual(result["commands"], commands)
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
 
     def test_asa_acls_deleted_all(self):
         set_module_args(dict(state="deleted"))
@@ -594,7 +594,7 @@ class TestAsaAclsModule(TestAsaModule):
             "no access-list ansible_test line 2 extended deny ip host 192.0.5.1 any4",
             "no access-list ansible_test line 1 remark HostA",
         ]
-        self.assertEqual(result["commands"], commands)
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
 
     def test_asa_acls_rendered(self):
         set_module_args(
