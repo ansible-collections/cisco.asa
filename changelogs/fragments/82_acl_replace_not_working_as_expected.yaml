@@ -1,0 +1,3 @@
+---
+bugfixes:
+  - To ASA Acls replaced operation which wasn't working as expected (https://github.com/ansible-collections/cisco.asa/issues/82).

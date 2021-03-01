@@ -128,6 +128,21 @@ class TestAsaAclsModule(TestAsaModule):
                     acls=[
                         dict(
                             aces=[
+                                dict(line=1, remark="HostA"),
+                                dict(
+                                    destination=dict(any4=True),
+                                    grant="deny",
+                                    line=2,
+                                    protocol="ip",
+                                    protocol_options=dict(ip="true"),
+                                    source=dict(host="192.0.5.1"),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="ansible_test",
+                        ),
+                        dict(
+                            aces=[
                                 dict(
                                     destination=dict(
                                         any="true",
@@ -244,7 +259,22 @@ class TestAsaAclsModule(TestAsaModule):
                                     time_range="temp",
                                 )
                             ],
-                        )
+                        ),
+                        dict(
+                            aces=[
+                                dict(line=1, remark="HostA0"),
+                                dict(
+                                    destination=dict(any4=True),
+                                    grant="deny",
+                                    line=2,
+                                    protocol="ip",
+                                    protocol_options=dict(ip="true"),
+                                    source=dict(host="192.0.5.1"),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="ansible_test",
+                        ),
                     ]
                 ),
                 state="replaced",
@@ -252,18 +282,35 @@ class TestAsaAclsModule(TestAsaModule):
         )
         result = self.execute_module(changed=True)
         commands = [
+            "no access-list ansible_test line 1 remark HostA",
             "no access-list test_access line 3 extended permit ip host 192.0.2.2 any",
             "no access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors",
             "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default",
             "access-list test_access line 1 extended deny igrp 198.51.101.0 255.255.255.0 198.51.102.0 255.255.255.0 log default time-range temp",
+            "access-list ansible_test line 1 remark HostA0",
         ]
-        self.assertEqual(result["commands"], commands)
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
 
     def test_asa_acls_replaced_idempotent(self):
         set_module_args(
             dict(
                 config=dict(
                     acls=[
+                        dict(
+                            aces=[
+                                dict(line=1, remark="HostA"),
+                                dict(
+                                    destination=dict(any4=True),
+                                    grant="deny",
+                                    line=2,
+                                    protocol="ip",
+                                    protocol_options=dict(ip="true"),
+                                    source=dict(host="192.0.5.1"),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="ansible_test",
+                        ),
                         dict(
                             aces=[
                                 dict(
@@ -392,19 +439,36 @@ class TestAsaAclsModule(TestAsaModule):
         commands = [
             "no access-list test_global_access line 2 remark test global remark",
             "no access-list test_global_access line 1 extended deny tcp any any eq www log errors",
-            "no access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive",
+            "no access-list ansible_test line 2 extended deny ip host 192.0.5.1 any4",
+            "no access-list ansible_test line 1 remark HostA",
             "no access-list test_access line 3 extended permit ip host 192.0.2.2 any",
             "no access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors",
             "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default",
+            "no access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive",
             "access-list test_global_access line 1 extended deny tcp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 eq www log errors",
         ]
-        self.assertEqual(result["commands"], commands)
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
 
     def test_asa_acls_overridden_idempotent(self):
         set_module_args(
             dict(
                 config=dict(
                     acls=[
+                        dict(
+                            aces=[
+                                dict(line=1, remark="HostA"),
+                                dict(
+                                    destination=dict(any4=True),
+                                    grant="deny",
+                                    line=2,
+                                    protocol="ip",
+                                    protocol_options=dict(ip="true"),
+                                    source=dict(host="192.0.5.1"),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="ansible_test",
+                        ),
                         dict(
                             aces=[
                                 dict(
@@ -515,7 +579,7 @@ class TestAsaAclsModule(TestAsaModule):
             "no access-list test_global_access line 2 remark test global remark",
             "no access-list test_global_access line 1 extended deny tcp any any eq www log errors",
         ]
-        self.assertEqual(result["commands"], commands)
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
 
     def test_asa_acls_deleted_all(self):
         set_module_args(dict(state="deleted"))
@@ -527,8 +591,10 @@ class TestAsaAclsModule(TestAsaModule):
             "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default",
             "no access-list test_global_access line 2 remark test global remark",
             "no access-list test_global_access line 1 extended deny tcp any any eq www log errors",
+            "no access-list ansible_test line 2 extended deny ip host 192.0.5.1 any4",
+            "no access-list ansible_test line 1 remark HostA",
         ]
-        self.assertEqual(result["commands"], commands)
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
 
     def test_asa_acls_rendered(self):
         set_module_args(
