@@ -4,6 +4,23 @@ Cisco Asa Collection Release Notes
 
 .. contents:: Topics
 
+v2.0.0
+======
+
+Major Changes
+-------------
+
+- Requires ansible.netcommon v2.0.0+ to support `ansible_network_single_user_mode` and `ansible_network_import_modules`.
+- Please refer to ansible.netcommon `changelog <https://github.com/ansible-collections/ansible.netcommon/blob/main/changelogs/CHANGELOG.rst#ansible-netcommon-collection-release-notes>`_ for more details.
+
+Minor Changes
+-------------
+- Adds support for `single_user_mode` command output caching. (https://github.com/ansible-collections/cisco.ios/pull/204).
+
+Bugfixes
+--------
+- To fix ASA acls module where replace wasn’t working as expected (https://github.com/ansible-collections/cisco.asa/pull/92).
+
 v1.0.4
 ======
 
