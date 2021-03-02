@@ -71,3 +71,15 @@ releases:
     - galaxy-version.yaml
     - 76_asa_og_state_delete_not_working_as_expected.yaml
     release_date: '2020-11-26'
+  2.0.0:
+    changes:
+      bugfixes:
+        - To fix ASA acls module where replace wasn't working as expected (https://github.com/ansible-collections/cisco.asa/pull/92).
+      major_changes:
+        - Requires ansible.netcommon v2.0.0+ to support `ansible_network_single_user_mode`
+          and `ansible_network_import_modules`.
+        - Please refer to ansible.netcommon `changelog <https://github.com/ansible-collections/ansible.netcommon/blob/main/changelogs/CHANGELOG.rst#ansible-netcommon-collection-release-notes>`
+          for more details.
+      minor_changes:
+        - Adds support for single_user_mode command output caching. (https://github.com/ansible-collections/cisco.ios/pull/204).
+    release_date: '2021-03-01'

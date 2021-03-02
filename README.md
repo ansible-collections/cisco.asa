@@ -7,7 +7,7 @@ The Ansible Cisco ASA collection includes a variety of Ansible content to help a
 <!--start requires_ansible-->
 ## Ansible version compatibility
 
-This collection has been tested against following Ansible versions: **>=2.9.10,<2.11**.
+This collection has been tested against following Ansible versions: **>=2.9.10**.
 
 Plugins and modules within a collection may be tested with only specific Ansible versions.
 A collection may contain metadata that identifies these versions.
