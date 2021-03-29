@@ -17,7 +17,7 @@ description:
 - This module allows you to work with access-lists on a Cisco ASA device.
 version_added: 1.0.0
 deprecated:
-  alternative: asa_acl
+  alternative: asa_acls
   why: Newer and updated modules released with more functionality in Ansible 2.10
   removed_at_date: '2022-06-01'
 extends_documentation_fragment:

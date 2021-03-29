@@ -121,9 +121,6 @@ options:
       this argument is ignored.
     type: bool
     default: no
-    deprecated:
-      alternative: save_when
-      removed_at_date: '2022-10-10'
   backup_options:
     description:
     - This is a dict object containing configurable options related to backup file
