@@ -29,6 +29,18 @@ description:
 - This asa plugin provides low level abstraction apis for sending and receiving CLI
   commands from Cisco ASA network devices.
 version_added: 1.0.0
+options:
+  config_commands:
+    description:
+    - Specifies a list of commands that can make configuration changes
+      to the target device.
+    - When `ansible_network_single_user_mode` is enabled, if a command sent
+      to the device is present in this list, the existing cache is invalidated.
+    version_added: 2.0.0
+    type: list
+    default: []
+    vars:
+    - name: ansible_asa_config_commands
 """
 
 import re
@@ -45,38 +57,45 @@ from ansible.plugins.cliconf import CliconfBase, enable_mode
 
 
 class Cliconf(CliconfBase):
+    def __init__(self, *args, **kwargs):
+        super(Cliconf, self).__init__(*args, **kwargs)
+        self._device_info = {}
+
     def get_device_info(self):
-        device_info = {}
+        if not self._device_info:
+            device_info = {}
 
-        device_info["network_os"] = "asa"
-        reply = self.get("show version")
-        data = to_text(reply, errors="surrogate_or_strict").strip()
+            device_info["network_os"] = "asa"
+            reply = self.get("show version")
+            data = to_text(reply, errors="surrogate_or_strict").strip()
 
-        match = re.search(r"Version (\S+)", data)
-        if match:
-            device_info["network_os_version"] = match.group(1)
+            match = re.search(r"Version (\S+)", data)
+            if match:
+                device_info["network_os_version"] = match.group(1)
 
-        match = re.search(r"Firepower .+ Version (\S+)", data)
-        if match:
-            device_info["network_os_firepower_version"] = match.group(1)
+            match = re.search(r"Firepower .+ Version (\S+)", data)
+            if match:
+                device_info["network_os_firepower_version"] = match.group(1)
 
-        match = re.search(r"Device .+ Version (\S+)", data)
-        if match:
-            device_info["network_os_device_mgr_version"] = match.group(1)
+            match = re.search(r"Device .+ Version (\S+)", data)
+            if match:
+                device_info["network_os_device_mgr_version"] = match.group(1)
 
-        match = re.search(r"^Model Id:\s+(.+) \(revision", data, re.M)
-        if match:
-            device_info["network_os_model"] = match.group(1)
+            match = re.search(r"^Model Id:\s+(.+) \(revision", data, re.M)
+            if match:
+                device_info["network_os_model"] = match.group(1)
 
-        match = re.search(r"^(.+) up", data, re.M)
-        if match:
-            device_info["network_os_hostname"] = match.group(1)
+            match = re.search(r"^(.+) up", data, re.M)
+            if match:
+                device_info["network_os_hostname"] = match.group(1)
 
-        match = re.search(r'image file is "(.+)"', data)
-        if match:
-            device_info["network_os_image"] = match.group(1)
+            match = re.search(r'image file is "(.+)"', data)
+            if match:
+                device_info["network_os_image"] = match.group(1)
 
-        return device_info
+            self._device_info = device_info
+
+        return self._device_info
 
     @enable_mode
     def get_config(self, source="running", format="text", flags=None):

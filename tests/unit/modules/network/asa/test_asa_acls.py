@@ -52,7 +52,7 @@ class TestAsaAclsModule(TestAsaModule):
         )
 
         self.mock_get_resource_connection_facts = patch(
-            "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.facts.facts."
+            "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.resource_module_base."
             "get_resource_connection"
         )
         self.get_resource_connection_facts = (
@@ -66,7 +66,7 @@ class TestAsaAclsModule(TestAsaModule):
 
         self.mock_execute_show_command = patch(
             "ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.acls.acls."
-            "AclsFacts.get_acls_data"
+            "AclsFacts.get_acls_config"
         )
         self.execute_show_command = self.mock_execute_show_command.start()
 
@@ -79,7 +79,7 @@ class TestAsaAclsModule(TestAsaModule):
         self.mock_load_config.stop()
         self.mock_execute_show_command.stop()
 
-    def load_fixtures(self, commands=None, transport="cli"):
+    def load_fixtures(self, commands=None):
         def load_from_file(*args, **kwargs):
             return load_fixture("asa_acls_config.cfg")
 
@@ -88,132 +88,146 @@ class TestAsaAclsModule(TestAsaModule):
     def test_asa_acls_merged(self):
         set_module_args(
             dict(
-                config=[
-                    dict(
-                        acls=[
-                            dict(
-                                name="test_global_access",
-                                acl_type="extended",
-                                aces=[
-                                    dict(
-                                        destination=dict(
-                                            any="true",
-                                            port_protocol=dict(eq="www"),
-                                        ),
-                                        grant="deny",
-                                        line=1,
-                                        log="errors",
-                                        protocol="tcp",
-                                        protocol_options=dict(tcp="true"),
-                                        source=dict(any="true"),
-                                    )
-                                ],
-                            )
-                        ]
-                    ),
-                    dict(
-                        acls=[
-                            dict(
-                                name="merge_v6_acl",
-                                aces=[
-                                    dict(
-                                        destination=dict(
-                                            address="2001:fc8:0:6::/64",
-                                            port_protocol=dict(eq="telnet"),
-                                        ),
-                                        grant="deny",
-                                        inactive="true",
-                                        protocol="tcp",
-                                        protocol_options=dict(tcp="true"),
-                                        source=dict(
-                                            address="2001:db8:0:5::/64",
-                                            port_protocol=dict(eq="www"),
-                                        ),
-                                    )
-                                ],
-                            )
-                        ]
-                    ),
-                    dict(
-                        acls=[
-                            dict(
-                                name="test_access",
-                                aces=[
-                                    dict(
-                                        source=dict(host="192.0.2.2"),
-                                        line=2,
-                                        remark="test_merge_host",
-                                    )
-                                ],
-                            )
-                        ]
-                    ),
-                ],
+                config=dict(
+                    acls=[
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        object_group="test_network_og",
+                                        port_protocol=dict(eq="www"),
+                                    ),
+                                    grant="deny",
+                                    line=2,
+                                    log="default",
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(
+                                        object_group="test_og_network"
+                                    ),
+                                )
+                            ],
+                            acl_type="extended",
+                            name="test_global_access",
+                        )
+                    ]
+                ),
                 state="merged",
             )
         )
         result = self.execute_module(changed=True)
         commands = [
-            "access-list test_global_access line 1 extended deny tcp any any eq www log errors",
-            "access-list merge_v6_acl deny tcp 2001:db8:0:5::/64 eq www 2001:fc8:0:6::/64 eq telnet inactive",
-            "no access-list test_access line 2 remark host1 extended deny tcp host 192.0.2.1 any eq www log default",
-            "access-list test_access line 2 remark test_merge_host deny tcp host 192.0.2.2 any eq www log default",
+            "access-list test_global_access line 2 extended deny tcp object-group test_og_network object-group test_network_og eq www log default"
         ]
         self.assertEqual(result["commands"], commands)
 
     def test_asa_acls_merged_idempotent(self):
         set_module_args(
             dict(
-                config=[
-                    dict(
-                        acls=[
-                            dict(
-                                aces=[
-                                    dict(
-                                        destination=dict(
-                                            address="192.0.3.0",
-                                            netmask="255.255.255.0",
-                                            port_protocol=dict(eq="www"),
-                                        ),
-                                        grant="deny",
-                                        line=1,
-                                        log="default",
-                                        protocol="tcp",
-                                        protocol_options=dict(tcp="true"),
-                                        source=dict(
-                                            address="192.0.2.0",
-                                            netmask="255.255.255.0",
-                                        ),
+                config=dict(
+                    acls=[
+                        dict(
+                            aces=[
+                                dict(line=1, remark="HostA"),
+                                dict(
+                                    destination=dict(any4=True),
+                                    grant="deny",
+                                    line=2,
+                                    protocol="ip",
+                                    protocol_options=dict(ip="true"),
+                                    source=dict(host="192.0.5.1"),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="ansible_test",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        any="true",
+                                        port_protocol=dict(eq="www"),
                                     ),
-                                    dict(
-                                        destination=dict(
-                                            any="true",
-                                            port_protocol=dict(eq="www"),
-                                        ),
-                                        grant="deny",
-                                        line=2,
-                                        log="default",
-                                        protocol="tcp",
-                                        protocol_options=dict(tcp="true"),
-                                        remark="host1",
-                                        source=dict(host="192.0.2.1"),
+                                    grant="deny",
+                                    line=1,
+                                    log="errors",
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(any="true"),
+                                ),
+                                dict(line=2, remark="test global remark"),
+                            ],
+                            acl_type="extended",
+                            name="test_global_access",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        address="192.0.3.0",
+                                        netmask="255.255.255.0",
+                                        port_protocol=dict(eq="www"),
                                     ),
-                                    dict(
-                                        destination=dict(any="true"),
-                                        grant="permit",
-                                        line=3,
-                                        protocol="ip",
-                                        protocol_options=dict(ip="true"),
-                                        remark="host2",
-                                        source=dict(host="192.0.2.2"),
+                                    grant="deny",
+                                    line=1,
+                                    log="default",
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(
+                                        address="192.0.2.0",
+                                        netmask="255.255.255.0",
                                     ),
-                                ],
-                                name="test_access",
-                                acl_type="extended",
-                            )
-                        ]
-                    )
-                ],
+                                ),
+                                dict(
+                                    destination=dict(
+                                        address="198.51.110.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                    grant="deny",
+                                    line=2,
+                                    log="errors",
+                                    protocol="igrp",
+                                    protocol_options=dict(igrp="true"),
+                                    source=dict(
+                                        address="198.51.100.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                ),
+                                dict(
+                                    destination=dict(any="true"),
+                                    grant="permit",
+                                    line=3,
+                                    protocol="ip",
+                                    protocol_options=dict(ip="true"),
+                                    source=dict(host="192.0.2.2"),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="test_access",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        address="2001:fc8:0:4::/64",
+                                        port_protocol=dict(eq="telnet"),
+                                    ),
+                                    grant="deny",
+                                    inactive="true",
+                                    line=1,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(
+                                        address="2001:db8:0:3::/64",
+                                        port_protocol=dict(eq="www"),
+                                    ),
+                                )
+                            ],
+                            acl_type="extended",
+                            name="test_R1_traffic",
+                        ),
+                    ]
+                ),
                 state="merged",
             )
         )
@@ -222,77 +236,168 @@ class TestAsaAclsModule(TestAsaModule):
     def test_asa_acls_replaced(self):
         set_module_args(
             dict(
-                config=[
-                    dict(
-                        acls=[
-                            dict(
-                                name="test_access",
-                                acl_type="extended",
-                                aces=[
-                                    dict(
-                                        destination=dict(
-                                            address="198.51.110.0",
-                                            netmask="255.255.255.0",
-                                        ),
-                                        grant="deny",
-                                        line=1,
-                                        log="default",
-                                        protocol="igrp",
-                                        protocol_options=dict(igrp="true"),
-                                        source=dict(
-                                            address="198.51.100.0",
-                                            netmask="255.255.255.0",
-                                        ),
-                                        time_range="temp",
-                                    )
-                                ],
-                            )
-                        ]
-                    )
-                ],
+                config=dict(
+                    acls=[
+                        dict(
+                            name="test_access",
+                            acl_type="extended",
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        address="198.51.102.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                    grant="deny",
+                                    line=1,
+                                    log="default",
+                                    protocol="igrp",
+                                    protocol_options=dict(igrp="true"),
+                                    source=dict(
+                                        address="198.51.101.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                    time_range="temp",
+                                )
+                            ],
+                        ),
+                        dict(
+                            aces=[
+                                dict(line=1, remark="HostA0"),
+                                dict(
+                                    destination=dict(any4=True),
+                                    grant="deny",
+                                    line=2,
+                                    protocol="ip",
+                                    protocol_options=dict(ip="true"),
+                                    source=dict(host="192.0.5.1"),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="ansible_test",
+                        ),
+                    ]
+                ),
                 state="replaced",
             )
         )
         result = self.execute_module(changed=True)
         commands = [
-            "no access-list test_access line 3 remark host2 extended permit ip host 192.0.2.2 any",
-            "no access-list test_access line 2 remark host1 extended deny tcp host 192.0.2.1 any eq www log default",
+            "no access-list ansible_test line 1 remark HostA",
+            "no access-list test_access line 3 extended permit ip host 192.0.2.2 any",
+            "no access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors",
             "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default",
-            "access-list test_access line 1 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log default time-range temp",
+            "access-list test_access line 1 extended deny igrp 198.51.101.0 255.255.255.0 198.51.102.0 255.255.255.0 log default time-range temp",
+            "access-list ansible_test line 1 remark HostA0",
         ]
-        self.assertEqual(result["commands"], commands)
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
 
     def test_asa_acls_replaced_idempotent(self):
         set_module_args(
             dict(
-                config=[
-                    dict(
-                        acls=[
-                            dict(
-                                name="test_access",
-                                acl_type="extended",
-                                aces=[
-                                    dict(
-                                        destination=dict(
-                                            address="192.0.3.0",
-                                            netmask="255.255.255.0",
-                                            port_protocol=dict(eq="www"),
-                                        ),
-                                        grant="deny",
-                                        line=1,
-                                        log="default",
-                                        protocol="tcp",
-                                        protocol_options=dict(tcp="true"),
-                                        source=dict(
-                                            address="192.0.2.0",
-                                            netmask="255.255.255.0",
-                                        ),
-                                    )
-                                ],
-                            )
-                        ]
-                    )
-                ],
+                config=dict(
+                    acls=[
+                        dict(
+                            aces=[
+                                dict(line=1, remark="HostA"),
+                                dict(
+                                    destination=dict(any4=True),
+                                    grant="deny",
+                                    line=2,
+                                    protocol="ip",
+                                    protocol_options=dict(ip="true"),
+                                    source=dict(host="192.0.5.1"),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="ansible_test",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        any="true",
+                                        port_protocol=dict(eq="www"),
+                                    ),
+                                    grant="deny",
+                                    line=1,
+                                    log="errors",
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(any="true"),
+                                ),
+                                dict(line=2, remark="test global remark"),
+                            ],
+                            acl_type="extended",
+                            name="test_global_access",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        address="192.0.3.0",
+                                        netmask="255.255.255.0",
+                                        port_protocol=dict(eq="www"),
+                                    ),
+                                    grant="deny",
+                                    line=1,
+                                    log="default",
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(
+                                        address="192.0.2.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        address="198.51.110.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                    grant="deny",
+                                    line=2,
+                                    log="errors",
+                                    protocol="igrp",
+                                    protocol_options=dict(igrp="true"),
+                                    source=dict(
+                                        address="198.51.100.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                ),
+                                dict(
+                                    destination=dict(any="true"),
+                                    grant="permit",
+                                    line=3,
+                                    protocol="ip",
+                                    protocol_options=dict(ip="true"),
+                                    source=dict(host="192.0.2.2"),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="test_access",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        address="2001:fc8:0:4::/64",
+                                        port_protocol=dict(eq="telnet"),
+                                    ),
+                                    grant="deny",
+                                    inactive="true",
+                                    line=1,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(
+                                        address="2001:db8:0:3::/64",
+                                        port_protocol=dict(eq="www"),
+                                    ),
+                                )
+                            ],
+                            acl_type="extended",
+                            name="test_R1_traffic",
+                        ),
+                    ]
+                ),
                 state="replaced",
             )
         )
@@ -301,84 +406,224 @@ class TestAsaAclsModule(TestAsaModule):
     def test_asa_acls_overridden(self):
         set_module_args(
             dict(
-                config=[
-                    dict(
-                        acls=[
-                            dict(
-                                name="test_global_access",
-                                acl_type="extended",
-                                aces=[
-                                    dict(
-                                        destination=dict(
-                                            any="true",
-                                            port_protocol=dict(eq="www"),
-                                        ),
-                                        grant="deny",
-                                        line=1,
-                                        log="errors",
-                                        protocol="tcp",
-                                        protocol_options=dict(tcp="true"),
-                                        source=dict(any="true"),
-                                    )
-                                ],
-                            )
-                        ]
-                    )
-                ],
+                config=dict(
+                    acls=[
+                        dict(
+                            name="test_global_access",
+                            acl_type="extended",
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        address="198.51.110.0",
+                                        netmask="255.255.255.0",
+                                        port_protocol=dict(eq="www"),
+                                    ),
+                                    grant="deny",
+                                    line=1,
+                                    log="errors",
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(
+                                        address="198.51.100.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                )
+                            ],
+                        )
+                    ]
+                ),
                 state="overridden",
             )
         )
         result = self.execute_module(changed=True)
         commands = [
-            "no access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive",
-            "no access-list test_access line 3 remark host2 extended permit ip host 192.0.2.2 any",
-            "no access-list test_access line 2 remark host1 extended deny tcp host 192.0.2.1 any eq www log default",
+            "no access-list test_global_access line 2 remark test global remark",
+            "no access-list test_global_access line 1 extended deny tcp any any eq www log errors",
+            "no access-list ansible_test line 2 extended deny ip host 192.0.5.1 any4",
+            "no access-list ansible_test line 1 remark HostA",
+            "no access-list test_access line 3 extended permit ip host 192.0.2.2 any",
+            "no access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors",
             "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default",
-            "access-list test_global_access line 1 extended deny tcp any any eq www log errors",
+            "no access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive",
+            "access-list test_global_access line 1 extended deny tcp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 eq www log errors",
         ]
-        self.assertEqual(result["commands"], commands)
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
+
+    def test_asa_acls_overridden_idempotent(self):
+        set_module_args(
+            dict(
+                config=dict(
+                    acls=[
+                        dict(
+                            aces=[
+                                dict(line=1, remark="HostA"),
+                                dict(
+                                    destination=dict(any4=True),
+                                    grant="deny",
+                                    line=2,
+                                    protocol="ip",
+                                    protocol_options=dict(ip="true"),
+                                    source=dict(host="192.0.5.1"),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="ansible_test",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        any="true",
+                                        port_protocol=dict(eq="www"),
+                                    ),
+                                    grant="deny",
+                                    line=1,
+                                    log="errors",
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(any="true"),
+                                ),
+                                dict(line=2, remark="test global remark"),
+                            ],
+                            acl_type="extended",
+                            name="test_global_access",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        address="192.0.3.0",
+                                        netmask="255.255.255.0",
+                                        port_protocol=dict(eq="www"),
+                                    ),
+                                    grant="deny",
+                                    line=1,
+                                    log="default",
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(
+                                        address="192.0.2.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        address="198.51.110.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                    grant="deny",
+                                    line=2,
+                                    log="errors",
+                                    protocol="igrp",
+                                    protocol_options=dict(igrp="true"),
+                                    source=dict(
+                                        address="198.51.100.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                ),
+                                dict(
+                                    destination=dict(any="true"),
+                                    grant="permit",
+                                    line=3,
+                                    protocol="ip",
+                                    protocol_options=dict(ip="true"),
+                                    source=dict(host="192.0.2.2"),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="test_access",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        address="2001:fc8:0:4::/64",
+                                        port_protocol=dict(eq="telnet"),
+                                    ),
+                                    grant="deny",
+                                    inactive="true",
+                                    line=1,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(
+                                        address="2001:db8:0:3::/64",
+                                        port_protocol=dict(eq="www"),
+                                    ),
+                                )
+                            ],
+                            acl_type="extended",
+                            name="test_R1_traffic",
+                        ),
+                    ]
+                ),
+                state="overridden",
+            )
+        )
+        self.execute_module(changed=False, commands=[], sort=True)
+
+    def test_asa_acls_delete_by_acl(self):
+        set_module_args(
+            dict(
+                config=dict(
+                    acls=[
+                        dict(name="test_global_access"),
+                        dict(name="test_R1_traffic"),
+                    ]
+                ),
+                state="deleted",
+            )
+        )
+        result = self.execute_module(changed=True)
+        commands = [
+            "no access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive",
+            "no access-list test_global_access line 2 remark test global remark",
+            "no access-list test_global_access line 1 extended deny tcp any any eq www log errors",
+        ]
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
 
     def test_asa_acls_deleted_all(self):
         set_module_args(dict(state="deleted"))
         result = self.execute_module(changed=True)
         commands = [
             "no access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive",
-            "no access-list test_access line 3 remark host2 extended permit ip host 192.0.2.2 any",
-            "no access-list test_access line 2 remark host1 extended deny tcp host 192.0.2.1 any eq www log default",
+            "no access-list test_access line 3 extended permit ip host 192.0.2.2 any",
+            "no access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors",
             "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default",
+            "no access-list test_global_access line 2 remark test global remark",
+            "no access-list test_global_access line 1 extended deny tcp any any eq www log errors",
+            "no access-list ansible_test line 2 extended deny ip host 192.0.5.1 any4",
+            "no access-list ansible_test line 1 remark HostA",
         ]
-        self.assertEqual(result["commands"], commands)
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
 
     def test_asa_acls_rendered(self):
         set_module_args(
             dict(
-                config=[
-                    dict(
-                        acls=[
-                            dict(
-                                name="test_access",
-                                acl_type="extended",
-                                aces=[
-                                    dict(
-                                        destination=dict(
-                                            address="192.0.3.0",
-                                            netmask="255.255.255.0",
-                                        ),
-                                        grant="deny",
-                                        line=1,
-                                        log="default",
-                                        protocol="tcp",
-                                        protocol_options=dict(tcp="true"),
-                                        source=dict(
-                                            address="192.0.2.0",
-                                            netmask="255.255.255.0",
-                                        ),
-                                    )
-                                ],
-                            )
-                        ]
-                    )
-                ],
+                config=dict(
+                    acls=[
+                        dict(
+                            name="test_access",
+                            acl_type="extended",
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        address="192.0.3.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                    grant="deny",
+                                    line=1,
+                                    log="default",
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(
+                                        address="192.0.2.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                )
+                            ],
+                        )
+                    ]
+                ),
                 state="rendered",
             )
         )

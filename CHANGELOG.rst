@@ -4,6 +4,38 @@ Cisco Asa Collection Release Notes
 
 .. contents:: Topics
 
+v2.0.0
+======
+
+Major Changes
+-------------
+
+- Requires ansible.netcommon v2.0.0+ to support `ansible_network_single_user_mode` and `ansible_network_import_modules`.
+- Please refer to ansible.netcommon `changelog <https://github.com/ansible-collections/ansible.netcommon/blob/main/changelogs/CHANGELOG.rst#ansible-netcommon-collection-release-notes>` for more details.
+
+Minor Changes
+-------------
+- Adds support for single_user_mode command output caching. (https://github.com/ansible-collections/cisco.ios/pull/204).
+
+Bugfixes
+--------
+- To fix ASA acls module where replace wasn't working as expected (https://github.com/ansible-collections/cisco.asa/pull/92).
+
+v1.0.4
+======
+
+Release Summary
+---------------
+
+- Releasing 1.0.4 with updated readme with changelog link, galaxy description, and bugfix.
+
+Bugfixes
+--------
+
+- Update asa acls RM to use newer RM design approach and addeed support for any4/any6 feature (https://github.com/ansible-collections/cisco.asa/pull/64).
+- Add version key to galaxy.yaml to work around ansible-galaxy bug
+- To fix ASA OGs module where delete by name was not resulting to an expected behaviour (https://github.com/ansible-collections/cisco.asa/pull/77).
+
 v1.0.3
 ======
 

@@ -343,7 +343,7 @@ Notes
 Examples
 --------
 
-.. code-block:: yaml+jinja
+.. code-block:: yaml
 
     - name: Show the ASA version
       cisco.asa.asa_command:

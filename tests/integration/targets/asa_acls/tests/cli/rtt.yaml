@@ -13,7 +13,7 @@
       register: base_config
       cisco.asa.asa_acls:
         config:
-          - acls:
+          acls:
             - name: test_access
               acl_type: extended
               aces:
@@ -85,7 +85,7 @@
       register: result
       cisco.asa.asa_acls:
         config:
-          - acls:
+          acls:
             - name: test_access
               acl_type: extended
               aces:
@@ -108,9 +108,9 @@
                   protocol_options:
                     tcp: true
                   source:
-                    object_group_network: test_og_network
+                    object_group: test_og_network
                   destination:
-                    object_group_network: test_network_og
+                    object_group: test_network_og
                     port_protocol:
                       eq: www
                   log: default

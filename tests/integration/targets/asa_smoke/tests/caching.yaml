@@ -1,0 +1,101 @@
+---
+- block:
+  - debug: msg="START connection={{ ansible_connection }} caching.yaml"
+
+  - set_fact:
+      merged:
+      - object-group security test_og_security
+      - description test_security
+      - security-group name test_1
+      - security-group name test_2
+      - security-group tag 10
+      - security-group tag 20
+      - object-group network test_og_network
+      - description test_og_network
+      - network-object 192.0.2.0 255.255.255.0
+      - network-object 198.51.100.0 255.255.255.0
+      - network-object host 192.0.2.1
+      - network-object host 192.0.2.2
+      - object-group network test_network_og
+      - description test_network_og
+      - network-object host 192.0.3.1
+      - network-object host 192.0.3.2
+      - network-object 2001:db8:3::/64
+      - object-group user test_og_user
+      - description test_user
+      - user LOCAL\new_user_1
+      - user LOCAL\new_user_2
+
+  - name: Remove OG Config
+    cisco.asa.asa_ogs:
+      state: deleted
+    ignore_errors: True
+
+  - name: Merge the provided configuration with the exisiting running configuration
+    cisco.asa.asa_ogs: &id001
+      config:
+        - object_type: network
+          object_groups:
+            - name: test_og_network
+              description: test_og_network
+              network_object:
+                host:
+                  - 192.0.2.1
+                  - 192.0.2.2
+                address:
+                  - 192.0.2.0 255.255.255.0
+                  - 198.51.100.0 255.255.255.0
+            - name: test_network_og
+              description: test_network_og
+              network_object:
+                host:
+                  - 192.0.3.1
+                  - 192.0.3.2
+                ipv6_address:
+                  - 2001:db8:3::/64
+        - object_type: security
+          object_groups:
+            - name: test_og_security
+              description: test_security
+              security_group:
+                sec_name:
+                  - test_1
+                  - test_2
+                tag:
+                  - 10
+                  - 20
+        - object_type: user
+          object_groups:
+            - name: test_og_user
+              description: test_user
+              user_object:
+                user:
+                  - name: new_user_1
+                    domain: LOCAL
+                  - name: new_user_2
+                    domain: LOCAL
+      state: merged
+    register: result
+
+  - assert:
+      that:
+        - result.commands|length == 21
+        - result.changed == true
+        - result.commands|symmetric_difference(merged) == []
+
+  - name: Merge the provided configuration with the exisiting running configuration
+        (IDEMPOTENT)
+    register: result
+    cisco.asa.asa_ogs: *id001
+
+  - assert:
+      that:
+        - result.commands|length == 0
+        - result.changed == false
+
+  always:
+    - name: Remove OG Config
+      cisco.asa.asa_ogs:
+        state: deleted
+      ignore_errors: True
+  when: ansible_connection == "network_cli" and ansible_network_single_user_mode|d(False)

@@ -2,7 +2,7 @@
 authors:
   - Ansible Security Community (ansible-security)
 dependencies:
-  "ansible.netcommon": "*"
+  "ansible.netcommon": ">=2.0.0"
 license_file: LICENSE
 name: asa
 namespace: cisco
@@ -10,3 +10,6 @@ description: Ansible Security Collection for Cisco ASA devices.
 readme: README.md
 repository: https://github.com/ansible-collections/cisco.asa
 tags: [cisco, asa, networking, security]
+# NOTE(pabelanger): We create an empty version key to keep ansible-galaxy
+# happy. We dynamically inject version info based on git information.
+version: null

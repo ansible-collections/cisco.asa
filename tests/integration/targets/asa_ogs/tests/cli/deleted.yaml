@@ -16,7 +16,6 @@
           - object_type: network
             object_groups:
               - name: test_og_network
-              - name: test_network_og
           - object_type: security
             object_groups:
               - name: test_og_security
@@ -24,7 +23,7 @@
 
     - assert:
         that:
-          - result.commands|length == 3
+          - result.commands|length == 2
           - result.changed == true
           - result.commands|symmetric_difference(deleted.commands) == []
 
@@ -36,6 +35,8 @@
         that:
           - result.changed == false
 
+    - include_tasks: _populate_config.yaml
+
     - name: Delete ALL configured module attributes
       register: result
       cisco.asa.asa_ogs:
@@ -43,14 +44,13 @@
 
     - assert:
         that:
-          - result.commands|length == 1
+          - result.commands|length == 4
           - result.changed == true
           - result.commands|symmetric_difference(delete_all.commands) == []
 
     - name: Delete ALL configured module attributes (IDEMPOTENT)
       register: result
       cisco.asa.asa_ogs:
-        config:
         state: deleted
 
     - assert:
