@@ -463,6 +463,9 @@ EXAMPLES = """
 # no network-object host 192.0.2.2
 # network-object host 192.0.3.1
 # no object-group network test_network_og
+# object-group network ANSIBLE_TEST
+# network-object object TEST1
+# network-object object TEST2
 
 # After state:
 # -------------
@@ -472,6 +475,9 @@ EXAMPLES = """
 #  description test_og_network_override
 #  network-object host 192.0.3.1
 #  network-object 192.0.3.0 255.255.255.0
+# object-group network ANSIBLE_TEST
+#  network-object object TEST1
+#  network-object object TEST2
 # object-group protocol test_og_protocol
 #  protocol-object tcp
 #  protocol-object udp
