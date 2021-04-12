@@ -98,7 +98,11 @@ class TestAsaOGsModule(TestAsaModule):
                                     host=["192.0.3.1", "192.0.3.2"],
                                     ipv6_address=["2001:db8:0:3::/64"],
                                 ),
-                            )
+                            ),
+                            dict(
+                                name="ANSIBLE_TEST",
+                                network_object=dict(object=["NEW_TEST"]),
+                            ),
                         ],
                         object_type="network",
                     )
@@ -113,6 +117,8 @@ class TestAsaOGsModule(TestAsaModule):
             "network-object host 192.0.3.1",
             "network-object host 192.0.3.2",
             "network-object 2001:db8:0:3::/64",
+            "object-group network ANSIBLE_TEST",
+            "network-object object NEW_TEST",
         ]
         self.assertEqual(result["commands"], commands)
 
@@ -129,7 +135,11 @@ class TestAsaOGsModule(TestAsaModule):
                                     host=["192.0.2.1"],
                                     address=["192.0.2.0 255.255.255.0"],
                                 ),
-                            )
+                            ),
+                            dict(
+                                name="ANSIBLE_TEST",
+                                network_object=dict(object=["TEST1", "TEST2"]),
+                            ),
                         ],
                         object_type="network",
                     ),
@@ -195,7 +205,11 @@ class TestAsaOGsModule(TestAsaModule):
                                     host=["192.0.2.1"],
                                     address=["192.0.2.0 255.255.255.0"],
                                 ),
-                            )
+                            ),
+                            dict(
+                                name="ANSIBLE_TEST",
+                                network_object=dict(object=["TEST1", "TEST2"]),
+                            ),
                         ],
                         object_type="network",
                     ),
@@ -246,6 +260,7 @@ class TestAsaOGsModule(TestAsaModule):
             "network-object 192.0.3.0 255.255.255.0",
             "no network-object host 192.0.2.1",
             "network-object host 192.0.3.1",
+            "no object-group network ANSIBLE_TEST",
         ]
         self.assertEqual(result["commands"], commands)
 
@@ -262,7 +277,11 @@ class TestAsaOGsModule(TestAsaModule):
                                     host=["192.0.2.1"],
                                     address=["192.0.2.0 255.255.255.0"],
                                 ),
-                            )
+                            ),
+                            dict(
+                                name="ANSIBLE_TEST",
+                                network_object=dict(object=["TEST1", "TEST2"]),
+                            ),
                         ],
                         object_type="network",
                     ),
@@ -304,6 +323,7 @@ class TestAsaOGsModule(TestAsaModule):
         result = self.execute_module(changed=True)
         commands = [
             "no object-group network test_og_network",
+            "no object-group network ANSIBLE_TEST",
             "no object-group service test_og_service",
         ]
         self.assertEqual(result["commands"], commands)

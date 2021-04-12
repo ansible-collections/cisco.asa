@@ -98,6 +98,9 @@ options:
                 description: Enter an IPv6 prefix.
                 type: list
                 elements: str
+              object:
+                description: Enter this keyword to specify a network object
+                type: str
           protocol_object:
             description: Configure a protocol object
             type: dict
@@ -427,6 +430,11 @@ EXAMPLES = """
                 - 192.0.3.1
               address:
                 - 192.0.3.0 255.255.255.0
+          - name: ANSIBLE_TEST
+            network_object:
+              object:
+                - TEST1
+                - TEST2
       - object_type: protocol
         object_groups:
           - name: test_og_protocol

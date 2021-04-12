@@ -99,6 +99,7 @@ class OGsArgs(object):
                                     "type": "list",
                                     "elements": "str",
                                 },
+                                "object": {"type": "list", "elements": "str"},
                             },
                         },
                         "protocol_object": {
