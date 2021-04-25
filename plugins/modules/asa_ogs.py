@@ -100,7 +100,8 @@ options:
                 elements: str
               object:
                 description: Enter this keyword to specify a network object
-                type: str
+                type: list
+                elements: str
           protocol_object:
             description: Configure a protocol object
             type: dict
