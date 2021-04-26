@@ -120,7 +120,7 @@ class TestAsaOGsModule(TestAsaModule):
             "object-group network ANSIBLE_TEST",
             "network-object object NEW_TEST",
         ]
-        self.assertEqual(result["commands"], commands)
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
 
     def test_asa_ogs_merged_idempotent(self):
         set_module_args(
@@ -262,7 +262,7 @@ class TestAsaOGsModule(TestAsaModule):
             "network-object host 192.0.3.1",
             "no object-group network ANSIBLE_TEST",
         ]
-        self.assertEqual(result["commands"], commands)
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
 
     def test_asa_ogs_overridden_idempotent(self):
         set_module_args(
@@ -326,7 +326,7 @@ class TestAsaOGsModule(TestAsaModule):
             "no object-group network ANSIBLE_TEST",
             "no object-group service test_og_service",
         ]
-        self.assertEqual(result["commands"], commands)
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
 
     def test_asa_ogs_rendered(self):
         set_module_args(
@@ -370,4 +370,4 @@ class TestAsaOGsModule(TestAsaModule):
             "service-object tcp-udp",
         ]
         result = self.execute_module(changed=False)
-        self.assertEqual(result["rendered"], commands)
+        self.assertEqual(sorted(result["rendered"]), sorted(commands))
