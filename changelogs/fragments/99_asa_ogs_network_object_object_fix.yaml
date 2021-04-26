@@ -1,0 +1,3 @@
+---
+bugfixes:
+  - To fix Cisco ASA network_object object config which wasn't working as expected (https://github.com/ansible-collections/cisco.asa/issues/99).

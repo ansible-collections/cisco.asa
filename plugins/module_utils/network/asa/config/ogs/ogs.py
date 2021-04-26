@@ -200,6 +200,7 @@ class OGs(ResourceModule):
             "network_object.host",
             "network_object.address",
             "network_object.ipv6_address",
+            "network_object.object",
         ]
         add_obj_cmd = False
         for name, entry in iteritems(want):
@@ -210,7 +211,7 @@ class OGs(ResourceModule):
                         entry,
                         h_item,
                         network_obj,
-                        ["address", "host", "ipv6_address"],
+                        ["address", "host", "ipv6_address", "object"],
                     )
                 else:
                     add_obj_cmd = True
@@ -260,6 +261,22 @@ class OGs(ResourceModule):
                 elif h_item and h_item[network_obj].get("ipv6_address"):
                     h_item[network_obj] = {
                         "ipv6_address": h_item[network_obj].get("ipv6_address")
+                    }
+                    if not add_obj_cmd:
+                        self.addcmd(entry, "og_name", False)
+                    self.compare(parsers, {}, h_item)
+                if entry[network_obj].get("object"):
+                    self._compare_object_diff(
+                        entry,
+                        h_item,
+                        network_obj,
+                        "object",
+                        parsers,
+                        "network_object.object",
+                    )
+                elif h_item and h_item[network_obj].get("object"):
+                    h_item[network_obj] = {
+                        "object": h_item[network_obj].get("object")
                     }
                     if not add_obj_cmd:
                         self.addcmd(entry, "og_name", False)
