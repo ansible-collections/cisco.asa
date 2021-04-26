@@ -45,6 +45,14 @@ def _tmplt_network_object_ipv6(config_data):
         return commands
 
 
+def _tmplt_network_object_object(config_data):
+    commands = []
+    if config_data.get("network_object").get("object"):
+        for each in config_data.get("network_object").get("object"):
+            commands.append("network-object object {0}".format(each))
+        return commands
+
+
 def _tmplt_protocol_object(config_data):
     commands = []
     if config_data.get("protocol_object").get("protocol"):
@@ -225,12 +233,12 @@ class OGsTemplate(NetworkTemplate):
                     *$""",
                 re.VERBOSE,
             ),
-            "setval": "network-object object {{ object }}",
+            "setval": _tmplt_network_object_object,
             "compval": "network_object.object",
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {"object": "{{ object }}"}
+                        "{{ obj_name }}": {"object": ["{{ object }}"]}
                     }
                 }
             },
