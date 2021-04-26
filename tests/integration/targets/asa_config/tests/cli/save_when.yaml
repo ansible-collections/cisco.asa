@@ -1,0 +1,47 @@
+---
+- debug: msg="START cli/save.yaml on connection={{ ansible_connection }}"
+
+- name: setup for save when TC
+  cisco.asa.asa_config:
+    commands:
+      - no description
+    parents:
+      - interface Management0/0
+    save_when: modified
+
+- name: save should always run
+  register: result
+  cisco.asa.asa_config:
+    save_when: always
+
+- assert:
+    that:
+      - result.changed == true
+
+- name: delete config (setup)
+  register: result
+  cisco.asa.asa_config:
+    replace: line
+    lines:
+      - no banner motd test_motd
+    save_when: modified
+
+- name: save should run when changed
+  register: result
+  cisco.asa.asa_config:
+    replace: line
+    lines:
+      - banner motd test_motd
+    save_when: modified
+
+- assert:
+    that:
+      - result.changed == true
+
+- name: teardown
+  register: result
+  cisco.asa.asa_config:
+    lines:
+      - no banner motd test_motd
+
+- debug: msg="END cli/save.yaml on connection={{ ansible_connection }}"
