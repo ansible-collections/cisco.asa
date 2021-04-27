@@ -18,7 +18,7 @@ DEPRECATED
 ----------
 :Removed in collection release after 2022-06-01
 :Why: Newer and updated modules released with more functionality in Ansible 2.10
-:Alternative: asa_acl
+:Alternative: asa_acls
 
 
 

@@ -4,6 +4,19 @@ Cisco Asa Collection Release Notes
 
 .. contents:: Topics
 
+v2.0.1
+======
+
+Minor Changes
+-------------
+- Remove tests/sanity/requirements.txt (https://github.com/ansible-collections/cisco.asa/pull/94).
+- Add ignore-2.12.txt (https://github.com/ansible-collections/cisco.asa/pull/102).
+
+Bugfixes
+--------
+- Added save_when param support in asa_config module (https://github.com/ansible-collections/cisco.asa/pull/75).
+- To fix Cisco ASA network_object object config which wasn't working as expected (https://github.com/ansible-collections/cisco.asa/pull/103).
+
 v2.0.0
 ======
 
