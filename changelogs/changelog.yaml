@@ -83,3 +83,12 @@ releases:
       minor_changes:
         - Adds support for single_user_mode command output caching. (https://github.com/ansible-collections/cisco.ios/pull/204).
     release_date: '2021-03-01'
+  2.0.1:
+    changes:
+      bugfixes:
+        - Added save_when param support in asa_config module (https://github.com/ansible-collections/cisco.asa/pull/75).
+        - To fix Cisco ASA network_object object config which wasn't working as expected (https://github.com/ansible-collections/cisco.asa/pull/103).
+      minor_changes:
+        - Remove tests/sanity/requirements.txt (https://github.com/ansible-collections/cisco.asa/pull/94).
+        - Add ignore-2.12.txt (https://github.com/ansible-collections/cisco.asa/pull/102).
+    release_date: '2021-03-01'
