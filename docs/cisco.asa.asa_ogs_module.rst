@@ -233,6 +233,25 @@ Parameters
                         <div>Enter an IPv6 prefix.</div>
                 </td>
             </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                    <td class="elbow-placeholder"></td>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="2">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>object</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">list</span>
+                         / <span style="color: purple">elements=string</span>
+                    </div>
+                </td>
+                <td>
+                </td>
+                <td>
+                        <div>Enter this keyword to specify a network object</div>
+                </td>
+            </tr>
 
             <tr>
                     <td class="elbow-placeholder"></td>
@@ -885,6 +904,11 @@ Examples
                     - 192.0.3.1
                   address:
                     - 192.0.3.0 255.255.255.0
+              - name: ANSIBLE_TEST
+                network_object:
+                  object:
+                    - TEST1
+                    - TEST2
           - object_type: protocol
             object_groups:
               - name: test_og_protocol
@@ -913,6 +937,9 @@ Examples
     # no network-object host 192.0.2.2
     # network-object host 192.0.3.1
     # no object-group network test_network_og
+    # object-group network ANSIBLE_TEST
+    # network-object object TEST1
+    # network-object object TEST2
 
     # After state:
     # -------------
@@ -922,6 +949,9 @@ Examples
     #  description test_og_network_override
     #  network-object host 192.0.3.1
     #  network-object 192.0.3.0 255.255.255.0
+    # object-group network ANSIBLE_TEST
+    #  network-object object TEST1
+    #  network-object object TEST2
     # object-group protocol test_og_protocol
     #  protocol-object tcp
     #  protocol-object udp

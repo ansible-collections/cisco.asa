@@ -470,6 +470,28 @@ Parameters
             <tr>
                 <td colspan="2">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>save_when</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">string</span>
+                    </div>
+                    <div style="font-style: italic; font-size: small; color: darkgreen">added in 1.1.0</div>
+                </td>
+                <td>
+                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
+                                    <li>always</li>
+                                    <li><div style="color: blue"><b>never</b>&nbsp;&larr;</div></li>
+                                    <li>modified</li>
+                                    <li>changed</li>
+                        </ul>
+                </td>
+                <td>
+                        <div>When changes are made to the device running-configuration, the changes are not copied to non-volatile storage by default.  Using this argument will change that before.  If the argument is set to <em>always</em>, then the running-config will always be copied to the startup-config and the <em>modified</em> flag will always be set to True.  If the argument is set to <em>modified</em>, then the running-config will only be copied to the startup-config if it has changed since the last save to startup-config.  If the argument is set to <em>never</em>, the running-config will never be copied to the startup-config.  If the argument is set to <em>changed</em>, then the running-config will only be copied to the startup-config if the task has made a change. <em>changed</em> was added in Ansible 2.5.</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
                     <b>src</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
@@ -578,6 +600,10 @@ Examples
         backup_options:
           filename: backup.cfg
           dir_path: /home/user
+
+    - name: save running to startup when modified
+      cisco.asa.asa_config:
+        save_when: modified
 
 
 
