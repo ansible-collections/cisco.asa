@@ -353,8 +353,7 @@ def run(module, result):
 
 
 def main():
-    """ main entry point for module execution
-    """
+    """main entry point for module execution"""
     backup_spec = dict(filename=dict(), dir_path=dict(type="path"))
     argument_spec = dict(
         src=dict(type="path"),

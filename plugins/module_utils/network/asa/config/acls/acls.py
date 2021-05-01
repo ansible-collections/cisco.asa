@@ -49,7 +49,7 @@ class Acls(ResourceModule):
         )
 
     def execute_module(self):
-        """ Execute the module
+        """Execute the module
         :rtype: A dictionary
         :returns: The result from module execution
         """
@@ -58,7 +58,7 @@ class Acls(ResourceModule):
         return self.result
 
     def gen_config(self):
-        """ Select the appropriate function based on the state provided
+        """Select the appropriate function based on the state provided
         :rtype: A list
         :returns: the commands necessary to migrate the current configuration
                   to the desired configuration
@@ -134,9 +134,9 @@ class Acls(ResourceModule):
 
     def _compare(self, want, have):
         """Leverages the base class `compare()` method and
-           populates the list of commands to be run by comparing
-           the `want` and `have` data with the `parsers` defined
-           for the Ospf_interfaces network resource.
+        populates the list of commands to be run by comparing
+        the `want` and `have` data with the `parsers` defined
+        for the Ospf_interfaces network resource.
         """
         parsers = ["aces"]
 
