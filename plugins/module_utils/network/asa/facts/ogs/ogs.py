@@ -31,8 +31,7 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.n
 
 
 class OGsFacts(object):
-    """ The asa_ogs fact class
-    """
+    """The asa_ogs fact class"""
 
     def __init__(self, module, subspec="config", options="options"):
 
@@ -53,7 +52,7 @@ class OGsFacts(object):
         return connection.get("sh running-config object-group")
 
     def populate_facts(self, connection, ansible_facts, data=None):
-        """ Populate the facts for OGs
+        """Populate the facts for OGs
         :param connection: the device connection
         :param ansible_facts: Facts dictionary
         :param data: previously collected conf

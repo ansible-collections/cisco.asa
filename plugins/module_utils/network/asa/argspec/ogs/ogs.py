@@ -31,8 +31,7 @@ __metaclass__ = type
 
 
 class OGsArgs(object):
-    """The arg spec for the asa_ogs module
-    """
+    """The arg spec for the asa_ogs module"""
 
     def __init__(self, **kwargs):
         pass
