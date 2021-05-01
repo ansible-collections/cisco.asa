@@ -245,8 +245,7 @@ def validate_n_expand_ipv4(module, want):
 
 
 def normalize_interface(name):
-    """Return the normalized interface name
-    """
+    """Return the normalized interface name"""
     if not name:
         return
 
@@ -299,8 +298,7 @@ def normalize_interface(name):
 
 
 def get_interface_type(interface):
-    """Gets the type of interface
-    """
+    """Gets the type of interface"""
 
     if interface.upper().startswith("GI"):
         return "GigabitEthernet"

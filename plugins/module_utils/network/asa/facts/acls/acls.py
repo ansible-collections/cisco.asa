@@ -32,8 +32,7 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.n
 
 
 class AclsFacts(object):
-    """ The asa_acls fact class
-    """
+    """The asa_acls fact class"""
 
     def __init__(self, module, subspec="config", options="options"):
 
@@ -54,7 +53,7 @@ class AclsFacts(object):
         return connection.get("sh access-list")
 
     def populate_facts(self, connection, ansible_facts, data=None):
-        """ Populate the facts for ACLs
+        """Populate the facts for ACLs
         :param connection: the device connection
         :param ansible_facts: Facts dictionary
         :param data: previously collected conf

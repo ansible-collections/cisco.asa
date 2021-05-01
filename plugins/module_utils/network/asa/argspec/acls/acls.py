@@ -31,8 +31,7 @@ __metaclass__ = type
 
 
 class AclsArgs(object):
-    """The arg spec for the asa_acls module
-    """
+    """The arg spec for the asa_acls module"""
 
     def __init__(self, **kwargs):
         pass
