@@ -1,0 +1,3 @@
+---
+bugfixes:
+  - To fix asa_acls where ipv6 with host wasn't getting rendered as expected and facts was skipping (https://github.com/ansible-collections/cisco.asa/issues/105).
