@@ -221,7 +221,15 @@ class TestAsaAclsModule(TestAsaModule):
                                         address="2001:db8:0:3::/64",
                                         port_protocol=dict(eq="www"),
                                     ),
-                                )
+                                ),
+                                dict(
+                                    destination=dict(any6=True),
+                                    grant="permit",
+                                    line=2,
+                                    protocol="ip",
+                                    protocol_options=dict(ip=True),
+                                    source=dict(host="2001:db8::1"),
+                                ),
                             ],
                             acl_type="extended",
                             name="test_R1_traffic",
@@ -391,7 +399,15 @@ class TestAsaAclsModule(TestAsaModule):
                                         address="2001:db8:0:3::/64",
                                         port_protocol=dict(eq="www"),
                                     ),
-                                )
+                                ),
+                                dict(
+                                    destination=dict(any6=True),
+                                    grant="permit",
+                                    line=2,
+                                    protocol="ip",
+                                    protocol_options=dict(ip=True),
+                                    source=dict(host="2001:db8::1"),
+                                ),
                             ],
                             acl_type="extended",
                             name="test_R1_traffic",
@@ -444,6 +460,7 @@ class TestAsaAclsModule(TestAsaModule):
             "no access-list test_access line 3 extended permit ip host 192.0.2.2 any",
             "no access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors",
             "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default",
+            "no access-list test_R1_traffic line 2 extended permit ip host 2001:db8::1 any6",
             "no access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive",
             "access-list test_global_access line 1 extended deny tcp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 eq www log errors",
         ]
@@ -549,7 +566,15 @@ class TestAsaAclsModule(TestAsaModule):
                                         address="2001:db8:0:3::/64",
                                         port_protocol=dict(eq="www"),
                                     ),
-                                )
+                                ),
+                                dict(
+                                    destination=dict(any6=True),
+                                    grant="permit",
+                                    line=2,
+                                    protocol="ip",
+                                    protocol_options=dict(ip=True),
+                                    source=dict(host="2001:db8::1"),
+                                ),
                             ],
                             acl_type="extended",
                             name="test_R1_traffic",
@@ -575,6 +600,7 @@ class TestAsaAclsModule(TestAsaModule):
         )
         result = self.execute_module(changed=True)
         commands = [
+            "no access-list test_R1_traffic line 2 extended permit ip host 2001:db8::1 any6",
             "no access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive",
             "no access-list test_global_access line 2 remark test global remark",
             "no access-list test_global_access line 1 extended deny tcp any any eq www log errors",
@@ -585,6 +611,7 @@ class TestAsaAclsModule(TestAsaModule):
         set_module_args(dict(state="deleted"))
         result = self.execute_module(changed=True)
         commands = [
+            "no access-list test_R1_traffic line 2 extended permit ip host 2001:db8::1 any6",
             "no access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive",
             "no access-list test_access line 3 extended permit ip host 192.0.2.2 any",
             "no access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors",
