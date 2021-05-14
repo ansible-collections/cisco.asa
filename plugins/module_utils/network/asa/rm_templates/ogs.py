@@ -97,12 +97,12 @@ def _tmplt_user_object_user_gp(config_data):
     commands = []
     if config_data.get("user_object").get("user_group"):
         for each in config_data.get("user_object").get("user_group"):
-            commands.append("user-group {domain}\\{name} {0}".format(**each))
+            commands.append(r"user-group {domain}\\{name}".format(**each))
     return commands
 
 
 def _tmplt_group_object(config_data):
-    command = "group-object { group_object }".format(**config_data)
+    command = "group-object {group_object}".format(**config_data)
     return command
 
 
@@ -365,7 +365,7 @@ class OGsTemplate(NetworkTemplate):
             "name": "user_object.user_gp",
             "getval": re.compile(
                 r"""\s+user-group*
-                    \s*(?P<domain>\S+)\\
+                    \s*(?P<domain>\S+\\)
                     (?P<user_gp>\S+)
                     *$""",
                 re.VERBOSE,
@@ -379,7 +379,7 @@ class OGsTemplate(NetworkTemplate):
                             "user_group": [
                                 {
                                     "name": "{{ user_gp }}",
-                                    "domain": "{{ domain }}",
+                                    "domain": r"{{ domain.split('\\')[0] }}",
                                 }
                             ]
                         }
@@ -400,7 +400,7 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {"group_object": "{{ gp_obj }}"}
+                        "{{ obj_name }}": {"group_object": ["{{ gp_obj }}"]}
                     }
                 }
             },
