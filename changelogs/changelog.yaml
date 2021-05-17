@@ -91,4 +91,15 @@ releases:
       minor_changes:
         - Remove tests/sanity/requirements.txt (https://github.com/ansible-collections/cisco.asa/pull/94).
         - Add ignore-2.12.txt (https://github.com/ansible-collections/cisco.asa/pull/102).
-    release_date: '2021-03-01'
+    release_date: '2021-04-27'
+  2.0.2:
+    changes:
+      bugfixes:
+      - To fix asa_acls where ipv6 with host wasn't getting rendered as expected and facts was skipping.
+      - To fix Cisco ASA network_object object config which wasn't working as expected.
+    fragments:
+    - 105_asa_acls_where_host_ipv6_wasn't_rendered_as_expected.yaml
+    - 107_asa_ogs_group_object_implementation.yaml
+    - black.yaml
+    - changelog_doc_path_update.yaml
+    release_date: '2021-05-17'

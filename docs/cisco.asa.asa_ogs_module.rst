@@ -88,6 +88,24 @@ Parameters
                     <td class="elbow-placeholder"></td>
                 <td colspan="3">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>group_object</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">list</span>
+                         / <span style="color: purple">elements=string</span>
+                    </div>
+                </td>
+                <td>
+                </td>
+                <td>
+                        <div>Configure an object group as an object</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="3">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
                     <b>icmp_type</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
@@ -683,6 +701,9 @@ Examples
         config:
         - object_type: network
           object_groups:
+            - name: group_network_obj
+              group_object:
+                - test_og_network
             - name: test_og_network
               description: test_og_network
               network_object:
@@ -732,6 +753,8 @@ Examples
     #  security-group name test_2
     #  security-group tag 10
     #  security-group tag 20
+    # object-group network group_network_obj
+    #  group-object test_og_network
     # object-group network test_og_network
     #  description test_og_network
     #  network-object 192.0.2.0 255.255.255.0
@@ -751,6 +774,8 @@ Examples
     # ------------
     #
     # ciscoasa# sh running-config object-group
+    # object-group network group_network_obj
+    #  group-object test_og_network
     # object-group network test_og_network
     #  description test_og_network
     #  network-object host 192.0.2.1
