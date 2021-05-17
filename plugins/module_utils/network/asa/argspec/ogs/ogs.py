@@ -33,9 +33,6 @@ __metaclass__ = type
 class OGsArgs(object):
     """The arg spec for the asa_ogs module"""
 
-    def __init__(self, **kwargs):
-        pass
-
     argument_spec = {
         "config": {
             "elements": "dict",
@@ -208,6 +205,7 @@ class OGsArgs(object):
                                 },
                             },
                         },
+                        "group_object": {"type": "list", "elements": "str"},
                     },
                 },
             },

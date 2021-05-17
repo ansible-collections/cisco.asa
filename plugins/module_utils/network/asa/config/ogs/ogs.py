@@ -175,6 +175,10 @@ class OGs(ResourceModule):
                 and name != "object_type"
                 and entry[icmp_obj].get("icmp_object")
             ):
+                if h_item and entry.get("group_object"):
+                    self.addcmd(entry, "og_name", False)
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
                 if h_item:
                     self._add_object_cmd(
                         entry, h_item, icmp_obj, ["icmp_type"]
@@ -182,6 +186,9 @@ class OGs(ResourceModule):
                 else:
                     self.addcmd(entry, "og_name", False)
                     self.compare(["description"], entry, h_item)
+                if entry.get("group_object"):
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
                 if self.state in ("overridden", "replaced") and h_item:
                     self.compare(["icmp_type"], {}, h_item)
                 if h_item and h_item[icmp_obj].get("icmp_object"):
@@ -206,6 +213,10 @@ class OGs(ResourceModule):
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
             if entry != h_item and name != "object_type":
+                if h_item and entry.get("group_object"):
+                    self.addcmd(entry, "og_name", False)
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
                 if h_item:
                     self._add_object_cmd(
                         entry,
@@ -217,6 +228,9 @@ class OGs(ResourceModule):
                     add_obj_cmd = True
                     self.addcmd(entry, "og_name", False)
                     self.compare(["description"], entry, h_item)
+                if entry.get("group_object"):
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
                 if entry[network_obj].get("address"):
                     self._compare_object_diff(
                         entry,
@@ -288,6 +302,10 @@ class OGs(ResourceModule):
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
             if entry != h_item and name != "object_type":
+                if h_item and entry.get("group_object"):
+                    self.addcmd(entry, "og_name", False)
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
                 if h_item:
                     self._add_object_cmd(
                         entry, h_item, protocol_obj, ["protocol"]
@@ -295,6 +313,9 @@ class OGs(ResourceModule):
                 else:
                     self.addcmd(entry, "og_name", False)
                     self.compare(["description"], entry, h_item)
+                if entry.get("group_object"):
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
                 if entry[protocol_obj].get("protocol"):
                     self._compare_object_diff(
                         entry,
@@ -313,6 +334,10 @@ class OGs(ResourceModule):
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
             if entry != h_item and name != "object_type":
+                if h_item and entry.get("group_object"):
+                    self.addcmd(entry, "og_name", False)
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
                 if h_item:
                     self._add_object_cmd(
                         entry, h_item, security_obj, ["sec_name", "tag"]
@@ -321,6 +346,9 @@ class OGs(ResourceModule):
                     add_obj_cmd = True
                     self.addcmd(entry, "og_name", False)
                     self.compare(["description"], entry, h_item)
+                if entry.get("group_object"):
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
                 if entry[security_obj].get("sec_name"):
                     self._compare_object_diff(
                         entry,
@@ -360,6 +388,10 @@ class OGs(ResourceModule):
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
             if entry != h_item and name != "object_type":
+                if h_item and entry.get("group_object"):
+                    self.addcmd(entry, "og_name", False)
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
                 if h_item:
                     self._add_object_cmd(
                         entry, h_item, service_obj, ["protocol"]
@@ -367,6 +399,9 @@ class OGs(ResourceModule):
                 else:
                     self.addcmd(entry, "og_name", False)
                     self.compare(["description"], entry, h_item)
+                if entry.get("group_object"):
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
                 if entry[service_obj].get("protocol"):
                     self._compare_object_diff(
                         entry,
@@ -385,6 +420,10 @@ class OGs(ResourceModule):
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
             if entry != h_item and name != "object_type":
+                if h_item and entry.get("group_object"):
+                    self.addcmd(entry, "og_name", False)
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
                 if h_item:
                     self._add_object_cmd(
                         entry, h_item, user_obj, ["user", "user_group"]
@@ -393,6 +432,9 @@ class OGs(ResourceModule):
                     add_obj_cmd = True
                     self.addcmd(entry, "og_name", False)
                     self.compare(["description"], entry, h_item)
+                if entry.get("group_object"):
+                    self._add_group_object_cmd(entry, h_item)
+                    continue
                 if entry[user_obj].get("user"):
                     self._compare_object_diff(
                         entry,
@@ -450,6 +492,20 @@ class OGs(ResourceModule):
                         self.addcmd(want, "og_name", False)
                         self.compare(["description"], want, have)
                         obj_cmd_added = True
+
+    def _add_group_object_cmd(self, want, have):
+        if have:
+            want["group_object"] = list(
+                set(want.get("group_object")) - set(have.get("group_object"))
+            )
+            have["group_object"] = list(
+                set(have.get("group_object")) - set(want.get("group_object"))
+            )
+        for each in want["group_object"]:
+            self.compare(["group_object"], {"group_object": each}, dict())
+        if (self.state == "replaced" or self.state == "overridden") and have:
+            for each in have["group_object"]:
+                self.compare(["group_object"], dict(), {"group_object": each})
 
     def _compare_object_diff(
         self, want, have, object, object_type, parsers, val

@@ -168,6 +168,10 @@ options:
                     description: Group domain
                     type: str
                     required: true
+          group_object:
+            description: Configure an object group as an object
+            type: list
+            elements: str
   running_config:
     description:
     - The module, by default, will connect to the remote device and retrieve the current
@@ -210,6 +214,9 @@ EXAMPLES = """
     config:
     - object_type: network
       object_groups:
+        - name: group_network_obj
+          group_object:
+            - test_og_network
         - name: test_og_network
           description: test_og_network
           network_object:
@@ -259,6 +266,8 @@ EXAMPLES = """
 #  security-group name test_2
 #  security-group tag 10
 #  security-group tag 20
+# object-group network group_network_obj
+#  group-object test_og_network
 # object-group network test_og_network
 #  description test_og_network
 #  network-object 192.0.2.0 255.255.255.0
@@ -278,6 +287,8 @@ EXAMPLES = """
 # ------------
 #
 # ciscoasa# sh running-config object-group
+# object-group network group_network_obj
+#  group-object test_og_network
 # object-group network test_og_network
 #  description test_og_network
 #  network-object host 192.0.2.1
