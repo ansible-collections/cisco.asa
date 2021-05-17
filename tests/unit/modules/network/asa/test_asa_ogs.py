@@ -92,6 +92,10 @@ class TestAsaOGsModule(TestAsaModule):
                     dict(
                         object_groups=[
                             dict(
+                                group_object=["test_network_og"],
+                                name="group_network_obj",
+                            ),
+                            dict(
                                 name="test_network_og",
                                 description="test network og",
                                 network_object=dict(
@@ -105,13 +109,30 @@ class TestAsaOGsModule(TestAsaModule):
                             ),
                         ],
                         object_type="network",
-                    )
+                    ),
+                    dict(
+                        object_groups=[
+                            dict(
+                                name="test_user_obj",
+                                user_object=dict(
+                                    user_group=[
+                                        dict(
+                                            domain="domain", name="test_merge"
+                                        )
+                                    ]
+                                ),
+                            )
+                        ],
+                        object_type="user",
+                    ),
                 ],
                 state="merged",
             )
         )
         result = self.execute_module(changed=True)
         commands = [
+            "object-group network group_network_obj",
+            "group-object test_network_og",
             "object-group network test_network_og",
             "description test network og",
             "network-object host 192.0.3.1",
@@ -119,6 +140,8 @@ class TestAsaOGsModule(TestAsaModule):
             "network-object 2001:db8:0:3::/64",
             "object-group network ANSIBLE_TEST",
             "network-object object NEW_TEST",
+            "object-group user test_user_obj",
+            "user-group domain\\\\test_merge",
         ]
         self.assertEqual(sorted(result["commands"]), sorted(commands))
 
@@ -128,6 +151,10 @@ class TestAsaOGsModule(TestAsaModule):
                 config=[
                     dict(
                         object_groups=[
+                            dict(
+                                group_object=["ANSIBLE_TEST"],
+                                name="group_network_obj",
+                            ),
                             dict(
                                 description="test_og_network",
                                 name="test_og_network",
@@ -153,6 +180,25 @@ class TestAsaOGsModule(TestAsaModule):
                             )
                         ],
                         object_type="service",
+                    ),
+                    dict(
+                        object_groups=[
+                            dict(
+                                group_object=["test_user_obj"],
+                                name="group_user_obj",
+                            ),
+                            dict(
+                                name="test_user_obj",
+                                user_object=dict(
+                                    user=[dict(domain="LOCAL", name="test1")],
+                                    user_group=[
+                                        dict(domain="domain", name="test1"),
+                                        dict(domain="domain", name="test2"),
+                                    ],
+                                ),
+                            ),
+                        ],
+                        object_type="user",
                     ),
                 ],
                 state="merged",
@@ -199,6 +245,10 @@ class TestAsaOGsModule(TestAsaModule):
                     dict(
                         object_groups=[
                             dict(
+                                group_object=["ANSIBLE_TEST"],
+                                name="group_network_obj",
+                            ),
+                            dict(
                                 description="test_og_network",
                                 name="test_og_network",
                                 network_object=dict(
@@ -223,6 +273,25 @@ class TestAsaOGsModule(TestAsaModule):
                             )
                         ],
                         object_type="service",
+                    ),
+                    dict(
+                        object_groups=[
+                            dict(
+                                group_object=["test_user_obj"],
+                                name="group_user_obj",
+                            ),
+                            dict(
+                                name="test_user_obj",
+                                user_object=dict(
+                                    user=[dict(domain="LOCAL", name="test1")],
+                                    user_group=[
+                                        dict(domain="domain", name="test1"),
+                                        dict(domain="domain", name="test2"),
+                                    ],
+                                ),
+                            ),
+                        ],
+                        object_type="user",
                     ),
                 ],
                 state="replaced",
@@ -254,6 +323,7 @@ class TestAsaOGsModule(TestAsaModule):
         result = self.execute_module(changed=True)
         commands = [
             "no object-group service test_og_service",
+            "no object-group network group_network_obj",
             "object-group network test_og_network",
             "description test_og_network_override",
             "no network-object 192.0.2.0 255.255.255.0",
@@ -261,6 +331,8 @@ class TestAsaOGsModule(TestAsaModule):
             "no network-object host 192.0.2.1",
             "network-object host 192.0.3.1",
             "no object-group network ANSIBLE_TEST",
+            "no object-group user group_user_obj",
+            "no object-group user test_user_obj",
         ]
         self.assertEqual(sorted(result["commands"]), sorted(commands))
 
@@ -270,6 +342,10 @@ class TestAsaOGsModule(TestAsaModule):
                 config=[
                     dict(
                         object_groups=[
+                            dict(
+                                group_object=["ANSIBLE_TEST"],
+                                name="group_network_obj",
+                            ),
                             dict(
                                 description="test_og_network",
                                 name="test_og_network",
@@ -295,6 +371,25 @@ class TestAsaOGsModule(TestAsaModule):
                             )
                         ],
                         object_type="service",
+                    ),
+                    dict(
+                        object_groups=[
+                            dict(
+                                group_object=["test_user_obj"],
+                                name="group_user_obj",
+                            ),
+                            dict(
+                                name="test_user_obj",
+                                user_object=dict(
+                                    user=[dict(domain="LOCAL", name="test1")],
+                                    user_group=[
+                                        dict(domain="domain", name="test1"),
+                                        dict(domain="domain", name="test2"),
+                                    ],
+                                ),
+                            ),
+                        ],
+                        object_type="user",
                     ),
                 ],
                 state="overridden",
@@ -322,9 +417,12 @@ class TestAsaOGsModule(TestAsaModule):
         set_module_args(dict(state="deleted"))
         result = self.execute_module(changed=True)
         commands = [
+            "no object-group network group_network_obj",
             "no object-group network test_og_network",
             "no object-group network ANSIBLE_TEST",
             "no object-group service test_og_service",
+            "no object-group user group_user_obj",
+            "no object-group user test_user_obj",
         ]
         self.assertEqual(sorted(result["commands"]), sorted(commands))
 

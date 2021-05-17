@@ -294,22 +294,6 @@ class OGs(ResourceModule):
                     if not add_obj_cmd:
                         self.addcmd(entry, "og_name", False)
                     self.compare(parsers, {}, h_item)
-                if entry[network_obj].get("object"):
-                    self._compare_object_diff(
-                        entry,
-                        h_item,
-                        network_obj,
-                        "object",
-                        parsers,
-                        "network_object.object",
-                    )
-                elif h_item and h_item[network_obj].get("object"):
-                    h_item[network_obj] = {
-                        "object": h_item[network_obj].get("object")
-                    }
-                    if not add_obj_cmd:
-                        self.addcmd(entry, "og_name", False)
-                    self.compare(parsers, {}, h_item)
         self.check_for_have_and_overidden(have)
 
     def _protocol_object_compare(self, want, have):

@@ -378,6 +378,7 @@ EXAMPLES = """
 # ---------------
 #
 # object-group security test_og_security
+<<<<<<< HEAD
 # description test_security
 # security-group name test_1
 # security-group name test_2
@@ -385,6 +386,15 @@ EXAMPLES = """
 # security-group tag 20
 # object-group network group_network_obj
 # group-object test_og_network
+=======
+#  description test_security
+#  security-group name test_1
+#  security-group name test_2
+#  security-group tag 10
+#  security-group tag 20
+# object-group network group_network_obj
+#  group-object test_og_network
+>>>>>>> 5fd585e (To implement asa_ogs group-object parameter which was missing from the module  (#112))
 # object-group network test_og_network
 # description test_og_network
 # network-object 192.0.2.0 255.255.255.0
