@@ -1,3 +1,0 @@
----
-bugfixes:
-  - To fix ASA OGs module where delete by name was not resulting to an expected behaviour (https://github.com/ansible-collections/cisco.asa/pull/77).
