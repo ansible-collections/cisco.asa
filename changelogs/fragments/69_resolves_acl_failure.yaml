@@ -1,3 +1,0 @@
----
-bugfixes:
-  - Unexpected set of CMDs fired when source and destination were both set to hosts acl (https://github.com/ansible-collections/cisco.asa/pull/69).

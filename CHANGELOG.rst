@@ -4,6 +4,14 @@ Cisco Asa Collection Release Notes
 
 .. contents:: Topics
 
+v2.0.2
+======
+
+Bugfixes
+--------
+- To fix asa_acls where ipv6 with host wasn't getting rendered as expected and facts was skipping (https://github.com/ansible-collections/cisco.asa/issues/105).
+- To fix Cisco ASA network_object object config which wasn't working as expected. (https://github.com/ansible-collections/cisco.asa/issues/99).
+
 v2.0.1
 ======
 
