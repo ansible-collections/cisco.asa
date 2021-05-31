@@ -1,0 +1,3 @@
+---
+bugfixes:
+- Fixes asa_ogs protocol object to except protocol number as input (https://github.com/ansible-collections/cisco.asa/issues/116).

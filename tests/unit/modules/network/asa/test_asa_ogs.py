@@ -125,6 +125,15 @@ class TestAsaOGsModule(TestAsaModule):
                         ],
                         object_type="user",
                     ),
+                    dict(
+                        object_groups=[
+                            dict(
+                                name="test_protocol",
+                                protocol_object=dict(protocol=["tcp", "16"]),
+                            )
+                        ],
+                        object_type="protocol",
+                    ),
                 ],
                 state="merged",
             )
@@ -142,6 +151,8 @@ class TestAsaOGsModule(TestAsaModule):
             "network-object object NEW_TEST",
             "object-group user test_user_obj",
             "user-group domain\\\\test_merge",
+            "object-group protocol test_protocol",
+            "protocol tcp",
         ]
         self.assertEqual(sorted(result["commands"]), sorted(commands))
 
@@ -199,6 +210,15 @@ class TestAsaOGsModule(TestAsaModule):
                             ),
                         ],
                         object_type="user",
+                    ),
+                    dict(
+                        object_groups=[
+                            dict(
+                                name="test_protocol",
+                                protocol_object=dict(protocol=["16"]),
+                            )
+                        ],
+                        object_type="protocol",
                     ),
                 ],
                 state="merged",
@@ -293,6 +313,15 @@ class TestAsaOGsModule(TestAsaModule):
                         ],
                         object_type="user",
                     ),
+                    dict(
+                        object_groups=[
+                            dict(
+                                name="test_protocol",
+                                protocol_object=dict(protocol=["16"]),
+                            )
+                        ],
+                        object_type="protocol",
+                    ),
                 ],
                 state="replaced",
             )
@@ -324,6 +353,7 @@ class TestAsaOGsModule(TestAsaModule):
         commands = [
             "no object-group service test_og_service",
             "no object-group network group_network_obj",
+            "no object-group protocol test_protocol",
             "object-group network test_og_network",
             "description test_og_network_override",
             "no network-object 192.0.2.0 255.255.255.0",
@@ -391,6 +421,15 @@ class TestAsaOGsModule(TestAsaModule):
                         ],
                         object_type="user",
                     ),
+                    dict(
+                        object_groups=[
+                            dict(
+                                name="test_protocol",
+                                protocol_object=dict(protocol=["16"]),
+                            )
+                        ],
+                        object_type="protocol",
+                    ),
                 ],
                 state="overridden",
             )
@@ -420,6 +459,7 @@ class TestAsaOGsModule(TestAsaModule):
             "no object-group network group_network_obj",
             "no object-group network test_og_network",
             "no object-group network ANSIBLE_TEST",
+            "no object-group protocol test_protocol",
             "no object-group service test_og_service",
             "no object-group user group_user_obj",
             "no object-group user test_user_obj",
