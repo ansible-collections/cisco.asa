@@ -494,7 +494,7 @@ class OGs(ResourceModule):
                         obj_cmd_added = True
 
     def _add_group_object_cmd(self, want, have):
-        if have:
+        if have and have.get("group_object"):
             want["group_object"] = list(
                 set(want.get("group_object")) - set(have.get("group_object"))
             )
@@ -503,7 +503,11 @@ class OGs(ResourceModule):
             )
         for each in want["group_object"]:
             self.compare(["group_object"], {"group_object": each}, dict())
-        if (self.state == "replaced" or self.state == "overridden") and have:
+        if (
+            (self.state == "replaced" or self.state == "overridden")
+            and have
+            and have.get("group_object")
+        ):
             for each in have["group_object"]:
                 self.compare(["group_object"], dict(), {"group_object": each})
 

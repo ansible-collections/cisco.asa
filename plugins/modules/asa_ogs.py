@@ -107,11 +107,11 @@ options:
             type: dict
             suboptions:
               protocol:
-                description: Defines the protocols in the group.
+                description:
+                  - Defines the protocols in the group.
+                  - User can either specify protocols directly/protocol numbers(0-255)
                 type: list
                 elements: str
-                choices: [ah, eigrp, esp, gre, icmp, icmp6, igmp, igrp, ip, ipinip,
-                  ipsec, nos, ospf, pcp, pim, pptp, sctp, snp, tcp, udp]
           security_group:
             description: Configure a security-group
             type: dict

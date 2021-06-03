@@ -101,32 +101,7 @@ class OGsArgs(object):
                         "protocol_object": {
                             "type": "dict",
                             "options": {
-                                "protocol": {
-                                    "type": "list",
-                                    "elements": "str",
-                                    "choices": [
-                                        "ah",
-                                        "eigrp",
-                                        "esp",
-                                        "gre",
-                                        "icmp",
-                                        "icmp6",
-                                        "igmp",
-                                        "igrp",
-                                        "ip",
-                                        "ipinip",
-                                        "ipsec",
-                                        "nos",
-                                        "ospf",
-                                        "pcp",
-                                        "pim",
-                                        "pptp",
-                                        "sctp",
-                                        "snp",
-                                        "tcp",
-                                        "udp",
-                                    ],
-                                }
+                                "protocol": {"type": "list", "elements": "str"}
                             },
                         },
                         "security_group": {
