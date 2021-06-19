@@ -1,0 +1,43 @@
+---
+- debug: msg="START cli/replace_block.yaml"
+
+- name: Create ACL
+  cisco.asa.asa_acl:
+    provider: '{{ cli }}'
+    lines:
+      - access-list ACL-BLOCK extended permit tcp any any eq www
+
+- name: Add another ACE
+  register: result
+  cisco.asa.asa_acl:
+    provider: '{{ cli }}'
+    lines:
+      - access-list ACL-BLOCK extended permit tcp any any eq www
+      - access-list ACL-BLOCK extended permit tcp any any eq https
+
+- assert:
+    that:
+      - "'access-list ACL-BLOCK extended permit tcp any any eq https' in result.updates"
+      - "'access-list ACL-BLOCK extended permit tcp any any eq www' not in result.updates"
+
+- name: Add another ACE in block mode
+  register: result
+  cisco.asa.asa_acl:
+    provider: '{{ cli }}'
+    replace: block
+    lines:
+      - access-list ACL-BLOCK extended permit tcp any any eq www
+      - access-list ACL-BLOCK extended permit tcp any any eq https
+      - access-list ACL-BLOCK extended permit tcp any any eq ssh
+
+- assert:
+    that:
+      - "'access-list ACL-BLOCK extended permit tcp any any eq www' in result.updates"
+
+- name: teardown
+  cisco.asa.asa_config:
+    commands:
+      - clear configure access-list ACL-BLOCK
+    provider: '{{ cli }}'
+
+- debug: msg="END cli/replace_block.yaml"
