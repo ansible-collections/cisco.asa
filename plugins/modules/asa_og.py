@@ -561,6 +561,7 @@ def replace(want_dict, have):
                     commands.append("service-object " + i)
 
         elif "service" in have_group_type:
+
             if description:
                 if description != have_description:
                     if "object-group service {0}".format(name) not in commands:
@@ -568,9 +569,23 @@ def replace(want_dict, have):
                             "object-group service {0}".format(name)
                         )
                     commands.append("description {0}".format(description))
+
             if service_cfg:
+
                 for i in service_cfg:
-                    if i not in have_service_cfg:
+                    if have_service_cfg is None:
+                        if (
+                            "object-group service {0}".format(name)
+                            not in commands
+                        ):
+
+                            commands.append(
+                                "object-group service {0}".format(name)
+                            )
+
+                        commands.append("service " + i)
+
+                    elif i not in have_service_cfg:
                         if (
                             "object-group service {0}".format(name)
                             not in commands
@@ -579,6 +594,7 @@ def replace(want_dict, have):
                                 "object-group service {0}".format(name)
                             )
                         add_lines.append("service " + i)
+
                 for i in have_service_cfg:
                     if i not in service_cfg:
                         if (
