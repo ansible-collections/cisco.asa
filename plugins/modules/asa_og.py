@@ -583,7 +583,7 @@ def replace(want_dict, have):
                                 "object-group service {0}".format(name)
                             )
 
-                        commands.append('service ' + i)    
+                        commands.append('service ' + i)
 
                     elif i not in have_service_cfg:
                         if (
