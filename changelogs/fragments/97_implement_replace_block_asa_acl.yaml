@@ -1,0 +1,3 @@
+---
+bugfixes:
+  - Implement the replace block mode that is described in the docs for asa_acl (https://github.com/ansible-collections/cisco.asa/issues/97).

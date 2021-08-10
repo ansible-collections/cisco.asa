@@ -209,8 +209,11 @@ def main():
             config = NetworkConfig(indent=1, contents=contents)
 
             commands = candidate.difference(config)
-            commands = dumps(commands, "commands").split("\n")
-            commands = [str(c) for c in commands if c]
+            if commands and module.params["replace"] == "block":
+                commands = str(candidate).split("\n")
+            else:
+                commands = dumps(commands, "commands").split("\n")
+                commands = [str(c) for c in commands if c]
         else:
             commands = str(candidate).split("\n")
 
