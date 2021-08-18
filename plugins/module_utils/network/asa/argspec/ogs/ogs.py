@@ -120,31 +120,80 @@ class OGsArgs(object):
                                 "protocol": {
                                     "type": "list",
                                     "elements": "str",
-                                    "choices": [
-                                        "ah",
-                                        "eigrp",
-                                        "esp",
-                                        "gre",
-                                        "icmp",
-                                        "icmp6",
-                                        "igmp",
-                                        "igrp",
-                                        "ip",
-                                        "ipinip",
-                                        "ipsec",
-                                        "nos",
-                                        "ospf",
-                                        "pcp",
-                                        "pim",
-                                        "pptp",
-                                        "sctp",
-                                        "snp",
-                                        "tcp",
-                                        "tcp-udp",
-                                        "udp",
-                                    ],
+                                    # "choices": [
+                                    #     "ah",
+                                    #     "eigrp",
+                                    #     "esp",
+                                    #     "gre",
+                                    #     "icmp",
+                                    #     "icmp6",
+                                    #     "igmp",
+                                    #     "igrp",
+                                    #     "ip",
+                                    #     "ipinip",
+                                    #     "ipsec",
+                                    #     "nos",
+                                    #     "ospf",
+                                    #     "pcp",
+                                    #     "pim",
+                                    #     "pptp",
+                                    #     "sctp",
+                                    #     "snp",
+                                    #     "tcp",
+                                    #     "tcp-udp",
+                                    #     "udp",
+                                    # ],
                                 },
                                 "object": {"type": "str"},
+                                "source_port_protocol":{
+                                    "type": "dict",
+                                    "options": {
+                                        "eq": {"type": "str"},
+                                        "gt": {"type": "str"},
+                                        "lt": {"type": "str"},
+                                        "neq": {"type": "str"},
+                                        "range": {
+                                            "type": "dict",
+                                            "options": {
+                                                "start": {
+                                                    "type": "int"
+                                                },
+                                                "end": {"type": "int"},
+                                            },
+                                        },
+                                    },
+                                },
+                                "destination_port_protocol":{
+                                    "type": "dict",
+                                    "options": {
+                                        "eq": {"type": "str"},
+                                        "gt": {"type": "str"},
+                                        "lt": {"type": "str"},
+                                        "neq": {"type": "str"},
+                                        "range": {
+                                            "type": "dict",
+                                            "options": {
+                                                "start": {
+                                                    "type": "int"
+                                                },
+                                                "end": {"type": "int"},
+                                            },
+                                        },
+                                    },
+                                }
+                            },
+                        },
+                        "port_object": {
+                            "type": "dict",
+                            "options": {
+                                "eq": {"type": "str"},
+                                "range": {
+                                    "type": "dict",
+                                    "options": {
+                                        "start": {"type": "str"},
+                                        "end": {"type": "str"}
+                                    }
+                                }
                             },
                         },
                         "user_object": {

@@ -134,9 +134,81 @@ options:
                 elements: str
                 choices: [ah, eigrp, esp, gre, icmp, icmp6, igmp, igrp, ip, ipinip,
                   ipsec, nos, ospf, pcp, pim, pptp, sctp, snp, tcp, tcp-udp, udp]
+              service_protocol:
+                description: Defines the protocols in the group.
+                type: str
               object:
                 description: Enter this keyword to specify a service object
                 type: str
+              source_port_protocol:
+                description: Keyword to specify source
+                type: dict
+                suboptions:
+                  eq:
+                    description: Match only packets on a given port number.
+                    type: str
+                  gt:
+                    description: Match only packets with a greater port number.
+                    type: str
+                  lt:
+                    description: Match only packets with a lower port number.
+                    type: str
+                  neq:
+                    description: Match only packets not on a given port number.
+                    type: str
+                  range:
+                    description: Port range operator
+                    type: dict
+                    suboptions:
+                      start:
+                        description: Specify the start of the port range.
+                        type: int
+                      end:
+                        description: Specify the end of the port range.
+                        type: int
+              destination_port_protocol:
+                description: Keyword to specify destination
+                type: dict
+                suboptions:
+                  eq:
+                    description: Match only packets on a given port number.
+                    type: str
+                  gt:
+                    description: Match only packets with a greater port number.
+                    type: str
+                  lt:
+                    description: Match only packets with a lower port number.
+                    type: str
+                  neq:
+                    description: Match only packets not on a given port number.
+                    type: str
+                  range:
+                    description: Port range operator
+                    type: dict
+                    suboptions:
+                      start:
+                        description: Specify the start of the port range.
+                        type: int
+                      end:
+                        description: Specify the end of the port range.
+                        type: int
+          port_object:
+            description: Configure a port object
+            type: dict
+            suboptions:
+              eq:
+                description: Enter this keyword to specify a port
+                type: str
+              range:
+                description: Enter this keyword to specify a range of ports
+                type: dict
+                suboptions:
+                  start:
+                    description: Specify the start of the port range.
+                    type: int
+                  end:
+                    description: Specify the end of the port range.
+                    type: int
           user_object:
             description: Configures single user, local or import user group
             type: dict
