@@ -240,7 +240,11 @@ class OGs(ResourceModule):
                         parsers,
                         "network_object.address",
                     )
-                elif h_item and h_item[network_obj].get("address"):
+                elif (
+                    h_item
+                    and h_item.get(network_obj)
+                    and h_item[network_obj].get("address")
+                ):
                     h_item[network_obj] = {
                         "address": h_item[network_obj].get("address")
                     }
@@ -272,7 +276,11 @@ class OGs(ResourceModule):
                         parsers,
                         "network_object.ipv6_address",
                     )
-                elif h_item and h_item[network_obj].get("ipv6_address"):
+                elif (
+                    h_item
+                    and h_item.get(network_obj)
+                    and h_item[network_obj].get("ipv6_address")
+                ):
                     h_item[network_obj] = {
                         "ipv6_address": h_item[network_obj].get("ipv6_address")
                     }
@@ -288,7 +296,11 @@ class OGs(ResourceModule):
                         parsers,
                         "network_object.object",
                     )
-                elif h_item and h_item[network_obj].get("object"):
+                elif (
+                    h_item
+                    and h_item.get(network_obj)
+                    and h_item[network_obj].get("object")
+                ):
                     h_item[network_obj] = {
                         "object": h_item[network_obj].get("object")
                     }
@@ -470,8 +482,8 @@ class OGs(ResourceModule):
     def _add_object_cmd(self, want, have, object, object_elements):
         obj_cmd_added = False
         for each in object_elements:
-            want_element = want[object].get(each)
-            have_element = have[object].get(each)
+            want_element = want[object].get(each) if want.get(object) else want
+            have_element = have[object].get(each) if have.get(object) else have
             if want_element and isinstance(want_element[0], dict):
                 if (
                     want_element
@@ -516,7 +528,11 @@ class OGs(ResourceModule):
     ):
         temp_have = copy.copy(have)
         temp_want = copy.copy(want)
-        if temp_have and temp_have[object].get(object_type):
+        if (
+            temp_have
+            and temp_have.get(object)
+            and temp_have[object].get(object_type)
+        ):
             want_diff = self.get_list_diff(
                 temp_want, temp_have, object, object_type
             )

@@ -107,6 +107,10 @@ class TestAsaOGsModule(TestAsaModule):
                                 name="ANSIBLE_TEST",
                                 network_object=dict(object=["NEW_TEST"]),
                             ),
+                            dict(
+                                name="bug_test_obj",
+                                network_object=dict(host=["9.9.9.9"]),
+                            ),
                         ],
                         object_type="network",
                     ),
@@ -149,6 +153,8 @@ class TestAsaOGsModule(TestAsaModule):
             "network-object 2001:db8:0:3::/64",
             "object-group network ANSIBLE_TEST",
             "network-object object NEW_TEST",
+            "object-group network bug_test_obj",
+            "network-object host 9.9.9.9",
             "object-group user test_user_obj",
             "user-group domain\\\\test_merge",
             "object-group protocol test_protocol",
@@ -177,6 +183,9 @@ class TestAsaOGsModule(TestAsaModule):
                             dict(
                                 name="ANSIBLE_TEST",
                                 network_object=dict(object=["TEST1", "TEST2"]),
+                            ),
+                            dict(
+                                name="bug_test_obj",
                             ),
                         ],
                         object_type="network",
@@ -280,6 +289,9 @@ class TestAsaOGsModule(TestAsaModule):
                                 name="ANSIBLE_TEST",
                                 network_object=dict(object=["TEST1", "TEST2"]),
                             ),
+                            dict(
+                                name="bug_test_obj",
+                            ),
                         ],
                         object_type="network",
                     ),
@@ -361,6 +373,7 @@ class TestAsaOGsModule(TestAsaModule):
             "no network-object host 192.0.2.1",
             "network-object host 192.0.3.1",
             "no object-group network ANSIBLE_TEST",
+            "no object-group network bug_test_obj",
             "no object-group user group_user_obj",
             "no object-group user test_user_obj",
         ]
@@ -387,6 +400,9 @@ class TestAsaOGsModule(TestAsaModule):
                             dict(
                                 name="ANSIBLE_TEST",
                                 network_object=dict(object=["TEST1", "TEST2"]),
+                            ),
+                            dict(
+                                name="bug_test_obj",
                             ),
                         ],
                         object_type="network",
@@ -459,6 +475,7 @@ class TestAsaOGsModule(TestAsaModule):
             "no object-group network group_network_obj",
             "no object-group network test_og_network",
             "no object-group network ANSIBLE_TEST",
+            "no object-group network bug_test_obj",
             "no object-group protocol test_protocol",
             "no object-group service test_og_service",
             "no object-group user group_user_obj",
