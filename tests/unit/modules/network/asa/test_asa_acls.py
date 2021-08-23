@@ -209,6 +209,43 @@ class TestAsaAclsModule(TestAsaModule):
                             aces=[
                                 dict(
                                     destination=dict(
+                                        address="10.30.30.0",
+                                        netmask="255.255.255.0",
+                                        port_protocol=dict(eq="100"),
+                                    ),
+                                    grant="permit",
+                                    line=1,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(
+                                        host="10.20.20.5",
+                                        port_protocol=dict(
+                                            range=dict(end=65535, start=49152)
+                                        ),
+                                    ),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        object_group="ALLSERV.12",
+                                        port_protocol=dict(eq="9389"),
+                                    ),
+                                    grant="permit",
+                                    line=2,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(
+                                        address="10.20.20.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="management_in",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
                                         address="2001:fc8:0:4::/64",
                                         port_protocol=dict(eq="telnet"),
                                     ),
@@ -387,6 +424,43 @@ class TestAsaAclsModule(TestAsaModule):
                             aces=[
                                 dict(
                                     destination=dict(
+                                        address="10.30.30.0",
+                                        netmask="255.255.255.0",
+                                        port_protocol=dict(eq="100"),
+                                    ),
+                                    grant="permit",
+                                    line=1,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(
+                                        host="10.20.20.5",
+                                        port_protocol=dict(
+                                            range=dict(end=65535, start=49152)
+                                        ),
+                                    ),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        object_group="ALLSERV.12",
+                                        port_protocol=dict(eq="9389"),
+                                    ),
+                                    grant="permit",
+                                    line=2,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(
+                                        address="10.20.20.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="management_in",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
                                         address="2001:fc8:0:4::/64",
                                         port_protocol=dict(eq="telnet"),
                                     ),
@@ -460,6 +534,8 @@ class TestAsaAclsModule(TestAsaModule):
             "no access-list test_access line 3 extended permit ip host 192.0.2.2 any",
             "no access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors",
             "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default",
+            "no access-list management_in line 2 extended permit tcp 10.20.20.0 255.255.255.0 object-group ALLSERV.12 eq 9389",
+            "no access-list management_in line 1 extended permit tcp host 10.20.20.5 range 49152 65535 10.30.30.0 255.255.255.0 eq 100",
             "no access-list test_R1_traffic line 2 extended permit ip host 2001:db8::1 any6",
             "no access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive",
             "access-list test_global_access line 1 extended deny tcp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 eq www log errors",
@@ -554,6 +630,43 @@ class TestAsaAclsModule(TestAsaModule):
                             aces=[
                                 dict(
                                     destination=dict(
+                                        address="10.30.30.0",
+                                        netmask="255.255.255.0",
+                                        port_protocol=dict(eq="100"),
+                                    ),
+                                    grant="permit",
+                                    line=1,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(
+                                        host="10.20.20.5",
+                                        port_protocol=dict(
+                                            range=dict(end=65535, start=49152)
+                                        ),
+                                    ),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        object_group="ALLSERV.12",
+                                        port_protocol=dict(eq="9389"),
+                                    ),
+                                    grant="permit",
+                                    line=2,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(
+                                        address="10.20.20.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="management_in",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
                                         address="2001:fc8:0:4::/64",
                                         port_protocol=dict(eq="telnet"),
                                     ),
@@ -616,6 +729,8 @@ class TestAsaAclsModule(TestAsaModule):
             "no access-list test_access line 3 extended permit ip host 192.0.2.2 any",
             "no access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors",
             "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default",
+            "no access-list management_in line 2 extended permit tcp 10.20.20.0 255.255.255.0 object-group ALLSERV.12 eq 9389",
+            "no access-list management_in line 1 extended permit tcp host 10.20.20.5 range 49152 65535 10.30.30.0 255.255.255.0 eq 100",
             "no access-list test_global_access line 2 remark test global remark",
             "no access-list test_global_access line 1 extended deny tcp any any eq www log errors",
             "no access-list ansible_test line 2 extended deny ip host 192.0.5.1 any4",
