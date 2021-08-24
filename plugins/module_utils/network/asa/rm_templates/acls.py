@@ -214,11 +214,13 @@ class AclsTemplate(NetworkTemplate):
                                 },
                                 "destination": {
                                     "address": "{% if destination is defined and\
-                                        '.' in destination and 'object-group' not in destination %}{{ destination.split(' ')[0] }}{% elif std_dest is defined and\
+                                        '.' in destination and\
+                                            'object-group' not in destination %}{{ destination.split(' ')[0] }}{% elif std_dest is defined and\
                                             '.' in std_dest and 'host' not in std_dest %}{{ std_dest.split(' ')[0] }}{% elif destination is defined and\
                                                  '::' in destination %}{{ destination }}{% endif %}",
                                     "netmask": "{% if destination is defined and\
-                                        '.' in destination and 'object-group' not in destination %}{{ destination.split(' ')[1] }}{% elif std_dest is defined and\
+                                        '.' in destination and\
+                                             'object-group' not in destination %}{{ destination.split(' ')[1] }}{% elif std_dest is defined and\
                                              '.' in std_dest and 'host' not in std_dest %}{{ std_dest.split(' ')[1] }}{% endif %}",
                                     "any4": "{% if destination is defined and\
                                          destination == 'any4' %}{{ True }}{% elif std_dest is defined and std_dest == 'any4' %}{{ True }}{% endif %}",
