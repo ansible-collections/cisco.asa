@@ -1,0 +1,3 @@
+---
+bugfixes:
+  - Corrects two errors in the sanity test for 'pylint' under Python 3.8
