@@ -69,7 +69,9 @@ class TestAsaFactsModule(TestAsaModule):
             output = list()
 
             for command in commands:
-                filename = str(command).split(" | ")[0].replace(" ", "_")
+                filename = (
+                    str(command).split(" | ", maxsplit=1)[0].replace(" ", "_")
+                )
                 output.append(load_fixture("asa_facts_%s" % filename))
             return output
 
