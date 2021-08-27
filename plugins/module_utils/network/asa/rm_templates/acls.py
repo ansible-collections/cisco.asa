@@ -213,12 +213,12 @@ class AclsTemplate(NetworkTemplate):
                                     },
                                 },
                                 "destination": {
-                                    "address": "{% if destination is defined and\
+                                    "address": "{% if destination is defined and 'host' not in destination and\
                                         '.' in destination and\
                                             'object-group' not in destination %}{{ destination.split(' ')[0] }}{% elif std_dest is defined and\
                                             '.' in std_dest and 'host' not in std_dest %}{{ std_dest.split(' ')[0] }}{% elif destination is defined and\
                                                  '::' in destination %}{{ destination }}{% endif %}",
-                                    "netmask": "{% if destination is defined and\
+                                    "netmask": "{% if destination is defined and 'host' not in destination and\
                                         '.' in destination and\
                                              'object-group' not in destination %}{{ destination.split(' ')[1] }}{% elif std_dest is defined and\
                                              '.' in std_dest and 'host' not in std_dest %}{{ std_dest.split(' ')[1] }}{% endif %}",
@@ -227,7 +227,7 @@ class AclsTemplate(NetworkTemplate):
                                     "any6": "{{ True if destination is defined and destination == 'any6' else None }}",
                                     "any": "{{ True if destination is defined and destination == 'any' else None }}",
                                     "host": "{% if destination is defined and\
-                                         'host' in destination %}{{ source_host.split(' ')[1] }}{% elif std_dest is defined and\
+                                         'host' in destination %}{{ destination.split(' ')[1] }}{% elif std_dest is defined and\
                                               'host' in std_dest %}{{ std_dest.split(' ')[1] }}{% endif %}",
                                     "interface": "{{ destination.split(' ')[1] if destination is defined and 'interface' in destination else None }}",
                                     "object_group": "{{ destination.split(' ')[1] if destination is defined and 'object-group' in destination else None }}",
