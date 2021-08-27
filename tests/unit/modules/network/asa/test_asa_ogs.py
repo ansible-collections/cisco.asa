@@ -257,7 +257,7 @@ class TestAsaOGsModule(TestAsaModule):
             "no network-object host 2001:db8::1",
             "network-object host 192.0.3.1",
         ]
-        self.assertEqual(result["commands"], commands)
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
 
     def test_asa_ogs_replaced_idempotent(self):
         set_module_args(
