@@ -1,0 +1,3 @@
+---
+bugfixes:
+- Fixes description for "passwords" parameter in documentation (https://github.com/ansible-collections/cisco.asa/issues/132).
