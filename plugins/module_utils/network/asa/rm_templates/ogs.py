@@ -192,7 +192,7 @@ class OGsTemplate(NetworkTemplate):
             "getval": re.compile(
                 r"""\s+network-object*
                     \s*(?P<host_obj>host)*
-                    \s*(?P<host_address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})
+                    \s*(?P<host_address>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|(\S+::\d+|\S+::/\d+))
                     *$""",
                 re.VERBOSE,
             ),
