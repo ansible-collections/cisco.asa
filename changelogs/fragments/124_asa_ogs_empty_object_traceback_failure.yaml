@@ -1,0 +1,3 @@
+---
+bugfixes:
+  - To fix asa_ogs for empty object traceback failure, (https://github.com/ansible-collections/cisco.asa/issues/124).
