@@ -204,11 +204,13 @@ class AclsTemplate(NetworkTemplate):
                                     "object_group": "{{ source.split(' ')[1] if source is defined and 'object-group' in source else None }}",
                                     "port_protocol": {
                                         "{{ source_port_protocol.split(' ')[0] if source_port_protocol\
-                                            is defined and 'range' not in source_port_protocol }}": "{{ source_port_protocol.split(' ')[1]\
+                                            is defined and 'range' not in source_port_protocol else None }}": "{{ source_port_protocol.split(' ')[1]\
                                                 if source_port_protocol is defined and 'range' not in source_port_protocol else None }}",
                                         "{{ 'range' }}": {
-                                            "start": "{{ source_port_protocol.split(' ')[1] if 'range' in source_port_protocol }}",
-                                            "end": "{{ source_port_protocol.split(' ')[2] if 'range' in source_port_protocol }}",
+                                            "start": "{{ source_port_protocol.split(' ')[1] if source_port_protocol is defined and\
+                                                'range' in source_port_protocol else None }}",
+                                            "end": "{{ source_port_protocol.split(' ')[2] if source_port_protocol is defined and\
+                                                'range' in source_port_protocol else None }}",
                                         },
                                     },
                                 },
@@ -233,11 +235,13 @@ class AclsTemplate(NetworkTemplate):
                                     "object_group": "{{ destination.split(' ')[1] if destination is defined and 'object-group' in destination else None }}",
                                     "port_protocol": {
                                         "{{ dest_port_protocol.split(' ')[0] if dest_port_protocol\
-                                            is defined and 'range' not in dest_port_protocol }}": "{{ dest_port_protocol.split(' ')[1]\
+                                            is defined and 'range' not in dest_port_protocol else None }}": "{{ dest_port_protocol.split(' ')[1]\
                                                 if dest_port_protocol is defined and 'range' not in dest_port_protocol else None }}",
                                         "{{ 'range' }}": {
-                                            "start": "{{ dest_port_protocol.split(' ')[1] if 'range' in dest_port_protocol }}",
-                                            "end": "{{ dest_port_protocol.split(' ')[2] if 'range' in dest_port_protocol }}",
+                                            "start": "{{ dest_port_protocol.split(' ')[1] if dest_port_protocol is defined and\
+                                                'range' in dest_port_protocol }}",
+                                            "end": "{{ dest_port_protocol.split(' ')[2] if dest_port_protocol is defined and\
+                                                'range' in dest_port_protocol }}",
                                         },
                                     },
                                 },
