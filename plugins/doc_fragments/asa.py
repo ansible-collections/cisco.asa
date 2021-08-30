@@ -31,8 +31,8 @@ class ModuleDocFragment(object):
     type: str
   passwords:
     description:
-    - Specifies which context to target if you are running in the ASA in multiple
-      context mode. Defaults to the current context you login to.
+    - Saves running-config passwords in clear-text when set to True.
+      Defaults to False
     type: bool
   provider:
     description:
