@@ -188,6 +188,24 @@ class OGsTemplate(NetworkTemplate):
             },
         },
         {
+            "name": "network_object.ipv6_address",
+            "getval": re.compile(
+                r"""\s+network-object*
+                    \s*(?P<ipv6>\S+::/\d+)
+                    *$""",
+                re.VERBOSE,
+            ),
+            "setval": _tmplt_network_object_ipv6,
+            "compval": "network_object.ipv6_address",
+            "result": {
+                "ogs": {
+                    "{{ obj_type }}": {
+                        "{{ obj_name }}": {"ipv6_address": ["{{ ipv6 }}"]}
+                    }
+                }
+            },
+        },
+        {
             "name": "network_object.host",
             "getval": re.compile(
                 r"""\s+network-object*
@@ -202,24 +220,6 @@ class OGsTemplate(NetworkTemplate):
                 "ogs": {
                     "{{ obj_type }}": {
                         "{{ obj_name }}": {"host": ["{{ host_address }}"]}
-                    }
-                }
-            },
-        },
-        {
-            "name": "network_object.ipv6_address",
-            "getval": re.compile(
-                r"""\s+network-object*
-                    \s*(?P<ipv6>\S+::/\d+)
-                    *$""",
-                re.VERBOSE,
-            ),
-            "setval": _tmplt_network_object_ipv6,
-            "compval": "network_object.ipv6_address",
-            "result": {
-                "ogs": {
-                    "{{ obj_type }}": {
-                        "{{ obj_name }}": {"ipv6_address": ["{{ ipv6 }}"]}
                     }
                 }
             },
