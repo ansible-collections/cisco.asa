@@ -176,7 +176,7 @@ class TestAsaOGsModule(TestAsaModule):
                                 description="test_og_network",
                                 name="test_og_network",
                                 network_object=dict(
-                                    host=["192.0.2.1"],
+                                    host=["192.0.2.1", "2001:db8::1"],
                                     address=["192.0.2.0 255.255.255.0"],
                                 ),
                             ),
@@ -263,9 +263,10 @@ class TestAsaOGsModule(TestAsaModule):
             "no network-object 192.0.2.0 255.255.255.0",
             "network-object 192.0.3.0 255.255.255.0",
             "no network-object host 192.0.2.1",
+            "no network-object host 2001:db8::1",
             "network-object host 192.0.3.1",
         ]
-        self.assertEqual(result["commands"], commands)
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
 
     def test_asa_ogs_replaced_idempotent(self):
         set_module_args(
@@ -281,7 +282,7 @@ class TestAsaOGsModule(TestAsaModule):
                                 description="test_og_network",
                                 name="test_og_network",
                                 network_object=dict(
-                                    host=["192.0.2.1"],
+                                    host=["192.0.2.1", "2001:db8::1"],
                                     address=["192.0.2.0 255.255.255.0"],
                                 ),
                             ),
@@ -371,6 +372,7 @@ class TestAsaOGsModule(TestAsaModule):
             "no network-object 192.0.2.0 255.255.255.0",
             "network-object 192.0.3.0 255.255.255.0",
             "no network-object host 192.0.2.1",
+            "no network-object host 2001:db8::1",
             "network-object host 192.0.3.1",
             "no object-group network ANSIBLE_TEST",
             "no object-group network bug_test_obj",
@@ -393,7 +395,7 @@ class TestAsaOGsModule(TestAsaModule):
                                 description="test_og_network",
                                 name="test_og_network",
                                 network_object=dict(
-                                    host=["192.0.2.1"],
+                                    host=["192.0.2.1", "2001:db8::1"],
                                     address=["192.0.2.0 255.255.255.0"],
                                 ),
                             ),
@@ -493,7 +495,7 @@ class TestAsaOGsModule(TestAsaModule):
                                 description="test_og_network",
                                 name="test_og_network",
                                 network_object=dict(
-                                    host=["192.0.2.1"],
+                                    host=["192.0.2.1", "2001:db8::1"],
                                     address=["192.0.2.0 255.255.255.0"],
                                 ),
                             )
@@ -520,6 +522,7 @@ class TestAsaOGsModule(TestAsaModule):
             "description test_og_network",
             "network-object 192.0.2.0 255.255.255.0",
             "network-object host 192.0.2.1",
+            "network-object host 2001:db8::1",
             "object-group service test_og_service",
             "service-object ipinip",
             "service-object tcp-udp",
