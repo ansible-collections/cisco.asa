@@ -188,25 +188,6 @@ class OGsTemplate(NetworkTemplate):
             },
         },
         {
-            "name": "network_object.host",
-            "getval": re.compile(
-                r"""\s+network-object*
-                    \s*(?P<host_obj>host)*
-                    \s*(?P<host_address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})
-                    *$""",
-                re.VERBOSE,
-            ),
-            "setval": _tmplt_network_object,
-            "compval": "network_object.host",
-            "result": {
-                "ogs": {
-                    "{{ obj_type }}": {
-                        "{{ obj_name }}": {"host": ["{{ host_address }}"]}
-                    }
-                }
-            },
-        },
-        {
             "name": "network_object.ipv6_address",
             "getval": re.compile(
                 r"""\s+network-object*
@@ -220,6 +201,25 @@ class OGsTemplate(NetworkTemplate):
                 "ogs": {
                     "{{ obj_type }}": {
                         "{{ obj_name }}": {"ipv6_address": ["{{ ipv6 }}"]}
+                    }
+                }
+            },
+        },
+        {
+            "name": "network_object.host",
+            "getval": re.compile(
+                r"""\s+network-object*
+                    \s*(?P<host_obj>host)*
+                    \s*(?P<host_address>\S+)
+                    *$""",
+                re.VERBOSE,
+            ),
+            "setval": _tmplt_network_object,
+            "compval": "network_object.host",
+            "result": {
+                "ogs": {
+                    "{{ obj_type }}": {
+                        "{{ obj_name }}": {"host": ["{{ host_address }}"]}
                     }
                 }
             },
