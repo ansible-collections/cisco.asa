@@ -65,6 +65,11 @@ Bugfixes
 v1.0.4
 ======
 
+Release Summary
+---------------
+
+- Releasing 1.0.4 with updated readme with changelog link, galaxy description, and bugfix.
+
 Bugfixes
 --------
 
@@ -75,6 +80,11 @@ Bugfixes
 v1.0.3
 ======
 
+Release Summary
+---------------
+
+- Releasing 1.0.3 with updated readme with changelog link, galaxy description, and bugfix.
+
 Bugfixes
 --------
 
@@ -82,6 +92,11 @@ Bugfixes
 
 v1.0.2
 ======
+
+Release Summary
+---------------
+
+- Re-releasing 1.0.1 with updated changelog.
 
 v1.0.1
 ======
