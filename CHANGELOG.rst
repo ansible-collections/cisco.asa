@@ -4,11 +4,27 @@ Cisco Asa Collection Release Notes
 
 .. contents:: Topics
 
+
+v2.0.3
+======
+
+Bugfixes
+--------
+
+- Fix TypeError argument of type 'NoneType' is not iterable in service-group when service-group does not exists.
+- Fixes asa_ogs protocol object to except protocol number as input (https://github.com/ansible-collections/cisco.asa/issues/116).
+- Fixes description for "passwords" parameter in documentation (https://github.com/ansible-collections/cisco.asa/issues/132).
+- Implement the replace block mode that is described in the docs for asa_acl (https://github.com/ansible-collections/cisco.asa/issues/97).
+- To fix asa_acls port range implementation, (https://github.com/ansible-collections/cisco.asa/issues/120, https://github.com/ansible-collections/cisco.asa/issues/121, https://github.com/ansible-collections/cisco.asa/issues/122).
+- To fix asa_ogs for empty object traceback failure, (https://github.com/ansible-collections/cisco.asa/issues/124).
+- To fix asa_ogs for parsing network object with ipv6 host address as expected (https://github.com/ansible-collections/cisco.asa/issues/128).
+
 v2.0.2
 ======
 
 Bugfixes
 --------
+
 - To fix asa_acls where ipv6 with host wasn't getting rendered as expected and facts was skipping (https://github.com/ansible-collections/cisco.asa/issues/105).
 - To fix Cisco ASA network_object object config which wasn't working as expected. (https://github.com/ansible-collections/cisco.asa/issues/99).
 
@@ -17,11 +33,13 @@ v2.0.1
 
 Minor Changes
 -------------
+
 - Remove tests/sanity/requirements.txt (https://github.com/ansible-collections/cisco.asa/pull/94).
 - Add ignore-2.12.txt (https://github.com/ansible-collections/cisco.asa/pull/102).
 
 Bugfixes
 --------
+
 - Added save_when param support in asa_config module (https://github.com/ansible-collections/cisco.asa/pull/75).
 - To fix Cisco ASA network_object object config which wasn't working as expected (https://github.com/ansible-collections/cisco.asa/pull/103).
 
@@ -36,10 +54,12 @@ Major Changes
 
 Minor Changes
 -------------
+
 - Adds support for single_user_mode command output caching. (https://github.com/ansible-collections/cisco.ios/pull/204).
 
 Bugfixes
 --------
+
 - To fix ASA acls module where replace wasn't working as expected (https://github.com/ansible-collections/cisco.asa/pull/92).
 
 v1.0.4
@@ -68,7 +88,7 @@ Release Summary
 Bugfixes
 --------
 
-- Unexpected set of CMDs fired when source and destination were both set to hosts acl. (https://github.com/ansible-collections/cisco.asa/pull/69).
+- Unexpected set of CMDs fired when source and destination were both set to hosts acl (https://github.com/ansible-collections/cisco.asa/pull/69).
 
 v1.0.2
 ======
