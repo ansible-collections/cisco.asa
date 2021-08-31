@@ -46,6 +46,9 @@ releases:
     - remove_asa_ignore.yaml
     release_date: '2020-08-03'
   1.0.2:
+    changes:
+      release_summary:
+      - Re-releasing 1.0.1 with updated changelog.
     fragments:
     - 1.0.2.yaml
     release_date: '2020-08-07'
@@ -67,6 +70,7 @@ releases:
         any4/any6 feature (https://github.com/ansible-collections/cisco.asa/pull/64).
     fragments:
     - 56_acl_any4_ay6_feature_update_use_rm_approach.yaml
+    - galaxy-version.yaml
     - 76_asa_og_state_delete_not_working_as_expected.yaml
     release_date: '2020-11-26'
   2.0.0:
