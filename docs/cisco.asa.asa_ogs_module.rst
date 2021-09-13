@@ -302,31 +302,10 @@ Parameters
                     </div>
                 </td>
                 <td>
-                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                    <li>ah</li>
-                                    <li>eigrp</li>
-                                    <li>esp</li>
-                                    <li>gre</li>
-                                    <li>icmp</li>
-                                    <li>icmp6</li>
-                                    <li>igmp</li>
-                                    <li>igrp</li>
-                                    <li>ip</li>
-                                    <li>ipinip</li>
-                                    <li>ipsec</li>
-                                    <li>nos</li>
-                                    <li>ospf</li>
-                                    <li>pcp</li>
-                                    <li>pim</li>
-                                    <li>pptp</li>
-                                    <li>sctp</li>
-                                    <li>snp</li>
-                                    <li>tcp</li>
-                                    <li>udp</li>
-                        </ul>
                 </td>
                 <td>
                         <div>Defines the protocols in the group.</div>
+                        <div>User can either specify protocols directly/protocol numbers(0-255)</div>
                 </td>
             </tr>
 
