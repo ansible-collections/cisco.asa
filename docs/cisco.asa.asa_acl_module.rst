@@ -198,7 +198,7 @@ Parameters
                         </ul>
                 </td>
                 <td>
-                        <div>Specifies which context to target if you are running in the ASA in multiple context mode. Defaults to the current context you login to.</div>
+                        <div>Saves running-config passwords in clear-text when set to True. Defaults to False</div>
                 </td>
             </tr>
             <tr>
@@ -447,7 +447,7 @@ Status
 ------
 
 
-- This module will be removed in version . *[deprecated]*
+- This module will be removed in a release after 2022-06-01. *[deprecated]*
 - For more information see `DEPRECATED`_.
 
 
