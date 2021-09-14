@@ -84,6 +84,8 @@ def _tmplt_service_object(config_data):
             commands.append("service-object {0}".format(each))
         return commands
 
+def _tmplt_services_object(config_data):
+    pass
 
 def _tmplt_port_object(config_data):
     pass
@@ -305,32 +307,75 @@ class OGsTemplate(NetworkTemplate):
             },
         },
         {
-            "name": "service_object",
+            "name": "port_object",
+            "getval": re.compile(
+                r"""\s+port-object*
+                    \s*(?P<eq>eq\s\S+)*
+                    \s*(?P<range>range\s(\S+|\d+)\s(\S+|\d+))
+                    *$""",
+                re.VERBOSE,
+            ),
+            "setval": _tmplt_port_object,
+            "compval": "port_object",
+            "result": {
+                "ogs": {
+                    "{{ obj_type }}": {
+                        "{{ obj_name }}": {
+                            "port_object": [
+                                {
+                                    "eq": "{{ eq.split(' ')[1] if eq is defined }}",
+                                    "range": {
+                                        "start": "{{ range.split('range ')[1].split(' ')[0] if range is defined else None }}",
+                                        "end": "{{ range.split('range ')[1].split(' ')[1] if range is defined else None }}",
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+        },
+        {
+            "name": "services_object",
             "getval": re.compile(
                 r"""\s+service-object*
                     \s*(?P<protocol>\S+)*
                     \s*(?P<source_port_protocol>source\s((eq|gts|lt|neq)\s(\S+|\d+)|(range\s(\S+|\d+)\s(\S+|\d+))))*
                     \s*(?P<destination_port_protocol>destination\s((eq|gts|lt|neq)\s(\S+|\d+)|(range\s(\S+|\d+)\s(\S+|\d+))))
-                    *$""",
+                    *""",
                 re.VERBOSE,
             ),
-            "setval": _tmplt_service_object,
+            "setval": _tmplt_services_object,
             "compval": "service_object",
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
                         "{{ obj_name }}": {
-                            "protocol": ["{{ protocol }}"],
-                            "source_port_protocol": {
-                                "{{ source_port_protocol.split(' ')[0] if source_port_protocol\
-                                        is defined else None }}": "{{ source_port_protocol.split(' ')[1]\
-                                            if source_port_protocol is defined else None }}"
-                            },
-                            "destination_port_protocol": {
-                                "{{ destination_port_protocol.split(' ')[0] if destination_port_protocol\
-                                        is defined else None }}": "{{ destination_port_protocol.split(' ')[1]\
-                                            if destination_port_protocol is defined else None }}"
-                            }
+                            "services_object": [
+                                {
+                                    "protocol": "{{ protocol }}",
+                                    "source_port_protocol": {
+                                        "eq": "{{ source_port_protocol.split(' ')[2] if source_port_protocol is defined and 'eq' in source_port_protocol and 'range' not in source_port_protocol }}",
+                                        "gt": "{{ source_port_protocol.split(' ')[2] if source_port_protocol is defined and 'gt' in source_port_protocol and 'range' not in source_port_protocol }}",
+                                        "lt": "{{ source_port_protocol.split(' ')[2] if source_port_protocol is defined and 'lt' in source_port_protocol and 'range' not in source_port_protocol }}",
+                                        "neq": "{{ source_port_protocol.split(' ')[2] if source_port_protocol is defined and 'neq' in source_port_protocol and 'range' not in source_port_protocol }}",
+                                        "range": {
+                                            "start": "{{ source_port_protocol.split('range ')[1].split(' ')[0] if source_port_protocol is defined and 'range' in source_port_protocol else None }}",
+                                            "end": "{{ source_port_protocol.split('range ')[1].split(' ')[1] if source_port_protocol is defined and 'range' in source_port_protocol else None }}",
+                                        }
+                                    },
+                                    "destination_port_protocol": {
+                                        "eq": "{{ destination_port_protocol.split(' ')[2] if 'eq' in destination_port_protocol and 'range' not in destination_port_protocol }}",
+                                        "gt": "{{ destination_port_protocol.split(' ')[2] if 'gt' in destination_port_protocol and 'range' not in destination_port_protocol }}",
+                                        "lt": "{{ destination_port_protocol.split(' ')[2] if 'lt' in destination_port_protocol and 'range' not in destination_port_protocol }}",
+                                        "neq": "{{ destination_port_protocol.split(' ')[2] if 'neq' in destination_port_protocol and 'range' not in destination_port_protocol }}",
+                                        "range": {
+                                            "start": "{{ destination_port_protocol.split('range ')[1].split(' ')[0] if 'range' in destination_port_protocol else None }}",
+                                            "end": "{{ destination_port_protocol.split('range ')[1].split(' ')[1] if 'range' in destination_port_protocol else None }}",
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -354,31 +399,24 @@ class OGsTemplate(NetworkTemplate):
                 }
             },
         },
-        # {
-        #     "name": "port_object",
-        #     "getval": re.compile(
-        #         r"""\s+port-object*
-        #             \s*(?P<eq>eq\s\S+)*
-        #             \s*(?P<range>range\s\S+)*
-        #             *$""",
-        #         re.VERBOSE,
-        #     ),
-        #     "setval": _tmplt_port_object,
-        #     "compval": "port_object",
-        #     "result": {
-        #         "ogs": {
-        #             "{{ obj_type }}": {
-        #                 "{{ obj_name }}": {
-        #                     "eq": "{{ eq.split(' ')[1] if eq is defined }}",
-        #                     "range": {
-        #                         "start": "{{ range.split(' ')[1] if eq is defined }}",
-        #                         "end": "{{ range.split(' ')[2] if eq is defined }}"
-        #                     },
-        #                 }
-        #             }
-        #         }
-        #     },
-        # },
+        {
+            "name": "service_object",
+            "getval": re.compile(
+                r"""\s+service-object*
+                    \s*(?P<protocol>\S+)*\s
+                    *$""",
+                re.VERBOSE,
+            ),
+            "setval": _tmplt_service_object,
+            "compval": "service_object",
+            "result": {
+                "ogs": {
+                    "{{ obj_type }}": {
+                        "{{ obj_name }}": {"protocol": ["{{ protocol }}"]}
+                    }
+                }
+            },
+        },
         {
             "name": "user_object.user",
             "getval": re.compile(

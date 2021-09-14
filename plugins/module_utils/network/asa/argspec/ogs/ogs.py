@@ -114,36 +114,11 @@ class OGsArgs(object):
                                 "tag": {"type": "list", "elements": "str"},
                             },
                         },
-                        "service_object": {
-                            "type": "dict",
+                        "services_object": {
+                            "type": "list",
+                            "elements": "dict",
                             "options": {
-                                "protocol": {
-                                    "type": "list",
-                                    "elements": "str",
-                                    # "choices": [
-                                    #     "ah",
-                                    #     "eigrp",
-                                    #     "esp",
-                                    #     "gre",
-                                    #     "icmp",
-                                    #     "icmp6",
-                                    #     "igmp",
-                                    #     "igrp",
-                                    #     "ip",
-                                    #     "ipinip",
-                                    #     "ipsec",
-                                    #     "nos",
-                                    #     "ospf",
-                                    #     "pcp",
-                                    #     "pim",
-                                    #     "pptp",
-                                    #     "sctp",
-                                    #     "snp",
-                                    #     "tcp",
-                                    #     "tcp-udp",
-                                    #     "udp",
-                                    # ],
-                                },
+                                "protocol": {"type": "str"},
                                 "object": {"type": "str"},
                                 "source_port_protocol":{
                                     "type": "dict",
@@ -183,8 +158,13 @@ class OGsArgs(object):
                                 }
                             },
                         },
+                        "protocol": {
+                            "type": "str",
+                            "choices": ["tcp", "tcp-udp", "udp"]
+                        },
                         "port_object": {
-                            "type": "dict",
+                            "type": "list",
+                            "elements": "dict",
                             "options": {
                                 "eq": {"type": "str"},
                                 "range": {
@@ -194,6 +174,39 @@ class OGsArgs(object):
                                         "end": {"type": "str"}
                                     }
                                 }
+                            },
+                        },
+                        "service_object": {
+                            "type": "dict",
+                            "options": {
+                                "protocol": {
+                                    "type": "list",
+                                    "elements": "str",
+                                    "choices": [
+                                        "ah",
+                                        "eigrp",
+                                        "esp",
+                                        "gre",
+                                        "icmp",
+                                        "icmp6",
+                                        "igmp",
+                                        "igrp",
+                                        "ip",
+                                        "ipinip",
+                                        "ipsec",
+                                        "nos",
+                                        "ospf",
+                                        "pcp",
+                                        "pim",
+                                        "pptp",
+                                        "sctp",
+                                        "snp",
+                                        "tcp",
+                                        "tcp-udp",
+                                        "udp",
+                                    ],
+                                },
+                                "object": {"type": "str"},
                             },
                         },
                         "user_object": {

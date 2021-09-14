@@ -27,7 +27,7 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.network_template import (
     NetworkTemplate,
 )
-import q
+
 
 class OGsFacts(object):
     """The asa_ogs fact class"""
@@ -50,10 +50,8 @@ class OGsFacts(object):
         """
         if not data:
             data = self.get_og_data(connection)
-        q("test")
         rmmod = NetworkTemplate(lines=data.splitlines(), tmplt=OGsTemplate())
         current = rmmod.parse()
-        q(current)
         ogs = []
         object_groups = {
             "icmp-type": "icmp_type",
@@ -76,7 +74,14 @@ class OGsFacts(object):
                         obj_gp["description"] = each[1].pop("description")
                     if each[1].get("group_object"):
                         obj_gp["group_object"] = each[1].pop("group_object")
-                    obj_gp[object_groups.get(k)] = each[1]
+                    if k == 'service':
+                        if 'services_object' in each[1]:
+                            obj_gp['services_object'] = each[1]['services_object']
+                        elif 'port_object' in each[1]:
+                            obj_gp['port_object'] = each[1]['port_object']
+                            obj_gp['protocol'] = each[1]['protocol']
+                    else:
+                        obj_gp[object_groups.get(k)] = each[1]
                     config_dict["object_groups"].append(obj_gp)
                     obj_gp = {}
                 config_dict["object_groups"] = sorted(

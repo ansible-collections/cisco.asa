@@ -125,7 +125,12 @@ options:
                 type: list
                 elements: str
           service_object:
-            description: Configure a service object
+            description:
+              - Configure a service object
+              - NEW 'services_object' param is introduced at object_group level, please
+                use the newer 'services_object' param defined at object_group level instead of
+                'service_object' param at object_group level, as 'service_object' option
+                will get deprecated and removed in a future release.
             type: dict
             suboptions:
               protocol:
@@ -134,7 +139,14 @@ options:
                 elements: str
                 choices: [ah, eigrp, esp, gre, icmp, icmp6, igmp, igrp, ip, ipinip,
                   ipsec, nos, ospf, pcp, pim, pptp, sctp, snp, tcp, tcp-udp, udp]
-              service_protocol:
+              object:
+                description: Enter this keyword to specify a service object
+                type: str
+          services_object:
+            description: Configure a service object
+            type: dict
+            suboptions:
+              protocol:
                 description: Defines the protocols in the group.
                 type: str
               object:
@@ -192,6 +204,12 @@ options:
                       end:
                         description: Specify the end of the port range.
                         type: int
+          protocol:
+            description:
+              - Specifies that object-group is for only specified protocol only.
+              - Required when port-object need to be configured
+            type: str
+            choices: [tcp, tcp-udp, udp]
           port_object:
             description: Configure a port object
             type: dict
