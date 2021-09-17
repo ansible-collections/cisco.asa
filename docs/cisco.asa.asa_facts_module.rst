@@ -124,7 +124,7 @@ Parameters
                         </ul>
                 </td>
                 <td>
-                        <div>Specifies which context to target if you are running in the ASA in multiple context mode. Defaults to the current context you login to.</div>
+                        <div>Saves running-config passwords in clear-text when set to True. Defaults to False</div>
                 </td>
             </tr>
             <tr>
