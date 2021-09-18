@@ -147,7 +147,8 @@ options:
               - Configure list of service objects
               - Newer OGs services_object param which will replace service_object param
               - Relased with version 2.1.0
-            type: dict
+            type: list
+            elements: dict
             suboptions:
               protocol:
                 description: Defines the protocols in the group.
@@ -215,7 +216,8 @@ options:
             choices: [tcp, tcp-udp, udp]
           port_object:
             description: Configure a port object
-            type: dict
+            type: list
+            elements: dict
             suboptions:
               eq:
                 description: Enter this keyword to specify a port

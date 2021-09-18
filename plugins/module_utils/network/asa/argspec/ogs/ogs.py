@@ -166,8 +166,8 @@ class OGsArgs(object):
                                 "range": {
                                     "type": "dict",
                                     "options": {
-                                        "start": {"type": "str"},
-                                        "end": {"type": "str"},
+                                        "start": {"type": "int"},
+                                        "end": {"type": "int"},
                                     },
                                 },
                             },
