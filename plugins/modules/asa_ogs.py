@@ -143,7 +143,10 @@ options:
                 description: Enter this keyword to specify a service object
                 type: str
           services_object:
-            description: Configure a service object
+            description:
+              - Configure list of service objects
+              - Newer OGs services_object param which will replace service_object param
+              - Relased with version 2.1.0
             type: dict
             suboptions:
               protocol:
@@ -152,8 +155,8 @@ options:
               object:
                 description: Enter this keyword to specify a service object
                 type: str
-              source_port_protocol:
-                description: Keyword to specify source
+              source_port:
+                description: Keyword to specify source port
                 type: dict
                 suboptions:
                   eq:
@@ -178,8 +181,8 @@ options:
                       end:
                         description: Specify the end of the port range.
                         type: int
-              destination_port_protocol:
-                description: Keyword to specify destination
+              destination_port:
+                description: Keyword to specify destination port
                 type: dict
                 suboptions:
                   eq:
@@ -335,6 +338,27 @@ EXAMPLES = """
             tag:
               - 10
               - 20
+    - object_type: service
+      object_groups:
+        - name: O-Worker
+          services_object:
+            - protocol: tcp
+              destination_port:
+                range:
+                  start: 100
+                  end: 200
+            - protocol: tcp-udp
+              source_port:
+                eq: 1234
+              destination_port:
+                gt: nfs
+        - name: O-UNIX-TCP
+          protocol: tcp
+          port_object:
+            - eq: https
+            - range:
+                start: 100
+                end: 400
     - object_type: user
       object_groups:
         - name: test_og_user
@@ -351,27 +375,33 @@ EXAMPLES = """
 # ---------------
 #
 # object-group security test_og_security
-#  description test_security
-#  security-group name test_1
-#  security-group name test_2
-#  security-group tag 10
-#  security-group tag 20
+# description test_security
+# security-group name test_1
+# security-group name test_2
+# security-group tag 10
+# security-group tag 20
 # object-group network group_network_obj
-#  group-object test_og_network
+# group-object test_og_network
 # object-group network test_og_network
-#  description test_og_network
-#  network-object 192.0.2.0 255.255.255.0
-#  network-object 198.51.100.0 255.255.255.0
-#  network-object host 192.0.2.1
-#  network-object host 192.0.2.2
+# description test_og_network
+# network-object 192.0.2.0 255.255.255.0
+# network-object 198.51.100.0 255.255.255.0
+# network-object host 192.0.2.1
+# network-object host 192.0.2.2
 # object-group network test_network_og
-#  network-object host 192.0.3.1
-#  network-object host 192.0.3.2
-#  network-object 2001:db8:3::/64
+# network-object host 192.0.3.1
+# network-object host 192.0.3.2
+# network-object 2001:db8:3::/64
+# object-group service O-Worker
+# service-object tcp destination range 100 200
+# service-object tcp source eq 1234 destination gt nfs
+# object-group service O-UNIX-TCP tcp
+# port-object eq https
+# port-object range 100 400
 # object-group user test_og_user
-#  description test_user
-#  user LOCAL\\new_user_1
-#  user LOCAL\\new_user_2
+# description test_user
+# user LOCAL\\new_user_1
+# user LOCAL\\new_user_2
 
 # After state:
 # ------------
@@ -397,6 +427,12 @@ EXAMPLES = """
 #  security-group name test_2
 #  security-group tag 10
 #  security-group tag 20
+# object-group service O-Worker
+#  service-object tcp destination range 100 200
+#  service-object tcp source eq 1234 destination gt nfs
+# object-group service O-UNIX-TCP tcp
+#  port-object eq https
+#  port-object range 100 400
 # object-group user test_og_user
 #  description test_user
 #  user LOCAL\\new_user_1
@@ -425,6 +461,12 @@ EXAMPLES = """
 #  security-group name test_2
 #  security-group tag 10
 #  security-group tag 20
+# object-group service O-Worker
+#  service-object tcp destination range 100 200
+#  service-object tcp source eq 1234 destination gt nfs
+# object-group service O-UNIX-TCP tcp
+#  port-object eq https
+#  port-object range 100 400
 # object-group user test_og_user
 #  user LOCAL\\new_user_1
 #  user LOCAL\\new_user_2
@@ -486,6 +528,12 @@ EXAMPLES = """
 #  security-group name test_2
 #  security-group tag 10
 #  security-group tag 20
+# object-group service O-Worker
+#  service-object tcp destination range 100 200
+#  service-object tcp source eq 1234 destination gt nfs
+# object-group service O-UNIX-TCP tcp
+#  port-object eq https
+#  port-object range 100 400
 # object-group user test_og_user
 #  user LOCAL\\new_user_1
 #  user LOCAL\\new_user_2
@@ -516,6 +564,12 @@ EXAMPLES = """
 #  security-group name test_2
 #  security-group tag 10
 #  security-group tag 20
+# object-group service O-Worker
+#  service-object tcp destination range 100 200
+#  service-object tcp source eq 1234 destination gt nfs
+# object-group service O-UNIX-TCP tcp
+#  port-object eq https
+#  port-object range 100 400
 # object-group user test_og_user
 #  user LOCAL\\new_user_1
 #  user LOCAL\\new_user_2
@@ -551,6 +605,8 @@ EXAMPLES = """
 # ---------------
 #
 # no object-group security test_og_security
+# no object-group service O-Worker
+# no object-group service O-UNIX-TCP
 # no object-group user test_og_user
 # object-group protocol test_og_protocol
 # description test_og_protocol
@@ -607,6 +663,12 @@ EXAMPLES = """
 #  security-group name test_2
 #  security-group tag 10
 #  security-group tag 20
+# object-group service O-Worker
+#  service-object tcp destination range 100 200
+#  service-object tcp source eq 1234 destination gt nfs
+# object-group service O-UNIX-TCP tcp
+#  port-object eq https
+#  port-object range 100 400
 # object-group user test_og_user
 #  user LOCAL\\new_user_1
 #  user LOCAL\\new_user_2
@@ -621,6 +683,9 @@ EXAMPLES = """
       - object_type: security
         object_groups:
           - name: test_og_security
+      - object_type: service
+        object_groups:
+          - name: O-UNIX-TCP
     state: deleted
 
 # Commands Fired:
@@ -629,6 +694,7 @@ EXAMPLES = """
 # no object-group network test_og_network
 # no object-group network test_network_og
 # no object-group security test_og_security
+# no object-group service O-UNIX-TCP
 
 # After state:
 # -------------
@@ -637,6 +703,9 @@ EXAMPLES = """
 # object-group user test_og_user
 #  user LOCAL\\new_user_1
 #  user LOCAL\\new_user_2
+# object-group service O-Worker
+#  service-object tcp destination range 100 200
+#  service-object tcp source eq 1234 destination gt nfs
 
 # Using DELETED without any config passed
 #"(NOTE: This will delete all of configured resource module attributes)"

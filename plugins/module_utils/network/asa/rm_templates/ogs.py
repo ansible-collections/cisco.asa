@@ -84,11 +84,37 @@ def _tmplt_service_object(config_data):
             commands.append("service-object {0}".format(each))
         return commands
 
+
 def _tmplt_services_object(config_data):
-    pass
+    if config_data.get("services_object"):
+        cmd = "service-object {protocol}".format(
+            **config_data["services_object"]
+        )
+        if config_data["services_object"].get("source_port"):
+            key = list(config_data["services_object"]["source_port"])[0]
+            cmd += " source {0} {1}".format(
+                key, config_data["services_object"]["source_port"][key]
+            )
+        if config_data["services_object"].get("destination_port"):
+            key = list(config_data["services_object"]["destination_port"])[0]
+            cmd += " destination {0} {1}".format(
+                key, config_data["services_object"]["destination_port"][key]
+            )
+        return cmd
+
 
 def _tmplt_port_object(config_data):
-    pass
+    if config_data.get("port_object"):
+        cmd = "port-object"
+        if config_data["port_object"].get("range"):
+            cmd += " range {start} {end}".format(
+                **config_data["port_object"]["range"]
+            )
+        else:
+            key = list(config_data["port_object"])[0]
+            cmd += " {0} {1}".format(key, config_data["port_object"][key])
+        return cmd
+
 
 def _tmplt_user_object_user(config_data):
     commands = []
@@ -134,7 +160,7 @@ class OGsTemplate(NetworkTemplate):
                         "{{ obj_name }}": {
                             "object_type": "{{ obj_type }}",
                             "name": "{{ obj_name }}",
-                            "protocol": "{{ protocol }}"
+                            "protocol": "{{ protocol }}",
                         }
                     }
                 }
@@ -327,7 +353,7 @@ class OGsTemplate(NetworkTemplate):
                                     "range": {
                                         "start": "{{ range.split('range ')[1].split(' ')[0] if range is defined else None }}",
                                         "end": "{{ range.split('range ')[1].split(' ')[1] if range is defined else None }}",
-                                    }
+                                    },
                                 }
                             ]
                         }
@@ -340,13 +366,13 @@ class OGsTemplate(NetworkTemplate):
             "getval": re.compile(
                 r"""\s+service-object*
                     \s*(?P<protocol>\S+)*
-                    \s*(?P<source_port_protocol>source\s((eq|gts|lt|neq)\s(\S+|\d+)|(range\s(\S+|\d+)\s(\S+|\d+))))*
-                    \s*(?P<destination_port_protocol>destination\s((eq|gts|lt|neq)\s(\S+|\d+)|(range\s(\S+|\d+)\s(\S+|\d+))))
+                    \s*(?P<source_port>source\s((eq|gts|lt|neq)\s(\S+|\d+)|(range\s(\S+|\d+)\s(\S+|\d+))))*
+                    \s*(?P<destination_port>destination\s((eq|gt|lt|neq)\s(\S+|\d+)|(range\s(\S+|\d+)\s(\S+|\d+))))
                     *""",
                 re.VERBOSE,
             ),
             "setval": _tmplt_services_object,
-            "compval": "service_object",
+            "compval": "services_object",
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
@@ -354,26 +380,32 @@ class OGsTemplate(NetworkTemplate):
                             "services_object": [
                                 {
                                     "protocol": "{{ protocol }}",
-                                    "source_port_protocol": {
-                                        "eq": "{{ source_port_protocol.split(' ')[2] if source_port_protocol is defined and 'eq' in source_port_protocol and 'range' not in source_port_protocol }}",
-                                        "gt": "{{ source_port_protocol.split(' ')[2] if source_port_protocol is defined and 'gt' in source_port_protocol and 'range' not in source_port_protocol }}",
-                                        "lt": "{{ source_port_protocol.split(' ')[2] if source_port_protocol is defined and 'lt' in source_port_protocol and 'range' not in source_port_protocol }}",
-                                        "neq": "{{ source_port_protocol.split(' ')[2] if source_port_protocol is defined and 'neq' in source_port_protocol and 'range' not in source_port_protocol }}",
+                                    "source_port": {
+                                        "eq": "{{ source_port.split(' ')[2] if source_port is defined and\
+                                            'eq' in source_port and 'range' not in source_port }}",
+                                        "gt": "{{ source_port.split(' ')[2] if source_port is defined and\
+                                            'gt' in source_port and 'range' not in source_port }}",
+                                        "lt": "{{ source_port.split(' ')[2] if source_port is defined and\
+                                            'lt' in source_port and 'range' not in source_port }}",
+                                        "neq": "{{ source_port.split(' ')[2] if source_port is defined and\
+                                            'neq' in source_port and 'range' not in source_port }}",
                                         "range": {
-                                            "start": "{{ source_port_protocol.split('range ')[1].split(' ')[0] if source_port_protocol is defined and 'range' in source_port_protocol else None }}",
-                                            "end": "{{ source_port_protocol.split('range ')[1].split(' ')[1] if source_port_protocol is defined and 'range' in source_port_protocol else None }}",
-                                        }
+                                            "start": "{{ source_port.split('range ')[1].split(' ')[0] if source_port is defined and\
+                                                'range' in source_port else None }}",
+                                            "end": "{{ source_port.split('range ')[1].split(' ')[1] if source_port is defined and\
+                                                'range' in source_port else None }}",
+                                        },
                                     },
-                                    "destination_port_protocol": {
-                                        "eq": "{{ destination_port_protocol.split(' ')[2] if 'eq' in destination_port_protocol and 'range' not in destination_port_protocol }}",
-                                        "gt": "{{ destination_port_protocol.split(' ')[2] if 'gt' in destination_port_protocol and 'range' not in destination_port_protocol }}",
-                                        "lt": "{{ destination_port_protocol.split(' ')[2] if 'lt' in destination_port_protocol and 'range' not in destination_port_protocol }}",
-                                        "neq": "{{ destination_port_protocol.split(' ')[2] if 'neq' in destination_port_protocol and 'range' not in destination_port_protocol }}",
+                                    "destination_port": {
+                                        "eq": "{{ destination_port.split(' ')[2] if 'eq' in destination_port and 'range' not in destination_port }}",
+                                        "gt": "{{ destination_port.split(' ')[2] if 'gt' in destination_port and 'range' not in destination_port }}",
+                                        "lt": "{{ destination_port.split(' ')[2] if 'lt' in destination_port and 'range' not in destination_port }}",
+                                        "neq": "{{ destination_port.split(' ')[2] if 'neq' in destination_port and 'range' not in destination_port }}",
                                         "range": {
-                                            "start": "{{ destination_port_protocol.split('range ')[1].split(' ')[0] if 'range' in destination_port_protocol else None }}",
-                                            "end": "{{ destination_port_protocol.split('range ')[1].split(' ')[1] if 'range' in destination_port_protocol else None }}",
-                                        }
-                                    }
+                                            "start": "{{ destination_port.split('range ')[1].split(' ')[0] if 'range' in destination_port else None }}",
+                                            "end": "{{ destination_port.split('range ')[1].split(' ')[1] if 'range' in destination_port else None }}",
+                                        },
+                                    },
                                 }
                             ]
                         }
