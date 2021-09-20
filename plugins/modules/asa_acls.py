@@ -362,6 +362,9 @@ options:
                   object_group:
                     description: Network object-group for destination address
                     type: str
+                  service_object_group:
+                    description: Service object-group for destination port
+                    type: str
                   port_protocol:
                     description:
                       - Specify the destination port along with protocol.

@@ -38,6 +38,12 @@ def _tmplt_access_list_entries(config_data):
                 cmd += " object-group {object_group}".format(
                     **config_data["aces"][type]
                 )
+            if type == "destination" and config_data["aces"][type].get(
+                "service_object_group"
+            ):
+                cmd += " object-group {service_object_group}".format(
+                    **config_data["aces"][type]
+                )
             if config_data["aces"].get("protocol_options"):
                 protocol_option_key = list(
                     config_data["aces"]["protocol_options"]
@@ -88,9 +94,12 @@ def _tmplt_access_list_entries(config_data):
                 )
             )
         if len(config_data["aces"]) > 4:
-            cmd = "access-list {name} line {line}".format(
-                **config_data["aces"]
-            )
+            try:
+                cmd = "access-list {name} line {line}".format(
+                    **config_data["aces"]
+                )
+            except KeyError:
+                cmd = "access-list {name}".format(**config_data["aces"])
             if (
                 config_data["aces"].get("acl_type")
                 and config_data["aces"].get("acl_type") != "standard"
@@ -168,6 +177,7 @@ class AclsTemplate(NetworkTemplate):
                     \s*(?P<source>any4|any6|any|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\s([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+\S+|host\s(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+)\S+)|interface\s\S+|object-group\s\S+))*
                     \s*(?P<source_port_protocol>(eq|gts|lt|neq)\s(\S+|\d+)|range\s\S+\s\S+)*
                     \s*(?P<destination>any4|any6|any|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\s([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+\S+|host\s(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+)\S+)|interface\s\S+|object-group\s\S+))*
+                    \s*(?P<dest_svc_object_group>object-group\s\S+)*
                     \s*(?P<dest_port_protocol>(eq|gts|lt|neq)\s(\S+|\d+)|range\s\S+\s\S+)*
                     \s*(?P<icmp_icmp6_protocol>alternate-address|conversion-error|echo|echo-reply|information-reply|information-request|mask-reply|mask-request|membership-query|membership-reduction|membership-report|mobile-redirect|neighbor-advertisement|neighbor-redirect|neighbor-solicitation|parameter-problem|packet-too-big|redirect|router-advertisement|router-renumbering|router-solicitation|source-quench|source-route-failed|time-exceeded|timestamp-reply|timestamp-request|traceroute|unreachable)*
                     \s*(?P<log>log\s\S+)*
@@ -233,6 +243,7 @@ class AclsTemplate(NetworkTemplate):
                                               'host' in std_dest %}{{ std_dest.split(' ')[1] }}{% endif %}",
                                     "interface": "{{ destination.split(' ')[1] if destination is defined and 'interface' in destination else None }}",
                                     "object_group": "{{ destination.split(' ')[1] if destination is defined and 'object-group' in destination else None }}",
+                                    "service_object_group": "{{ dest_svc_object_group.split('object-group ')[1] if dest_svc_object_group is defined }}",
                                     "port_protocol": {
                                         "{{ dest_port_protocol.split(' ')[0] if dest_port_protocol\
                                             is defined and 'range' not in dest_port_protocol else None }}": "{{ dest_port_protocol.split(' ')[1]\
