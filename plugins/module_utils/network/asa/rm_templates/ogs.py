@@ -397,13 +397,19 @@ class OGsTemplate(NetworkTemplate):
                                         },
                                     },
                                     "destination_port": {
-                                        "eq": "{{ destination_port.split(' ')[2] if 'eq' in destination_port and 'range' not in destination_port }}",
-                                        "gt": "{{ destination_port.split(' ')[2] if 'gt' in destination_port and 'range' not in destination_port }}",
-                                        "lt": "{{ destination_port.split(' ')[2] if 'lt' in destination_port and 'range' not in destination_port }}",
-                                        "neq": "{{ destination_port.split(' ')[2] if 'neq' in destination_port and 'range' not in destination_port }}",
+                                        "eq": "{{ destination_port.split(' ')[2] if destination_port is defined and\
+                                            'eq' in destination_port and 'range' not in destination_port }}",
+                                        "gt": "{{ destination_port.split(' ')[2] if destination_port is defined and\
+                                            'gt' in destination_port and 'range' not in destination_port }}",
+                                        "lt": "{{ destination_port.split(' ')[2] if destination_port is defined and\
+                                            'lt' in destination_port and 'range' not in destination_port }}",
+                                        "neq": "{{ destination_port.split(' ')[2] if destination_port is defined and\
+                                            'neq' in destination_port and 'range' not in destination_port }}",
                                         "range": {
-                                            "start": "{{ destination_port.split('range ')[1].split(' ')[0] if 'range' in destination_port else None }}",
-                                            "end": "{{ destination_port.split('range ')[1].split(' ')[1] if 'range' in destination_port else None }}",
+                                            "start": "{{ destination_port.split('range ')[1].split(' ')[0] if destination_port is defined and\
+                                                'range' in destination_port else None }}",
+                                            "end": "{{ destination_port.split('range ')[1].split(' ')[1] if destination_port is defined and\
+                                                'range' in destination_port else None }}",
                                         },
                                     },
                                 }
