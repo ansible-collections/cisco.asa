@@ -155,7 +155,7 @@ options:
                         description: All redirects
                         type: bool
                       router_advertisement:
-                        description: Router discovery advertisements
+                        description: Router  discovery advertisements
                         type: bool
                       router_solicitation:
                         description: Router discovery solicitations
