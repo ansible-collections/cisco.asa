@@ -1,3 +1,0 @@
----
-minor_changes:
-- Fixes asa_ogs service object where complete params were not supported and added with the PR ((https://github.com/ansible-collections/cisco.asa/issues/100).

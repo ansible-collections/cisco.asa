@@ -5,6 +5,24 @@ Cisco Asa Collection Release Notes
 .. contents:: Topics
 
 
+v2.1.0
+======
+
+Release Summary
+---------------
+
+- Releasing 2.1.0 with updated readme with changelog link, minor change, and bugfix.
+
+Minor Changes
+-------------
+
+- Fixes asa_ogs service object where complete params were not supported and added with the PR ((https://github.com/ansible-collections/cisco.asa/issues/100).
+
+Bugfixes
+--------
+
+- Fixes asa_acls to add the support for service object group under destination option ((https://github.com/ansible-collections/cisco.asa/issues/100).
+
 v2.0.3
 ======
 
