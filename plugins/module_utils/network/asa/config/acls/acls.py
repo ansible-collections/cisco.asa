@@ -14,7 +14,7 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-
+import copy
 from ansible.module_utils.six import iteritems
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.facts import (
     Facts,
@@ -99,6 +99,22 @@ class Acls(ResourceModule):
                                     break
         # if state is merged, merge want onto have and then compare
         if self.state == "merged":
+            # to append line number from have to want
+            # if want ace config mateches have ace config
+            temp_have = copy.deepcopy(haved)
+            for k, v in iteritems(wantd):
+                h_item = temp_have.pop(k, {})
+                if not h_item:
+                    continue
+                if v.get("aces"):
+                    for each in v["aces"]:
+                        if "line" in each:
+                            continue
+                        else:
+                            for each_have in h_item["aces"]:
+                                have_line = each_have.pop("line")
+                                if each == each_have:
+                                    each.update({"line": have_line})
             wantd = dict_merge(haved, wantd)
 
         # if state is deleted, empty out wantd and set haved to wantd
