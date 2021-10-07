@@ -102,6 +102,9 @@ class AclsArgs(object):
                                         "host": {"type": "str"},
                                         "interface": {"type": "str"},
                                         "object_group": {"type": "str"},
+                                        "service_object_group": {
+                                            "type": "str"
+                                        },
                                         "port_protocol": {
                                             "type": "dict",
                                             "options": {
