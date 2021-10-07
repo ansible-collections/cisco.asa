@@ -132,3 +132,18 @@ releases:
     - 97_implement_replace_block_asa_acl.yaml
     - readme_freenode_to_liberachat.yml
     release_date: '2021-08-31'
+  2.1.0:
+    changes:
+      release_summary:
+      - Releasing 2.1.0 with updated readme with changelog link, minor change, and bugfix.
+      bugfixes:
+      - Fixes asa_acls to add the support for service object group under destination
+        option ((https://github.com/ansible-collections/cisco.asa/issues/100).
+      minor_changes:
+      - Fixes asa_ogs service object where complete params were not supported and
+        added with the PR ((https://github.com/ansible-collections/cisco.asa/issues/100).
+    fragments:
+    - 0-copy_ignore_txt.yml
+    - 100_fix_asa_ogs_services_object_param.yaml
+    - fix_asa_acls_for_service_object_gp.yaml
+    release_date: '2021-10-06'
