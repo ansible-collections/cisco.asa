@@ -117,9 +117,8 @@ parsed:
       object_type: network
     - object_groups:
         - name: test_og_service
-          service_object:
-            protocol:
-              - tcp-udp
+          services_object:
+            - protocol: tcp-udp
       object_type: service
 rtt:
   commands:

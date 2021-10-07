@@ -85,6 +85,37 @@ def _tmplt_service_object(config_data):
         return commands
 
 
+def _tmplt_services_object(config_data):
+    if config_data.get("services_object"):
+        cmd = "service-object {protocol}".format(
+            **config_data["services_object"]
+        )
+        if config_data["services_object"].get("source_port"):
+            key = list(config_data["services_object"]["source_port"])[0]
+            cmd += " source {0} {1}".format(
+                key, config_data["services_object"]["source_port"][key]
+            )
+        if config_data["services_object"].get("destination_port"):
+            key = list(config_data["services_object"]["destination_port"])[0]
+            cmd += " destination {0} {1}".format(
+                key, config_data["services_object"]["destination_port"][key]
+            )
+        return cmd
+
+
+def _tmplt_port_object(config_data):
+    if config_data.get("port_object"):
+        cmd = "port-object"
+        if config_data["port_object"].get("range"):
+            cmd += " range {start} {end}".format(
+                **config_data["port_object"]["range"]
+            )
+        else:
+            key = list(config_data["port_object"])[0]
+            cmd += " {0} {1}".format(key, config_data["port_object"][key])
+        return cmd
+
+
 def _tmplt_user_object_user(config_data):
     commands = []
     if config_data.get("user_object").get("user"):
@@ -117,7 +148,8 @@ class OGsTemplate(NetworkTemplate):
                 r"""
                     ^object-group*
                     \s*(?P<obj_type>\S+)*
-                    \s*(?P<obj_name>\S+)
+                    \s*(?P<obj_name>\S+)*
+                    \s*(?P<protocol>\S+)*
                     $""",
                 re.VERBOSE,
             ),
@@ -128,6 +160,7 @@ class OGsTemplate(NetworkTemplate):
                         "{{ obj_name }}": {
                             "object_type": "{{ obj_type }}",
                             "name": "{{ obj_name }}",
+                            "protocol": "{{ protocol }}",
                         }
                     }
                 }
@@ -300,19 +333,88 @@ class OGsTemplate(NetworkTemplate):
             },
         },
         {
-            "name": "service_object",
+            "name": "port_object",
             "getval": re.compile(
-                r"""\s+service-object*
-                    \s*(?P<protocol>\S+)*\s
+                r"""\s+port-object*
+                    \s*(?P<eq>eq\s\S+)*
+                    \s*(?P<range>range\s(\S+|\d+)\s(\S+|\d+))
                     *$""",
                 re.VERBOSE,
             ),
-            "setval": _tmplt_service_object,
-            "compval": "service_object",
+            "setval": _tmplt_port_object,
+            "compval": "port_object",
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {"protocol": ["{{ protocol }}"]}
+                        "{{ obj_name }}": {
+                            "port_object": [
+                                {
+                                    "eq": "{{ eq.split(' ')[1] if eq is defined }}",
+                                    "range": {
+                                        "start": "{{ range.split('range ')[1].split(' ')[0] if range is defined else None }}",
+                                        "end": "{{ range.split('range ')[1].split(' ')[1] if range is defined else None }}",
+                                    },
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+        },
+        {
+            "name": "services_object",
+            "getval": re.compile(
+                r"""\s+service-object*
+                    \s*(?P<protocol>\S+)*
+                    \s*(?P<source_port>source\s((eq|gts|lt|neq)\s(\S+|\d+)|(range\s(\S+|\d+)\s(\S+|\d+))))*
+                    \s*(?P<destination_port>destination\s((eq|gt|lt|neq)\s(\S+|\d+)|(range\s(\S+|\d+)\s(\S+|\d+))))
+                    *""",
+                re.VERBOSE,
+            ),
+            "setval": _tmplt_services_object,
+            "compval": "services_object",
+            "result": {
+                "ogs": {
+                    "{{ obj_type }}": {
+                        "{{ obj_name }}": {
+                            "services_object": [
+                                {
+                                    "protocol": "{{ protocol }}",
+                                    "source_port": {
+                                        "eq": "{{ source_port.split(' ')[2] if source_port is defined and\
+                                            'eq' in source_port and 'range' not in source_port }}",
+                                        "gt": "{{ source_port.split(' ')[2] if source_port is defined and\
+                                            'gt' in source_port and 'range' not in source_port }}",
+                                        "lt": "{{ source_port.split(' ')[2] if source_port is defined and\
+                                            'lt' in source_port and 'range' not in source_port }}",
+                                        "neq": "{{ source_port.split(' ')[2] if source_port is defined and\
+                                            'neq' in source_port and 'range' not in source_port }}",
+                                        "range": {
+                                            "start": "{{ source_port.split('range ')[1].split(' ')[0] if source_port is defined and\
+                                                'range' in source_port else None }}",
+                                            "end": "{{ source_port.split('range ')[1].split(' ')[1] if source_port is defined and\
+                                                'range' in source_port else None }}",
+                                        },
+                                    },
+                                    "destination_port": {
+                                        "eq": "{{ destination_port.split(' ')[2] if destination_port is defined and\
+                                            'eq' in destination_port and 'range' not in destination_port }}",
+                                        "gt": "{{ destination_port.split(' ')[2] if destination_port is defined and\
+                                            'gt' in destination_port and 'range' not in destination_port }}",
+                                        "lt": "{{ destination_port.split(' ')[2] if destination_port is defined and\
+                                            'lt' in destination_port and 'range' not in destination_port }}",
+                                        "neq": "{{ destination_port.split(' ')[2] if destination_port is defined and\
+                                            'neq' in destination_port and 'range' not in destination_port }}",
+                                        "range": {
+                                            "start": "{{ destination_port.split('range ')[1].split(' ')[0] if destination_port is defined and\
+                                                'range' in destination_port else None }}",
+                                            "end": "{{ destination_port.split('range ')[1].split(' ')[1] if destination_port is defined and\
+                                                'range' in destination_port else None }}",
+                                        },
+                                    },
+                                }
+                            ]
+                        }
                     }
                 }
             },
@@ -331,6 +433,24 @@ class OGsTemplate(NetworkTemplate):
                 "ogs": {
                     "{{ obj_type }}": {
                         "{{ obj_name }}": {"object": "{{ object }}"}
+                    }
+                }
+            },
+        },
+        {
+            "name": "service_object",
+            "getval": re.compile(
+                r"""\s+service-object*
+                    \s*(?P<protocol>\S+)*\s
+                    *$""",
+                re.VERBOSE,
+            ),
+            "setval": _tmplt_service_object,
+            "compval": "service_object",
+            "result": {
+                "ogs": {
+                    "{{ obj_type }}": {
+                        "{{ obj_name }}": {"protocol": ["{{ protocol }}"]}
                     }
                 }
             },
