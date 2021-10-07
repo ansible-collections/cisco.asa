@@ -114,6 +114,64 @@ class OGsArgs(object):
                                 "tag": {"type": "list", "elements": "str"},
                             },
                         },
+                        "services_object": {
+                            "type": "list",
+                            "elements": "dict",
+                            "options": {
+                                "protocol": {"type": "str"},
+                                "object": {"type": "str"},
+                                "source_port": {
+                                    "type": "dict",
+                                    "options": {
+                                        "eq": {"type": "str"},
+                                        "gt": {"type": "str"},
+                                        "lt": {"type": "str"},
+                                        "neq": {"type": "str"},
+                                        "range": {
+                                            "type": "dict",
+                                            "options": {
+                                                "start": {"type": "int"},
+                                                "end": {"type": "int"},
+                                            },
+                                        },
+                                    },
+                                },
+                                "destination_port": {
+                                    "type": "dict",
+                                    "options": {
+                                        "eq": {"type": "str"},
+                                        "gt": {"type": "str"},
+                                        "lt": {"type": "str"},
+                                        "neq": {"type": "str"},
+                                        "range": {
+                                            "type": "dict",
+                                            "options": {
+                                                "start": {"type": "int"},
+                                                "end": {"type": "int"},
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        "protocol": {
+                            "type": "str",
+                            "choices": ["tcp", "tcp-udp", "udp"],
+                        },
+                        "port_object": {
+                            "type": "list",
+                            "elements": "dict",
+                            "options": {
+                                "eq": {"type": "str"},
+                                "range": {
+                                    "type": "dict",
+                                    "options": {
+                                        "start": {"type": "int"},
+                                        "end": {"type": "int"},
+                                    },
+                                },
+                            },
+                        },
                         "service_object": {
                             "type": "dict",
                             "options": {

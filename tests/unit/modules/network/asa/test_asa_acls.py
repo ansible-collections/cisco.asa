@@ -109,7 +109,24 @@ class TestAsaAclsModule(TestAsaModule):
                             ],
                             acl_type="extended",
                             name="test_global_access",
-                        )
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        any="true",
+                                        service_object_group="O-UNIX-TCP",
+                                    ),
+                                    grant="permit",
+                                    line=2,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(object_group="O-Environments"),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="MyACL",
+                        ),
                     ]
                 ),
                 state="merged",
@@ -117,7 +134,8 @@ class TestAsaAclsModule(TestAsaModule):
         )
         result = self.execute_module(changed=True)
         commands = [
-            "access-list test_global_access line 2 extended deny tcp object-group test_og_network object-group test_network_og eq www log default"
+            "access-list test_global_access line 2 extended deny tcp object-group test_og_network object-group test_network_og eq www log default",
+            "access-list MyACL line 2 extended permit tcp object-group O-Environments any object-group O-UNIX-TCP",
         ]
         self.assertEqual(result["commands"], commands)
 
@@ -249,6 +267,23 @@ class TestAsaAclsModule(TestAsaModule):
                             ],
                             acl_type="extended",
                             name="management_in",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        any="true",
+                                        service_object_group="O-Windows-TCP",
+                                    ),
+                                    grant="permit",
+                                    line=1,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(object_group="O-Environments"),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="MyACL",
                         ),
                         dict(
                             aces=[
@@ -477,6 +512,23 @@ class TestAsaAclsModule(TestAsaModule):
                             aces=[
                                 dict(
                                     destination=dict(
+                                        any="true",
+                                        service_object_group="O-Windows-TCP",
+                                    ),
+                                    grant="permit",
+                                    line=1,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(object_group="O-Environments"),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="MyACL",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
                                         address="2001:fc8:0:4::/64",
                                         port_protocol=dict(eq="telnet"),
                                     ),
@@ -553,6 +605,7 @@ class TestAsaAclsModule(TestAsaModule):
             "no access-list management_in line 3 extended permit ip any4 host 192.0.2.1",
             "no access-list management_in line 2 extended permit tcp 198.51.101.0 255.255.255.0 object-group ALLSERV.12 eq 9389",
             "no access-list management_in line 1 extended permit tcp host 198.51.100.5 range 49152 65535 198.51.100.0 255.255.255.0 eq 100",
+            "no access-list MyACL line 1 extended permit tcp object-group O-Environments any object-group O-Windows-TCP",
             "no access-list test_R1_traffic line 2 extended permit ip host 2001:db8::1 any6",
             "no access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive",
             "access-list test_global_access line 1 extended deny tcp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 eq www log errors",
@@ -692,6 +745,23 @@ class TestAsaAclsModule(TestAsaModule):
                             aces=[
                                 dict(
                                     destination=dict(
+                                        any="true",
+                                        service_object_group="O-Windows-TCP",
+                                    ),
+                                    grant="permit",
+                                    line=1,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(object_group="O-Environments"),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="MyACL",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
                                         address="2001:fc8:0:4::/64",
                                         port_protocol=dict(eq="telnet"),
                                     ),
@@ -757,6 +827,7 @@ class TestAsaAclsModule(TestAsaModule):
             "no access-list management_in line 3 extended permit ip any4 host 192.0.2.1",
             "no access-list management_in line 2 extended permit tcp 198.51.101.0 255.255.255.0 object-group ALLSERV.12 eq 9389",
             "no access-list management_in line 1 extended permit tcp host 198.51.100.5 range 49152 65535 198.51.100.0 255.255.255.0 eq 100",
+            "no access-list MyACL line 1 extended permit tcp object-group O-Environments any object-group O-Windows-TCP",
             "no access-list test_global_access line 2 remark test global remark",
             "no access-list test_global_access line 1 extended deny tcp any any eq www log errors",
             "no access-list ansible_test line 2 extended deny ip host 192.0.5.1 any4",

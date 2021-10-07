@@ -397,6 +397,8 @@ class OGs(ResourceModule):
 
     def _service_object_compare(self, want, have):
         service_obj = "service_object"
+        services_obj = "services_object"
+        port_obj = "port_object"
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
             if entry != h_item and name != "object_type":
@@ -414,16 +416,158 @@ class OGs(ResourceModule):
                 if entry.get("group_object"):
                     self._add_group_object_cmd(entry, h_item)
                     continue
-                if entry[service_obj].get("protocol"):
-                    self._compare_object_diff(
-                        entry,
-                        h_item,
-                        service_obj,
-                        "protocol",
-                        ["service_object"],
-                        service_obj,
+                if entry.get(service_obj):
+                    if entry[service_obj].get("protocol"):
+                        self._compare_object_diff(
+                            entry,
+                            h_item,
+                            service_obj,
+                            "protocol",
+                            ["service_object"],
+                            service_obj,
+                        )
+                elif entry.get(services_obj):
+                    if h_item:
+                        h_item = self.convert_list_to_dict(
+                            val=h_item,
+                            source="source_port",
+                            destination="destination_port",
+                        )
+                    entry = self.convert_list_to_dict(
+                        val=entry,
+                        source="source_port",
+                        destination="destination_port",
                     )
+                    command_len = len(self.commands)
+                    for k, v in iteritems(entry):
+                        if h_item:
+                            h_service_item = h_item.pop(k, {})
+                            if h_service_item != v:
+                                self.compare(
+                                    [services_obj],
+                                    want={services_obj: v},
+                                    have={services_obj: h_service_item},
+                                )
+                        else:
+                            temp_want = {"name": name, services_obj: v}
+                            self.addcmd(temp_want, "og_name", True)
+
+                            self.compare(
+                                [services_obj], want=temp_want, have={}
+                            )
+                    if h_item and self.state in ["overridden", "replaced"]:
+                        for k, v in iteritems(h_item):
+                            temp_have = {"name": name, services_obj: v}
+                            self.compare(
+                                [services_obj], want={}, have=temp_have
+                            )
+                    if command_len < len(self.commands):
+                        cmd = "object-group service {0}".format(name)
+                        if cmd not in self.commands:
+                            self.commands.insert(command_len, cmd)
+                elif entry.get(port_obj):
+                    protocol = entry.get("protocol")
+                    if h_item:
+                        h_item = self.convert_list_to_dict(
+                            val=h_item,
+                            source="source_port",
+                            destination="destination_port",
+                        )
+                    entry = self.convert_list_to_dict(
+                        val=entry,
+                        source="source_port",
+                        destination="destination_port",
+                    )
+                    command_len = len(self.commands)
+                    for k, v in iteritems(entry):
+                        h_port_item = h_item.pop(k, {})
+                        if "http" in k and "_" in k:
+                            # This condition is to TC of device behaviour, where if user tries to
+                            # configure http it gets converted to www.
+                            temp = k.split("_")[0]
+                            h_port_item = {temp: "http"}
+                        if h_port_item != v:
+                            self.compare(
+                                [port_obj],
+                                want={port_obj: v},
+                                have={port_obj: h_port_item},
+                            )
+                        elif not h_port_item:
+                            temp_want = {"name": name, port_obj: v}
+                            self.compare([port_obj], want=temp_want, have={})
+                    if h_item and self.state in ["overridden", "replaced"]:
+                        for k, v in iteritems(h_item):
+                            temp_have = {"name": name, port_obj: v}
+                            self.compare([port_obj], want={}, have=temp_have)
+                    if command_len < len(self.commands):
+                        self.commands.insert(
+                            command_len,
+                            "object-group service {0} {1}".format(
+                                name, protocol
+                            ),
+                        )
         self.check_for_have_and_overidden(have)
+
+    def convert_list_to_dict(self, *args, **kwargs):
+        temp = {}
+        if kwargs["val"].get("services_object"):
+            for every in kwargs["val"]["services_object"]:
+                temp_key = every["protocol"]
+                if "source_port" in every:
+                    if "range" in every["source_port"]:
+                        temp_key = (
+                            "range"
+                            + "_"
+                            + str(every["source_port"]["range"]["start"])
+                            + "_"
+                            + str(every["source_port"]["range"]["end"])
+                        )
+                    else:
+                        source_key = list(every["source_port"])[0]
+                        temp_key = (
+                            temp_key
+                            + "_"
+                            + source_key
+                            + "_"
+                            + every["source_port"][source_key]
+                        )
+                if "destination_port" in every:
+                    if "range" in every["destination_port"]:
+                        temp_key = (
+                            "range"
+                            + "_"
+                            + str(every["destination_port"]["range"]["start"])
+                            + "_"
+                            + str(every["destination_port"]["range"]["end"])
+                        )
+                    else:
+                        destination_key = list(every["destination_port"])[0]
+                        temp_key = (
+                            temp_key
+                            + "_"
+                            + destination_key
+                            + "_"
+                            + every["destination_port"][destination_key]
+                        )
+                temp.update({temp_key: every})
+            return temp
+        elif kwargs["val"].get("port_object"):
+            for every in kwargs["val"]["port_object"]:
+                if "range" in every:
+                    temp_key = (
+                        "start"
+                        + "_"
+                        + every["range"]["start"]
+                        + "_"
+                        + "end"
+                        + "_"
+                        + every["range"]["end"]
+                    )
+                else:
+                    every_key = list(every)[0]
+                    temp_key = every_key + "_" + every[every_key]
+                temp.update({temp_key: every})
+            return temp
 
     def _user_object_compare(self, want, have):
         user_obj = "user_object"
@@ -484,7 +628,11 @@ class OGs(ResourceModule):
         for each in object_elements:
             want_element = want[object].get(each) if want.get(object) else want
             have_element = have[object].get(each) if have.get(object) else have
-            if want_element and isinstance(want_element[0], dict):
+            if (
+                want_element
+                and isinstance(want_element, list)
+                and isinstance(want_element[0], dict)
+            ):
                 if (
                     want_element
                     and have_element

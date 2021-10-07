@@ -1,0 +1,3 @@
+---
+bugfixes:
+- Fixes asa_acls to add the support for service object group under destination option ((https://github.com/ansible-collections/cisco.asa/issues/100).
