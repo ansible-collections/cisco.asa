@@ -1244,6 +1244,8 @@ def main():
         ("state", "rendered", ("config",)),
         ("state", "parsed", ("running_config",)),
     ]
+
+    # added a dummy comment
     mutually_exclusive = [("config", "running_config")]
 
     module = AnsibleModule(
