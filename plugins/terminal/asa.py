@@ -31,14 +31,14 @@ from ansible.plugins.terminal import TerminalBase
 class TerminalModule(TerminalBase):
 
     terminal_stdout_re = [
-        re.compile(rb"[\r\n]?[\w+\-\.:\/\[\]]+(?:\([^\)]+\)){,3}(?:>|#) ?$"),
-        re.compile(rb"\[\w+\@[\w\-\.]+(?: [^\]])\] ?[>#\$] ?$"),
+        re.compile(br"[\r\n]?[\w+\-\.:\/\[\]]+(?:\([^\)]+\)){,3}(?:>|#) ?$"),
+        re.compile(br"\[\w+\@[\w\-\.]+(?: [^\]])\] ?[>#\$] ?$"),
     ]
 
     terminal_stderr_re = [
-        re.compile(rb"error:", re.I),
-        re.compile(rb"Removing.* not allowed, it is being used"),
-        re.compile(rb"^Command authorization failed\r?$", re.MULTILINE),
+        re.compile(br"error:", re.I),
+        re.compile(br"Removing.* not allowed, it is being used"),
+        re.compile(br"^Command authorization failed\r?$", re.MULTILINE),
     ]
 
     terminal_config_prompt = re.compile(r"^.+\(config(-.*)?\)#$")
