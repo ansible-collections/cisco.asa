@@ -366,8 +366,8 @@ class OGsTemplate(NetworkTemplate):
             "getval": re.compile(
                 r"""\s+service-object*
                     \s*(?P<protocol>\S+)*
-                    \s*(?P<source_port>source\s((eq|gts|lt|neq)\s(\S+|\d+)|(range\s(\S+|\d+)\s(\S+|\d+))))*
-                    \s*(?P<destination_port>destination\s((eq|gt|lt|neq)\s(\S+|\d+)|(range\s(\S+|\d+)\s(\S+|\d+))))
+                    \s*(?P<source_port>source\s((eq|gts|lt|neq)\s(\S+|\d+)|(range\s(\S+|\S+)\s(\S+|\S+))))*
+                    \s*(?P<destination_port>destination\s((eq|gt|lt|neq)\s(\S+|\d+)|(range\s(\S+|\S+)\s(\S+|\S+))))
                     *""",
                 re.VERBOSE,
             ),

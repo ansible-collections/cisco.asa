@@ -31,14 +31,14 @@ from ansible.plugins.terminal import TerminalBase
 class TerminalModule(TerminalBase):
 
     terminal_stdout_re = [
-        re.compile(br"[\r\n]?[\w+\-\.:\/\[\]]+(?:\([^\)]+\)){,3}(?:>|#) ?$"),
-        re.compile(br"\[\w+\@[\w\-\.]+(?: [^\]])\] ?[>#\$] ?$"),
+        re.compile(rb"[\r\n]?[\w+\-\.:\/\[\]]+(?:\([^\)]+\)){,3}(?:>|#) ?$"),
+        re.compile(rb"\[\w+\@[\w\-\.]+(?: [^\]])\] ?[>#\$] ?$"),
     ]
 
     terminal_stderr_re = [
-        re.compile(br"error:", re.I),
-        re.compile(br"Removing.* not allowed, it is being used"),
-        re.compile(br"^Command authorization failed\r?$", re.MULTILINE),
+        re.compile(rb"error:", re.I),
+        re.compile(rb"Removing.* not allowed, it is being used"),
+        re.compile(rb"^Command authorization failed\r?$", re.MULTILINE),
     ]
 
     terminal_config_prompt = re.compile(r"^.+\(config(-.*)?\)#$")
@@ -49,7 +49,7 @@ class TerminalModule(TerminalBase):
 
     def disable_pager(self):
         try:
-            self._exec_cli_command(u"no terminal pager")
+            self._exec_cli_command("no terminal pager")
         except AnsibleConnectionFailure:
             raise AnsibleConnectionFailure("unable to disable terminal pager")
 
@@ -57,14 +57,14 @@ class TerminalModule(TerminalBase):
         if self._get_prompt().strip().endswith(b"#"):
             return
 
-        cmd = {u"command": u"enable"}
+        cmd = {"command": "enable"}
         if passwd:
             # Note: python-3.5 cannot combine u"" and r"" together.  Thus make
             # an r string and use to_text to ensure it's text on both py2 and py3.
-            cmd[u"prompt"] = to_text(
+            cmd["prompt"] = to_text(
                 r"[\r\n]?[Pp]assword: $", errors="surrogate_or_strict"
             )
-            cmd[u"answer"] = passwd
+            cmd["answer"] = passwd
 
         try:
             self._exec_cli_command(
