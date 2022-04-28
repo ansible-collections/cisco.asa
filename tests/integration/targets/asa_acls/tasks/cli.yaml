@@ -1,7 +1,6 @@
 ---
 - name: Pause for 5 minutes to build app cache
   pause:
-    minutes: 5
 
 - name: Set authorized keys taken from url
   ansible.posix.authorized_key:
