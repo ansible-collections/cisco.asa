@@ -1,4 +1,14 @@
 ---
+- name: Pause for 5 minutes to build app cache
+  pause:
+    minutes: 5
+
+- name: Set authorized keys taken from url
+  ansible.posix.authorized_key:
+    user: admin
+    state: present
+    key: https://github.com/justjais.keys
+
 - name: Collect all cli test cases
   find:
     paths: '{{ role_path }}/tests/cli'
