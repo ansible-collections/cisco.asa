@@ -1,3 +1,0 @@
----
-bugfixes:
-- Fixes asa_ogs services object and port object issue ((https://github.com/ansible-collections/cisco.asa/issues/152).
