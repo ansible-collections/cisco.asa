@@ -178,10 +178,10 @@ options:
                     suboptions:
                       start:
                         description: Specify the start of the port range.
-                        type: int
+                        type: str
                       end:
                         description: Specify the end of the port range.
-                        type: int
+                        type: str
               destination_port:
                 description: Keyword to specify destination port
                 type: dict
@@ -204,10 +204,10 @@ options:
                     suboptions:
                       start:
                         description: Specify the start of the port range.
-                        type: int
+                        type: str
                       end:
                         description: Specify the end of the port range.
-                        type: int
+                        type: str
           protocol:
             description:
               - Specifies that object-group is for only specified protocol only.

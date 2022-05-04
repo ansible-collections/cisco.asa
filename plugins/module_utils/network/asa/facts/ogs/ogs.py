@@ -88,7 +88,7 @@ class OGsFacts(object):
                     obj_gp = {}
                 config_dict["object_groups"] = sorted(
                     config_dict["object_groups"],
-                    key=lambda k, sk="name": k[sk],
+                    key=lambda k, sk="name": str(k[sk]),
                 )
                 ogs.append(config_dict)
         # sort the object group list of dict by object_type
