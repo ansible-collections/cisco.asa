@@ -147,3 +147,13 @@ releases:
     - 100_fix_asa_ogs_services_object_param.yaml
     - fix_asa_acls_for_service_object_gp.yaml
     release_date: '2021-10-06'
+  3.0.0:
+    changes:
+      bugfixes:
+      - Fixes asa_ogs services object and port object issue ((https://github.com/ansible-collections/cisco.asa/issues/152).
+      major_changes:
+      - Minimum required ansible.netcommon version is 2.5.1.
+      - Updated base plugin references to ansible.netcommon.
+    fragments:
+    - fix_for_the_ogs_bug_asa_152.yaml
+    release_date: '2022-05-05'
