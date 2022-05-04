@@ -5,6 +5,20 @@ Cisco Asa Collection Release Notes
 .. contents:: Topics
 
 
+v3.0.0
+======
+
+Major Changes
+-------------
+
+- Minimum required ansible.netcommon version is 2.5.1.
+- Updated base plugin references to ansible.netcommon.
+
+Bugfixes
+--------
+
+- Fixes asa_ogs services object and port object issue
+
 v2.1.0
 ======
 
