@@ -54,7 +54,8 @@ options:
       Possible values for this argument include all and the resources like interfaces,
       vlans etc. Can specify a list of values to include a larger subset. Values can
       also be used with an initial C(M(!)) to specify that a specific subset should
-      not be collected. Valid subsets are 'all', 'acls', 'ogs'.
+      not be collected. Values can also be used with an initial C(M(!)) to specify
+      that a specific subset should not be collected. Valid subsets are 'all', 'acls', 'ogs'.
     required: false
     type: list
     elements: str
