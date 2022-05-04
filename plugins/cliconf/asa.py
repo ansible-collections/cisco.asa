@@ -22,8 +22,8 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 ---
-author: Ansible Security Team
-cliconf: asa
+author: Ansible Security Team (@ansible-security)
+name: asa
 short_description: Use asa cliconf to run command on Cisco ASA platform
 description:
 - This asa plugin provides low level abstraction apis for sending and receiving CLI
@@ -38,6 +38,7 @@ options:
       to the device is present in this list, the existing cache is invalidated.
     version_added: 2.0.0
     type: list
+    elements: str
     default: []
     vars:
     - name: ansible_asa_config_commands
