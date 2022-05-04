@@ -193,6 +193,32 @@ class TestAsaOGsModule(TestAsaModule):
                     dict(
                         object_groups=[
                             dict(
+                                name="3300",
+                                port_object=[
+                                    dict(eq="3300"),
+                                ],
+                                protocol="tcp",
+                            ),
+                            dict(
+                                name="O-UNIX-TCP",
+                                port_object=[
+                                    dict(eq="https"),
+                                    dict(range=dict(end=400, start=100)),
+                                ],
+                                protocol="tcp",
+                            ),
+                            dict(
+                                name="sg-skype_ports",
+                                services_object=[
+                                    dict(
+                                        destination_port=dict(
+                                            range=dict(end="5061", start="sip")
+                                        ),
+                                        protocol="tcp-udp",
+                                    ),
+                                ],
+                            ),
+                            dict(
                                 name="test_og_service",
                                 services_object=[
                                     dict(
@@ -209,14 +235,6 @@ class TestAsaOGsModule(TestAsaModule):
                                     dict(protocol="ipinip"),
                                     dict(protocol="tcp-udp"),
                                 ],
-                            ),
-                            dict(
-                                name="O-UNIX-TCP",
-                                port_object=[
-                                    dict(eq="https"),
-                                    dict(range=dict(end=400, start=100)),
-                                ],
-                                protocol="tcp",
                             ),
                         ],
                         object_type="service",
@@ -319,6 +337,32 @@ class TestAsaOGsModule(TestAsaModule):
                     dict(
                         object_groups=[
                             dict(
+                                name="3300",
+                                port_object=[
+                                    dict(eq="3300"),
+                                ],
+                                protocol="tcp",
+                            ),
+                            dict(
+                                name="O-UNIX-TCP",
+                                port_object=[
+                                    dict(eq="https"),
+                                    dict(range=dict(end=400, start=100)),
+                                ],
+                                protocol="tcp",
+                            ),
+                            dict(
+                                name="sg-skype_ports",
+                                services_object=[
+                                    dict(
+                                        destination_port=dict(
+                                            range=dict(end="5061", start="sip")
+                                        ),
+                                        protocol="tcp-udp",
+                                    ),
+                                ],
+                            ),
+                            dict(
                                 name="test_og_service",
                                 services_object=[
                                     dict(
@@ -335,14 +379,6 @@ class TestAsaOGsModule(TestAsaModule):
                                     dict(protocol="ipinip"),
                                     dict(protocol="tcp-udp"),
                                 ],
-                            ),
-                            dict(
-                                name="O-UNIX-TCP",
-                                port_object=[
-                                    dict(eq="https"),
-                                    dict(range=dict(end=400, start=100)),
-                                ],
-                                protocol="tcp",
                             ),
                         ],
                         object_type="service",
@@ -405,6 +441,8 @@ class TestAsaOGsModule(TestAsaModule):
         result = self.execute_module(changed=True)
         commands = [
             "no object-group service test_og_service",
+            "no object-group service 3300",
+            "no object-group service sg-skype_ports",
             "no object-group service O-UNIX-TCP",
             "no object-group network group_network_obj",
             "no object-group protocol test_protocol",
@@ -453,6 +491,32 @@ class TestAsaOGsModule(TestAsaModule):
                     dict(
                         object_groups=[
                             dict(
+                                name="3300",
+                                port_object=[
+                                    dict(eq="3300"),
+                                ],
+                                protocol="tcp",
+                            ),
+                            dict(
+                                name="O-UNIX-TCP",
+                                port_object=[
+                                    dict(eq="https"),
+                                    dict(range=dict(end=400, start=100)),
+                                ],
+                                protocol="tcp",
+                            ),
+                            dict(
+                                name="sg-skype_ports",
+                                services_object=[
+                                    dict(
+                                        destination_port=dict(
+                                            range=dict(end="5061", start="sip")
+                                        ),
+                                        protocol="tcp-udp",
+                                    ),
+                                ],
+                            ),
+                            dict(
                                 name="test_og_service",
                                 services_object=[
                                     dict(
@@ -469,14 +533,6 @@ class TestAsaOGsModule(TestAsaModule):
                                     dict(protocol="ipinip"),
                                     dict(protocol="tcp-udp"),
                                 ],
-                            ),
-                            dict(
-                                name="O-UNIX-TCP",
-                                port_object=[
-                                    dict(eq="https"),
-                                    dict(range=dict(end=400, start=100)),
-                                ],
-                                protocol="tcp",
                             ),
                         ],
                         object_type="service",
@@ -540,6 +596,8 @@ class TestAsaOGsModule(TestAsaModule):
             "no object-group network ANSIBLE_TEST",
             "no object-group network bug_test_obj",
             "no object-group protocol test_protocol",
+            "no object-group service 3300",
+            "no object-group service sg-skype_ports",
             "no object-group service test_og_service",
             "no object-group service O-UNIX-TCP",
             "no object-group user group_user_obj",
