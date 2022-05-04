@@ -2,7 +2,7 @@
 authors:
   - Ansible Security Community (ansible-security)
 dependencies:
-  "ansible.netcommon": ">=2.0.0"
+  "ansible.netcommon": ">=2.5.1"
 license_file: LICENSE
 name: asa
 namespace: cisco
