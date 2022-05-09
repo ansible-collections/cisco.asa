@@ -26,11 +26,6 @@
 The module file for asa_acls
 """
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
-
 DOCUMENTATION = """
 module: asa_acls
 short_description: Access-Lists resource module
