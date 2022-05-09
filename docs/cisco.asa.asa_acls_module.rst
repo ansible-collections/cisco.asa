@@ -2388,6 +2388,7 @@ Notes
 .. note::
    - Tested against Cisco ASA Version 9.10(1)11
    - This module works with connection ``network_cli``. See `ASA Platform Options <../network/user_guide/platform_asa.html>`_.
+   - When working with acl_type=standard, the ace must contain ``destination`` for idempotency to function correctly.
 
 
 
