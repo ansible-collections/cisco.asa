@@ -148,7 +148,7 @@ class TestAsaOGsModule(TestAsaModule):
                                             range=dict(end="200", start="100")
                                         ),
                                         protocol="tcp-udp",
-                                    ),
+                                    )
                                 ],
                             ),
                             dict(
@@ -159,7 +159,7 @@ class TestAsaOGsModule(TestAsaModule):
                                             range=dict(end="400", start="300")
                                         ),
                                         protocol="udp",
-                                    ),
+                                    )
                                 ],
                             ),
                         ],
@@ -189,7 +189,7 @@ class TestAsaOGsModule(TestAsaModule):
             "object-group service test_og_service_src_port_range",
             "service-object tcp-udp source range 100 200",
             "object-group service test_og_service_dst_port_range",
-            "service-object udp destination range 300 400"
+            "service-object udp destination range 300 400",
         ]
         self.assertEqual(sorted(result["commands"]), sorted(commands))
 
@@ -215,9 +215,7 @@ class TestAsaOGsModule(TestAsaModule):
                                 name="ANSIBLE_TEST",
                                 network_object=dict(object=["TEST1", "TEST2"]),
                             ),
-                            dict(
-                                name="bug_test_obj",
-                            ),
+                            dict(name="bug_test_obj"),
                         ],
                         object_type="network",
                     ),
@@ -225,9 +223,7 @@ class TestAsaOGsModule(TestAsaModule):
                         object_groups=[
                             dict(
                                 name="3300",
-                                port_object=[
-                                    dict(eq="3300"),
-                                ],
+                                port_object=[dict(eq="3300")],
                                 protocol="tcp",
                             ),
                             dict(
@@ -246,7 +242,7 @@ class TestAsaOGsModule(TestAsaModule):
                                             range=dict(end="5061", start="sip")
                                         ),
                                         protocol="tcp-udp",
-                                    ),
+                                    )
                                 ],
                             ),
                             dict(
@@ -359,9 +355,7 @@ class TestAsaOGsModule(TestAsaModule):
                                 name="ANSIBLE_TEST",
                                 network_object=dict(object=["TEST1", "TEST2"]),
                             ),
-                            dict(
-                                name="bug_test_obj",
-                            ),
+                            dict(name="bug_test_obj"),
                         ],
                         object_type="network",
                     ),
@@ -369,9 +363,7 @@ class TestAsaOGsModule(TestAsaModule):
                         object_groups=[
                             dict(
                                 name="3300",
-                                port_object=[
-                                    dict(eq="3300"),
-                                ],
+                                port_object=[dict(eq="3300")],
                                 protocol="tcp",
                             ),
                             dict(
@@ -390,7 +382,7 @@ class TestAsaOGsModule(TestAsaModule):
                                             range=dict(end="5061", start="sip")
                                         ),
                                         protocol="tcp-udp",
-                                    ),
+                                    )
                                 ],
                             ),
                             dict(
@@ -513,9 +505,7 @@ class TestAsaOGsModule(TestAsaModule):
                                 name="ANSIBLE_TEST",
                                 network_object=dict(object=["TEST1", "TEST2"]),
                             ),
-                            dict(
-                                name="bug_test_obj",
-                            ),
+                            dict(name="bug_test_obj"),
                         ],
                         object_type="network",
                     ),
@@ -523,9 +513,7 @@ class TestAsaOGsModule(TestAsaModule):
                         object_groups=[
                             dict(
                                 name="3300",
-                                port_object=[
-                                    dict(eq="3300"),
-                                ],
+                                port_object=[dict(eq="3300")],
                                 protocol="tcp",
                             ),
                             dict(
@@ -544,7 +532,7 @@ class TestAsaOGsModule(TestAsaModule):
                                             range=dict(end="5061", start="sip")
                                         ),
                                         protocol="tcp-udp",
-                                    ),
+                                    )
                                 ],
                             ),
                             dict(
@@ -669,7 +657,7 @@ class TestAsaOGsModule(TestAsaModule):
                                             range=dict(end="200", start="100")
                                         ),
                                         protocol="tcp-udp",
-                                    ),
+                                    )
                                 ],
                             ),
                             dict(
@@ -680,7 +668,7 @@ class TestAsaOGsModule(TestAsaModule):
                                             range=dict(end="400", start="300")
                                         ),
                                         protocol="udp",
-                                    ),
+                                    )
                                 ],
                             ),
                         ],
@@ -702,7 +690,7 @@ class TestAsaOGsModule(TestAsaModule):
             "object-group service test_og_service_src_port_range",
             "service-object tcp-udp source range 100 200",
             "object-group service test_og_service_dst_port_range",
-            "service-object udp destination range 300 400"
+            "service-object udp destination range 300 400",
         ]
         result = self.execute_module(changed=False)
         self.assertEqual(sorted(result["rendered"]), sorted(commands))

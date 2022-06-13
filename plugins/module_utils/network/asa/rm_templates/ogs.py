@@ -103,12 +103,17 @@ def _tmplt_services_object(config_data):
         if config_data["services_object"].get("destination_port"):
             if config_data["services_object"]["destination_port"].get("range"):
                 cmd += " destination range {start} {end}".format(
-                    **config_data["services_object"]["destination_port"]["range"]
+                    **config_data["services_object"]["destination_port"][
+                        "range"
+                    ]
                 )
             else:
-                key = list(config_data["services_object"]["destination_port"])[0]
+                key = list(config_data["services_object"]["destination_port"])[
+                    0
+                ]
                 cmd += " destination {0} {1}".format(
-                    key, config_data["services_object"]["destination_port"][key]
+                    key,
+                    config_data["services_object"]["destination_port"][key],
                 )
         return cmd
 
