@@ -142,17 +142,25 @@ class TestAsaOGsModule(TestAsaModule):
                         object_groups=[
                             dict(
                                 name="test_og_service_src_port_range",
-                                source_port=dict(
-                                    range=dict(end="100", start="200")
-                                ),
-                                protocol="tcp-udp",
+                                services_object=[
+                                    dict(
+                                        destination_port=dict(
+                                            range=dict(end="200", start="100")
+                                        ),
+                                        protocol="tcp-udp",
+                                    ),
+                                ],
                             ),
                             dict(
                                 name="test_og_service_dst_port_range",
-                                destination_port=dict(
-                                    range=dict(end="300", start="400")
-                                ),
-                                protocol="udp",
+                                services_object=[
+                                    dict(
+                                        destination_port=dict(
+                                            range=dict(end="400", start="300")
+                                        ),
+                                        protocol="udp",
+                                    ),
+                                ],
                             ),
                         ],
                         object_type="service",
@@ -181,7 +189,7 @@ class TestAsaOGsModule(TestAsaModule):
             "object-group service test_og_service_src_port_range",
             "service-object tcp-udp source range 100 200",
             "object-group service test_og_service_dst_port_range",
-            "service-object tcp-udp destination range 300 400"
+            "service-object udp destination range 300 400"
         ]
         self.assertEqual(sorted(result["commands"]), sorted(commands))
 
@@ -655,17 +663,25 @@ class TestAsaOGsModule(TestAsaModule):
                             ),
                             dict(
                                 name="test_og_service_src_port_range",
-                                source_port=dict(
-                                    range=dict(end="100", start="200")
-                                ),
-                                protocol="tcp-udp",
+                                services_object=[
+                                    dict(
+                                        destination_port=dict(
+                                            range=dict(end="200", start="100")
+                                        ),
+                                        protocol="tcp-udp",
+                                    ),
+                                ],
                             ),
                             dict(
                                 name="test_og_service_dst_port_range",
-                                destination_port=dict(
-                                    range=dict(end="300", start="400")
-                                ),
-                                protocol="udp",
+                                services_object=[
+                                    dict(
+                                        destination_port=dict(
+                                            range=dict(end="400", start="300")
+                                        ),
+                                        protocol="udp",
+                                    ),
+                                ],
                             ),
                         ],
                         object_type="service",
