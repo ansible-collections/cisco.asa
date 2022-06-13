@@ -228,10 +228,10 @@ options:
                 suboptions:
                   start:
                     description: Specify the start of the port range.
-                    type: int
+                    type: str
                   end:
                     description: Specify the end of the port range.
-                    type: int
+                    type: str
           user_object:
             description: Configures single user, local or import user group
             type: dict
