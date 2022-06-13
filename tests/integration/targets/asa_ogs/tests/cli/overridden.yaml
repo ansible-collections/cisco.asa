@@ -30,24 +30,6 @@
                   protocol:
                     - tcp
                     - udp
-          - object_type: service
-            object_groups:
-              - name: test_og_service_src_port_range
-                description: test_og_service_override
-                services_object:
-                  - protocol: tcp
-                    source_port:
-                      range:
-                        start: 300
-                        end: 400
-              - name: test_og_service_dst_port_range
-                description: test_og_service_override
-                services_object:
-                  - protocol: tcp
-                    destination_port:
-                      range:
-                        start: 300
-                        end: 400
         state: overridden
 
     - assert:

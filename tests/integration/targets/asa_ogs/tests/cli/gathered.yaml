@@ -45,22 +45,6 @@
                       domain: LOCAL
                     - name: new_user_2
                       domain: LOCAL
-          - object_type: service
-            object_groups:
-              - name: test_og_service_src_port_range
-                services_object:
-                  - protocol: tcp
-                    source_port:
-                      range:
-                        start: 100
-                        end: 200
-              - name: test_og_service_dst_port_range
-                services_object:
-                  - protocol: tcp
-                    destination_port:
-                      range:
-                        start: 100
-                        end: 200
         state: merged
 
     - name: Gather the provided configuration with the exisiting running configuration
