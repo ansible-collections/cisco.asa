@@ -117,6 +117,19 @@ class TestAsaOGsModule(TestAsaModule):
                     dict(
                         object_groups=[
                             dict(
+                                name="allowed.ports.tcp",
+                                port_object=[
+                                    dict(eq="3300"),
+                                    dict(range=dict(start="9101", end="9103")),
+                                ],
+                                protocol="tcp",
+                            ),
+                        ],
+                        object_type="service",
+                    ),
+                    dict(
+                        object_groups=[
+                            dict(
                                 name="test_user_obj",
                                 user_object=dict(
                                     user_group=[
@@ -182,6 +195,9 @@ class TestAsaOGsModule(TestAsaModule):
             "network-object object NEW_TEST",
             "object-group network bug_test_obj",
             "network-object host 9.9.9.9",
+            "object-group service allowed.ports.tcp tcp",
+            "port-object eq 3300",
+            "port-object range 9101 9103",
             "object-group user test_user_obj",
             "user-group domain\\\\test_merge",
             "object-group protocol test_protocol",
