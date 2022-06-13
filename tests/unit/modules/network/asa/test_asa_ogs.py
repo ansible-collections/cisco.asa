@@ -138,6 +138,25 @@ class TestAsaOGsModule(TestAsaModule):
                         ],
                         object_type="protocol",
                     ),
+                    dict(
+                        object_groups=[
+                            dict(
+                                name="test_og_service_src_port_range",
+                                source_port=dict(
+                                    range=dict(end="100", start="200")
+                                ),
+                                protocol="tcp-udp",
+                            ),
+                            dict(
+                                name="test_og_service_dst_port_range",
+                                destination_port=dict(
+                                    range=dict(end="300", start="400")
+                                ),
+                                protocol="udp",
+                            ),
+                        ],
+                        object_type="service",
+                    ),
                 ],
                 state="merged",
             )
@@ -159,6 +178,10 @@ class TestAsaOGsModule(TestAsaModule):
             "user-group domain\\\\test_merge",
             "object-group protocol test_protocol",
             "protocol tcp",
+            "object-group service test_og_service_src_port_range",
+            "service-object tcp-udp source range 100 200",
+            "object-group service test_og_service_dst_port_range",
+            "service-object tcp-udp destination range 300 400"
         ]
         self.assertEqual(sorted(result["commands"]), sorted(commands))
 
@@ -629,7 +652,21 @@ class TestAsaOGsModule(TestAsaModule):
                                 service_object=dict(
                                     protocol=["ipinip", "tcp-udp"]
                                 ),
-                            )
+                            ),
+                            dict(
+                                name="test_og_service_src_port_range",
+                                source_port=dict(
+                                    range=dict(end="100", start="200")
+                                ),
+                                protocol="tcp-udp",
+                            ),
+                            dict(
+                                name="test_og_service_dst_port_range",
+                                destination_port=dict(
+                                    range=dict(end="300", start="400")
+                                ),
+                                protocol="udp",
+                            ),
                         ],
                         object_type="service",
                     ),
@@ -646,6 +683,10 @@ class TestAsaOGsModule(TestAsaModule):
             "object-group service test_og_service",
             "service-object ipinip",
             "service-object tcp-udp",
+            "object-group service test_og_service_src_port_range",
+            "service-object tcp-udp source range 100 200",
+            "object-group service test_og_service_dst_port_range",
+            "service-object tcp-udp destination range 300 400"
         ]
         result = self.execute_module(changed=False)
         self.assertEqual(sorted(result["rendered"]), sorted(commands))
