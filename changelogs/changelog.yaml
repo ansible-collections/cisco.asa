@@ -157,3 +157,15 @@ releases:
     fragments:
     - fix_for_the_ogs_bug_asa_152.yaml
     release_date: '2022-05-05'
+  3.1.0:
+    changes:
+      release_summary:
+      - Releasing 3.1.0 with bugfix.
+      bugfixes:
+      - Fix service-object port range rendering
+      - Fixes asa_ogs port object range issue and duplicate service cmd (https://github.com/ansible-collections/cisco.asa/issues/165,
+        https://github.com/ansible-collections/cisco.asa/issues/166).
+      - Unit TC for svc src/dst port range
+    fragments:
+    - fix_asa_ogs_bug_165_166.yaml
+    release_date: '2022-06-28'
