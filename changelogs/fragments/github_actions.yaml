@@ -1,4 +1,0 @@
----
-bugfixes:
-  - Fix service-object port range rendering
-  - Unit TC for svc src/dst port range

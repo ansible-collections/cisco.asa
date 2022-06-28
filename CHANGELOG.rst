@@ -5,6 +5,21 @@ Cisco Asa Collection Release Notes
 .. contents:: Topics
 
 
+v3.1.0
+======
+
+Release Summary
+---------------
+
+- Releasing 3.1.0 with bugfix.
+
+Bugfixes
+--------
+
+- Fix service-object port range rendering
+- Fixes asa_ogs port object range issue and duplicate service cmd (https://github.com/ansible-collections/cisco.asa/issues/165, https://github.com/ansible-collections/cisco.asa/issues/166).
+- Unit TC for svc src/dst port range
+
 v3.0.0
 ======
 
