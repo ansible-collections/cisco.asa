@@ -162,6 +162,14 @@ class TestAsaOGsModule(TestAsaModule):
                                     )
                                 ],
                             ),
+                            dict(
+                                name="allowed.ports.tcp",
+                                port_object=[
+                                    dict(eq="3300"),
+                                    dict(range=dict(start="9101", end="9103")),
+                                ],
+                                protocol="tcp",
+                            ),
                         ],
                         object_type="service",
                     ),
@@ -190,6 +198,9 @@ class TestAsaOGsModule(TestAsaModule):
             "service-object tcp-udp source range 100 200",
             "object-group service test_og_service_dst_port_range",
             "service-object udp destination range 300 400",
+            "object-group service allowed.ports.tcp tcp",
+            "port-object eq 3300",
+            "port-object range 9101 9103",
         ]
         self.assertEqual(sorted(result["commands"]), sorted(commands))
 

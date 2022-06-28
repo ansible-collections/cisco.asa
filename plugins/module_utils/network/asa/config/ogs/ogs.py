@@ -411,6 +411,9 @@ class OGs(ResourceModule):
                         entry, h_item, service_obj, ["protocol"]
                     )
                 else:
+                    protocol = entry.get("protocol")
+                    if protocol:
+                        entry["name"] = "{0} {1}".format(name, protocol)
                     self.addcmd(entry, "og_name", False)
                     self.compare(["description"], entry, h_item)
                 if entry.get("group_object"):
@@ -499,13 +502,6 @@ class OGs(ResourceModule):
                         for k, v in iteritems(h_item):
                             temp_have = {"name": name, port_obj: v}
                             self.compare([port_obj], want={}, have=temp_have)
-                    if command_len < len(self.commands):
-                        self.commands.insert(
-                            command_len,
-                            "object-group service {0} {1}".format(
-                                name, protocol
-                            ),
-                        )
         self.check_for_have_and_overidden(have)
 
     def convert_list_to_dict(self, *args, **kwargs):
