@@ -1053,7 +1053,7 @@ class TestAsaAclsModule(TestAsaModule):
                                         port_protocol=dict(eq="domain"),
                                     ),
                                     grant="permit",
-                                    line=4,
+                                    line=3,
                                     protocol="udp",
                                     protocol_options=dict(udp="true"),
                                     source=dict(
