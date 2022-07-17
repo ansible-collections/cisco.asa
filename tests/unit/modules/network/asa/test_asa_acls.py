@@ -127,6 +127,103 @@ class TestAsaAclsModule(TestAsaModule):
                             acl_type="extended",
                             name="MyACL",
                         ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        any="true",
+                                        port_protocol=dict(eq="www"),
+                                    ),
+                                    grant="permit",
+                                    line=1,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(network_object="dbhost1"),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        network_object="www_host1",
+                                        port_protocol=dict(eq="www"),
+                                    ),
+                                    grant="permit",
+                                    line=2,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(any="true"),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        network_object="dbhost1",
+                                        port_protocol=dict(eq="5432"),
+                                    ),
+                                    grant="permit",
+                                    line=3,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(host="10.1.2.3"),
+                                ),
+                                dict(
+                                    destination=dict(host="192.168.1.1"),
+                                    grant="permit",
+                                    line=4,
+                                    protocol="icmp",
+                                    source=dict(network_object="dbhost1"),
+                                ),                                                            
+                            ],
+                            acl_type="extended",
+                            name="acl_network_object_test",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        any6="true",
+                                        port_protocol=dict(
+                                            range=dict(
+                                                end=200,
+                                                start=100
+                                            )
+                                        )
+                                    ),
+                                    grant="permit",
+                                    protocol="udp",
+                                    protocol_options=dict(udp="true"),
+                                    source=dict(address="2001:db8::/32"),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        any6="true",
+                                        port_protocol=dict(eq="www"),
+                                    ),
+                                    grant="permit",
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(host="2001:db8:85a3:d000:a00:8a2e:370:7334"),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        any6="true",
+                                        port_protocol=dict(eq="domain"),
+                                    ),
+                                    grant="permit",
+                                    protocol="udp",
+                                    protocol_options=dict(udp="true"),
+                                    source=dict(address="2001:db8:85a3:d000:a00:8a2e:370:7334/127"),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        network_object="www_host1",
+                                        port_protocol=dict(eq="www"),
+                                    ),
+                                    grant="permit",
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(address="2001:db8:85a3::8a2e:370:7334/126"),
+                                )
+                            ],
+                            acl_type="extended",
+                            name="acl_ipv6_test",
+                        ),
                     ]
                 ),
                 state="merged",
@@ -136,6 +233,14 @@ class TestAsaAclsModule(TestAsaModule):
         commands = [
             "access-list test_global_access line 2 extended deny tcp object-group test_og_network object-group test_network_og eq www log default",
             "access-list MyACL line 2 extended permit tcp object-group O-Environments any object-group O-UNIX-TCP",
+            "access-list acl_network_object_test line 1 extended permit tcp object dbhost1 any eq www",
+            "access-list acl_network_object_test line 2 extended permit tcp any object www_host1 eq www",
+            "access-list acl_network_object_test line 3 extended permit tcp host 10.1.2.3 object dbhost1 eq 5432",
+            "access-list acl_network_object_test line 4 extended permit icmp object dbhost1 host 192.168.1.1",
+            "access-list acl_ipv6_test extended permit udp 2001:db8::/32 any6 range 100 200",
+            "access-list acl_ipv6_test extended permit tcp host 2001:db8:85a3:d000:a00:8a2e:370:7334 any6 eq www",
+            "access-list acl_ipv6_test extended permit udp 2001:db8:85a3:d000:a00:8a2e:370:7334/127 any6 eq domain",
+            "access-list acl_ipv6_test extended permit tcp 2001:db8:85a3::8a2e:370:7334/126 object www_host1 eq www",
         ]
         self.assertEqual(result["commands"], commands)
 
@@ -860,14 +965,119 @@ class TestAsaAclsModule(TestAsaModule):
                                     ),
                                 )
                             ],
-                        )
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        any="true",
+                                        port_protocol=dict(eq="www"),
+                                    ),
+                                    grant="permit",
+                                    line=1,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(network_object="dbhost1"),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        network_object="www_host1",
+                                        port_protocol=dict(eq="www"),
+                                    ),
+                                    grant="permit",
+                                    line=2,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(any="true"),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        network_object="dbhost1",
+                                        port_protocol=dict(eq="5432"),
+                                    ),
+                                    grant="permit",
+                                    line=3,
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(host="10.1.2.3"),
+                                ),
+                                dict(
+                                    destination=dict(host="192.168.1.1"),
+                                    grant="permit",
+                                    line=4,
+                                    protocol="icmp",
+                                    source=dict(network_object="dbhost1"),
+                                ),                                                            
+                            ],
+                            acl_type="extended",
+                            name="acl_network_object_test",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        any6="true",
+                                        port_protocol=dict(
+                                            range=dict(
+                                                end=200,
+                                                start=100
+                                            )
+                                        )
+                                    ),
+                                    grant="permit",
+                                    protocol="udp",
+                                    protocol_options=dict(udp="true"),
+                                    source=dict(address="2001:db8::/32"),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        any6="true",
+                                        port_protocol=dict(eq="www"),
+                                    ),
+                                    grant="permit",
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(host="2001:db8:85a3:d000:a00:8a2e:370:7334"),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        any6="true",
+                                        port_protocol=dict(eq="domain"),
+                                    ),
+                                    grant="permit",
+                                    protocol="udp",
+                                    protocol_options=dict(udp="true"),
+                                    source=dict(address="2001:db8:85a3:d000:a00:8a2e:370:7334/127"),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        network_object="www_host1",
+                                        port_protocol=dict(eq="www"),
+                                    ),
+                                    grant="permit",
+                                    protocol="tcp",
+                                    protocol_options=dict(tcp="true"),
+                                    source=dict(address="2001:db8:85a3::8a2e:370:7334/126"),
+                                )
+                            ],
+                            acl_type="extended",
+                            name="acl_ipv6_test",
+                        ),
                     ]
                 ),
                 state="rendered",
             )
         )
         commands = [
-            "access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 log default"
+            "access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 log default",
+            "access-list acl_network_object_test line 1 extended permit tcp object dbhost1 any eq www",
+            "access-list acl_network_object_test line 2 extended permit tcp any object www_host1 eq www",
+            "access-list acl_network_object_test line 3 extended permit tcp host 10.1.2.3 object dbhost1 eq 5432",
+            "access-list acl_network_object_test line 4 extended permit icmp object dbhost1 host 192.168.1.1",
+            "access-list acl_ipv6_test extended permit udp 2001:db8::/32 any6 range 100 200",
+            "access-list acl_ipv6_test extended permit tcp host 2001:db8:85a3:d000:a00:8a2e:370:7334 any6 eq www",
+            "access-list acl_ipv6_test extended permit udp 2001:db8:85a3:d000:a00:8a2e:370:7334/127 any6 eq domain",
+            "access-list acl_ipv6_test extended permit tcp 2001:db8:85a3::8a2e:370:7334/126 object www_host1 eq www",
         ]
         result = self.execute_module(changed=False)
         self.assertEqual(result["rendered"], commands)

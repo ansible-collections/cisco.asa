@@ -300,6 +300,9 @@ options:
                   interface:
                     description: Use interface address as source address
                     type: str
+                  network_object:
+                    description: Network object for source address
+                    type: str
                   object_group:
                     description: Network object-group for source address
                     type: str
@@ -358,6 +361,9 @@ options:
                     type: str
                   interface:
                     description: Use interface address as destination address
+                    type: str
+                  network_object:
+                    description: Network object for destination address
                     type: str
                   object_group:
                     description: Network object-group for destination address
