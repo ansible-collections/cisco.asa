@@ -247,7 +247,8 @@ class AclsTemplate(NetworkTemplate):
                                          destination.split(' ')[0] == 'host' %}{{ destination.split(' ')[1] }}{% elif std_dest is defined and\
                                               'host' in std_dest %}{{ std_dest.split(' ')[1] }}{% endif %}",
                                     "interface": "{{ destination.split(' ')[1] if destination is defined and 'interface' in destination else None }}",
-                                    "network_object": "{{ destination.split(' ')[1] if destination is defined and destination.split(' ')[0] == 'object' else None }}",
+                                    "network_object": "{{ destination.split(' ')[1] if destination is defined and destination.split(' ')[0] == 'object'\
+                                         else None }}",
                                     "object_group": "{{ destination.split(' ')[1] if destination is defined and 'object-group' in destination else None }}",
                                     "service_object_group": "{{ dest_svc_object_group.split('object-group ')[1] if dest_svc_object_group is defined }}",
                                     "port_protocol": {
