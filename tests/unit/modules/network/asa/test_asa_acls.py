@@ -173,21 +173,21 @@ class TestAsaAclsModule(TestAsaModule):
                             acl_type="extended",
                             name="acl_network_object_test",
                         ),
-                        # dict(
-                        #     aces=[
-                        #         dict(
-                        #             destination=dict(
-                        #                 any6="true",
-                        #                 port_protocol=dict(
-                        #                     range=dict(end=200, start=100)
-                        #                 ),
-                        #             ),
-                        #             grant="permit",
-                        #             line=1,
-                        #             protocol="udp",
-                        #             protocol_options=dict(udp="true"),
-                        #             source=dict(address="2001:db8::/32"),
-                        #         ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
+                                        any6="true",
+                                        port_protocol=dict(
+                                            range=dict(end=200, start=100)
+                                        ),
+                                    ),
+                                    grant="permit",
+                                    line=1,
+                                    protocol="udp",
+                                    protocol_options=dict(udp="true"),
+                                    source=dict(address="2001:db8::/32"),
+                                ),
                         #         dict(
                         #             destination=dict(
                         #                 any6="true",
@@ -227,10 +227,10 @@ class TestAsaAclsModule(TestAsaModule):
                         #                 address="2001:db8:85a3::8a2e:370:7334/126"
                         #             ),
                         #         ),
-                        #     ],
-                        #     acl_type="extended",
-                        #     name="acl_ipv6_test",
-                        # ),
+                            ],
+                            acl_type="extended",
+                            name="acl_ipv6_test",
+                        ),
                     ]
                 ),
                 state="merged",
@@ -244,7 +244,7 @@ class TestAsaAclsModule(TestAsaModule):
             "access-list acl_network_object_test line 2 extended permit tcp any object www_host1 eq www",
             "access-list acl_network_object_test line 3 extended permit tcp host 10.1.2.3 object dbhost1 eq 5432",
             "access-list acl_network_object_test line 4 extended permit icmp object dbhost1 host 192.168.1.1",
-            # "access-list acl_ipv6_test line 1 extended permit udp 2001:db8::/32 any6 range 100 200",
+            "access-list acl_ipv6_test line 1 extended permit udp 2001:db8::/32 any6 range 100 200",
             # "access-list acl_ipv6_test line 2 extended permit tcp host 2001:db8:85a3:d000:a00:8a2e:370:7334 any6 eq www",
             # "access-list acl_ipv6_test line 3 extended permit udp 2001:db8:85a3:d000:a00:8a2e:370:7334/127 any6 eq domain",
             # "access-list acl_ipv6_test line 4 extended permit tcp 2001:db8:85a3::8a2e:370:7334/126 object www_host1 eq www",
