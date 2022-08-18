@@ -1,2 +1,3 @@
 plugins/action/asa.py action-plugin-docs # base class for deprecated network platform modules using `connection: local`
+tests/unit/mock/loader.py pylint:arguments-renamed
 plugins/action/asa.py pylint:arguments-renamed
