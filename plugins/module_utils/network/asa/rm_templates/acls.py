@@ -207,7 +207,7 @@ class AclsTemplate(NetworkTemplate):
                                 "source": {
                                     "address": "{% if source is defined and '.' in source and 'host'\
                                         not in source and 'object' not in source %}{{ source.split(' ')[0] }}{% elif source is defined and\
-                                            ':' in source and 'host' not in source %}{{ source }}{% endif %}",
+                                            '::' in source and 'host' not in source %}{{ source }}{% endif %}",
                                     "netmask": "{{ source.split(' ')[1] if source\
                                         is defined and '.' in source and 'host' not in source else None and 'object-group' not in source }}",
                                     "any4": "{{ True if source is defined and source == 'any4' else None }}",
@@ -234,7 +234,7 @@ class AclsTemplate(NetworkTemplate):
                                         '.' in destination and\
                                             'object' not in destination %}{{ destination.split(' ')[0] }}{% elif std_dest is defined and\
                                             '.' in std_dest and 'host' not in std_dest %}{{ std_dest.split(' ')[0] }}{% elif destination is defined and\
-                                                 ':' in destination %}{{ destination }}{% endif %}",
+                                                 '::' in destination %}{{ destination }}{% endif %}",
                                     "netmask": "{% if destination is defined and 'host' not in destination and\
                                         '.' in destination and\
                                              'object-group' not in destination %}{{ destination.split(' ')[1] }}{% elif std_dest is defined and\
