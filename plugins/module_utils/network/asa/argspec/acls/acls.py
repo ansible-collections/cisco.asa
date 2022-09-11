@@ -70,6 +70,7 @@ class AclsArgs(object):
                                         "any6": {"type": "bool"},
                                         "host": {"type": "str"},
                                         "interface": {"type": "str"},
+                                        "network_object": {"type": "str"},
                                         "object_group": {"type": "str"},
                                         "port_protocol": {
                                             "type": "dict",
@@ -101,6 +102,7 @@ class AclsArgs(object):
                                         "any6": {"type": "bool"},
                                         "host": {"type": "str"},
                                         "interface": {"type": "str"},
+                                        "network_object": {"type": "str"},
                                         "object_group": {"type": "str"},
                                         "service_object_group": {
                                             "type": "str"

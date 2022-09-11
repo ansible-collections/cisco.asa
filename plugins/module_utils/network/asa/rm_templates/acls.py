@@ -34,6 +34,10 @@ def _tmplt_access_list_entries(config_data):
                 cmd += " interface {interface}".format(
                     **config_data["aces"][type]
                 )
+            elif config_data["aces"][type].get("network_object"):
+                cmd += " object {network_object}".format(
+                    **config_data["aces"][type]
+                )
             elif config_data["aces"][type].get("object_group"):
                 cmd += " object-group {object_group}".format(
                     **config_data["aces"][type]
@@ -174,9 +178,9 @@ class AclsTemplate(NetworkTemplate):
                     \s*(?P<std_dest>(host\s\S+)|any4|(?:[0-9]{1,3}\.){3}[0-9]{1,3}\s(?:[0-9]{1,3}\.){3}[0-9]{1,3})*
                     \s*(?P<protocol>ah|eigrp|esp|gre|icmp|icmp6|igmp|igrp|ip|ipinip|ipsec|nos|ospf|pcp|pim|pptp|sctp|snp|tcp|udp)*
                     \s*(?P<protocol_num>\d+\s)*
-                    \s*(?P<source>any4|any6|any|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\s([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+\S+|host\s(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+)\S+)|interface\s\S+|object-group\s\S+))*
+                    \s*(?P<source>any4|any6|any|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\s([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+\S+|host\s(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+)\S+)|interface\s\S+|object\s\S+|object-group\s\S+))*
                     \s*(?P<source_port_protocol>(eq|gts|lt|neq)\s(\S+|\d+)|range\s\S+\s\S+)*
-                    \s*(?P<destination>any4|any6|any|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\s([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+\S+|host\s(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+)\S+)|interface\s\S+|object-group\s\S+))*
+                    \s*(?P<destination>any4|any6|any|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\s([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+\S+|host\s(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+)\S+)|interface\s\S+|object\s\S+|object-group\s\S+))*
                     \s*(?P<dest_svc_object_group>object-group\s\S+)*
                     \s*(?P<dest_port_protocol>(eq|gts|lt|neq)\s(\S+|\d+)|range\s\S+\s\S+)*
                     \s*(?P<icmp_icmp6_protocol>alternate-address|conversion-error|echo|echo-reply|information-reply|information-request|mask-reply|mask-request|membership-query|membership-reduction|membership-report|mobile-redirect|neighbor-advertisement|neighbor-redirect|neighbor-solicitation|parameter-problem|packet-too-big|redirect|router-advertisement|router-renumbering|router-solicitation|source-quench|source-route-failed|time-exceeded|timestamp-reply|timestamp-request|traceroute|unreachable)*
@@ -202,15 +206,17 @@ class AclsTemplate(NetworkTemplate):
                                 "icmp_icmp6_protocol": "{{ icmp_icmp6_protocol if icmp_icmp6_protocol is defined else None }}",
                                 "source": {
                                     "address": "{% if source is defined and '.' in source and 'host'\
-                                        not in source and 'object-group' not in source %}{{ source.split(' ')[0] }}{% elif source is defined and\
+                                        not in source and 'object' not in source %}{{ source.split(' ')[0] }}{% elif source is defined and\
                                             '::' in source and 'host' not in source %}{{ source }}{% endif %}",
                                     "netmask": "{{ source.split(' ')[1] if source\
                                         is defined and '.' in source and 'host' not in source else None and 'object-group' not in source }}",
                                     "any4": "{{ True if source is defined and source == 'any4' else None }}",
                                     "any6": "{{ True if source is defined and source == 'any6' else None }}",
                                     "any": "{{ True if source is defined and source == 'any' else None }}",
-                                    "host": "{{ source.split(' ')[1] if source is defined and 'host' in source else None }}",
+                                    "host": "{{ source.split(' ')[1] if source is defined and source.split(' ')[0] == 'host' else None }}",
                                     "interface": "{{ source.split(' ')[1] if source is defined and 'interface' in source else None }}",
+                                    "network_object": "{{ source.split(' ')[1] if source is defined and source.split(' ')[0] == 'object'\
+                                        else None }}",
                                     "object_group": "{{ source.split(' ')[1] if source is defined and 'object-group' in source else None }}",
                                     "port_protocol": {
                                         "{{ source_port_protocol.split(' ')[0] if source_port_protocol\
@@ -227,7 +233,7 @@ class AclsTemplate(NetworkTemplate):
                                 "destination": {
                                     "address": "{% if destination is defined and 'host' not in destination and\
                                         '.' in destination and\
-                                            'object-group' not in destination %}{{ destination.split(' ')[0] }}{% elif std_dest is defined and\
+                                            'object' not in destination %}{{ destination.split(' ')[0] }}{% elif std_dest is defined and\
                                             '.' in std_dest and 'host' not in std_dest %}{{ std_dest.split(' ')[0] }}{% elif destination is defined and\
                                                  '::' in destination %}{{ destination }}{% endif %}",
                                     "netmask": "{% if destination is defined and 'host' not in destination and\
@@ -239,9 +245,11 @@ class AclsTemplate(NetworkTemplate):
                                     "any6": "{{ True if destination is defined and destination == 'any6' else None }}",
                                     "any": "{{ True if destination is defined and destination == 'any' else None }}",
                                     "host": "{% if destination is defined and\
-                                         'host' in destination %}{{ destination.split(' ')[1] }}{% elif std_dest is defined and\
+                                         destination.split(' ')[0] == 'host' %}{{ destination.split(' ')[1] }}{% elif std_dest is defined and\
                                               'host' in std_dest %}{{ std_dest.split(' ')[1] }}{% endif %}",
                                     "interface": "{{ destination.split(' ')[1] if destination is defined and 'interface' in destination else None }}",
+                                    "network_object": "{{ destination.split(' ')[1] if destination is defined and destination.split(' ')[0] == 'object'\
+                                         else None }}",
                                     "object_group": "{{ destination.split(' ')[1] if destination is defined and 'object-group' in destination else None }}",
                                     "service_object_group": "{{ dest_svc_object_group.split('object-group ')[1] if dest_svc_object_group is defined }}",
                                     "port_protocol": {
