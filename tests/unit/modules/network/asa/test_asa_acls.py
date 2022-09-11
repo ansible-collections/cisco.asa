@@ -122,7 +122,7 @@ class TestAsaAclsModule(TestAsaModule):
                                     protocol="tcp",
                                     protocol_options=dict(tcp="true"),
                                     source=dict(object_group="O-Environments"),
-                                )
+                                ),
                             ],
                             acl_type="extended",
                             name="MyACL",
@@ -330,7 +330,7 @@ class TestAsaAclsModule(TestAsaModule):
                                     protocol="tcp",
                                     protocol_options=dict(tcp="true"),
                                     source=dict(object_group="O-Environments"),
-                                )
+                                ),
                             ],
                             acl_type="extended",
                             name="MyACL",
@@ -570,7 +570,7 @@ class TestAsaAclsModule(TestAsaModule):
                                     protocol="tcp",
                                     protocol_options=dict(tcp="true"),
                                     source=dict(object_group="O-Environments"),
-                                )
+                                ),
                             ],
                             acl_type="extended",
                             name="MyACL",
@@ -803,7 +803,7 @@ class TestAsaAclsModule(TestAsaModule):
                                     protocol="tcp",
                                     protocol_options=dict(tcp="true"),
                                     source=dict(object_group="O-Environments"),
-                                )
+                                ),
                             ],
                             acl_type="extended",
                             name="MyACL",
