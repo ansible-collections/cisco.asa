@@ -1,5 +1,5 @@
 ---
-- debug:
+- ansible.builtin.debug:
     msg: START asa_ogs empty_config.yaml integration tests on connection={{
       ansible_connection }}
 

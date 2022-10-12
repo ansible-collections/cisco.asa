@@ -1,5 +1,5 @@
 ---
-- debug:
+- ansible.builtin.debug:
     msg: START asa_acls parsed integration tests on connection={{ ansible_connection
       }}
 

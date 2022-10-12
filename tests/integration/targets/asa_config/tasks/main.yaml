@@ -1,7 +1,9 @@
 ---
-- include: cli.yaml
+- name: Include tasks
+  ansible.builtin.include_tasks: cli.yaml
   tags:
     - cli
 
-- include: redirection.yaml
+- name: Include tasks
+  ansible.builtin.include_tasks: redirection.yaml
   when: ansible_version.full is version('2.10.0', '>=')

@@ -1,5 +1,6 @@
 ---
-- debug: msg="START cli/sublevel.yaml"
+- ansible.builtin.debug:
+    msg: "START cli/sublevel.yaml"
 
 - name: setup test
   cisco.asa.asa_config:
@@ -37,4 +38,5 @@
     lines:
       - no object-group network OG-ANSIBLE-SUBLEVEL
 
-- debug: msg="END cli/sublevel.yaml"
+- ansible.builtin.debug:
+    msg: "END cli/sublevel.yaml"

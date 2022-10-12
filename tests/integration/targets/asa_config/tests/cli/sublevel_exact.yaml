@@ -1,5 +1,6 @@
 ---
-- debug: msg="START cli/sublevel_exact.yaml"
+- ansible.builtin.debug:
+    msg: "START cli/sublevel_exact.yaml"
 
 - name: setup
   cisco.asa.asa_config:
@@ -64,4 +65,5 @@
     lines:
       - no object-group network OG-ANSIBLE-EXACT
 
-- debug: msg="END cli/sublevel_exact.yaml"
+- ansible.builtin.debug:
+    msg: "END cli/sublevel_exact.yaml"

@@ -1,5 +1,6 @@
 ---
-- debug: msg="START cli/removal_error.yaml"
+- ansible.builtin.debug:
+    msg: "START cli/removal_error.yaml"
 
 - name: setup
   ignore_errors: true
@@ -36,4 +37,5 @@
       - clear configure access-list ANSIBLE-DNS
       - no object-group network OGA-GOOGLE-DNS
 
-- debug: msg="END cli/removal_error.yaml"
+- ansible.builtin.debug:
+    msg: "END cli/removal_error.yaml"
