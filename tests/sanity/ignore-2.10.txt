@@ -1,3 +1,5 @@
+plugins/terminal/asa.py compile-2.6!skip
+plugins/terminal/asa.py compile-2.7!skip
 plugins/action/asa.py action-plugin-docs # base class for deprecated network platform modules using `connection: local`
 plugins/module_utils/network/asa/config/acls/acls.py compile-2.6!skip
 plugins/module_utils/network/asa/config/ogs/ogs.py compile-2.6!skip
