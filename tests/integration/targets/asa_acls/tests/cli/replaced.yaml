@@ -1,11 +1,11 @@
 ---
-- debug:
+- ansible.builtin.debug:
     msg: START Replaced asa_acls state for integration tests on connection={{ ansible_connection
       }}
 
-- include_tasks: _remove_config.yaml
-- include_tasks: _populate_network_og.yaml
-- include_tasks: _populate_config.yaml
+- ansible.builtin.include_tasks: _remove_config.yaml
+- ansible.builtin.include_tasks: _populate_network_og.yaml
+- ansible.builtin.include_tasks: _populate_config.yaml
 
 - block:
 
@@ -79,5 +79,5 @@
           - result['changed'] == false
   always:
 
-    - include_tasks: _remove_config.yaml
-    - include_tasks: _remove_og_config.yaml
+    - ansible.builtin.include_tasks: _remove_config.yaml
+    - ansible.builtin.include_tasks: _remove_og_config.yaml

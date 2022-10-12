@@ -1,5 +1,6 @@
 ---
-- debug: msg="START redirection/shortname.yaml on connection={{ ansible_connection }}"
+- ansible.builtin.debug:
+    msg: "START redirection/shortname.yaml on connection={{ ansible_connection }}"
 
 - name: Use src with module alias
   register: result
@@ -24,7 +25,7 @@
       - result.changed == true
 
 - name: check if the backup file exist
-  find:
+  ansible.builtin.find:
     paths: '{{ role_path }}/backup_test_dir/{{ inventory_hostname_short }}/backup_with_alias.cfg'
   register: backup_file
   connection: local
@@ -33,4 +34,5 @@
     that:
       - backup_file.files is defined
 
-- debug: msg="END redirection/shortname.yaml on connection={{ ansible_connection }}"
+- ansible.builtin.debug:
+    msg: "END redirection/shortname.yaml on connection={{ ansible_connection }}"

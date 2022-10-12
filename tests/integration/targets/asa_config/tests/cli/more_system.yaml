@@ -1,5 +1,6 @@
 ---
-- debug: msg="START cli/more_system.yaml"
+- ansible.builtin.debug:
+    msg: "START cli/more_system.yaml"
 
 - name: Prepare tunnel-group
   cisco.asa.asa_config:
@@ -31,4 +32,5 @@
     lines:
       - clear configure tunnel-group 192.0.2.1
 
-- debug: msg="END cli/more_system.yaml"
+- ansible.builtin.debug:
+    msg: "END cli/more_system.yaml"

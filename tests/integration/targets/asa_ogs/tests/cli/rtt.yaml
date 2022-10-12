@@ -1,9 +1,9 @@
 ---
-- debug:
-    msg: START asa_ogs round trip integration tests on connection={{
-      ansible_connection }}
+- ansible.builtin.debug:
+    msg: "START asa_ogs round trip integration tests on connection={{
+      ansible_connection }}"
 
-- include_tasks: _remove_config.yaml
+- ansible.builtin.include_tasks: _remove_config.yaml
 
 - block:
 
@@ -103,4 +103,4 @@
           - revert.commands|symmetric_difference(rtt.commands) == []
   always:
 
-    - include_tasks: _remove_config.yaml
+    - ansible.builtin.include_tasks: _remove_config.yaml

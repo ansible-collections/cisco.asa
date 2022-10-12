@@ -1,5 +1,6 @@
 ---
-- debug: msg="START cli/invalid.yaml"
+- ansible.builtin.debug:
+    msg: "START cli/invalid.yaml"
 
 - name: run invalid command
   register: result
@@ -25,4 +26,5 @@
       - result.failed
   ignore_errors: true
 
-- debug: msg="END cli/invalid.yaml"
+- ansible.builtin.debug:
+    msg: "END cli/invalid.yaml"

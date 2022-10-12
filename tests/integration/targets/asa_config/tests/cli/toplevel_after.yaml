@@ -1,5 +1,6 @@
 ---
-- debug: msg="START cli/toplevel_after.yaml"
+- ansible.builtin.debug:
+    msg: "START cli/toplevel_after.yaml"
 
 - name: setup
   cisco.asa.asa_config:
@@ -39,4 +40,5 @@
       - no snmp-server contact
       - hostname {{ inventory_hostname_short }}
 
-- debug: msg="END cli/toplevel_after.yaml"
+- ansible.builtin.debug:
+    msg: "END cli/toplevel_after.yaml"
