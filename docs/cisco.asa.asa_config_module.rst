@@ -588,7 +588,7 @@ Examples
         parents: [interface Vlan13]
       register: interface
     - name: Show changes to interface from task above
-      debug:
+      ansible.builtin.debug:
         var: interface
 
     - name: configurable backup path

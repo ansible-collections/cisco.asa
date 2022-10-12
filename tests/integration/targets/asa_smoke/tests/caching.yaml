@@ -1,6 +1,7 @@
 ---
 - block:
-  - debug: msg="START connection={{ ansible_connection }} caching.yaml"
+  - ansible.builtin.debug:
+      msg: "START connection={{ ansible_connection }} caching.yaml"
 
   - set_fact:
       merged:

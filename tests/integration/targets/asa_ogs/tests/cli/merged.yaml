@@ -1,9 +1,9 @@
 ---
-- debug:
-    msg: Start asa_ogs merged integration tests ansible_connection={{
-      ansible_connection }}
+- ansible.builtin.debug:
+    msg: "Start asa_ogs merged integration tests ansible_connection={{
+      ansible_connection }}"
 
-- include_tasks: _remove_config.yaml
+- ansible.builtin.include_tasks: _remove_config.yaml
 
 - block:
 
@@ -70,4 +70,4 @@
           - result.changed == false
   always:
 
-    - include_tasks: _remove_config.yaml
+    - ansible.builtin.include_tasks: _remove_config.yaml

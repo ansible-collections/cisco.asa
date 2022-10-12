@@ -1,7 +1,7 @@
 ---
-- debug:
-    msg: Start asa_ogs rendered integration tests ansible_connection={{
-      ansible_connection }}
+- ansible.builtin.debug:
+    msg: "Start asa_ogs rendered integration tests ansible_connection={{
+      ansible_connection }}"
 
 - block:
 

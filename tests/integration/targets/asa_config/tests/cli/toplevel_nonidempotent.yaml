@@ -1,5 +1,6 @@
 ---
-- debug: msg="START cli/toplevel_nonidempotent.yaml"
+- ansible.builtin.debug:
+    msg: "START cli/toplevel_nonidempotent.yaml"
 
 - name: setup
   cisco.asa.asa_config:
@@ -33,4 +34,5 @@
     lines:
       - hostname {{ inventory_hostname_short }}
 
-- debug: msg="END cli/toplevel_nonidempotent.yaml"
+- ansible.builtin.debug:
+    msg: "END cli/toplevel_nonidempotent.yaml"

@@ -1,9 +1,9 @@
 ---
-- debug:
-    msg: START asa_ogs gathered integration tests on connection={{ ansible_connection
-      }}
+- ansible.builtin.debug:
+    msg: "START asa_ogs gathered integration tests on connection={{ ansible_connection
+      }}"
 
-- include_tasks: _remove_config.yaml
+- ansible.builtin.include_tasks: _remove_config.yaml
 
 - block:
 
@@ -60,4 +60,4 @@
           - result['changed'] == false
   always:
 
-    - include_tasks: _remove_config.yaml
+    - ansible.builtin.include_tasks: _remove_config.yaml

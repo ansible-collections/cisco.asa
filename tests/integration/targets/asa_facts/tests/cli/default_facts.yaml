@@ -1,5 +1,6 @@
 ---
-- debug: msg="START cli/default_facts.yaml on connection={{ ansible_connection }}"
+- ansible.builtin.debug:
+    msg: "START cli/default_facts.yaml on connection={{ ansible_connection }}"
 
 - name: test getting default facts
   register: result
@@ -22,4 +23,5 @@
   loop: "{{ lookup('dict', result.ansible_facts.ansible_net_filesystems_info, wantlist=True)\
     \ }}"
 
-- debug: msg="END cli/default.yaml on connection={{ ansible_connection }}"
+- ansible.builtin.debug:
+    msg: "END cli/default.yaml on connection={{ ansible_connection }}"
