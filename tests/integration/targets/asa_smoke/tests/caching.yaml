@@ -5,32 +5,32 @@
 
   - set_fact:
       merged:
-      - object-group security test_og_security
-      - description test_security
-      - security-group name test_1
-      - security-group name test_2
-      - security-group tag 10
-      - security-group tag 20
-      - object-group network test_og_network
-      - description test_og_network
-      - network-object 192.0.2.0 255.255.255.0
-      - network-object 198.51.100.0 255.255.255.0
-      - network-object host 192.0.2.1
-      - network-object host 192.0.2.2
-      - object-group network test_network_og
-      - description test_network_og
-      - network-object host 192.0.3.1
-      - network-object host 192.0.3.2
-      - network-object 2001:db8:3::/64
-      - object-group user test_og_user
-      - description test_user
-      - user LOCAL\new_user_1
-      - user LOCAL\new_user_2
+        - object-group security test_og_security
+        - description test_security
+        - security-group name test_1
+        - security-group name test_2
+        - security-group tag 10
+        - security-group tag 20
+        - object-group network test_og_network
+        - description test_og_network
+        - network-object 192.0.2.0 255.255.255.0
+        - network-object 198.51.100.0 255.255.255.0
+        - network-object host 192.0.2.1
+        - network-object host 192.0.2.2
+        - object-group network test_network_og
+        - description test_network_og
+        - network-object host 192.0.3.1
+        - network-object host 192.0.3.2
+        - network-object 2001:db8:3::/64
+        - object-group user test_og_user
+        - description test_user
+        - user LOCAL\new_user_1
+        - user LOCAL\new_user_2
 
   - name: Remove OG Config
     cisco.asa.asa_ogs:
       state: deleted
-    ignore_errors: True
+    ignore_errors: true
 
   - name: Merge the provided configuration with the exisiting running configuration
     cisco.asa.asa_ogs: &id001
@@ -98,5 +98,5 @@
     - name: Remove OG Config
       cisco.asa.asa_ogs:
         state: deleted
-      ignore_errors: True
+      ignore_errors: true
   when: ansible_connection == "network_cli" and ansible_network_single_user_mode|d(False)
