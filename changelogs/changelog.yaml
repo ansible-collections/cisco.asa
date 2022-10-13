@@ -179,6 +179,9 @@ releases:
       - 'This includes the following modules:'
       - asa_acl
       - asa_og
+    removed_features:
+    - asa_acl - use asa_acls instead.
+    - asa_og - use asa_ogs instead.
     fragments:
     - github_actions.yaml
     - remove_deprecated_modules.yaml
