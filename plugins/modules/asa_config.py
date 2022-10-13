@@ -17,6 +17,8 @@ description:
   into sections.  This module provides an implementation for working with ASA configuration
   sections in a deterministic way.
 version_added: 1.0.0
+extends_documentation_fragment:
+- cisco.asa.asa
 options:
   lines:
     description:
