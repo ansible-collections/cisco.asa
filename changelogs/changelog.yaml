@@ -172,8 +172,11 @@ releases:
   4.0.0:
     changes:
       major_changes:
-      - 'This includes the following modules:'
+      - Please use either of the following connection types - network_cli, httpapi
+        or netconf.
+      - "This release drops support for `connection: local` and provider dictionary."
       - This release removes all deprecated plugins that have reached their end-of-life.
+      - 'This includes the following modules:'
       - asa_acl
       - asa_og
     fragments:

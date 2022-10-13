@@ -11,13 +11,16 @@ v4.0.0
 Release Summary
 ---------------
 
-- Releasing 4.0.0 with deprecated older modules and GH actions enabled for sanity and unit test over the repo.
+- Releasing 4.0.0 with deprecated older modules removed and GH actions enabled for sanity and unit test over the repo.
+- This release drops support for `connection: local` and provider dictionary.
 
 Major Changes
 -------------
 
-- This includes the following modules:
+- Please use either of the following connection types - network_cli, httpapi or netconf.
+- This release drops support for `connection: local` and provider dictionary.
 - This release removes all deprecated plugins that have reached their end-of-life.
+- This includes the following modules:
 - asa_acl
 - asa_og
 
