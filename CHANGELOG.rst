@@ -8,6 +8,11 @@ Cisco Asa Collection Release Notes
 v4.0.0
 ======
 
+Release Summary
+---------------
+
+- Releasing 4.0.0 with deprecated older modules and GH actions enabled for sanity and unit test over the repo.
+
 Major Changes
 -------------
 
@@ -18,6 +23,11 @@ Major Changes
 
 v3.1.0
 ======
+
+Release Summary
+---------------
+
+- Releasing 3.1.0 with bugfix.
 
 Bugfixes
 --------
