@@ -8,7 +8,6 @@
   cisco.asa.asa_facts:
     gather_subset:
       - '!hardware'
-    provider: '{{ cli }}'
 
 - assert:
     that:
