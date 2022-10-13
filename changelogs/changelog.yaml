@@ -169,3 +169,14 @@ releases:
     fragments:
     - fix_asa_ogs_bug_165_166.yaml
     release_date: '2022-06-28'
+  4.0.0:
+    changes:
+      major_changes:
+      - 'This includes the following modules:'
+      - This release removes all deprecated plugins that have reached their end-of-life.
+      - asa_acl
+      - asa_og
+    fragments:
+    - github_actions.yaml
+    - remove_deprecated_modules.yaml
+    release_date: '2022-10-13'

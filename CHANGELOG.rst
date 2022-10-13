@@ -5,13 +5,19 @@ Cisco Asa Collection Release Notes
 .. contents:: Topics
 
 
-v3.1.0
+v4.0.0
 ======
 
-Release Summary
----------------
+Major Changes
+-------------
 
-- Releasing 3.1.0 with bugfix.
+- This includes the following modules:
+- This release removes all deprecated plugins that have reached their end-of-life.
+- asa_acl
+- asa_og
+
+v3.1.0
+======
 
 Bugfixes
 --------
