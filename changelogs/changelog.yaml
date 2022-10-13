@@ -169,3 +169,23 @@ releases:
     fragments:
     - fix_asa_ogs_bug_165_166.yaml
     release_date: '2022-06-28'
+  4.0.0:
+    changes:
+      major_changes:
+      - Please use either of the following connection types - network_cli, httpapi
+        or netconf.
+      - 'This release drops support for `connection: local` and provider dictionary.'
+      - 'Use of connection: local and the provider option are no longer valid on any
+        modules in this collection.'
+      - This release removes all deprecated plugins that have reached their end-of-life.
+      - 'This includes the following modules:'
+      - asa_acl
+      - asa_og
+    removed_features:
+    - asa_acl - use asa_acls instead.
+    - asa_og - use asa_ogs instead.
+    fragments:
+    - github_actions.yaml
+    - remove_deprecated_modules.yaml
+    - remove_provider.yaml
+    release_date: '2022-10-13'

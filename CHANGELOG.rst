@@ -5,6 +5,26 @@ Cisco Asa Collection Release Notes
 .. contents:: Topics
 
 
+v4.0.0
+======
+
+Release Summary
+---------------
+
+- Releasing 4.0.0 with deprecated older modules removed and GH actions enabled for sanity and unit test over the repo.
+- This release drops support for `connection: local` and provider dictionary.
+
+Major Changes
+-------------
+
+- Please use either of the following connection types - network_cli, httpapi or netconf.
+- This release drops support for `connection: local` and provider dictionary.
+- Use of connection: local and the provider option are no longer valid on any modules in this collection.
+- This release removes all deprecated plugins that have reached their end-of-life.
+- This includes the following modules:
+- asa_acl
+- asa_og
+
 v3.1.0
 ======
 
