@@ -172,9 +172,6 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.fact
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.facts import (
     Facts,
 )
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
-    asa_argument_spec,
-)
 
 
 def main():
@@ -184,7 +181,6 @@ def main():
     :returns: ansible_facts
     """
     argument_spec = FactsArgs.argument_spec
-    argument_spec.update(asa_argument_spec)
 
     module = AnsibleModule(
         argument_spec=argument_spec, supports_check_mode=True

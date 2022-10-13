@@ -39,7 +39,7 @@ class ActionModule(ActionNetworkModule):
         )
         persistent_connection = self._play_context.connection.split(".")[-1]
         warnings = []
-        
+
         if persistent_connection not in ("network_cli"):
             return {
                 "failed": True,
