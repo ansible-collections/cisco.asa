@@ -19,6 +19,7 @@ Major Changes
 
 - Please use either of the following connection types - network_cli, httpapi or netconf.
 - This release drops support for `connection: local` and provider dictionary.
+- Use of connection: local and the provider option are no longer valid on any modules in this collection.
 - This release removes all deprecated plugins that have reached their end-of-life.
 - This includes the following modules:
 - asa_acl
