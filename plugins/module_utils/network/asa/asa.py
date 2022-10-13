@@ -47,6 +47,7 @@ asa_argument_spec = {
     "passwords": dict(type="bool"),
 }
 
+
 def check_args(module):
     pass
 
