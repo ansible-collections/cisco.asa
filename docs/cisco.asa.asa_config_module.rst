@@ -527,7 +527,6 @@ Examples
         - network-object host 10.80.30.19
         - network-object host 10.80.30.20
         parents: [object-group network OG-MONITORED-SERVERS]
-        provider: '{{ cli }}'
 
     - cisco.asa.asa_config:
         host: '{{ inventory_hostname }}'
@@ -547,20 +546,17 @@ Examples
         - ikev1 pre-shared-key MyS3cretVPNK3y
         parents: tunnel-group 1.1.1.1 ipsec-attributes
         passwords: yes
-        provider: '{{ cli }}'
 
     - name: attach ASA acl on interface vlan13/nameif cloud13
       cisco.asa.asa_config:
         lines:
         - access-group cloud-acl_access_in in interface cloud13
-        provider: '{{ cli }}'
 
     - name: configure ASA (>=9.2) default BGP
       cisco.asa.asa_config:
         lines:
         - bgp log-neighbor-changes
         - bgp bestpath compare-routerid
-        provider: '{{ cli }}'
         parents:
         - router bgp 65002
       register: bgp
@@ -571,7 +567,6 @@ Examples
         - bgp router-id {{ bgp_router_id }}
         - neighbor {{ bgp_neighbor_ip }} remote-as {{ bgp_neighbor_as }}
         - neighbor {{ bgp_neighbor_ip }} description {{ bgp_neighbor_name }}
-        provider: '{{ cli }}'
         parents:
         - router bgp 65002
         - address-family ipv4 unicast
@@ -584,7 +579,6 @@ Examples
         - nameif cloud13
         - security-level 50
         - ip address 192.168.13.1 255.255.255.0 standby 192.168.13.2
-        provider: '{{ cli }}'
         parents: [interface Vlan13]
       register: interface
     - name: Show changes to interface from task above
@@ -595,7 +589,6 @@ Examples
       cisco.asa.asa_config:
         lines:
         - access-group cloud-acl_access_in in interface cloud13
-        provider: '{{ cli }}'
         backup: yes
         backup_options:
           filename: backup.cfg

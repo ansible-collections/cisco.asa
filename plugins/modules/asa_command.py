@@ -18,8 +18,6 @@ description:
   for a specific condition before returning or timing out if the condition is not
   met.
 version_added: 1.0.0
-extends_documentation_fragment:
-- cisco.asa.asa
 options:
   commands:
     description:
