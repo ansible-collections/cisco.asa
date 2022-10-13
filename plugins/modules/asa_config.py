@@ -260,6 +260,7 @@ backup_path:
 """
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
+    asa_argument_spec,
     check_args,
 )
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
@@ -368,6 +369,8 @@ def main():
             choices=["always", "never", "modified", "changed"], default="never"
         ),
     )
+
+    argument_spec.update(asa_argument_spec)
 
     mutually_exclusive = [
         ("lines", "src"),

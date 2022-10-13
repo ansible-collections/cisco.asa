@@ -42,6 +42,10 @@ _CONNECTION = None
 
 command_spec = {"command": dict(key=True), "prompt": dict(), "answer": dict()}
 
+asa_argument_spec = {
+    "context": dict(type="str"),
+    "passwords": dict(type="bool"),
+}
 
 def check_args(module):
     pass

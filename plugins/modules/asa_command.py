@@ -117,6 +117,7 @@ import time
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
+    asa_argument_spec,
     check_args,
 )
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
@@ -144,6 +145,8 @@ def main():
         retries=dict(default=10, type="int"),
         interval=dict(default=1, type="int"),
     )
+
+    spec.update(asa_argument_spec)
 
     module = AnsibleModule(argument_spec=spec, supports_check_mode=True)
     check_args(module)
