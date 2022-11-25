@@ -86,10 +86,12 @@ class OGsFacts(object):
                         obj_gp[object_groups.get(k)] = each[1]
                     config_dict["object_groups"].append(obj_gp)
                     obj_gp = {}
-                config_dict["object_groups"] = sorted(
-                    config_dict["object_groups"],
-                    key=lambda k, sk="name": str(k[sk]),
-                )
+                sortgroups = self._module.params.get("sortgroups", True)
+                if sortgroups:
+                    config_dict["object_groups"] = sorted(
+                        config_dict["object_groups"],
+                        key=lambda k, sk="name": str(k[sk]),
+                    )
                 ogs.append(config_dict)
         # sort the object group list of dict by object_type
         ogs = sorted(ogs, key=lambda i: i["object_type"])
