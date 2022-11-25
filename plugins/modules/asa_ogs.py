@@ -277,6 +277,13 @@ options:
       value of this option should be the output received from device by executing
       command.
     type: str
+  sortgroups:
+    description:
+    - The module, by default, will sort all outputted groups by alphabet. There are times
+      when it is not desirable to have the groups sorted. Example: You want to use the output
+      from state 'gathered' as input for the state 'replaced' (the groups have dependencies
+      to each other, so they have to be configured in the correct order).
+    type: boolean
   state:
     description:
     - The state the configuration should be left in
@@ -1062,7 +1069,7 @@ def main():
         ("state", "parsed", ("running_config",)),
     ]
 
-    mutually_exclusive = [("config", "running_config")]
+    mutually_exclusive = [("config", "running_config","sortgroups")]
 
     module = AnsibleModule(
         argument_spec=OGsArgs.argument_spec,
