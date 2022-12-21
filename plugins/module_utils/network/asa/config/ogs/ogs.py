@@ -25,7 +25,7 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
     dict_merge,
 )
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.resource_module import (
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.resource_module import (
     ResourceModule,
 )
 
