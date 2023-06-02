@@ -31,7 +31,6 @@ class OGsFacts(object):
     """The asa_ogs fact class"""
 
     def __init__(self, module, subspec="config", options="options"):
-
         self._module = module
         self.argument_spec = OGsArgs.argument_spec
 
