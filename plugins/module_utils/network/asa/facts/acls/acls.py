@@ -26,7 +26,7 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.acls
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates.acls import (
     AclsTemplate,
 )
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.network_template import (
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.network_template import (
     NetworkTemplate,
 )
 

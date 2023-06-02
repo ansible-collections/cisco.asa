@@ -24,7 +24,7 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.ogs.
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates.ogs import (
     OGsTemplate,
 )
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.network_template import (
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.network_template import (
     NetworkTemplate,
 )
 
