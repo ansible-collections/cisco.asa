@@ -49,8 +49,7 @@ releases:
     release_date: "2020-08-03"
   1.0.2:
     changes:
-      release_summary:
-        - Re-releasing 1.0.1 with updated changelog.
+      release_summary: Re-releasing 1.0.1 with updated changelog.
     fragments:
       - 1.0.2.yaml
     release_date: "2020-08-07"
@@ -136,8 +135,7 @@ releases:
     release_date: "2021-08-31"
   2.1.0:
     changes:
-      release_summary:
-        - Releasing 2.1.0 with updated readme with changelog link, minor change, and bugfix.
+      release_summary: Releasing 2.1.0 with updated readme with changelog link, minor change, and bugfix.
       bugfixes:
         - Fixes asa_acls to add the support for service object group under destination
           option ((https://github.com/ansible-collections/cisco.asa/issues/100).
@@ -161,8 +159,7 @@ releases:
     release_date: "2022-05-05"
   3.1.0:
     changes:
-      release_summary:
-        - Releasing 3.1.0 with bugfix.
+      release_summary: Releasing 3.1.0 with bugfix.
       bugfixes:
         - Fix service-object port range rendering
         - Fixes asa_ogs port object range issue and duplicate service cmd (https://github.com/ansible-collections/cisco.asa/issues/165,
