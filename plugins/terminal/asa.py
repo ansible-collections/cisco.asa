@@ -18,16 +18,15 @@
 #
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
-import re
 import json
+import re
 
 from ansible.errors import AnsibleConnectionFailure
-from ansible.module_utils._text import to_text, to_bytes
-from ansible_collections.ansible.netcommon.plugins.plugin_utils.terminal_base import (
-    TerminalBase,
-)
+from ansible.module_utils._text import to_bytes, to_text
+from ansible_collections.ansible.netcommon.plugins.plugin_utils.terminal_base import TerminalBase
 
 
 class TerminalModule(TerminalBase):
@@ -64,17 +63,18 @@ class TerminalModule(TerminalBase):
             # Note: python-3.5 cannot combine u"" and r"" together.  Thus make
             # an r string and use to_text to ensure it's text on both py2 and py3.
             cmd["prompt"] = to_text(
-                r"[\r\n]?[Pp]assword: $", errors="surrogate_or_strict"
+                r"[\r\n]?[Pp]assword: $",
+                errors="surrogate_or_strict",
             )
             cmd["answer"] = passwd
 
         try:
             self._exec_cli_command(
-                to_bytes(json.dumps(cmd), errors="surrogate_or_strict")
+                to_bytes(json.dumps(cmd), errors="surrogate_or_strict"),
             )
         except AnsibleConnectionFailure:
             raise AnsibleConnectionFailure(
-                "unable to elevate privilege to enable mode"
+                "unable to elevate privilege to enable mode",
             )
 
         self.disable_pager()
