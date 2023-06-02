@@ -13,11 +13,8 @@ __metaclass__ = type
 
 import socket
 
+from ansible.module_utils.common.network import is_masklen, to_netmask
 from ansible.module_utils.six import iteritems
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
-    is_masklen,
-    to_netmask,
-)
 
 
 def remove_duplicate_cmd(cmd, commands):
