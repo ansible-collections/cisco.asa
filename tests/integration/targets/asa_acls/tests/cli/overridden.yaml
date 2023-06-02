@@ -8,7 +8,6 @@
 - ansible.builtin.include_tasks: _populate_config.yaml
 
 - block:
-
     - name: Override device configuration of all interfaces with provided configuration
       register: result
       cisco.asa.asa_acls: &id001
@@ -50,7 +49,8 @@
           - result.changed == true
           - result.commands|symmetric_difference(overridden.commands) == []
 
-    - name: Override device configuration of all interfaces with provided configuration
+    - name:
+        Override device configuration of all interfaces with provided configuration
         (IDEMPOTENT)
       register: result
       cisco.asa.asa_acls: *id001
@@ -61,6 +61,5 @@
           - result.commands|length == 0
           - result['changed'] == false
   always:
-
     - ansible.builtin.include_tasks: _remove_config.yaml
     - ansible.builtin.include_tasks: _remove_og_config.yaml

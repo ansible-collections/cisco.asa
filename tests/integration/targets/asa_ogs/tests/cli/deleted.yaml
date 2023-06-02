@@ -8,7 +8,6 @@
 - ansible.builtin.include_tasks: _populate_config.yaml
 
 - block:
-
     - name: Delete given module attributes
       register: result
       cisco.asa.asa_ogs: &id001
@@ -57,5 +56,4 @@
         that:
           - result.changed == false
   always:
-
     - ansible.builtin.include_tasks: _remove_config.yaml
