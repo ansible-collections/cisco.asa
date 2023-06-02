@@ -1,8 +1,10 @@
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 import re
+
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.network_template import (
     NetworkTemplate,
 )
@@ -31,73 +33,53 @@ def _tmplt_access_list_entries(config_data):
             elif config_data["aces"][type].get("host"):
                 cmd += " host {host}".format(**config_data["aces"][type])
             elif config_data["aces"][type].get("interface"):
-                cmd += " interface {interface}".format(
-                    **config_data["aces"][type]
-                )
+                cmd += " interface {interface}".format(**config_data["aces"][type])
             elif config_data["aces"][type].get("object_group"):
-                cmd += " object-group {object_group}".format(
-                    **config_data["aces"][type]
-                )
+                cmd += " object-group {object_group}".format(**config_data["aces"][type])
             if type == "destination" and config_data["aces"][type].get(
-                "service_object_group"
+                "service_object_group",
             ):
-                cmd += " object-group {service_object_group}".format(
-                    **config_data["aces"][type]
-                )
+                cmd += " object-group {service_object_group}".format(**config_data["aces"][type])
             if config_data["aces"].get("protocol_options"):
                 protocol_option_key = list(
-                    config_data["aces"]["protocol_options"]
+                    config_data["aces"]["protocol_options"],
                 )[0]
                 if (
                     isinstance(
-                        config_data["aces"]["protocol_options"][
-                            protocol_option_key
-                        ],
+                        config_data["aces"]["protocol_options"][protocol_option_key],
                         dict,
                     )
                     and type == "destination"
                 ):
                     val = list(
-                        config_data["aces"]["protocol_options"][
-                            protocol_option_key
-                        ]
+                        config_data["aces"]["protocol_options"][protocol_option_key],
                     )[0]
                     cmd += " {0}".format(val.replace("_", "-"))
             if config_data["aces"][type].get("port_protocol"):
                 if config_data["aces"][type].get("port_protocol").get("range"):
-                    start = config_data["aces"][type].get("port_protocol")[
-                        "range"
-                    ]["start"]
-                    end = config_data["aces"][type].get("port_protocol")[
-                        "range"
-                    ]["end"]
+                    start = config_data["aces"][type].get("port_protocol")["range"]["start"]
+                    end = config_data["aces"][type].get("port_protocol")["range"]["end"]
                     cmd += " range {0} {1}".format(start, end)
                 else:
                     port_protocol = list(
-                        config_data["aces"][type]["port_protocol"]
+                        config_data["aces"][type]["port_protocol"],
                     )[0]
                     cmd += (
                         " "
                         + port_protocol
                         + " "
-                        + config_data["aces"][type]["port_protocol"][
-                            port_protocol
-                        ]
+                        + config_data["aces"][type]["port_protocol"][port_protocol]
                     )
             return cmd
 
         cmd = ""
         if config_data["aces"].get("remark"):
             command.append(
-                "access-list {name} line {line} remark {remark}".format(
-                    **config_data["aces"]
-                )
+                "access-list {name} line {line} remark {remark}".format(**config_data["aces"]),
             )
         if len(config_data["aces"]) > 4:
             try:
-                cmd = "access-list {name} line {line}".format(
-                    **config_data["aces"]
-                )
+                cmd = "access-list {name} line {line}".format(**config_data["aces"])
             except KeyError:
                 cmd = "access-list {name}".format(**config_data["aces"])
             if (
@@ -108,26 +90,25 @@ def _tmplt_access_list_entries(config_data):
             if config_data["aces"].get("grant"):
                 cmd += " {grant}".format(**config_data["aces"])
             if config_data["aces"].get("protocol_options"):
-                if (
-                    "protocol_number"
-                    in config_data["aces"]["protocol_options"]
-                ):
-                    cmd += " {protocol_number}".format(
-                        **config_data["aces"]["protocol_options"]
-                    )
+                if "protocol_number" in config_data["aces"]["protocol_options"]:
+                    cmd += " {protocol_number}".format(**config_data["aces"]["protocol_options"])
                 else:
                     cmd += " {0}".format(
-                        list(config_data["aces"]["protocol_options"])[0]
+                        list(config_data["aces"]["protocol_options"])[0],
                     )
             elif config_data["aces"].get("protocol"):
                 cmd += " {protocol}".format(**config_data["aces"])
             if config_data["aces"].get("source"):
                 cmd = source_destination_common_config(
-                    config_data, cmd, "source"
+                    config_data,
+                    cmd,
+                    "source",
                 )
             if config_data["aces"].get("destination"):
                 cmd = source_destination_common_config(
-                    config_data, cmd, "destination"
+                    config_data,
+                    cmd,
+                    "destination",
                 )
             if config_data["aces"].get("log"):
                 cmd += " log {log}".format(**config_data["aces"])
@@ -259,10 +240,10 @@ class AclsTemplate(NetworkTemplate):
                                 "inactive": "{{ True if inactive is defined }}",
                                 "log": "{{ log.split('log ')[1] if log is defined }}",
                                 "time_range": "{{ time_range if time_range is defined }}",
-                            }
+                            },
                         ],
-                    }
-                }
+                    },
+                },
             },
         },
     ]

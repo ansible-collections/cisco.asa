@@ -6,10 +6,11 @@
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
-import os
 import json
+import os
 
 from ansible_collections.cisco.asa.tests.unit.modules.utils import (
     AnsibleExitJson,
@@ -68,7 +69,9 @@ class TestAsaModule(ModuleTestCase):
                 )
             else:
                 self.assertEqual(
-                    commands, result["commands"], result["commands"]
+                    commands,
+                    result["commands"],
+                    result["commands"],
                 )
 
         return result

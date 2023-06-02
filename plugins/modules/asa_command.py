@@ -5,6 +5,7 @@
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
@@ -116,17 +117,16 @@ failed_conditions:
 import time
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
-    asa_argument_spec,
-    check_args,
-)
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
-    run_commands,
-)
+from ansible.module_utils.six import string_types
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.parsing import (
     Conditional,
 )
-from ansible.module_utils.six import string_types
+
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
+    asa_argument_spec,
+    check_args,
+    run_commands,
+)
 
 
 def to_lines(stdout):
@@ -187,7 +187,7 @@ def main():
             "changed": False,
             "stdout": responses,
             "stdout_lines": list(to_lines(responses)),
-        }
+        },
     )
 
     module.exit_json(**result)

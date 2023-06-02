@@ -17,6 +17,7 @@
 #
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
@@ -171,12 +172,8 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.facts.facts import (
     FactsArgs,
 )
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.facts import (
-    Facts,
-)
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
-    asa_argument_spec,
-)
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import asa_argument_spec
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.facts import Facts
 
 
 def main():
@@ -189,13 +186,14 @@ def main():
     argument_spec.update(asa_argument_spec)
 
     module = AnsibleModule(
-        argument_spec=argument_spec, supports_check_mode=True
+        argument_spec=argument_spec,
+        supports_check_mode=True,
     )
 
     warnings = []
     if module.params["gather_subset"] == "!config":
         warnings.append(
-            "default value for `gather_subset` will be changed to `min` from `!config` v2.11 onwards"
+            "default value for `gather_subset` will be changed to `min` from `!config` v2.11 onwards",
         )
 
     result = Facts(module).get_facts()

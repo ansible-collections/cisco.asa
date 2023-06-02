@@ -16,7 +16,8 @@
 
 - name: configure test access-list
   cisco.asa.asa_config:
-    lines: access-list ANSIBLE-DNS extended permit udp any object-group OGA-GOOGLE-DNS
+    lines:
+      access-list ANSIBLE-DNS extended permit udp any object-group OGA-GOOGLE-DNS
       eq domain
 
 - name: try to remove object-group (should fail)
