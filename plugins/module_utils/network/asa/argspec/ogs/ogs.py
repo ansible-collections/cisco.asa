@@ -27,6 +27,7 @@ The arg spec for the asa_ogs module
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
@@ -83,7 +84,7 @@ class OGsArgs(object):
                                         "traceroute",
                                         "unreachable",
                                     ],
-                                }
+                                },
                             },
                         },
                         "network_object": {
@@ -101,7 +102,7 @@ class OGsArgs(object):
                         "protocol_object": {
                             "type": "dict",
                             "options": {
-                                "protocol": {"type": "list", "elements": "str"}
+                                "protocol": {"type": "list", "elements": "str"},
                             },
                         },
                         "security_group": {

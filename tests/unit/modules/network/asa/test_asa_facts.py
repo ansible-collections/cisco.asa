@@ -16,13 +16,13 @@
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
-from ansible_collections.cisco.asa.tests.unit.compat.mock import patch
 from ansible_collections.cisco.asa.plugins.modules import asa_facts
-from ansible_collections.cisco.asa.tests.unit.modules.utils import (
-    set_module_args,
-)
+from ansible_collections.cisco.asa.tests.unit.compat.mock import patch
+from ansible_collections.cisco.asa.tests.unit.modules.utils import set_module_args
+
 from .asa_module import TestAsaModule, load_fixture
 
 
@@ -33,19 +33,17 @@ class TestAsaFactsModule(TestAsaModule):
     def setUp(self):
         super(TestAsaFactsModule, self).setUp()
         self.mock_run_commands = patch(
-            "ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.legacy.base.run_commands"
+            "ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.legacy.base.run_commands",
         )
         self.run_commands = self.mock_run_commands.start()
 
         self.mock_get_resource_connection = patch(
-            "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.facts.facts.get_resource_connection"
+            "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.facts.facts.get_resource_connection",
         )
-        self.get_resource_connection = (
-            self.mock_get_resource_connection.start()
-        )
+        self.get_resource_connection = self.mock_get_resource_connection.start()
 
         self.mock_get_capabilities = patch(
-            "ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.legacy.base.get_capabilities"
+            "ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.legacy.base.get_capabilities",
         )
         self.get_capabilities = self.mock_get_capabilities.start()
         self.get_capabilities.return_value = {
@@ -79,7 +77,8 @@ class TestAsaFactsModule(TestAsaModule):
         set_module_args(dict(gather_subset="default"))
         result = self.execute_module()
         self.assertEqual(
-            result["ansible_facts"]["ansible_net_serialnum"], "9AWFX1S46VQ"
+            result["ansible_facts"]["ansible_net_serialnum"],
+            "9AWFX1S46VQ",
         )
         self.assertEqual(result["ansible_facts"]["ansible_net_system"], "asa")
 
@@ -87,14 +86,10 @@ class TestAsaFactsModule(TestAsaModule):
         set_module_args(dict(gather_subset="hardware"))
         result = self.execute_module()
         self.assertEqual(
-            result["ansible_facts"]["ansible_net_filesystems_info"]["disk0:"][
-                "spacetotal_kb"
-            ],
+            result["ansible_facts"]["ansible_net_filesystems_info"]["disk0:"]["spacetotal_kb"],
             8370192.0,
         )
         self.assertEqual(
-            result["ansible_facts"]["ansible_net_filesystems_info"]["disk0:"][
-                "spacefree_kb"
-            ],
+            result["ansible_facts"]["ansible_net_filesystems_info"]["disk0:"]["spacefree_kb"],
             8348976.0,
         )
