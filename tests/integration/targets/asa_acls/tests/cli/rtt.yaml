@@ -1,6 +1,7 @@
 ---
 - ansible.builtin.debug:
-    msg: START asa_acls round trip integration tests on connection={{ ansible_connection
+    msg:
+      START asa_acls round trip integration tests on connection={{ ansible_connection
       }}
 
 - ansible.builtin.include_tasks: _remove_config.yaml
@@ -8,7 +9,6 @@
 - ansible.builtin.include_tasks: _populate_config.yaml
 
 - block:
-
     - name: Apply the provided configuration (base config)
       register: base_config
       cisco.asa.asa_acls:
@@ -76,8 +76,8 @@
     - name: Gather ACLs facts
       cisco.asa.asa_facts:
         gather_subset:
-          - '!all'
-          - '!min'
+          - "!all"
+          - "!min"
         gather_network_resources:
           - acls
 
@@ -134,6 +134,5 @@
           - revert.changed == true
           - revert.commands|symmetric_difference(rtt.commands) == []
   always:
-
     - ansible.builtin.include_tasks: _remove_config.yaml
     - ansible.builtin.include_tasks: _remove_og_config.yaml

@@ -5,6 +5,7 @@
 The Ansible Cisco ASA collection includes a variety of Ansible content to help automate the management of Cisco ASA firewall appliances.
 
 <!--start requires_ansible-->
+
 ## Ansible version compatibility
 
 This collection has been tested against following Ansible versions: **>=2.9.10**.
@@ -14,34 +15,42 @@ fully qualified collection name (for example, `cisco.ios.ios`).
 Plugins and modules within a collection may be tested with only specific Ansible versions.
 A collection may contain metadata that identifies these versions.
 PEP440 is the schema used to describe the versions of Ansible.
+
 <!--end requires_ansible-->
 
 ## Tested with Ansible
 
 This collection has been tested against Cisco ASA 9.10(1)11 and Cisco ASA image configured over Zuul with version 9.12.3.
+
 <!-- List the versions of Ansible the collection has been tested with. Must match what is in galaxy.yml. -->
 
 ## External requirements
+
 <!-- List any external resources the collection depends on, for example minimum versions of an OS, libraries, or utilities. Do not list other Ansible collections here. -->
+
 ### Supported connections
-The Cisco ASA collection supports ``network_cli`` connections.
+
+The Cisco ASA collection supports `network_cli` connections.
 
 ## Included content
 
 <!--start collection content-->
+
 ### Cliconf plugins
-Name | Description
---- | ---
-[cisco.asa.asa](https://github.com/ansible-collections/cisco.asa/blob/main/docs/cisco.asa.asa_cliconf.rst)|Use asa cliconf to run command on Cisco ASA platform
+
+| Name                                                                                                       | Description                                          |
+| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| [cisco.asa.asa](https://github.com/ansible-collections/cisco.asa/blob/main/docs/cisco.asa.asa_cliconf.rst) | Use asa cliconf to run command on Cisco ASA platform |
 
 ### Modules
-Name | Description
---- | ---
-[cisco.asa.asa_acls](https://github.com/ansible-collections/cisco.asa/blob/main/docs/cisco.asa.asa_acls_module.rst)|Access-Lists resource module
-[cisco.asa.asa_command](https://github.com/ansible-collections/cisco.asa/blob/main/docs/cisco.asa.asa_command_module.rst)|Run arbitrary commands on Cisco ASA devices
-[cisco.asa.asa_config](https://github.com/ansible-collections/cisco.asa/blob/main/docs/cisco.asa.asa_config_module.rst)|Manage configuration sections on Cisco ASA devices
-[cisco.asa.asa_facts](https://github.com/ansible-collections/cisco.asa/blob/main/docs/cisco.asa.asa_facts_module.rst)|Collect facts from remote devices running Cisco ASA
-[cisco.asa.asa_ogs](https://github.com/ansible-collections/cisco.asa/blob/main/docs/cisco.asa.asa_ogs_module.rst)|Object Group resource module
+
+| Name                                                                                                                      | Description                                         |
+| ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| [cisco.asa.asa_acls](https://github.com/ansible-collections/cisco.asa/blob/main/docs/cisco.asa.asa_acls_module.rst)       | Access-Lists resource module                        |
+| [cisco.asa.asa_command](https://github.com/ansible-collections/cisco.asa/blob/main/docs/cisco.asa.asa_command_module.rst) | Run arbitrary commands on Cisco ASA devices         |
+| [cisco.asa.asa_config](https://github.com/ansible-collections/cisco.asa/blob/main/docs/cisco.asa.asa_config_module.rst)   | Manage configuration sections on Cisco ASA devices  |
+| [cisco.asa.asa_facts](https://github.com/ansible-collections/cisco.asa/blob/main/docs/cisco.asa.asa_facts_module.rst)     | Collect facts from remote devices running Cisco ASA |
+| [cisco.asa.asa_ogs](https://github.com/ansible-collections/cisco.asa/blob/main/docs/cisco.asa.asa_ogs_module.rst)         | Object Group resource module                        |
 
 <!--end collection content-->
 
@@ -58,6 +67,7 @@ You can also include it in a `requirements.yml` file and install it with `ansibl
 collections:
   - name: cisco.asa
 ```
+
 ## Using this collection
 
 This collection includes [security resource modules](https://docs.ansible.com/ansible/latest/network/user_guide/network_resource_modules.html). Similar to Network resource modules introduced in Ansible `2.9`
@@ -69,6 +79,7 @@ An example for using this collection to manage a ACL resource
 is as follows:
 
 `inventory.ini` (Note the password should be managed by a [Vault](https://docs.ansible.com/ansible/latest/user_guide/vault.html) for a production environment.
+
 ```
 [asa01]
 host_asa.example.com
@@ -141,32 +152,31 @@ You can either call modules by their Fully Qualified Collection Namespace (FQCN)
 
 The following example task replaces configuration changes in the existing configuration on a Cisco ASA firewall device, using the FQCN:
 
- ```yaml
- ---
-   - name: Replace device configurations of listed ACLs with provided configurations
-     register: result
-     cisco.asa.asa_acls: &id001
-       config:
-
-         - acls:
-             - name: test_global_access
-               acl_type: extended
-               aces:
-                 - grant: deny
-                   line: 1
-                   protocol_options:
-                   tcp: true
-                   source:
-                     address: 192.0.4.0
-                     netmask: 255.255.255.0
-                     port_protocol:
-                       eq: telnet
-                   destination:
-                     address: 192.0.5.0
-                     netmask: 255.255.255.0
-                     port_protocol:
-                       eq: www
-       state: replaced
+```yaml
+---
+- name: Replace device configurations of listed ACLs with provided configurations
+  register: result
+  cisco.asa.asa_acls: &id001
+    config:
+      - acls:
+          - name: test_global_access
+            acl_type: extended
+            aces:
+              - grant: deny
+                line: 1
+                protocol_options:
+                tcp: true
+                source:
+                  address: 192.0.4.0
+                  netmask: 255.255.255.0
+                  port_protocol:
+                    eq: telnet
+                destination:
+                  address: 192.0.5.0
+                  netmask: 255.255.255.0
+                  port_protocol:
+                    eq: www
+    state: replaced
 ```
 
 ## Contributing to this collection
@@ -175,17 +185,20 @@ We welcome community contributions to this collection. If you find problems, ple
 
 You can also join us on:
 
-- IRC - the ``#ansible-security`` [libera.chat](https://libera.chat/) channel
+- IRC - the `#ansible-security` [libera.chat](https://libera.chat/) channel
 
 See the [Ansible Community Guide](https://docs.ansible.com/ansible/latest/community/index.html) for details on contributing to Ansible.
 
 ### Code of Conduct
+
 This collection follows the Ansible project's
 [Code of Conduct](https://docs.ansible.com/ansible/devel/community/code_of_conduct.html).
 Please read and familiarize yourself with this document.
 
 ## Release notes
+
 <!--Add a link to a changelog.md file or an external docsite to cover this information. -->
+
 Release notes are available [here](https://github.com/ansible-collections/cisco.asa/blob/main/CHANGELOG.rst).
 
 ## Roadmap

@@ -18,8 +18,9 @@
       - result.ansible_facts.ansible_net_config is not defined
 
 - assert:
-    that: '{{ item.value.spacetotal_kb }} > {{ item.value.spacefree_kb }}'
-  loop: "{{ lookup('dict', result.ansible_facts.ansible_net_filesystems_info, wantlist=True)\
+    that: "{{ item.value.spacetotal_kb }} > {{ item.value.spacefree_kb }}"
+  loop:
+    "{{ lookup('dict', result.ansible_facts.ansible_net_filesystems_info, wantlist=True)\
     \ }}"
 
 - ansible.builtin.debug:
