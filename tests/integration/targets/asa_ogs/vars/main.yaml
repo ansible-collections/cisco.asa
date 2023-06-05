@@ -41,7 +41,7 @@ replaced:
     - object-group network test_og_network
     - description test_og_network_replace
     - no network-object 192.0.2.0 255.255.255.0
-    - no network-object 198.51.100.0 255.255.255.0
+    - no network-object 203.0.113.0 255.255.255.0
     - network-object 198.51.100.0 255.255.255.0
     - no network-object host 192.0.2.1
     - no network-object host 192.0.2.2
@@ -57,7 +57,7 @@ overridden:
     - object-group network test_og_network
     - description test_og_network_override
     - no network-object 192.0.2.0 255.255.255.0
-    - no network-object 198.51.100.0 255.255.255.0
+    - no network-object 203.0.113.0 255.255.255.0
     - network-object 198.51.100.0 255.255.255.0
     - no network-object host 192.0.2.1
     - no network-object host 192.0.2.2
@@ -133,7 +133,7 @@ rtt:
     - description test_og_network
     - no network-object 198.51.100.0 255.255.255.0
     - network-object 192.0.2.0 255.255.255.0
-    - network-object 198.51.100.0 255.255.255.0
+    - network-object 203.0.113.0 255.255.255.0
     - no network-object host 198.51.100.1
     - network-object host 192.0.2.1
     - network-object host 192.0.2.2
