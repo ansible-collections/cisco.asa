@@ -25,8 +25,8 @@
                 description: test_network_og
                 network_object:
                   host:
-                    - 192.0.3.1
-                    - 192.0.3.2
+                    - 198.51.100.1
+                    - 198.51.100.2
                   ipv6_address:
                     - 2001:db8:3::/64
           - object_type: security
@@ -70,9 +70,9 @@
                 description: test_og_network_override
                 network_object:
                   host:
-                    - 192.0.3.1
+                    - 198.51.100.1
                   address:
-                    - 192.0.3.0 255.255.255.0
+                    - 198.51.100.0 255.255.255.0
           - object_type: protocol
             object_groups:
               - name: test_og_protocol

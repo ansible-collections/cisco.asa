@@ -179,7 +179,7 @@ class TestAsaAclsModule(TestAsaModule):
                             aces=[
                                 dict(
                                     destination=dict(
-                                        address="192.0.3.0",
+                                        address="198.51.100.0",
                                         netmask="255.255.255.0",
                                         port_protocol=dict(eq="www"),
                                     ),
@@ -370,7 +370,7 @@ class TestAsaAclsModule(TestAsaModule):
             "no access-list ansible_test line 1 remark HostA",
             "no access-list test_access line 3 extended permit ip host 192.0.2.2 any",
             "no access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors",
-            "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default",
+            "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default",
             "access-list test_access line 1 extended deny igrp 198.51.101.0 255.255.255.0 198.51.102.0 255.255.255.0 log default time-range temp",
             "access-list ansible_test line 1 remark HostA0",
         ]
@@ -419,7 +419,7 @@ class TestAsaAclsModule(TestAsaModule):
                             aces=[
                                 dict(
                                     destination=dict(
-                                        address="192.0.3.0",
+                                        address="198.51.100.0",
                                         netmask="255.255.255.0",
                                         port_protocol=dict(eq="www"),
                                     ),
@@ -598,7 +598,7 @@ class TestAsaAclsModule(TestAsaModule):
             "no access-list ansible_test line 1 remark HostA",
             "no access-list test_access line 3 extended permit ip host 192.0.2.2 any",
             "no access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors",
-            "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default",
+            "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default",
             "no access-list management_in line 3 extended permit ip any4 host 192.0.2.1",
             "no access-list management_in line 2 extended permit tcp 198.51.101.0 255.255.255.0 object-group ALLSERV.12 eq 9389",
             "no access-list management_in line 1 extended permit tcp host 198.51.100.5 range 49152 65535 198.51.100.0 255.255.255.0 eq 100",
@@ -652,7 +652,7 @@ class TestAsaAclsModule(TestAsaModule):
                             aces=[
                                 dict(
                                     destination=dict(
-                                        address="192.0.3.0",
+                                        address="198.51.100.0",
                                         netmask="255.255.255.0",
                                         port_protocol=dict(eq="www"),
                                     ),
@@ -820,7 +820,7 @@ class TestAsaAclsModule(TestAsaModule):
             "no access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive",
             "no access-list test_access line 3 extended permit ip host 192.0.2.2 any",
             "no access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors",
-            "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default",
+            "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default",
             "no access-list management_in line 3 extended permit ip any4 host 192.0.2.1",
             "no access-list management_in line 2 extended permit tcp 198.51.101.0 255.255.255.0 object-group ALLSERV.12 eq 9389",
             "no access-list management_in line 1 extended permit tcp host 198.51.100.5 range 49152 65535 198.51.100.0 255.255.255.0 eq 100",
@@ -843,7 +843,7 @@ class TestAsaAclsModule(TestAsaModule):
                             aces=[
                                 dict(
                                     destination=dict(
-                                        address="192.0.3.0",
+                                        address="198.51.100.0",
                                         netmask="255.255.255.0",
                                     ),
                                     grant="deny",
@@ -864,7 +864,7 @@ class TestAsaAclsModule(TestAsaModule):
             ),
         )
         commands = [
-            "access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 log default",
+            "access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 log default",
         ]
         result = self.execute_module(changed=False)
         self.assertEqual(result["rendered"], commands)
