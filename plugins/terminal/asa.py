@@ -56,7 +56,7 @@ class TerminalModule(TerminalBase):
                 self._exec_cli_command("terminal length 0")
             except AnsibleConnectionFailure:
                 raise AnsibleConnectionFailure(
-                    "unable to disable terminal pager or set terminal length"
+                    "unable to disable terminal pager or set terminal length",
                 )
 
     def on_become(self, passwd=None):
