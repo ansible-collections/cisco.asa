@@ -5,11 +5,13 @@
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 import sys
 
 import pytest
+
 
 # These tests and/or the module under test are unstable on Python 3.5.
 # See: https://app.shippable.com/github/ansible/ansible/runs/161331/15/tests
@@ -19,11 +21,10 @@ pytestmark = pytest.mark.skipif(
     reason="Tests and/or module are unstable on Python 3.5.",
 )
 
-from ansible_collections.cisco.asa.tests.unit.compat.mock import patch
 from ansible_collections.cisco.asa.plugins.modules import asa_acls
-from ansible_collections.cisco.asa.tests.unit.modules.utils import (
-    set_module_args,
-)
+from ansible_collections.cisco.asa.tests.unit.compat.mock import patch
+from ansible_collections.cisco.asa.tests.unit.modules.utils import set_module_args
+
 from .asa_module import TestAsaModule, load_fixture
 
 
@@ -34,39 +35,35 @@ class TestAsaAclsModule(TestAsaModule):
         super(TestAsaAclsModule, self).setUp()
 
         self.mock_get_config = patch(
-            "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.network.Config.get_config"
+            "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.network.Config.get_config",
         )
         self.get_config = self.mock_get_config.start()
 
         self.mock_load_config = patch(
-            "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.network.Config.load_config"
+            "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.network.Config.load_config",
         )
         self.load_config = self.mock_load_config.start()
 
         self.mock_get_resource_connection_config = patch(
             "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.cfg.base."
-            "get_resource_connection"
+            "get_resource_connection",
         )
-        self.get_resource_connection_config = (
-            self.mock_get_resource_connection_config.start()
-        )
+        self.get_resource_connection_config = self.mock_get_resource_connection_config.start()
 
         self.mock_get_resource_connection_facts = patch(
             "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.resource_module_base."
-            "get_resource_connection"
+            "get_resource_connection",
         )
-        self.get_resource_connection_facts = (
-            self.mock_get_resource_connection_facts.start()
-        )
+        self.get_resource_connection_facts = self.mock_get_resource_connection_facts.start()
 
         self.mock_edit_config = patch(
-            "ansible_collections.cisco.asa.plugins.module_utils.network.asa.providers.providers.CliProvider.edit_config"
+            "ansible_collections.cisco.asa.plugins.module_utils.network.asa.providers.providers.CliProvider.edit_config",
         )
         self.edit_config = self.mock_edit_config.start()
 
         self.mock_execute_show_command = patch(
             "ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.acls.acls."
-            "AclsFacts.get_acls_config"
+            "AclsFacts.get_acls_config",
         )
         self.execute_show_command = self.mock_execute_show_command.start()
 
@@ -103,9 +100,9 @@ class TestAsaAclsModule(TestAsaModule):
                                     protocol="tcp",
                                     protocol_options=dict(tcp="true"),
                                     source=dict(
-                                        object_group="test_og_network"
+                                        object_group="test_og_network",
                                     ),
-                                )
+                                ),
                             ],
                             acl_type="extended",
                             name="test_global_access",
@@ -127,10 +124,10 @@ class TestAsaAclsModule(TestAsaModule):
                             acl_type="extended",
                             name="MyACL",
                         ),
-                    ]
+                    ],
                 ),
                 state="merged",
-            )
+            ),
         )
         result = self.execute_module(changed=True)
         commands = [
@@ -238,7 +235,7 @@ class TestAsaAclsModule(TestAsaModule):
                                     source=dict(
                                         host="198.51.100.5",
                                         port_protocol=dict(
-                                            range=dict(end=65535, start=49152)
+                                            range=dict(end=65535, start=49152),
                                         ),
                                     ),
                                 ),
@@ -314,10 +311,10 @@ class TestAsaAclsModule(TestAsaModule):
                             acl_type="extended",
                             name="test_R1_traffic",
                         ),
-                    ]
+                    ],
                 ),
                 state="merged",
-            )
+            ),
         )
         self.execute_module(changed=False, commands=[], sort=True)
 
@@ -345,7 +342,7 @@ class TestAsaAclsModule(TestAsaModule):
                                         netmask="255.255.255.0",
                                     ),
                                     time_range="temp",
-                                )
+                                ),
                             ],
                         ),
                         dict(
@@ -363,10 +360,10 @@ class TestAsaAclsModule(TestAsaModule):
                             acl_type="extended",
                             name="ansible_test",
                         ),
-                    ]
+                    ],
                 ),
                 state="replaced",
-            )
+            ),
         )
         result = self.execute_module(changed=True)
         commands = [
@@ -478,7 +475,7 @@ class TestAsaAclsModule(TestAsaModule):
                                     source=dict(
                                         host="198.51.100.5",
                                         port_protocol=dict(
-                                            range=dict(end=65535, start=49152)
+                                            range=dict(end=65535, start=49152),
                                         ),
                                     ),
                                 ),
@@ -554,10 +551,10 @@ class TestAsaAclsModule(TestAsaModule):
                             acl_type="extended",
                             name="test_R1_traffic",
                         ),
-                    ]
+                    ],
                 ),
                 state="replaced",
-            )
+            ),
         )
         self.execute_module(changed=False, commands=[], sort=True)
 
@@ -585,13 +582,13 @@ class TestAsaAclsModule(TestAsaModule):
                                         address="198.51.100.0",
                                         netmask="255.255.255.0",
                                     ),
-                                )
+                                ),
                             ],
-                        )
-                    ]
+                        ),
+                    ],
                 ),
                 state="overridden",
-            )
+            ),
         )
         result = self.execute_module(changed=True)
         commands = [
@@ -711,7 +708,7 @@ class TestAsaAclsModule(TestAsaModule):
                                     source=dict(
                                         host="198.51.100.5",
                                         port_protocol=dict(
-                                            range=dict(end=65535, start=49152)
+                                            range=dict(end=65535, start=49152),
                                         ),
                                     ),
                                 ),
@@ -787,10 +784,10 @@ class TestAsaAclsModule(TestAsaModule):
                             acl_type="extended",
                             name="test_R1_traffic",
                         ),
-                    ]
+                    ],
                 ),
                 state="overridden",
-            )
+            ),
         )
         self.execute_module(changed=False, commands=[], sort=True)
 
@@ -801,10 +798,10 @@ class TestAsaAclsModule(TestAsaModule):
                     acls=[
                         dict(name="test_global_access"),
                         dict(name="test_R1_traffic"),
-                    ]
+                    ],
                 ),
                 state="deleted",
-            )
+            ),
         )
         result = self.execute_module(changed=True)
         commands = [
@@ -858,16 +855,16 @@ class TestAsaAclsModule(TestAsaModule):
                                         address="192.0.2.0",
                                         netmask="255.255.255.0",
                                     ),
-                                )
+                                ),
                             ],
-                        )
-                    ]
+                        ),
+                    ],
                 ),
                 state="rendered",
-            )
+            ),
         )
         commands = [
-            "access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 log default"
+            "access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 log default",
         ]
         result = self.execute_module(changed=False)
         self.assertEqual(result["rendered"], commands)

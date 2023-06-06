@@ -27,15 +27,16 @@
 #
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 import json
 
 from ansible.module_utils._text import to_text
+from ansible.module_utils.connection import Connection, ConnectionError, exec_command
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
     EntityCollection,
 )
-from ansible.module_utils.connection import exec_command
-from ansible.module_utils.connection import Connection, ConnectionError
+
 
 _DEVICE_CONFIGS = {}
 _CONNECTION = None
@@ -96,7 +97,7 @@ def to_commands(module, commands):
         if module.check_mode and not item["command"].startswith("show"):
             module.warn(
                 "only show commands are supported when using check "
-                "mode, not executing `%s`" % item["command"]
+                "mode, not executing `%s`" % item["command"],
             )
 
     return commands

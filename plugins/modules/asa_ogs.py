@@ -28,6 +28,7 @@ The module file for asa_ogs
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
@@ -1040,12 +1041,9 @@ commands:
 """
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.ogs.ogs import (
-    OGsArgs,
-)
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.config.ogs.ogs import (
-    OGs,
-)
+
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.ogs.ogs import OGsArgs
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.config.ogs.ogs import OGs
 
 
 def main():

@@ -9,6 +9,7 @@ The arg spec for the asa facts module.
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
@@ -20,7 +21,9 @@ class FactsArgs(object):
 
     argument_spec = {
         "gather_subset": dict(
-            default=["!config"], type="list", elements="str"
+            default=["!config"],
+            type="list",
+            elements="str",
         ),
         "gather_network_resources": dict(type="list", elements="str"),
     }

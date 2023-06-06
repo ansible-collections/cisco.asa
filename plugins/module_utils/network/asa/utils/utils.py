@@ -8,14 +8,13 @@
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 import socket
+
+from ansible.module_utils.common.network import is_masklen, to_netmask
 from ansible.module_utils.six import iteritems
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
-    is_masklen,
-    to_netmask,
-)
 
 
 def remove_duplicate_cmd(cmd, commands):
@@ -79,10 +78,7 @@ def new_dict_to_set(input_dict, temp_list, test_set, count=0):
                 if v is not None:
                     test_dict.update({k: v})
                 try:
-                    if (
-                        tuple(iteritems(test_dict)) not in test_set
-                        and count == input_dict_len
-                    ):
+                    if tuple(iteritems(test_dict)) not in test_set and count == input_dict_len:
                         test_set.add(tuple(iteritems(test_dict)))
                         count = 0
                 except TypeError:
@@ -165,11 +161,7 @@ def filter_dict_having_none_value(want, have):
                 if each.get("secondary"):
                     want_ip = each.get("address").split("/")
                     have_ip = have.get("ipv4")
-                    if (
-                        len(want_ip) > 1
-                        and have_ip
-                        and have_ip[0].get("secondary")
-                    ):
+                    if len(want_ip) > 1 and have_ip and have_ip[0].get("secondary"):
                         have_ip = have_ip[0]["address"].split(" ")[0]
                         if have_ip != want_ip[0]:
                             diff_ip = True
@@ -201,15 +193,15 @@ def validate_ipv4(value, module):
         if len(address) != 2:
             module.fail_json(
                 msg="address format is <ipv4 address>/<mask>, got invalid format {0}".format(
-                    value
-                )
+                    value,
+                ),
             )
 
         if not is_masklen(address[1]):
             module.fail_json(
                 msg="invalid value for mask: {0}, mask should be in range 0-32".format(
-                    address[1]
-                )
+                    address[1],
+                ),
             )
 
 
@@ -219,15 +211,15 @@ def validate_ipv6(value, module):
         if len(address) != 2:
             module.fail_json(
                 msg="address format is <ipv6 address>/<mask>, got invalid format {0}".format(
-                    value
-                )
+                    value,
+                ),
             )
         else:
             if not 0 <= int(address[1]) <= 128:
                 module.fail_json(
                     msg="invalid value for mask: {0}, mask should be in range 0-128".format(
-                        address[1]
-                    )
+                        address[1],
+                    ),
                 )
 
 

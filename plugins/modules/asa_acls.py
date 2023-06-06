@@ -28,6 +28,7 @@ The module file for asa_acls
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
@@ -1224,12 +1225,11 @@ commands:
 """
 
 from ansible.module_utils.basic import AnsibleModule
+
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.acls.acls import (
     AclsArgs,
 )
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.config.acls.acls import (
-    Acls,
-)
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.config.acls.acls import Acls
 
 
 def main():

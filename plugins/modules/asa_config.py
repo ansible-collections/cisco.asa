@@ -5,6 +5,7 @@
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
@@ -258,18 +259,17 @@ backup_path:
   sample: /playbooks/ansible/backup/asa_config.2016-07-16@22:28:34
 """
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
-    asa_argument_spec,
-    check_args,
-)
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
-    get_config,
-    load_config,
-    run_commands,
-)
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.config import (
     NetworkConfig,
     dumps,
+)
+
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
+    asa_argument_spec,
+    check_args,
+    get_config,
+    load_config,
+    run_commands,
 )
 
 
@@ -301,7 +301,10 @@ def run(module, result):
             contents = get_config(module)
         config = NetworkConfig(indent=1, contents=contents)
         configobjs = candidate.difference(
-            config, path=path, match=match, replace=replace
+            config,
+            path=path,
+            match=match,
+            replace=replace,
         )
 
     else:
@@ -327,17 +330,19 @@ def run(module, result):
 
     if module.params["save"]:
         module.warn(
-            "module param save is deprecated, please use newer and updated param save_when instead which is released with more functionality!"
+            "module param save is deprecated, please use newer and updated param save_when instead which is released with more functionality!",
         )
         save_config(module, result)
     if module.params["save_when"] == "always":
         save_config(module, result)
     elif module.params["save_when"] == "modified":
         running_config_checksum = run_commands(
-            module, "show running-config | include checksum:"
+            module,
+            "show running-config | include checksum:",
         )
         startup_config_checksum = run_commands(
-            module, "show startup-config | include checksum:"
+            module,
+            "show startup-config | include checksum:",
         )
         if running_config_checksum != startup_config_checksum:
             save_config(module, result)
@@ -355,7 +360,8 @@ def main():
         before=dict(type="list", elements="str"),
         after=dict(type="list", elements="str"),
         match=dict(
-            default="line", choices=["line", "strict", "exact", "none"]
+            default="line",
+            choices=["line", "strict", "exact", "none"],
         ),
         replace=dict(default="line", choices=["line", "block"]),
         backup_options=dict(type="dict", options=backup_spec),
@@ -365,7 +371,8 @@ def main():
         backup=dict(type="bool", default=False),
         save=dict(type="bool", default=False),
         save_when=dict(
-            choices=["always", "never", "modified", "changed"], default="never"
+            choices=["always", "never", "modified", "changed"],
+            default="never",
         ),
     )
 

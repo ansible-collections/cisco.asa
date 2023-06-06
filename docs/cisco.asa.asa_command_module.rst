@@ -53,6 +53,21 @@ Parameters
             <tr>
                 <td colspan="1">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>context</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">string</span>
+                    </div>
+                </td>
+                <td>
+                </td>
+                <td>
+                        <div>Specifies which context to target if you are running in the ASA in multiple context mode. Defaults to the current context you login to.</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
                     <b>interval</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
@@ -83,6 +98,25 @@ Parameters
                 </td>
                 <td>
                         <div>The <em>match</em> argument is used in conjunction with the <em>wait_for</em> argument to specify the match policy.  Valid values are <code>all</code> or <code>any</code>.  If the value is set to <code>all</code> then all conditionals in the wait_for must be satisfied.  If the value is set to <code>any</code> then only one of the values must be satisfied.</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>passwords</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">boolean</span>
+                    </div>
+                </td>
+                <td>
+                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
+                                    <li>no</li>
+                                    <li>yes</li>
+                        </ul>
+                </td>
+                <td>
+                        <div>Saves running-config passwords in clear-text when set to True. Defaults to False</div>
                 </td>
             </tr>
             <tr>
@@ -127,6 +161,7 @@ Notes
 
 .. note::
    - When processing wait_for, each commands' output is stored as an element of the *result* array.  The allowed operators for conditional evaluation are *eq*, *==*, *neq*, *ne*, *!=*, *gt*, *>*, *ge*, *>=*, *lt*, *<*, *le*, *<=*, *contains*, *matches*.  Operators can be prefaced by *not* to negate their meaning.  The *contains* operator searches for a substring match (like the Python *in* operator).  The *matches* operator searches using a regex search operation.
+   - For more information on using Ansible to manage network devices see the :ref:`Ansible Network Guide <network_guide>`
 
 
 

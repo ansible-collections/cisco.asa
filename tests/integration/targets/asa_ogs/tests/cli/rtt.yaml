@@ -6,7 +6,6 @@
 - ansible.builtin.include_tasks: _remove_config.yaml
 
 - block:
-
     - name: Apply the provided configuration (Base config)
       register: base_config
       cisco.asa.asa_ogs:
@@ -56,8 +55,8 @@
     - name: Gather Object group facts
       cisco.asa.asa_facts:
         gather_subset:
-          - '!all'
-          - '!min'
+          - "!all"
+          - "!min"
         gather_network_resources:
           - ogs
 
@@ -102,5 +101,4 @@
           - revert.changed == true
           - revert.commands|symmetric_difference(rtt.commands) == []
   always:
-
     - ansible.builtin.include_tasks: _remove_config.yaml

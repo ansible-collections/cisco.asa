@@ -68,5 +68,6 @@
     match: strict
 
 - ansible.builtin.debug:
-    msg: "END cli/sublevel_strict_mul_parents.yaml on connection={{ ansible_connection
+    msg:
+      "END cli/sublevel_strict_mul_parents.yaml on connection={{ ansible_connection
       }}"
