@@ -1,0 +1,2 @@
+minor_changes:
+  - terminal ASA plugin - Add "terminal pager 0" command as a fallback option to disable pager in cases where "no terminal pager" command is blocked due to internal security policies. 
