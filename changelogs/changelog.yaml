@@ -185,3 +185,11 @@ releases:
       - remove_deprecated_modules.yaml
       - remove_provider.yaml
     release_date: "2022-10-13"
+  4.0.1:
+    changes:
+      release_summary: Release with bugfix fixing the import path coming from utils and netcommon lib.
+    fragments:
+      - cleanup.yaml
+      - rm_base.yaml
+      - rm_base_plus.yaml
+    release_date: "2023-06-12"
