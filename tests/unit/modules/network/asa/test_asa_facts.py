@@ -27,7 +27,6 @@ from .asa_module import TestAsaModule, load_fixture
 
 
 class TestAsaFactsModule(TestAsaModule):
-
     module = asa_facts
 
     def setUp(self):

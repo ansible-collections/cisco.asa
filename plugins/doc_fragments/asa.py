@@ -10,7 +10,6 @@ __metaclass__ = type
 
 
 class ModuleDocFragment(object):
-
     # Standard files documentation fragment
     DOCUMENTATION = r"""options:
   context:

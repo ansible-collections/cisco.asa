@@ -26,7 +26,6 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
 
 
 class FactsBase(object):
-
     COMMANDS = list()
 
     def __init__(self, module):
@@ -47,7 +46,6 @@ class FactsBase(object):
 
 
 class Default(FactsBase):
-
     COMMANDS = ["show version"]
 
     def populate(self):
@@ -109,7 +107,6 @@ class Default(FactsBase):
 
 
 class Hardware(FactsBase):
-
     COMMANDS = ["dir", "show memory"]
 
     def populate(self):
@@ -173,7 +170,6 @@ class Hardware(FactsBase):
 
 
 class Config(FactsBase):
-
     COMMANDS = ["show running-config"]
 
     def populate(self):
