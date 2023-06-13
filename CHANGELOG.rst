@@ -5,6 +5,14 @@ Cisco Asa Collection Release Notes
 .. contents:: Topics
 
 
+v4.0.1
+======
+
+Release Summary
+---------------
+
+- Release with bugfix fixing the import path coming from `utils` and `netcommon` lib.
+
 v4.0.0
 ======
 
