@@ -189,8 +189,8 @@ releases:
     changes:
       release_summary: Release with bugfix fixing the import path coming from utils and netcommon lib.
     fragments:
-    - cleanup.yaml
-    - pre-commit.yaml
-    - rm_base.yaml
-    - rm_base_plus.yaml
-    release_date: '2023-06-13'
+      - cleanup.yaml
+      - pre-commit.yaml
+      - rm_base.yaml
+      - rm_base_plus.yaml
+    release_date: "2023-06-13"
