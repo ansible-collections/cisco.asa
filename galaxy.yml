@@ -13,4 +13,4 @@ issues: https://github.com/ansible-collections/cisco.asa/issues
 tags: [cisco, asa, networking, security]
 # NOTE(pabelanger): We create an empty version key to keep ansible-galaxy
 # happy. We dynamically inject version info based on git information.
-version: 4.0.1-dev
+version: 4.0.1
