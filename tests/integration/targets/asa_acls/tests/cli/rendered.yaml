@@ -21,7 +21,7 @@
                     address: 192.0.2.0
                     netmask: 255.255.255.0
                   destination:
-                    address: 192.0.3.0
+                    address: 198.51.100.0
                     netmask: 255.255.255.0
                     port_protocol:
                       eq: www

@@ -24,8 +24,8 @@
                 description: test_network_og
                 network_object:
                   host:
-                    - 192.0.3.1
-                    - 192.0.3.2
+                    - 198.51.100.1
+                    - 198.51.100.2
                   ipv6_address:
                     - 2001:db8:3::/64
           - object_type: security

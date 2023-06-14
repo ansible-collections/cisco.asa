@@ -18,9 +18,9 @@
                 description: test_og_network_replace
                 network_object:
                   host:
-                    - 192.0.3.1
+                    - 198.51.100.1
                   address:
-                    - 192.0.3.0 255.255.255.0
+                    - 198.51.100.0 255.255.255.0
           - object_type: protocol
             object_groups:
               - name: test_og_protocol

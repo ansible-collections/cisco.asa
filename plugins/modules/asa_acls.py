@@ -468,7 +468,7 @@ EXAMPLES = """
               address: 192.0.2.0
               netmask: 255.255.255.0
             destination:
-              address: 192.0.3.0
+              address: 198.51.100.0
               netmask: 255.255.255.0
               port_protocol:
                 eq: www
@@ -547,7 +547,7 @@ EXAMPLES = """
 # access-list global_access line 4 extended deny tcp any any eq www log errors interval 300
 # access-list R1_traffic line 1 remark test_v6_acls
 # access-list R1_traffic line 2 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive
-# access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default
+# access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default
 # access-list temp_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
 #                         time-range temp inactive
 # access-list temp_access line 2 extended deny tcp interface management interface management
@@ -571,7 +571,7 @@ EXAMPLES = """
 #                        inactive (hitcnt=0) (inactive) 0xe922b432
 # access-list temp_access; 2 elements; name hash: 0xaf1b712e
 # access-list temp_access line 1
-#                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+#                         extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www
 #                         log default (hitcnt=0) 0xb58abb0d
 # access-list temp_access line 2
 #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
@@ -581,9 +581,9 @@ EXAMPLES = """
 #                         interval 300 (hitcnt=0) 0x78aa233d
 # access-list test_access line 2 extended deny tcp object-group test_og_network object-group test_network_og
 #                         eq www log default (hitcnt=0) 0x477aec1e
-#    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 192.0.3.1 eq www
+#    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 198.51.100.1 eq www
 #                            log default (hitcnt=0) 0xdc7edff8
-#    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 192.0.3.2 eq www
+#    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 198.51.100.2 eq www
 #                            log default (hitcnt=0) 0x7b0e9fde
 #    access-list test_access line 2 extended deny tcp 198.51.100.0 255.255.255.0 2001:db8:3::/64 eq www
 #                            log default (hitcnt=0) 0x97c75adc
@@ -648,7 +648,7 @@ EXAMPLES = """
 #                        inactive (hitcnt=0) (inactive) 0xe922b432
 # access-list temp_access; 2 elements; name hash: 0xaf1b712e
 # access-list temp_access line 1
-#                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+#                         extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www
 #                         log default (hitcnt=0) 0xb58abb0d
 # access-list temp_access line 2
 #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
@@ -700,7 +700,7 @@ EXAMPLES = """
 #                        inactive (hitcnt=0) (inactive) 0xe922b432
 # access-list temp_access; 2 elements; name hash: 0xaf1b712e
 # access-list temp_access line 1
-#                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+#                         extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www
 #                         log default (hitcnt=0) 0xb58abb0d
 # access-list temp_access line 2
 #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
@@ -725,7 +725,7 @@ EXAMPLES = """
 #                        inactive (hitcnt=0) (inactive) 0xe922b432
 # access-list temp_access; 2 elements; name hash: 0xaf1b712e
 # access-list temp_access line 1
-#                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+#                         extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www
 #                         log default (hitcnt=0) 0xb58abb0d
 # access-list temp_access line 2
 #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
@@ -760,7 +760,7 @@ EXAMPLES = """
 # access-list temp_access line 2
 #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 time-range temp
 # no access-list temp_access line 1
-#                            extended grant deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default
+#                            extended grant deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default
 # no access-list R1_traffic line 2
 #                           extended grant deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive
 # no access-list R1_traffic line 1
@@ -796,7 +796,7 @@ EXAMPLES = """
 #                        inactive (hitcnt=0) (inactive) 0xe922b432
 # access-list temp_access; 2 elements; name hash: 0xaf1b712e
 # access-list temp_access line 1
-#                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+#                         extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www
 #                         log default (hitcnt=0) 0xb58abb0d
 # access-list temp_access line 2
 #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
@@ -814,7 +814,7 @@ EXAMPLES = """
 # ---------------
 # no access-list temp_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
 #                            time-range temp inactive
-# no access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+# no access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www
 #                            log default
 # no access-list global_access line 3 extended deny tcp any any eq www log errors interval 300
 # no access-list global_access line 2 extended deny tcp any any eq telnet
@@ -852,7 +852,7 @@ EXAMPLES = """
 #                        inactive (hitcnt=0) (inactive) 0xe922b432
 # access-list temp_access; 2 elements; name hash: 0xaf1b712e
 # access-list temp_access line 1
-#                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+#                         extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www
 #                         log default (hitcnt=0) 0xb58abb0d
 # access-list temp_access line 2
 #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
@@ -870,7 +870,7 @@ EXAMPLES = """
 # no access-list R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www
 #                           log errors interval 300
 # no access-list R1_traffic line 2 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive
-# no access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default
+# no access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default
 # no access-list temp_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
 #                            time-range temp inactive
 
@@ -897,7 +897,7 @@ EXAMPLES = """
 #                        inactive (hitcnt=0) (inactive) 0xe922b432
 # access-list temp_access; 2 elements; name hash: 0xaf1b712e
 # access-list temp_access line 1
-#                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+#                         extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www
 #                         log default (hitcnt=0) 0xb58abb0d
 # access-list temp_access line 2
 #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
@@ -1002,7 +1002,7 @@ EXAMPLES = """
 #                     "aces": [
 #                         {
 #                             "destination": {
-#                                 "address": "192.0.3.0",
+#                                 "address": "198.51.100.0",
 #                                 "netmask": "255.255.255.0",
 #                                 "port_protocol": {
 #                                     "eq": "www"
@@ -1063,7 +1063,7 @@ EXAMPLES = """
             address: 192.0.2.0
             netmask: 255.255.255.0
           destination:
-            address: 192.0.3.0
+            address: 198.51.100.0
             netmask: 255.255.255.0
             port_protocol:
               eq: www
@@ -1100,7 +1100,7 @@ EXAMPLES = """
 #
 # "rendered": [
 #         "access-list temp_access line 1
-#                                  extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0
+#                                  extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0
 #                                  eq www log default"
 #         "access-list temp_access line 2
 #                                  extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
@@ -1114,7 +1114,7 @@ EXAMPLES = """
 # parsed.cfg
 #
 # access-list test_access; 2 elements; name hash: 0xaf1b712e
-# access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default
+# access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default
 # access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors
 # access-list test_R1_traffic; 1 elements; name hash: 0xaf40d3c2
 # access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive
@@ -1134,7 +1134,7 @@ EXAMPLES = """
 #                     "aces": [
 #                         {
 #                             "destination": {
-#                                 "address": "192.0.3.0",
+#                                 "address": "198.51.100.0",
 #                                 "netmask": "255.255.255.0",
 #                                 "port_protocol": {
 #                                     "eq": "www"

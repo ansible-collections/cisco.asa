@@ -15,7 +15,7 @@
           - name: test_network_og
             network_object:
               host:
-                - 192.0.3.1
+                - 198.51.100.1
               ipv6_address:
                 - 2001:db8:3::/64
     state: merged
