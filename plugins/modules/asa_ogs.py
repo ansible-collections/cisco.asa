@@ -303,7 +303,7 @@ EXAMPLES = """
 # ciscoasa# sh running-config object-group
 # object-group network test_og_network
 #  description test_network_og
-#  network-object host 192.0.3.1
+#  network-object host 198.51.100.1
 
 - name: "Merge module attributes of given object-group"
   cisco.asa.asa_ogs:
@@ -326,8 +326,8 @@ EXAMPLES = """
           description: test_network_og
           network_object:
             host:
-              - 192.0.3.1
-              - 192.0.3.2
+              - 198.51.100.1
+              - 198.51.100.2
             ipv6_address:
               - 2001:db8:3::/64
     - object_type: security
@@ -392,8 +392,8 @@ EXAMPLES = """
 # network-object host 192.0.2.1
 # network-object host 192.0.2.2
 # object-group network test_network_og
-# network-object host 192.0.3.1
-# network-object host 192.0.3.2
+# network-object host 198.51.100.1
+# network-object host 198.51.100.2
 # network-object 2001:db8:3::/64
 # object-group service O-Worker
 # service-object tcp destination range 100 200
@@ -418,11 +418,11 @@ EXAMPLES = """
 #  network-object host 192.0.2.2
 #  network-object 192.0.2.0 255.255.255.0
 #  network-object 198.51.100.0 255.255.255.0
-#  network-object host 192.0.3.1
+#  network-object host 198.51.100.1
 # object-group network test_network_og
 #  description test_network_og
-#  network-object host 192.0.3.1
-#  network-object host 192.0.3.2
+#  network-object host 198.51.100.1
+#  network-object host 198.51.100.2
 #  network-object 2001:db8:0:3::/64
 #  group-object test_og_network
 # object-group security test_og_security
@@ -455,8 +455,8 @@ EXAMPLES = """
 #  network-object 198.51.100.0 255.255.255.0
 # object-group network test_network_og
 #  description test_network_og
-#  network-object host 192.0.3.1
-#  network-object host 192.0.3.2
+#  network-object host 198.51.100.1
+#  network-object host 198.51.100.2
 #  network-object 2001:db8:0:3::/64
 #  group-object test_og_network
 # object-group security test_og_security
@@ -483,9 +483,9 @@ EXAMPLES = """
             description: test_og_network_replace
             network_object:
               host:
-                - 192.0.3.1
+                - 198.51.100.1
               address:
-                - 192.0.3.0 255.255.255.0
+                - 198.51.100.0 255.255.255.0
       - object_type: protocol
         object_groups:
           - name: test_og_protocol
@@ -507,10 +507,10 @@ EXAMPLES = """
 # description test_og_network_replace
 # no network-object 192.0.2.0 255.255.255.0
 # no network-object 198.51.100.0 255.255.255.0
-# network-object 192.0.3.0 255.255.255.0
+# network-object 198.51.100.0 255.255.255.0
 # no network-object host 192.0.2.1
 # no network-object host 192.0.2.2
-# network-object host 192.0.3.1
+# network-object host 198.51.100.1
 
 # After state:
 # -------------
@@ -518,12 +518,12 @@ EXAMPLES = """
 # ciscoasa# sh running-config object-group
 # object-group network test_og_network
 #  description test_og_network_replace
-#  network-object host 192.0.3.1
-#  network-object 192.0.3.0 255.255.255.0
+#  network-object host 198.51.100.1
+#  network-object 198.51.100.0 255.255.255.0
 # object-group network test_network_og
 #  description test_network_og
-#  network-object host 192.0.3.1
-#  network-object host 192.0.3.2
+#  network-object host 198.51.100.1
+#  network-object host 198.51.100.2
 #  network-object 2001:db8:0:3::/64
 #  group-object test_og_network
 # object-group security test_og_security
@@ -558,8 +558,8 @@ EXAMPLES = """
 #  network-object 198.51.100.0 255.255.255.0
 # object-group network test_network_og
 #  description test_network_og
-#  network-object host 192.0.3.1
-#  network-object host 192.0.3.2
+#  network-object host 198.51.100.1
+#  network-object host 198.51.100.2
 #  network-object 2001:db8:0:3::/64
 #  group-object test_og_network
 # object-group security test_og_security
@@ -586,9 +586,9 @@ EXAMPLES = """
             description: test_og_network_override
             network_object:
               host:
-                - 192.0.3.1
+                - 198.51.100.1
               address:
-                - 192.0.3.0 255.255.255.0
+                - 198.51.100.0 255.255.255.0
           - name: ANSIBLE_TEST
             network_object:
               object:
@@ -619,10 +619,10 @@ EXAMPLES = """
 # description test_og_network_override
 # no network-object 192.0.2.0 255.255.255.0
 # no network-object 198.51.100.0 255.255.255.0
-# network-object 192.0.3.0 255.255.255.0
+# network-object 198.51.100.0 255.255.255.0
 # no network-object host 192.0.2.1
 # no network-object host 192.0.2.2
-# network-object host 192.0.3.1
+# network-object host 198.51.100.1
 # no object-group network test_network_og
 # object-group network ANSIBLE_TEST
 # network-object object TEST1
@@ -634,8 +634,8 @@ EXAMPLES = """
 # ciscoasa# sh running-config object-group
 # object-group network test_og_network
 #  description test_og_network_override
-#  network-object host 192.0.3.1
-#  network-object 192.0.3.0 255.255.255.0
+#  network-object host 198.51.100.1
+#  network-object 198.51.100.0 255.255.255.0
 # object-group network ANSIBLE_TEST
 #  network-object object TEST1
 #  network-object object TEST2
@@ -657,8 +657,8 @@ EXAMPLES = """
 #  network-object 198.51.100.0 255.255.255.0
 # object-group network test_network_og
 #  description test_network_og
-#  network-object host 192.0.3.1
-#  network-object host 192.0.3.2
+#  network-object host 198.51.100.1
+#  network-object host 198.51.100.2
 #  network-object 2001:db8:0:3::/64
 #  group-object test_og_network
 # object-group security test_og_security
@@ -725,8 +725,8 @@ EXAMPLES = """
 #  network-object 198.51.100.0 255.255.255.0
 # object-group network test_network_og
 #  description test_network_og
-#  network-object host 192.0.3.1
-#  network-object host 192.0.3.2
+#  network-object host 198.51.100.1
+#  network-object host 198.51.100.2
 #  network-object 2001:db8:0:3::/64
 #  group-object test_og_network
 # object-group security test_og_security
@@ -770,8 +770,8 @@ EXAMPLES = """
 #  network-object 198.51.100.0 255.255.255.0
 # object-group network test_network_og
 #  description test_network_og
-#  network-object host 192.0.3.1
-#  network-object host 192.0.3.2
+#  network-object host 198.51.100.1
+#  network-object host 198.51.100.2
 #  network-object 2001:db8:0:3::/64
 #  group-object test_og_network
 # object-group security test_og_security
@@ -818,8 +818,8 @@ EXAMPLES = """
 #                     "name": "test_network_og",
 #                     "network_object": {
 #                         "host": [
-#                             "192.0.3.1",
-#                             "192.0.3.2"
+#                             "198.51.100.1",
+#                             "198.51.100.2"
 #                         ],
 #                         "ipv6_address": [
 #                             "2001:db8:3::/64"
@@ -878,8 +878,8 @@ EXAMPLES = """
 #  network-object 198.51.100.0 255.255.255.0
 # object-group network test_network_og
 #  description test_network_og
-#  network-object host 192.0.3.1
-#  network-object host 192.0.3.2
+#  network-object host 198.51.100.1
+#  network-object host 198.51.100.2
 #  network-object 2001:db8:0:3::/64
 #  group-object test_og_network
 # object-group security test_og_security
@@ -911,8 +911,8 @@ EXAMPLES = """
             description: test_network_og
             network_object:
               host:
-                - 192.0.3.1
-                - 192.0.3.2
+                - 198.51.100.1
+                - 198.51.100.2
               ipv6_address:
                 - 2001:db8:3::/64
       - object_type: security
@@ -956,8 +956,8 @@ EXAMPLES = """
 #         "network-object host 192.0.2.2",
 #         "object-group network test_network_og",
 #         "description test_network_og",
-#         "network-object host 192.0.3.1",
-#         "network-object host 192.0.3.2",
+#         "network-object host 198.51.100.1",
+#         "network-object host 198.51.100.2",
 #         "network-object 2001:db8:3::/64",
 #         "object-group user test_og_user",
 #         "description test_user",
