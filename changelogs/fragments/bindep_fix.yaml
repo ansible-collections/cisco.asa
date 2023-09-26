@@ -1,0 +1,3 @@
+---
+trivial:
+  - Fix 'python3-Cython' dependency in bindep.txt.
