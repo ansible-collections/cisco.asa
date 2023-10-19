@@ -102,3 +102,10 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# ide
+*.code-workspace
+.vscode/
+.DS_Store
+
+changelogs/.plugin-cache.yaml
