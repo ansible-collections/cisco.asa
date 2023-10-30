@@ -1163,70 +1163,70 @@ Examples
     - name: "Merge module attributes of given object-group"
       cisco.asa.asa_ogs:
         config:
-        - object_type: network
-          object_groups:
-            - name: group_network_obj
-              group_object:
-                - test_og_network
-            - name: test_og_network
-              description: test_og_network
-              network_object:
-                host:
-                  - 192.0.2.1
-                  - 192.0.2.2
-                address:
-                  - 192.0.2.0 255.255.255.0
-                  - 198.51.100.0 255.255.255.0
-            - name: test_network_og
-              description: test_network_og
-              network_object:
-                host:
-                  - 198.51.100.1
-                  - 198.51.100.2
-                ipv6_address:
-                  - 2001:db8:3::/64
-        - object_type: security
-          object_groups:
-            - name: test_og_security
-              description: test_security
-              security_group:
-                sec_name:
-                  - test_1
-                  - test_2
-                tag:
-                  - 10
-                  - 20
-        - object_type: service
-          object_groups:
-            - name: O-Worker
-              services_object:
-                - protocol: tcp
-                  destination_port:
-                    range:
+          - object_type: network
+            object_groups:
+              - name: group_network_obj
+                group_object:
+                  - test_og_network
+              - name: test_og_network
+                description: test_og_network
+                network_object:
+                  host:
+                    - 192.0.2.1
+                    - 192.0.2.2
+                  address:
+                    - 192.0.2.0 255.255.255.0
+                    - 198.51.100.0 255.255.255.0
+              - name: test_network_og
+                description: test_network_og
+                network_object:
+                  host:
+                    - 198.51.100.1
+                    - 198.51.100.2
+                  ipv6_address:
+                    - 2001:db8:3::/64
+          - object_type: security
+            object_groups:
+              - name: test_og_security
+                description: test_security
+                security_group:
+                  sec_name:
+                    - test_1
+                    - test_2
+                  tag:
+                    - 10
+                    - 20
+          - object_type: service
+            object_groups:
+              - name: O-Worker
+                services_object:
+                  - protocol: tcp
+                    destination_port:
+                      range:
+                        start: 100
+                        end: 200
+                  - protocol: tcp-udp
+                    source_port:
+                      eq: 1234
+                    destination_port:
+                      gt: nfs
+              - name: O-UNIX-TCP
+                protocol: tcp
+                port_object:
+                  - eq: https
+                  - range:
                       start: 100
-                      end: 200
-                - protocol: tcp-udp
-                  source_port:
-                    eq: 1234
-                  destination_port:
-                    gt: nfs
-            - name: O-UNIX-TCP
-              protocol: tcp
-              port_object:
-                - eq: https
-                - range:
-                    start: 100
-                    end: 400
-        - object_type: user
-          object_groups:
-            - name: test_og_user
-              description: test_user
-              user_object:
-                user:
-                  - name: new_user_1
-                    domain: LOCAL
-                  - name: new_user_2
-                    domain: LOCAL
+                      end: 400
+          - object_type: user
+            object_groups:
+              - name: test_og_user
+                description: test_user
+                user_object:
+                  user:
+                    - name: new_user_1
+                      domain: LOCAL
+                    - name: new_user_2
+                      domain: LOCAL
         state: merged
 
     # Commands fired:
@@ -1566,7 +1566,7 @@ Examples
     #  service-object tcp source eq 1234 destination gt nfs
 
     # Using DELETED without any config passed
-    #"(NOTE: This will delete all of configured resource module attributes)"
+    # "(NOTE: This will delete all of configured resource module attributes)"
 
     # Before state:
     # -------------
