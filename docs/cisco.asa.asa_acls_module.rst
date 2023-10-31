@@ -2416,85 +2416,85 @@ Examples
             - name: temp_access
               acl_type: extended
               aces:
-              - grant: deny
-                line: 1
-                protocol_options:
-                  tcp: true
-                source:
-                  address: 192.0.2.0
-                  netmask: 255.255.255.0
-                destination:
-                  address: 198.51.100.0
-                  netmask: 255.255.255.0
-                  port_protocol:
-                    eq: www
-                log: default
-              - grant: deny
-                line: 2
-                protocol_options:
-                  igrp: true
-                source:
-                  address: 198.51.100.0
-                  netmask: 255.255.255.0
-                destination:
-                  address: 198.51.110.0
-                  netmask: 255.255.255.0
-                time_range: temp
-              - grant: deny
-                line: 3
-                protocol_options:
-                  tcp: true
-                source:
-                  interface: management
-                destination:
-                  interface: management
-                  port_protocol:
-                    eq: www
-                log: warnings
-              - grant: deny
-                line: 4
-                protocol_options:
-                  tcp: true
-                source:
-                  object_group: test_og_network
-                destination:
-                  object_group: test_network_og
-                  port_protocol:
-                    eq: www
-                log: default
+                - grant: deny
+                  line: 1
+                  protocol_options:
+                    tcp: true
+                  source:
+                    address: 192.0.2.0
+                    netmask: 255.255.255.0
+                  destination:
+                    address: 198.51.100.0
+                    netmask: 255.255.255.0
+                    port_protocol:
+                      eq: www
+                  log: default
+                - grant: deny
+                  line: 2
+                  protocol_options:
+                    igrp: true
+                  source:
+                    address: 198.51.100.0
+                    netmask: 255.255.255.0
+                  destination:
+                    address: 198.51.110.0
+                    netmask: 255.255.255.0
+                  time_range: temp
+                - grant: deny
+                  line: 3
+                  protocol_options:
+                    tcp: true
+                  source:
+                    interface: management
+                  destination:
+                    interface: management
+                    port_protocol:
+                      eq: www
+                  log: warnings
+                - grant: deny
+                  line: 4
+                  protocol_options:
+                    tcp: true
+                  source:
+                    object_group: test_og_network
+                  destination:
+                    object_group: test_network_og
+                    port_protocol:
+                      eq: www
+                  log: default
             - name: global_access
               acl_type: extended
               aces:
-              - line: 3
-                remark: test global access
-              - grant: deny
-                line: 4
-                protocol_options:
-                  tcp: true
-                source:
-                  any: true
-                destination:
-                  any: true
-                  port_protocol:
-                    eq: www
-                log: errors
+                - line: 3
+                  remark: test global access
+                - grant: deny
+                  line: 4
+                  protocol_options:
+                    tcp: true
+                  source:
+                    any: true
+                  destination:
+                    any: true
+                    port_protocol:
+                      eq: www
+                  log: errors
             - name: R1_traffic
               aces:
-              - line: 1
-                remark: test_v6_acls
-              - grant: deny
-                line: 2
-                protocol_options:
-                  tcp: true
-                source:
-                  address: 2001:db8:0:3::/64
-                  port_protocol:
-                    eq: www
-                destination:
-                  address: 2001:fc8:0:4::/64
-                  port_protocol:
-                    eq: telnet
-                inactive: true
+                - line: 1
+                  remark: test_v6_acls
+                - grant: deny
+                  line: 2
+                  protocol_options:
+                    tcp: true
+                  source:
+                    address: 2001:db8:0:3::/64
+                    port_protocol:
+                      eq: www
+                  destination:
+                    address: 2001:fc8:0:4::/64
+                    port_protocol:
+                      eq: telnet
+                  inactive: true
         state: merged
 
     # Commands fired:
@@ -2617,20 +2617,20 @@ Examples
             - name: global_access
               acl_type: extended
               aces:
-              - grant: deny
-                line: 1
-                protocol_options:
-                  tcp: true
-                source:
-                  address: 192.0.4.0
-                  netmask: 255.255.255.0
-                  port_protocol:
-                    eq: telnet
-                destination:
-                  address: 192.0.5.0
-                  netmask: 255.255.255.0
-                  port_protocol:
-                    eq: www
+                - grant: deny
+                  line: 1
+                  protocol_options:
+                    tcp: true
+                  source:
+                    address: 192.0.4.0
+                    netmask: 255.255.255.0
+                    port_protocol:
+                      eq: telnet
+                  destination:
+                    address: 192.0.5.0
+                    netmask: 255.255.255.0
+                    port_protocol:
+                      eq: www
         state: replaced
 
     # Commands fired:
@@ -2695,20 +2695,20 @@ Examples
             - name: global_access
               acl_type: extended
               aces:
-              - grant: deny
-                line: 1
-                protocol_options:
-                  tcp: true
-                source:
-                  address: 192.0.4.0
-                  netmask: 255.255.255.0
-                  port_protocol:
-                    eq: telnet
-                destination:
-                  address: 192.0.5.0
-                  netmask: 255.255.255.0
-                  port_protocol:
-                    eq: www
+                - grant: deny
+                  line: 1
+                  protocol_options:
+                    tcp: true
+                  source:
+                    address: 192.0.4.0
+                    netmask: 255.255.255.0
+                    port_protocol:
+                      eq: telnet
+                  destination:
+                    address: 192.0.5.0
+                    netmask: 255.255.255.0
+                    port_protocol:
+                      eq: www
         state: overridden
 
     # Commands fired:
@@ -2789,7 +2789,7 @@ Examples
     #                        inactive (hitcnt=0) (inactive) 0xe922b432
 
     # Using Deleted without any config passed
-    #"(NOTE: This will delete all of configured resource module attributes)"
+    # "(NOTE: This will delete all of configured resource module attributes)"
 
     # Before state:
     # -------------
@@ -3011,44 +3011,44 @@ Examples
           - name: temp_access
             acl_type: extended
             aces:
-            - grant: deny
-              line: 1
-              protocol_options:
-                tcp: true
-              source:
-                address: 192.0.2.0
-                netmask: 255.255.255.0
-              destination:
-                address: 198.51.100.0
-                netmask: 255.255.255.0
-                port_protocol:
-                  eq: www
-              log: default
-            - grant: deny
-              line: 2
-              protocol_options:
-                igrp: true
-              source:
-                address: 198.51.100.0
-                netmask: 255.255.255.0
-              destination:
-                address: 198.51.110.0
-                netmask: 255.255.255.0
-              time_range: temp
+              - grant: deny
+                line: 1
+                protocol_options:
+                  tcp: true
+                source:
+                  address: 192.0.2.0
+                  netmask: 255.255.255.0
+                destination:
+                  address: 198.51.100.0
+                  netmask: 255.255.255.0
+                  port_protocol:
+                    eq: www
+                log: default
+              - grant: deny
+                line: 2
+                protocol_options:
+                  igrp: true
+                source:
+                  address: 198.51.100.0
+                  netmask: 255.255.255.0
+                destination:
+                  address: 198.51.110.0
+                  netmask: 255.255.255.0
+                time_range: temp
           - name: R1_traffic
             aces:
-            - grant: deny
-              protocol_options:
-                tcp: true
-              source:
-                address: 2001:db8:0:3::/64
-                port_protocol:
-                  eq: www
-              destination:
-                address: 2001:fc8:0:4::/64
-                port_protocol:
-                  eq: telnet
-              inactive: true
+              - grant: deny
+                protocol_options:
+                  tcp: true
+                source:
+                  address: 2001:db8:0:3::/64
+                  port_protocol:
+                    eq: www
+                destination:
+                  address: 2001:fc8:0:4::/64
+                  port_protocol:
+                    eq: telnet
+                inactive: true
         state: rendered
 
     # Module Execution Result:

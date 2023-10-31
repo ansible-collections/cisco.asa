@@ -173,20 +173,20 @@ Examples
     - name: Show the ASA version
       cisco.asa.asa_command:
         commands:
-        - show version
+          - show version
 
     - name: Show ASA drops and memory
       cisco.asa.asa_command:
         commands:
-        - show asp drop
-        - show memory
+          - show asp drop
+          - show memory
 
     - name: Send repeat pings and wait for the result to pass 100%
       cisco.asa.asa_command:
         commands:
-        - ping 8.8.8.8 repeat 20 size 350
+          - ping 8.8.8.8 repeat 20 size 350
         wait_for:
-        - result[0] contains 100
+          - result[0] contains 100
         retries: 2
 
 
