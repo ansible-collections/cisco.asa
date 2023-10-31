@@ -129,12 +129,12 @@ Examples
     - name: Gather only the config and default facts
       cisco.asa.asa_facts:
         gather_subset:
-        - config
+          - config
 
     - name: Do not gather hardware facts
       cisco.asa.asa_facts:
         gather_subset:
-        - '!hardware'
+          - '!hardware'
 
     - name: Gather legacy and resource facts
       cisco.asa.asa_facts:
