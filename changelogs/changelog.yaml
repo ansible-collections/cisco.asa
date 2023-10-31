@@ -196,7 +196,8 @@ releases:
     - test-net-2.yaml
     release_date: '2023-09-27'
   4.0.3:
-    changes: {}
+    changes:
+      release_summary: Release with updated workflow and lint fixes.
     fragments:
     - codecov_pr.yml
     - lint_fixtures.yaml
