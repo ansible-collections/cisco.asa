@@ -197,3 +197,10 @@ releases:
       - bindep_fix.yaml
       - test-net-2.yaml
     release_date: "2023-09-27"
+  4.0.3:
+    changes:
+      release_summary: Release with updated workflow and lint fixes.
+    fragments:
+      - codecov_pr.yml
+      - lint_fixtures.yaml
+    release_date: "2023-10-31"
