@@ -95,7 +95,7 @@ options:
       value is not given, the backup file is written to the C(backup) folder in the
       playbook root directory. If the directory does not exist, it is created.
     type: bool
-    default: no
+    default: false
   config:
     description:
     - The C(config) argument allows the playbook designer to supply the base configuration
@@ -125,7 +125,7 @@ options:
   backup_options:
     description:
     - This is a dict object containing configurable options related to backup file
-      path. The value of this option is read only when C(backup) is set to I(yes),
+      path. The value of this option is read only when C(backup) is set to I(true),
       if C(backup) is set to I(no) this option will be silently ignored.
     suboptions:
       filename:
@@ -182,7 +182,6 @@ EXAMPLES = """
       - message-length maximum 512
     match: line
     parents: [policy-map type inspect dns PM-DNS, parameters]
-    authorize: yes
     auth_pass: cisco
     username: admin
     password: cisco
@@ -192,7 +191,7 @@ EXAMPLES = """
     lines:
       - ikev1 pre-shared-key MyS3cretVPNK3y
     parents: tunnel-group 1.1.1.1 ipsec-attributes
-    passwords: yes
+    passwords: true
 
 - name: attach ASA acl on interface vlan13/nameif cloud13
   cisco.asa.asa_config:
@@ -236,7 +235,7 @@ EXAMPLES = """
   cisco.asa.asa_config:
     lines:
       - access-group cloud-acl_access_in in interface cloud13
-    backup: yes
+    backup: true
     backup_options:
       filename: backup.cfg
       dir_path: /home/user
@@ -254,7 +253,7 @@ updates:
   sample: ['...', '...']
 backup_path:
   description: The full path to the backup file
-  returned: when backup is yes
+  returned: when backup is true
   type: str
   sample: /playbooks/ansible/backup/asa_config.2016-07-16@22:28:34
 """

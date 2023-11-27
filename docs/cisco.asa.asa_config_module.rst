@@ -80,7 +80,7 @@ Parameters
                 <td>
                 </td>
                 <td>
-                        <div>This is a dict object containing configurable options related to backup file path. The value of this option is read only when <code>backup</code> is set to <em>yes</em>, if <code>backup</code> is set to <em>no</em> this option will be silently ignored.</div>
+                        <div>This is a dict object containing configurable options related to backup file path. The value of this option is read only when <code>backup</code> is set to <em>true</em>, if <code>backup</code> is set to <em>no</em> this option will be silently ignored.</div>
                 </td>
             </tr>
                                 <tr>
@@ -360,7 +360,6 @@ Examples
           - message-length maximum 512
         match: line
         parents: [policy-map type inspect dns PM-DNS, parameters]
-        authorize: yes
         auth_pass: cisco
         username: admin
         password: cisco
@@ -370,7 +369,7 @@ Examples
         lines:
           - ikev1 pre-shared-key MyS3cretVPNK3y
         parents: tunnel-group 1.1.1.1 ipsec-attributes
-        passwords: yes
+        passwords: true
 
     - name: attach ASA acl on interface vlan13/nameif cloud13
       cisco.asa.asa_config:
@@ -414,7 +413,7 @@ Examples
       cisco.asa.asa_config:
         lines:
           - access-group cloud-acl_access_in in interface cloud13
-        backup: yes
+        backup: true
         backup_options:
           filename: backup.cfg
           dir_path: /home/user
@@ -446,7 +445,7 @@ Common return values are documented `here <https://docs.ansible.com/ansible/late
                       <span style="color: purple">string</span>
                     </div>
                 </td>
-                <td>when backup is yes</td>
+                <td>when backup is true</td>
                 <td>
                             <div>The full path to the backup file</div>
                     <br/>
