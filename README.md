@@ -93,7 +93,7 @@ ansible_python_interpreter=python
 
 #### Using the modules with Fully Qualified Collection Name (FQCN)
 
-You can either call modules by their Fully Qualified Collection Namespace (FQCN), like `cisco.asa.asa_acls`, or you can call modules by their short name if you list the `cisco.asa` collection in the playbook's `collections`, as follows:
+You can either call modules by their Fully Qualified Collection Name (FQCN), like `cisco.asa.asa_acls`, or you can call modules by their short name if you list the `cisco.asa` collection in the playbook's `collections`, as follows:
 
 ```yaml
 ---
