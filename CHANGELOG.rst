@@ -5,6 +5,14 @@ Cisco Asa Collection Release Notes
 .. contents:: Topics
 
 
+v5.0.1
+======
+
+Bugfixes
+--------
+
+- Prevents module_defaults from were being incorrectly applied to the platform action, instead of the concerned module.
+
 v5.0.0
 ======
 
