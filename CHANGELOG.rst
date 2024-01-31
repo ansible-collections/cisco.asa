@@ -5,13 +5,21 @@ Cisco Asa Collection Release Notes
 .. contents:: Topics
 
 
+v5.0.1
+======
+
+Bugfixes
+--------
+
+- Prevents module_defaults from were being incorrectly applied to the platform action, instead of the concerned module.
+
 v5.0.0
 ======
 
 Release Summary
 ---------------
 
-Starting from this release, the minimum `ansible-core` version this collection requires is `2.14.0`. The last known version compatible with ansible-core<2.14 is `v4.0.3`.
+Starting from this release, the minimum `ansible-core` version this collection requires is `2.14.0`. The last known version compatible with
 
 Major Changes
 -------------
