@@ -245,6 +245,7 @@ class OGsArgs(object):
             },
         },
         "running_config": {"type": "str"},
+        "sortgroups": {"type": "bool", "default" : True},
         "state": {
             "choices": [
                 "merged",
