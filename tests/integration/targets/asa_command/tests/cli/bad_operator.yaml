@@ -1,6 +1,6 @@
 ---
 - ansible.builtin.debug:
-    msg: "START cli/bad_operator.yaml"
+    msg: START cli/bad_operator.yaml
 
 - name: test bad operator
   register: result
@@ -18,4 +18,4 @@
       - result.msg is defined
 
 - ansible.builtin.debug:
-    msg: "END cli/bad_operator.yaml"
+    msg: END cli/bad_operator.yaml

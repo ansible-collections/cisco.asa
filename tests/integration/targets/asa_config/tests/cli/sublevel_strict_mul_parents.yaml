@@ -1,6 +1,6 @@
 ---
 - ansible.builtin.debug:
-    msg: "START cli/sublevel_strict_mul_parents.yaml on connection={{ ansible_connection}}"
+    msg: START cli/sublevel_strict_mul_parents.yaml on connection={{ ansible_connection}}
 
 - name: setup
   cisco.asa.asa_config:
@@ -68,6 +68,4 @@
     match: strict
 
 - ansible.builtin.debug:
-    msg:
-      "END cli/sublevel_strict_mul_parents.yaml on connection={{ ansible_connection
-      }}"
+    msg: END cli/sublevel_strict_mul_parents.yaml on connection={{ ansible_connection }}

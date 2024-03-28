@@ -1,6 +1,6 @@
 ---
 - ansible.builtin.debug:
-    msg: "START cli/force.yaml"
+    msg: START cli/force.yaml
 
 - name: setup
   ignore_errors: true
@@ -36,4 +36,4 @@
       - no object-group network OG-ANSIBLE-TEMPLATE-DEFAULT
 
 - ansible.builtin.debug:
-    msg: "END cli/force.yaml"
+    msg: END cli/force.yaml

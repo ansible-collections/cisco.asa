@@ -1,7 +1,7 @@
 ---
 - block:
     - ansible.builtin.debug:
-        msg: "START connection={{ ansible_connection }} caching.yaml"
+        msg: START connection={{ ansible_connection }} caching.yaml
 
     - set_fact:
         merged:
@@ -84,9 +84,7 @@
           - result.changed == true
           - result.commands|symmetric_difference(merged) == []
 
-    - name:
-        Merge the provided configuration with the exisiting running configuration
-        (IDEMPOTENT)
+    - name: Merge the provided configuration with the exisiting running configuration (IDEMPOTENT)
       register: result
       cisco.asa.asa_ogs: *id001
 

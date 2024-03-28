@@ -1,8 +1,6 @@
 ---
 - ansible.builtin.debug:
-    msg:
-      Start Deleted integration state for asa_acls ansible_connection={{ ansible_connection
-      }}
+    msg: Start Deleted integration state for asa_acls ansible_connection={{ ansible_connection }}
 
 - ansible.builtin.include_tasks: _remove_config.yaml
 
@@ -49,8 +47,7 @@
           - result.changed == true
           - result.commands|symmetric_difference(delete_all.commands) == []
 
-    - name: Delete ACL attributes of provided configured interfaces based on AFI
-        (IDEMPOTENT)
+    - name: Delete ACL attributes of provided configured interfaces based on AFI (IDEMPOTENT)
       register: result
       cisco.asa.asa_acls: *id002
 

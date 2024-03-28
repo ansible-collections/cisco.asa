@@ -1,6 +1,6 @@
 ---
 - ansible.builtin.debug:
-    msg: "START cli/defaults.yaml"
+    msg: START cli/defaults.yaml
 
 - name: setup
   ignore_errors: true
@@ -42,4 +42,4 @@
       - no object-group network OG-ANSIBLE-TEMPLATE-DEFAULT
 
 - ansible.builtin.debug:
-    msg: "END cli/defaults.yaml"
+    msg: END cli/defaults.yaml

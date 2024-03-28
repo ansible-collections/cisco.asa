@@ -1,6 +1,6 @@
 ---
 - ansible.builtin.debug:
-    msg: "START cli/toplevel_before.yaml"
+    msg: START cli/toplevel_before.yaml
 
 - name: setup
   cisco.asa.asa_config:
@@ -41,4 +41,4 @@
       - hostname {{ inventory_hostname_short }}
 
 - ansible.builtin.debug:
-    msg: "END cli/toplevel_before.yaml"
+    msg: END cli/toplevel_before.yaml

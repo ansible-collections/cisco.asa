@@ -1,7 +1,6 @@
 ---
 - ansible.builtin.debug:
-    msg: "START cli/not_hardware_facts.yaml on connection={{ ansible_connection
-      }}"
+    msg: START cli/not_hardware_facts.yaml on connection={{ ansible_connection }}
 
 - name: test not hardware
   register: result
@@ -19,5 +18,4 @@
       - result.ansible_facts.ansible_net_filesystems_info is not defined
 
 - ansible.builtin.debug:
-    msg: "END cli/not_hardware_facts.yaml on connection={{ ansible_connection
-      }}"
+    msg: END cli/not_hardware_facts.yaml on connection={{ ansible_connection }}

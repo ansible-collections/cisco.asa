@@ -1,8 +1,6 @@
 ---
 - ansible.builtin.debug:
-    msg:
-      START asa_acls empty_config.yaml integration tests on connection={{ ansible_connection
-      }}
+    msg: START asa_acls empty_config.yaml integration tests on connection={{ ansible_connection }}
 
 - name: Merged with empty config should give appropriate error message
   register: result

@@ -1,6 +1,6 @@
 ---
 - name: Populate Config
-  cisco.asa.asa_acls: &id001
+  cisco.asa.asa_acls:
     config:
       acls:
         - name: test_access

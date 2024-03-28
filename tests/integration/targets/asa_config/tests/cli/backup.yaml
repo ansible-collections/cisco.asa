@@ -1,6 +1,6 @@
 ---
 - ansible.builtin.debug:
-    msg: "START cli/backup.yaml"
+    msg: START cli/backup.yaml
 
 - name: setup
   ignore_errors: true
@@ -49,4 +49,4 @@
       - no object-group network OG-ANSIBLE-TEMPLATE
 
 - ansible.builtin.debug:
-    msg: "END cli/backup.yaml"
+    msg: END cli/backup.yaml

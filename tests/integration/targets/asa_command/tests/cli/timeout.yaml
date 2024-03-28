@@ -1,6 +1,6 @@
 ---
 - ansible.builtin.debug:
-    msg: "START cli/timeout.yaml"
+    msg: START cli/timeout.yaml
 
 - name: test bad condition
   register: result
@@ -17,4 +17,4 @@
       - result.msg is defined
 
 - ansible.builtin.debug:
-    msg: "END cli/timeout.yaml"
+    msg: END cli/timeout.yaml

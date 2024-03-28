@@ -1,6 +1,6 @@
 ---
 - ansible.builtin.debug:
-    msg: "START cli/save.yaml on connection={{ ansible_connection }}"
+    msg: START cli/save.yaml on connection={{ ansible_connection }}
 
 - name: setup for save when TC
   cisco.asa.asa_config:
@@ -46,4 +46,4 @@
       - no banner motd test_motd
 
 - ansible.builtin.debug:
-    msg: "END cli/save.yaml on connection={{ ansible_connection }}"
+    msg: END cli/save.yaml on connection={{ ansible_connection }}

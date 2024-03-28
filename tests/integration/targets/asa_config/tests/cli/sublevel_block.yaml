@@ -1,6 +1,6 @@
 ---
 - ansible.builtin.debug:
-    msg: "START cli/sublevel_block.yaml"
+    msg: START cli/sublevel_block.yaml
 
 - name: setup
   register: object_group
@@ -61,4 +61,4 @@
       - no object-group network OG-ANSIBLE
 
 - ansible.builtin.debug:
-    msg: "END cli/sublevel_block.yaml"
+    msg: END cli/sublevel_block.yaml

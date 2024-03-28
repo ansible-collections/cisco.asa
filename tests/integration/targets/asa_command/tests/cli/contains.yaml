@@ -1,6 +1,6 @@
 ---
 - ansible.builtin.debug:
-    msg: "START cli/contains.yaml"
+    msg: START cli/contains.yaml
 
 - name: test contains operator
   register: result
@@ -18,4 +18,4 @@
       - result.stdout is defined
 
 - ansible.builtin.debug:
-    msg: "END cli/contains.yaml"
+    msg: END cli/contains.yaml

@@ -1,8 +1,6 @@
 ---
 - ansible.builtin.debug:
-    msg:
-      "START asa_ogs parsed integration tests on connection={{ ansible_connection
-      }}"
+    msg: START asa_ogs parsed integration tests on connection={{ ansible_connection }}
 
 - name: Parse the commands for provided configuration
   become: true

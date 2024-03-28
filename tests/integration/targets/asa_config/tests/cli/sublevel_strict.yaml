@@ -1,6 +1,6 @@
 ---
 - ansible.builtin.debug:
-    msg: "START cli/sublevel_strict.yaml"
+    msg: START cli/sublevel_strict.yaml
 
 - name: setup
   cisco.asa.asa_config:
@@ -62,4 +62,4 @@
       - no object-group network OG-ANSIBLE-STRICT
 
 - ansible.builtin.debug:
-    msg: "END cli/sublevel_strict.yaml"
+    msg: END cli/sublevel_strict.yaml

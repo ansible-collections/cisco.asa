@@ -1,6 +1,6 @@
 ---
 - ansible.builtin.debug:
-    msg: "START cli/all_facts.yaml on connection={{ ansible_connection }}"
+    msg: START cli/all_facts.yaml on connection={{ ansible_connection }}
 
 - name: test getting all facts
   register: result
@@ -20,9 +20,7 @@
 
 - assert:
     that: "{{ item.value.spacetotal_kb }} > {{ item.value.spacefree_kb }}"
-  loop:
-    "{{ lookup('dict', result.ansible_facts.ansible_net_filesystems_info, wantlist=True)\
-    \ }}"
+  loop: "{{ lookup('dict', result.ansible_facts.ansible_net_filesystems_info, wantlist=True) }}"
 
 - ansible.builtin.debug:
-    msg: "END cli/all_facts.yaml on connection={{ ansible_connection }}"
+    msg: END cli/all_facts.yaml on connection={{ ansible_connection }}
