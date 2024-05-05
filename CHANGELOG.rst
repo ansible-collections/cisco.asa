@@ -4,7 +4,6 @@ Cisco Asa Collection Release Notes
 
 .. contents:: Topics
 
-
 v5.0.1
 ======
 
