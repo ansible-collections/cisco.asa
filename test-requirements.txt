@@ -1,2 +1,3 @@
+yamllint
 pytest-xdist
 pytest-ansible ; python_version >= '3.9'
