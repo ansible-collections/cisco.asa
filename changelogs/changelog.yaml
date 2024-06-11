@@ -223,3 +223,16 @@ releases:
     fragments:
       - fix_module_defaults.yaml
     release_date: "2024-01-31"
+  6.0.0:
+    changes:
+      major_changes:
+        - Bumping `requires_ansible` to `>=2.15.0`, since previous ansible-core versions
+          are EoL now.
+      release_summary:
+        "With this release, the minimum required version of `ansible-core`
+        for this collection is `2.15.0`. The last version known to be compatible with
+        `ansible-core` versions below `2.15` is v5.0.1."
+    fragments:
+      - add_2.18.yaml
+      - bump_215.yaml
+    release_date: "2024-06-11"
