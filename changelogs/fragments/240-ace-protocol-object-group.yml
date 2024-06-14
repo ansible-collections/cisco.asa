@@ -1,0 +1,2 @@
+minor_changes:
+  - cisco.asa.asa_acls - add support for specifying object-group as protocol
