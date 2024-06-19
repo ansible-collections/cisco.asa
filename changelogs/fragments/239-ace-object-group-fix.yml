@@ -1,0 +1,2 @@
+bugfixes:
+  - cisco.asa.asa_acls - fixed ace parsing when source is object-group and its name contains dots
