@@ -186,7 +186,7 @@ class AclsTemplate(NetworkTemplate):
                                         not in source and 'object-group' not in source %}{{ source.split(' ')[0] }}{% elif source is defined and\
                                             '::' in source and 'host' not in source %}{{ source }}{% endif %}",
                                     "netmask": "{{ source.split(' ')[1] if source\
-                                        is defined and '.' in source and 'host' not in source else None and 'object-group' not in source }}",
+                                        is defined and '.' in source and 'host' not in source and 'object-group' not in source else None }}",
                                     "any4": "{{ True if source is defined and source == 'any4' else None }}",
                                     "any6": "{{ True if source is defined and source == 'any6' else None }}",
                                     "any": "{{ True if source is defined and source == 'any' else None }}",
