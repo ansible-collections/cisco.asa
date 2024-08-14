@@ -9,7 +9,7 @@ The Ansible Cisco ASA collection includes a variety of Ansible content to help a
 
 * Join the Ansible forum:
   * [Get Help](https://forum.ansible.com/c/help/6): get help or help others.
-  * [Posts tagged with 'your tag'](https://forum.ansible.com/tag/YOUR_TAG): subscribe to participate in collection-related conversations.
+  * [Posts tagged with 'security'](https://forum.ansible.com/tag/security): subscribe to participate in collection-related conversations.
   * [Ansible Network Automation Working Group](https://forum.ansible.com/g/network-wg): by joining the team you will automatically get subscribed to the posts tagged with [your group forum tag here](https://forum.ansible.com/tags/security).
   * [Social Spaces](https://forum.ansible.com/c/chat/4): gather and interact with fellow enthusiasts.
   * [News & Announcements](https://forum.ansible.com/c/news/5): track project-wide announcements including social events.
