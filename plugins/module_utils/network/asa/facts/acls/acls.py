@@ -90,6 +90,7 @@ class AclsFacts(object):
                         each.get("protocol")
                         and each.get("protocol") != "icmp"
                         and each.get("protocol") != "icmp6"
+                        and "object-group" not in each.get("protocol")
                     ):
                         each["protocol_options"] = {each.get("protocol"): True}
                 acls.append(val)
