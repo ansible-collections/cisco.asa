@@ -454,7 +454,7 @@ Status
 ------
 
 
-- This module will be removed in version 6.0.0. *[deprecated]*
+- This module will be removed in version 6.0.1. *[deprecated]*
 - For more information see `DEPRECATED`_.
 
 
