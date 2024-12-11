@@ -39,7 +39,7 @@ description: This module configures and manages the named or numbered ACLs on AS
   platforms.
 version_added: 1.0.0
 deprecated:
-  removed_in: 6.0.0
+  removed_in: 6.0.1
   why: This collection and all content in it is unmaintained and deprecated.
   alternative: Unknown.
 author: Sumit Jaiswal (@justjais)

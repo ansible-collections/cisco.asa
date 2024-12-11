@@ -27,7 +27,7 @@ author:
 - Sumit Jaiswal (@justjais)
 short_description: Collect facts from remote devices running Cisco ASA
 deprecated:
-  removed_in: 6.0.0
+  removed_in: 6.0.1
   why: This collection and all content in it is unmaintained and deprecated.
   alternative: Unknown.
 description:
