@@ -26,6 +26,10 @@ DOCUMENTATION = """
 author: Ansible Security Team (@ansible-security)
 name: asa
 short_description: Use asa cliconf to run command on Cisco ASA platform
+deprecated:
+  removed_in: 6.0.0
+  why: This collection and all content in it is unmaintained and deprecated.
+  alternative: Unknown.
 description:
 - This asa plugin provides low level abstraction apis for sending and receiving CLI
   commands from Cisco ASA network devices.

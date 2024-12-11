@@ -26,6 +26,10 @@ module: asa_facts
 author:
 - Sumit Jaiswal (@justjais)
 short_description: Collect facts from remote devices running Cisco ASA
+deprecated:
+  removed_in: 6.0.0
+  why: This collection and all content in it is unmaintained and deprecated.
+  alternative: Unknown.
 description:
 - Collects a base set of device facts from a remote device that is running ASA.  This
   module prepends all of the base network fact keys with C(ansible_net_<fact>).  The

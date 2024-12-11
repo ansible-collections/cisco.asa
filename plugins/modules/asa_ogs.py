@@ -36,6 +36,10 @@ DOCUMENTATION = """
 module: asa_ogs
 short_description: Object Group resource module
 description: This module configures and manages Objects and Groups on ASA platforms.
+deprecated:
+  removed_in: 6.0.0
+  why: This collection and all content in it is unmaintained and deprecated.
+  alternative: Unknown.
 version_added: 1.0.0
 author: Sumit Jaiswal (@justjais)
 notes:

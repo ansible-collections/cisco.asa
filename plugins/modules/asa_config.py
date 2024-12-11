@@ -13,6 +13,10 @@ DOCUMENTATION = """
 module: asa_config
 author: Peter Sprygada (@privateip), Patrick Ogenstad (@ogenstad)
 short_description: Manage configuration sections on Cisco ASA devices
+deprecated:
+  removed_in: 6.0.0
+  why: This collection and all content in it is unmaintained and deprecated.
+  alternative: Unknown.
 description:
 - Cisco ASA configurations use a simple block indent file syntax for segmenting configuration
   into sections.  This module provides an implementation for working with ASA configuration
