@@ -1,1 +1,11 @@
 plugins/action/asa.py action-plugin-docs # base class for deprecated network platform modules using `connection: local`
+tests/unit/modules/network/asa/test_asa_acls.py:91:161: E501: line too long (161 > 160 characters)
+tests/unit/modules/network/asa/test_asa_acls.py:173:161: E501: line too long (161 > 160 characters)
+tests/unit/modules/network/asa/test_asa_acls.py:383:161: E501: line too long (161 > 160 characters)
+tests/unit/modules/network/asa/test_asa_acls.py:469:161: E501: line too long (161 > 160 characters)
+tests/unit/modules/network/asa/test_asa_acls.py:679:161: E501: line too long (161 > 160 characters)
+tests/unit/modules/network/asa/test_asa_acls.py:758:161: E501: line too long (161 > 160 characters)
+tests/unit/modules/network/asa/test_asa_acls.py:968:161: E501: line too long (161 > 160 characters)
+tests/unit/modules/network/asa/test_asa_acls.py:1017:161: E501: line too long (161 > 160 characters)
+tests/unit/modules/network/asa/test_asa_acls.py:1065:161: E501: line too long (161 > 160 characters)
+tests/unit/modules/network/asa/test_asa_acls.py:1130:161: E501: line too long (161 > 160 characters)
