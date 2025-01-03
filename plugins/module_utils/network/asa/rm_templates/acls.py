@@ -34,11 +34,11 @@ def _tmplt_access_list_entries(config_data):
                 cmd += " host {host}".format(**config_data["aces"][type])
             elif config_data["aces"][type].get("interface"):
                 cmd += " interface {interface}".format(
-                    **config_data["aces"][type]
+                    **config_data["aces"][type],
                 )
             elif config_data["aces"][type].get("network_object"):
                 cmd += " object {network_object}".format(
-                    **config_data["aces"][type]
+                    **config_data["aces"][type],
                 )
             elif config_data["aces"][type].get("object_group"):
                 cmd += " object-group {object_group}".format(**config_data["aces"][type])

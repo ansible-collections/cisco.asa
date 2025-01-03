@@ -119,7 +119,7 @@ class TestAsaAclsModule(TestAsaModule):
                                     protocol="tcp",
                                     protocol_options=dict(tcp="true"),
                                     source=dict(object_group="O-Environments"),
-                                )
+                                ),
                             ],
                             acl_type="extended",
                             name="MyACL",
@@ -170,7 +170,7 @@ class TestAsaAclsModule(TestAsaModule):
                             acl_type="extended",
                             name="acl_network_object_test",
                         ),
-                    ]
+                    ],
                 ),
                 state="merged",
             ),
@@ -954,7 +954,7 @@ class TestAsaAclsModule(TestAsaModule):
                             acl_type="extended",
                             name="acl_network_object_test",
                         ),
-                    ]
+                    ],
                 ),
                 state="rendered",
             ),
