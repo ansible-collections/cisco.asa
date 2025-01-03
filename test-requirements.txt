@@ -1,7 +1,9 @@
-black==23.3.0 ; python_version >= '3.7'
+# For ansible-tox-linters
+black==23.3.0
 flake8
-pexpect
-pytest-xdist
 yamllint
+
+# Unit test runner
+pytest-ansible
 pytest-xdist
-pytest-ansible ; python_version >= '3.9'
+pytest-cov
