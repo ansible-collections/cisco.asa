@@ -23,6 +23,7 @@ pytestmark = pytest.mark.skipif(
 
 from textwrap import dedent
 from unittest.mock import patch
+
 from ansible_collections.cisco.asa.plugins.modules import asa_acls
 from ansible_collections.cisco.asa.tests.unit.modules.utils import set_module_args
 
@@ -1297,10 +1298,10 @@ class TestAsaAclsModule(TestAsaModule):
                             "source": {"object_group": "O-Environments"},
                             "destination": {"any": True, "service_object_group": "O-Windows-TCP"},
                             "protocol_options": {"tcp": True},
-                        }
+                        },
                     ],
                 },
-            ]
+            ],
         }
         result = self.execute_module(changed=False)
         self.assertEqual(result["gathered"], facts)
