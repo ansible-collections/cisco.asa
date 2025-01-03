@@ -12,21 +12,22 @@ created
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 import copy
+
 from ansible.module_utils.six import iteritems
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.facts import (
-    Facts,
-)
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates.ogs import (
-    OGsTemplate,
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.resource_module import (
+    ResourceModule,
 )
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
     dict_merge,
 )
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.resource_module import (
-    ResourceModule,
+
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.facts import Facts
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates.ogs import (
+    OGsTemplate,
 )
 
 
@@ -121,7 +122,7 @@ class OGs(ResourceModule):
                     for each_key, each_val in iteritems(have):
                         if each_key != "object_type":
                             each_val.update(
-                                {"object_type": have.get("object_type")}
+                                {"object_type": have.get("object_type")},
                             )
                             self.addcmd(each_val, "og_name", True)
 
@@ -153,11 +154,7 @@ class OGs(ResourceModule):
                 self._user_object_compare(want, have)
 
     def get_list_diff(self, want, have, object, param):
-        diff = [
-            item
-            for item in want[object][param]
-            if item not in have[object][param]
-        ]
+        diff = [item for item in want[object][param] if item not in have[object][param]]
         return diff
 
     def check_for_have_and_overidden(self, have):
@@ -170,18 +167,17 @@ class OGs(ResourceModule):
         icmp_obj = "icmp_type"
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
-            if (
-                entry != h_item
-                and name != "object_type"
-                and entry[icmp_obj].get("icmp_object")
-            ):
+            if entry != h_item and name != "object_type" and entry[icmp_obj].get("icmp_object"):
                 if h_item and entry.get("group_object"):
                     self.addcmd(entry, "og_name", False)
                     self._add_group_object_cmd(entry, h_item)
                     continue
                 if h_item:
                     self._add_object_cmd(
-                        entry, h_item, icmp_obj, ["icmp_type"]
+                        entry,
+                        h_item,
+                        icmp_obj,
+                        ["icmp_type"],
                     )
                 else:
                     self.addcmd(entry, "og_name", False)
@@ -193,7 +189,10 @@ class OGs(ResourceModule):
                     self.compare(["icmp_type"], {}, h_item)
                 if h_item and h_item[icmp_obj].get("icmp_object"):
                     li_diff = self.get_list_diff(
-                        entry, h_item, icmp_obj, "icmp_object"
+                        entry,
+                        h_item,
+                        icmp_obj,
+                        "icmp_object",
                     )
                 else:
                     li_diff = entry[icmp_obj].get("icmp_object")
@@ -240,13 +239,9 @@ class OGs(ResourceModule):
                         parsers,
                         "network_object.address",
                     )
-                elif (
-                    h_item
-                    and h_item.get(network_obj)
-                    and h_item[network_obj].get("address")
-                ):
+                elif h_item and h_item.get(network_obj) and h_item[network_obj].get("address"):
                     h_item[network_obj] = {
-                        "address": h_item[network_obj].get("address")
+                        "address": h_item[network_obj].get("address"),
                     }
                     if not add_obj_cmd:
                         self.addcmd(entry, "og_name", False)
@@ -262,7 +257,7 @@ class OGs(ResourceModule):
                     )
                 elif h_item and h_item[network_obj].get("host"):
                     h_item[network_obj] = {
-                        "host": h_item[network_obj].get("host")
+                        "host": h_item[network_obj].get("host"),
                     }
                     if not add_obj_cmd:
                         self.addcmd(entry, "og_name", False)
@@ -276,13 +271,9 @@ class OGs(ResourceModule):
                         parsers,
                         "network_object.ipv6_address",
                     )
-                elif (
-                    h_item
-                    and h_item.get(network_obj)
-                    and h_item[network_obj].get("ipv6_address")
-                ):
+                elif h_item and h_item.get(network_obj) and h_item[network_obj].get("ipv6_address"):
                     h_item[network_obj] = {
-                        "ipv6_address": h_item[network_obj].get("ipv6_address")
+                        "ipv6_address": h_item[network_obj].get("ipv6_address"),
                     }
                     if not add_obj_cmd:
                         self.addcmd(entry, "og_name", False)
@@ -296,13 +287,9 @@ class OGs(ResourceModule):
                         parsers,
                         "network_object.object",
                     )
-                elif (
-                    h_item
-                    and h_item.get(network_obj)
-                    and h_item[network_obj].get("object")
-                ):
+                elif h_item and h_item.get(network_obj) and h_item[network_obj].get("object"):
                     h_item[network_obj] = {
-                        "object": h_item[network_obj].get("object")
+                        "object": h_item[network_obj].get("object"),
                     }
                     if not add_obj_cmd:
                         self.addcmd(entry, "og_name", False)
@@ -320,7 +307,10 @@ class OGs(ResourceModule):
                     continue
                 if h_item:
                     self._add_object_cmd(
-                        entry, h_item, protocol_obj, ["protocol"]
+                        entry,
+                        h_item,
+                        protocol_obj,
+                        ["protocol"],
                     )
                 else:
                     self.addcmd(entry, "og_name", False)
@@ -352,7 +342,10 @@ class OGs(ResourceModule):
                     continue
                 if h_item:
                     self._add_object_cmd(
-                        entry, h_item, security_obj, ["sec_name", "tag"]
+                        entry,
+                        h_item,
+                        security_obj,
+                        ["sec_name", "tag"],
                     )
                 else:
                     add_obj_cmd = True
@@ -372,7 +365,7 @@ class OGs(ResourceModule):
                     )
                 elif h_item and h_item[security_obj].get("sec_name"):
                     h_item[security_obj] = {
-                        "sec_name": h_item[security_obj].get("sec_name")
+                        "sec_name": h_item[security_obj].get("sec_name"),
                     }
                     if not add_obj_cmd:
                         self.addcmd(entry, "og_name", False)
@@ -388,7 +381,7 @@ class OGs(ResourceModule):
                     )
                 elif h_item and h_item[security_obj].get("tag"):
                     h_item[security_obj] = {
-                        "tag": h_item[security_obj].get("tag")
+                        "tag": h_item[security_obj].get("tag"),
                     }
                     if not add_obj_cmd:
                         self.addcmd(entry, "og_name", False)
@@ -408,7 +401,10 @@ class OGs(ResourceModule):
                     continue
                 if h_item:
                     self._add_object_cmd(
-                        entry, h_item, service_obj, ["protocol"]
+                        entry,
+                        h_item,
+                        service_obj,
+                        ["protocol"],
                     )
                 else:
                     protocol = entry.get("protocol")
@@ -456,13 +452,17 @@ class OGs(ResourceModule):
                             self.addcmd(temp_want, "og_name", True)
 
                             self.compare(
-                                [services_obj], want=temp_want, have={}
+                                [services_obj],
+                                want=temp_want,
+                                have={},
                             )
                     if h_item and self.state in ["overridden", "replaced"]:
                         for k, v in iteritems(h_item):
                             temp_have = {"name": name, services_obj: v}
                             self.compare(
-                                [services_obj], want={}, have=temp_have
+                                [services_obj],
+                                want={},
+                                have=temp_have,
                             )
                     if command_len < len(self.commands):
                         cmd = "object-group service {0}".format(name)
@@ -521,11 +521,7 @@ class OGs(ResourceModule):
                     else:
                         source_key = list(every["source_port"])[0]
                         temp_key = (
-                            temp_key
-                            + "_"
-                            + source_key
-                            + "_"
-                            + every["source_port"][source_key]
+                            temp_key + "_" + source_key + "_" + every["source_port"][source_key]
                         )
                 if "destination_port" in every:
                     if "range" in every["destination_port"]:
@@ -578,7 +574,10 @@ class OGs(ResourceModule):
                     continue
                 if h_item:
                     self._add_object_cmd(
-                        entry, h_item, user_obj, ["user", "user_group"]
+                        entry,
+                        h_item,
+                        user_obj,
+                        ["user", "user_group"],
                     )
                 else:
                     add_obj_cmd = True
@@ -612,7 +611,7 @@ class OGs(ResourceModule):
                     )
                 elif h_item and h_item[user_obj].get("user_group"):
                     h_item[user_obj] = {
-                        "user_group": h_item[user_obj].get("user_group")
+                        "user_group": h_item[user_obj].get("user_group"),
                     }
                     if not add_obj_cmd:
                         self.addcmd(entry, "og_name", False)
@@ -629,21 +628,13 @@ class OGs(ResourceModule):
                 and isinstance(want_element, list)
                 and isinstance(want_element[0], dict)
             ):
-                if (
-                    want_element
-                    and have_element
-                    and want_element != have_element
-                ):
+                if want_element and have_element and want_element != have_element:
                     if not obj_cmd_added:
                         self.addcmd(want, "og_name", False)
                         self.compare(["description"], want, have)
                         obj_cmd_added = True
             else:
-                if (
-                    want_element
-                    and have_element
-                    and set(want_element) != set(have_element)
-                ):
+                if want_element and have_element and set(want_element) != set(have_element):
                     if not obj_cmd_added:
                         self.addcmd(want, "og_name", False)
                         self.compare(["description"], want, have)
@@ -652,10 +643,10 @@ class OGs(ResourceModule):
     def _add_group_object_cmd(self, want, have):
         if have and have.get("group_object"):
             want["group_object"] = list(
-                set(want.get("group_object")) - set(have.get("group_object"))
+                set(want.get("group_object")) - set(have.get("group_object")),
             )
             have["group_object"] = list(
-                set(have.get("group_object")) - set(want.get("group_object"))
+                set(have.get("group_object")) - set(want.get("group_object")),
             )
         for each in want["group_object"]:
             self.compare(["group_object"], {"group_object": each}, dict())
@@ -668,17 +659,22 @@ class OGs(ResourceModule):
                 self.compare(["group_object"], dict(), {"group_object": each})
 
     def _compare_object_diff(
-        self, want, have, object, object_type, parsers, val
+        self,
+        want,
+        have,
+        object,
+        object_type,
+        parsers,
+        val,
     ):
         temp_have = copy.copy(have)
         temp_want = copy.copy(want)
-        if (
-            temp_have
-            and temp_have.get(object)
-            and temp_have[object].get(object_type)
-        ):
+        if temp_have and temp_have.get(object) and temp_have[object].get(object_type):
             want_diff = self.get_list_diff(
-                temp_want, temp_have, object, object_type
+                temp_want,
+                temp_have,
+                object,
+                object_type,
             )
             have_diff = [
                 each
@@ -691,11 +687,7 @@ class OGs(ResourceModule):
             have_diff = []
             want_diff = temp_want[object].get(object_type)
         temp_want[object][object_type] = want_diff
-        if (
-            have_diff
-            or temp_have.get(object)
-            and self.state in ("overridden", "replaced")
-        ):
+        if have_diff or temp_have.get(object) and self.state in ("overridden", "replaced"):
             if have_diff:
                 temp_have[object] = {object_type: have_diff}
                 self.compare(parsers, {}, temp_have)

@@ -1,5 +1,6 @@
 ---
-- debug: msg="START cli/removal_error.yaml"
+- ansible.builtin.debug:
+    msg: "START cli/removal_error.yaml"
 
 - name: setup
   ignore_errors: true
@@ -15,7 +16,8 @@
 
 - name: configure test access-list
   cisco.asa.asa_config:
-    lines: access-list ANSIBLE-DNS extended permit udp any object-group OGA-GOOGLE-DNS
+    lines:
+      access-list ANSIBLE-DNS extended permit udp any object-group OGA-GOOGLE-DNS
       eq domain
 
 - name: try to remove object-group (should fail)
@@ -36,4 +38,5 @@
       - clear configure access-list ANSIBLE-DNS
       - no object-group network OGA-GOOGLE-DNS
 
-- debug: msg="END cli/removal_error.yaml"
+- ansible.builtin.debug:
+    msg: "END cli/removal_error.yaml"

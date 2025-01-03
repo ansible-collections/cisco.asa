@@ -1,12 +1,11 @@
 ---
-- debug:
-    msg: Start asa_ogs merged integration tests ansible_connection={{
-      ansible_connection }}
+- ansible.builtin.debug:
+    msg: "Start asa_ogs merged integration tests ansible_connection={{
+      ansible_connection }}"
 
-- include_tasks: _remove_config.yaml
+- ansible.builtin.include_tasks: _remove_config.yaml
 
 - block:
-
     - name: Merge the provided configuration with the exisiting running configuration
       register: result
       cisco.asa.asa_ogs: &id001
@@ -26,8 +25,8 @@
                 description: test_network_og
                 network_object:
                   host:
-                    - 192.0.3.1
-                    - 192.0.3.2
+                    - 198.51.100.1
+                    - 198.51.100.2
                   ipv6_address:
                     - 2001:db8:3::/64
           - object_type: security
@@ -59,7 +58,8 @@
           - result.changed == true
           - result.commands|symmetric_difference(merged.commands) == []
 
-    - name: Merge the provided configuration with the exisiting running configuration
+    - name:
+        Merge the provided configuration with the exisiting running configuration
         (IDEMPOTENT)
       register: result
       cisco.asa.asa_ogs: *id001
@@ -69,5 +69,4 @@
           - result.commands|length == 0
           - result.changed == false
   always:
-
-    - include_tasks: _remove_config.yaml
+    - ansible.builtin.include_tasks: _remove_config.yaml

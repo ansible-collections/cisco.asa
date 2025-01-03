@@ -12,6 +12,7 @@ based on the configuration.
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
@@ -19,13 +20,12 @@ import platform
 import re
 
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
-    run_commands,
     get_capabilities,
+    run_commands,
 )
 
 
 class FactsBase(object):
-
     COMMANDS = list()
 
     def __init__(self, module):
@@ -36,7 +36,9 @@ class FactsBase(object):
 
     def populate(self):
         self.responses = run_commands(
-            self.module, commands=self.COMMANDS, check_rc=False
+            self.module,
+            commands=self.COMMANDS,
+            check_rc=False,
         )
 
     def run(self, cmd):
@@ -44,7 +46,6 @@ class FactsBase(object):
 
 
 class Default(FactsBase):
-
     COMMANDS = ["show version"]
 
     def populate(self):
@@ -72,7 +73,9 @@ class Default(FactsBase):
             self.facts["stacked_models"] = match
 
         match = re.findall(
-            r"^System [Ss]erial [Nn]umber\s+: (\S+)", data, re.M
+            r"^System [Ss]erial [Nn]umber\s+: (\S+)",
+            data,
+            re.M,
         )
         if match:
             self.facts["stacked_serialnums"] = match
@@ -104,7 +107,6 @@ class Default(FactsBase):
 
 
 class Hardware(FactsBase):
-
     COMMANDS = ["dir", "show memory"]
 
     def populate(self):
@@ -124,28 +126,25 @@ class Hardware(FactsBase):
                 for each in mem_list:
                     if "Free memory" in each:
                         match = re.search(
-                            r"Free memory.+ (\d+) .+(\d\d)", each
+                            r"Free memory.+ (\d+) .+(\d\d)",
+                            each,
                         )
                         if match:
-                            self.facts["memfree_mb"] = (
-                                int(match.group(1)) // 1024
-                            )
+                            self.facts["memfree_mb"] = int(match.group(1)) // 1024
                     elif "Used memory" in each:
                         match = re.search(
-                            r"Used memory.+ (\d+) .+(\d\d)", each
+                            r"Used memory.+ (\d+) .+(\d\d)",
+                            each,
                         )
                         if match:
-                            self.facts["memused_mb"] = (
-                                int(match.group(1)) // 1024
-                            )
+                            self.facts["memused_mb"] = int(match.group(1)) // 1024
                     elif "Total memory" in each:
                         match = re.search(
-                            r"Total memory.+ (\d+) .+(\d\d)", each
+                            r"Total memory.+ (\d+) .+(\d\d)",
+                            each,
                         )
                         if match:
-                            self.facts["memtotal_mb"] = (
-                                int(match.group(1)) // 1024
-                            )
+                            self.facts["memtotal_mb"] = int(match.group(1)) // 1024
 
     def parse_filesystems(self, data):
         return re.findall(r"^Directory of (\S+)/", data, re.M)
@@ -160,7 +159,8 @@ class Hardware(FactsBase):
                 facts[fs] = dict()
                 continue
             match = re.match(
-                r"^(\d+) bytes total \((\d+) bytes free\/(\d+)% free\)", line
+                r"^(\d+) bytes total \((\d+) bytes free\/(\d+)% free\)",
+                line,
             )
             if match:
                 facts[fs]["spacetotal_kb"] = int(match.group(1)) / 1024
@@ -170,7 +170,6 @@ class Hardware(FactsBase):
 
 
 class Config(FactsBase):
-
     COMMANDS = ["show running-config"]
 
     def populate(self):

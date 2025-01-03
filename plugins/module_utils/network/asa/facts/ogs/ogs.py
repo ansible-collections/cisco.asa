@@ -11,21 +11,19 @@ based on the configuration.
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
 from ansible.module_utils.six import iteritems
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
-    utils,
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import utils
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.network_template import (
+    NetworkTemplate,
 )
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.ogs.ogs import (
-    OGsArgs,
-)
+
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.ogs.ogs import OGsArgs
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates.ogs import (
     OGsTemplate,
-)
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.network_template import (
-    NetworkTemplate,
 )
 
 
@@ -33,7 +31,6 @@ class OGsFacts(object):
     """The asa_ogs fact class"""
 
     def __init__(self, module, subspec="config", options="options"):
-
         self._module = module
         self.argument_spec = OGsArgs.argument_spec
 
@@ -76,9 +73,7 @@ class OGsFacts(object):
                         obj_gp["group_object"] = each[1].pop("group_object")
                     if k == "service":
                         if "services_object" in each[1]:
-                            obj_gp["services_object"] = each[1][
-                                "services_object"
-                            ]
+                            obj_gp["services_object"] = each[1]["services_object"]
                         elif "port_object" in each[1]:
                             obj_gp["port_object"] = each[1]["port_object"]
                             obj_gp["protocol"] = each[1]["protocol"]
@@ -95,7 +90,7 @@ class OGsFacts(object):
         ogs = sorted(ogs, key=lambda i: i["object_type"])
         facts = {}
         params = utils.remove_empties(
-            utils.validate_config(self.argument_spec, {"config": ogs})
+            utils.validate_config(self.argument_spec, {"config": ogs}),
         )
         facts["ogs"] = params.get("config")
 

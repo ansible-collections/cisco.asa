@@ -1,5 +1,6 @@
 ---
-- debug: msg="START cli/output.yaml"
+- ansible.builtin.debug:
+    msg: "START cli/output.yaml"
 
 - name: get output for single command
   register: result
@@ -25,4 +26,5 @@
       - result.stdout is defined
       - result.stdout | length == 2
 
-- debug: msg="END cli/output.yaml"
+- ansible.builtin.debug:
+    msg: "END cli/output.yaml"

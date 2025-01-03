@@ -1,14 +1,14 @@
 ---
-- debug:
-    msg: Start Deleted integration state for asa_acls ansible_connection={{ ansible_connection
+- ansible.builtin.debug:
+    msg:
+      Start Deleted integration state for asa_acls ansible_connection={{ ansible_connection
       }}
 
-- include_tasks: _remove_config.yaml
+- ansible.builtin.include_tasks: _remove_config.yaml
 
-- include_tasks: _populate_config.yaml
+- ansible.builtin.include_tasks: _populate_config.yaml
 
 - block:
-
     - name: Delete attributes of provided configured ACLs
       register: result
       cisco.asa.asa_acls: &id001
@@ -60,5 +60,4 @@
           - result.commands|length == 0
           - result.changed == false
   always:
-
-    - include_tasks: _remove_config.yaml
+    - ansible.builtin.include_tasks: _remove_config.yaml

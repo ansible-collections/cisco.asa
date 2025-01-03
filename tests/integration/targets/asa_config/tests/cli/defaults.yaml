@@ -1,5 +1,6 @@
 ---
-- debug: msg="START cli/defaults.yaml"
+- ansible.builtin.debug:
+    msg: "START cli/defaults.yaml"
 
 - name: setup
   ignore_errors: true
@@ -13,7 +14,8 @@
     src: defaults/config.j2
     defaults: true
 
-- debug: var=result
+- ansible.builtin.debug:
+    var: result
 
 - assert:
     that:
@@ -26,7 +28,8 @@
     src: defaults/config.j2
     defaults: true
 
-- debug: var=result
+- ansible.builtin.debug:
+    var: result
 
 - assert:
     that:
@@ -38,4 +41,5 @@
     commands:
       - no object-group network OG-ANSIBLE-TEMPLATE-DEFAULT
 
-- debug: msg="END cli/defaults.yaml"
+- ansible.builtin.debug:
+    msg: "END cli/defaults.yaml"

@@ -27,6 +27,7 @@ The arg spec for the asa_acls module
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
@@ -83,7 +84,7 @@ class AclsArgs(object):
                                                     "type": "dict",
                                                     "options": {
                                                         "start": {
-                                                            "type": "int"
+                                                            "type": "int",
                                                         },
                                                         "end": {"type": "int"},
                                                     },
@@ -105,7 +106,7 @@ class AclsArgs(object):
                                         "network_object": {"type": "str"},
                                         "object_group": {"type": "str"},
                                         "service_object_group": {
-                                            "type": "str"
+                                            "type": "str",
                                         },
                                         "port_protocol": {
                                             "type": "dict",
@@ -118,7 +119,7 @@ class AclsArgs(object):
                                                     "type": "dict",
                                                     "options": {
                                                         "start": {
-                                                            "type": "int"
+                                                            "type": "int",
                                                         },
                                                         "end": {"type": "int"},
                                                     },
@@ -140,54 +141,54 @@ class AclsArgs(object):
                                             "type": "dict",
                                             "options": {
                                                 "alternate_address": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "conversion_error": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "echo": {"type": "bool"},
                                                 "echo_reply": {"type": "bool"},
                                                 "information_reply": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "information_request": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "mask_reply": {"type": "bool"},
                                                 "mask_request": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "mobile_redirect": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "parameter_problem": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "redirect": {"type": "bool"},
                                                 "router_advertisement": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "router_solicitation": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "source_quench": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "source_route_failed": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "time_exceeded": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "timestamp_reply": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "timestamp_request": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "traceroute": {"type": "bool"},
                                                 "unreachable": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                             },
                                         },
@@ -197,43 +198,43 @@ class AclsArgs(object):
                                                 "echo": {"type": "bool"},
                                                 "echo_reply": {"type": "bool"},
                                                 "membership_query": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "membership_reduction": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "membership_report": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "neighbor_advertisement": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "neighbor_redirect": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "neighbor_solicitation": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "packet_too_big": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "parameter_problem": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "router_advertisement": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "router_renumbering": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "router_solicitation": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "time_exceeded": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "unreachable": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                             },
                                         },
@@ -274,7 +275,7 @@ class AclsArgs(object):
                             },
                         },
                     },
-                }
+                },
             },
         },
         "running_config": {"type": "str"},

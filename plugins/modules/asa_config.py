@@ -5,6 +5,7 @@
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
@@ -94,7 +95,7 @@ options:
       value is not given, the backup file is written to the C(backup) folder in the
       playbook root directory. If the directory does not exist, it is created.
     type: bool
-    default: no
+    default: false
   config:
     description:
     - The C(config) argument allows the playbook designer to supply the base configuration
@@ -124,7 +125,7 @@ options:
   backup_options:
     description:
     - This is a dict object containing configurable options related to backup file
-      path. The value of this option is read only when C(backup) is set to I(yes),
+      path. The value of this option is read only when C(backup) is set to I(true),
       if C(backup) is set to I(no) this option will be silently ignored.
     suboptions:
       filename:
@@ -169,20 +170,18 @@ options:
 EXAMPLES = """
 - cisco.asa.asa_config:
     lines:
-    - network-object host 10.80.30.18
-    - network-object host 10.80.30.19
-    - network-object host 10.80.30.20
+      - network-object host 10.80.30.18
+      - network-object host 10.80.30.19
+      - network-object host 10.80.30.20
     parents: [object-group network OG-MONITORED-SERVERS]
-    provider: '{{ cli }}'
 
 - cisco.asa.asa_config:
     host: '{{ inventory_hostname }}'
     lines:
-    - message-length maximum client auto
-    - message-length maximum 512
+      - message-length maximum client auto
+      - message-length maximum 512
     match: line
     parents: [policy-map type inspect dns PM-DNS, parameters]
-    authorize: yes
     auth_pass: cisco
     username: admin
     password: cisco
@@ -190,59 +189,53 @@ EXAMPLES = """
 
 - cisco.asa.asa_config:
     lines:
-    - ikev1 pre-shared-key MyS3cretVPNK3y
+      - ikev1 pre-shared-key MyS3cretVPNK3y
     parents: tunnel-group 1.1.1.1 ipsec-attributes
-    passwords: yes
-    provider: '{{ cli }}'
+    passwords: true
 
 - name: attach ASA acl on interface vlan13/nameif cloud13
   cisco.asa.asa_config:
     lines:
-    - access-group cloud-acl_access_in in interface cloud13
-    provider: '{{ cli }}'
+      - access-group cloud-acl_access_in in interface cloud13
 
 - name: configure ASA (>=9.2) default BGP
   cisco.asa.asa_config:
     lines:
-    - bgp log-neighbor-changes
-    - bgp bestpath compare-routerid
-    provider: '{{ cli }}'
+      - bgp log-neighbor-changes
+      - bgp bestpath compare-routerid
     parents:
-    - router bgp 65002
+      - router bgp 65002
   register: bgp
   when: bgp_default_config is defined
 - name: configure ASA (>=9.2) BGP neighbor in default/single context mode
   cisco.asa.asa_config:
     lines:
-    - bgp router-id {{ bgp_router_id }}
-    - neighbor {{ bgp_neighbor_ip }} remote-as {{ bgp_neighbor_as }}
-    - neighbor {{ bgp_neighbor_ip }} description {{ bgp_neighbor_name }}
-    provider: '{{ cli }}'
+      - bgp router-id {{ bgp_router_id }}
+      - neighbor {{ bgp_neighbor_ip }} remote-as {{ bgp_neighbor_as }}
+      - neighbor {{ bgp_neighbor_ip }} description {{ bgp_neighbor_name }}
     parents:
-    - router bgp 65002
-    - address-family ipv4 unicast
+      - router bgp 65002
+      - address-family ipv4 unicast
   register: bgp
   when: bgp_neighbor_as is defined
 - name: configure ASA interface with standby
   cisco.asa.asa_config:
     lines:
-    - description my cloud interface
-    - nameif cloud13
-    - security-level 50
-    - ip address 192.168.13.1 255.255.255.0 standby 192.168.13.2
-    provider: '{{ cli }}'
+      - description my cloud interface
+      - nameif cloud13
+      - security-level 50
+      - ip address 192.168.13.1 255.255.255.0 standby 192.168.13.2
     parents: [interface Vlan13]
   register: interface
 - name: Show changes to interface from task above
-  debug:
+  ansible.builtin.debug:
     var: interface
 
 - name: configurable backup path
   cisco.asa.asa_config:
     lines:
-    - access-group cloud-acl_access_in in interface cloud13
-    provider: '{{ cli }}'
-    backup: yes
+      - access-group cloud-acl_access_in in interface cloud13
+    backup: true
     backup_options:
       filename: backup.cfg
       dir_path: /home/user
@@ -260,23 +253,22 @@ updates:
   sample: ['...', '...']
 backup_path:
   description: The full path to the backup file
-  returned: when backup is yes
+  returned: when backup is true
   type: str
   sample: /playbooks/ansible/backup/asa_config.2016-07-16@22:28:34
 """
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
-    asa_argument_spec,
-    check_args,
-)
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
-    get_config,
-    load_config,
-    run_commands,
-)
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.config import (
     NetworkConfig,
     dumps,
+)
+
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
+    asa_argument_spec,
+    check_args,
+    get_config,
+    load_config,
+    run_commands,
 )
 
 
@@ -308,7 +300,10 @@ def run(module, result):
             contents = get_config(module)
         config = NetworkConfig(indent=1, contents=contents)
         configobjs = candidate.difference(
-            config, path=path, match=match, replace=replace
+            config,
+            path=path,
+            match=match,
+            replace=replace,
         )
 
     else:
@@ -334,17 +329,19 @@ def run(module, result):
 
     if module.params["save"]:
         module.warn(
-            "module param save is deprecated, please use newer and updated param save_when instead which is released with more functionality!"
+            "module param save is deprecated, please use newer and updated param save_when instead which is released with more functionality!",
         )
         save_config(module, result)
     if module.params["save_when"] == "always":
         save_config(module, result)
     elif module.params["save_when"] == "modified":
         running_config_checksum = run_commands(
-            module, "show running-config | include checksum:"
+            module,
+            "show running-config | include checksum:",
         )
         startup_config_checksum = run_commands(
-            module, "show startup-config | include checksum:"
+            module,
+            "show startup-config | include checksum:",
         )
         if running_config_checksum != startup_config_checksum:
             save_config(module, result)
@@ -362,7 +359,8 @@ def main():
         before=dict(type="list", elements="str"),
         after=dict(type="list", elements="str"),
         match=dict(
-            default="line", choices=["line", "strict", "exact", "none"]
+            default="line",
+            choices=["line", "strict", "exact", "none"],
         ),
         replace=dict(default="line", choices=["line", "block"]),
         backup_options=dict(type="dict", options=backup_spec),
@@ -372,7 +370,8 @@ def main():
         backup=dict(type="bool", default=False),
         save=dict(type="bool", default=False),
         save_when=dict(
-            choices=["always", "never", "modified", "changed"], default="never"
+            choices=["always", "never", "modified", "changed"],
+            default="never",
         ),
     )
 

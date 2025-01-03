@@ -27,62 +27,26 @@
 #
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 import json
 
 from ansible.module_utils._text import to_text
-from ansible.module_utils.basic import env_fallback
+from ansible.module_utils.connection import Connection, ConnectionError, exec_command
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
     EntityCollection,
 )
-from ansible.module_utils.connection import exec_command
-from ansible.module_utils.connection import Connection, ConnectionError
+
 
 _DEVICE_CONFIGS = {}
 _CONNECTION = None
 
-asa_provider_spec = {
-    "host": dict(),
-    "port": dict(type="int"),
-    "username": dict(fallback=(env_fallback, ["ANSIBLE_NET_USERNAME"])),
-    "password": dict(
-        fallback=(env_fallback, ["ANSIBLE_NET_PASSWORD"]), no_log=True
-    ),
-    "ssh_keyfile": dict(
-        fallback=(env_fallback, ["ANSIBLE_NET_SSH_KEYFILE"]), type="path"
-    ),
-    "authorize": dict(
-        fallback=(env_fallback, ["ANSIBLE_NET_AUTHORIZE"]), type="bool"
-    ),
-    "auth_pass": dict(
-        fallback=(env_fallback, ["ANSIBLE_NET_AUTH_PASS"]), no_log=True
-    ),
-    "timeout": dict(type="int"),
-}
+command_spec = {"command": dict(key=True), "prompt": dict(), "answer": dict()}
 
 asa_argument_spec = {
-    "provider": dict(
-        type="dict",
-        options=asa_provider_spec,
-        removed_at_date="2022-06-01",
-        removed_from_collection="cisco.asa",
-    )
-}
-
-asa_top_spec = {
-    "authorize": dict(
-        fallback=(env_fallback, ["ANSIBLE_NET_AUTHORIZE"]), type="bool"
-    ),
     "context": dict(type="str"),
     "passwords": dict(type="bool"),
 }
-asa_argument_spec.update(asa_top_spec)
-
-command_spec = {"command": dict(key=True), "prompt": dict(), "answer": dict()}
-
-
-def get_provider_argspec():
-    return asa_provider_spec
 
 
 def check_args(module):
@@ -95,12 +59,10 @@ def get_connection(module):
 
     # Not all modules include the 'context' key.
     context = module.params.get("context")
-    capabilities = get_capabilities(module)
-    network_api = capabilities.get("network_api")
-    if network_api == "cliconf":
+    connection_proxy = Connection(module._socket_path)
+    cap = json.loads(connection_proxy.get_capabilities())
+    if cap["network_api"] == "cliconf":
         module._asa_connection = Connection(module._socket_path)
-    else:
-        module.fail_json(msg="Invalid connection type %s" % network_api)
 
     if context:
         if context == "system":
@@ -135,7 +97,7 @@ def to_commands(module, commands):
         if module.check_mode and not item["command"].startswith("show"):
             module.warn(
                 "only show commands are supported when using check "
-                "mode, not executing `%s`" % item["command"]
+                "mode, not executing `%s`" % item["command"],
             )
 
     return commands

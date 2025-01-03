@@ -1,13 +1,13 @@
 ---
-- debug:
-    msg: START Merged asa_acls state for integration tests on connection={{ ansible_connection
+- ansible.builtin.debug:
+    msg:
+      START Merged asa_acls state for integration tests on connection={{ ansible_connection
       }}
 
-- include_tasks: _remove_config.yaml
-- include_tasks: _populate_network_og.yaml
+- ansible.builtin.include_tasks: _remove_config.yaml
+- ansible.builtin.include_tasks: _populate_network_og.yaml
 
 - block:
-
     - name: Merge provided configuration with device configuration
       register: result
       cisco.asa.asa_acls: &id001
@@ -24,7 +24,7 @@
                     address: 192.0.2.0
                     netmask: 255.255.255.0
                   destination:
-                    address: 192.0.3.0
+                    address: 198.51.100.0
                     netmask: 255.255.255.0
                     port_protocol:
                       eq: www
@@ -125,6 +125,5 @@
           - result.commands|length == 0
           - result['changed'] == false
   always:
-
-    - include_tasks: _remove_config.yaml
-    - include_tasks: _remove_og_config.yaml
+    - ansible.builtin.include_tasks: _remove_config.yaml
+    - ansible.builtin.include_tasks: _remove_og_config.yaml

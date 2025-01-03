@@ -1,5 +1,6 @@
 ---
-- debug: msg="START cli/basic.yaml"
+- ansible.builtin.debug:
+    msg: "START cli/basic.yaml"
 
 - name: setup
   ignore_errors: true
@@ -32,4 +33,5 @@
     commands:
       - no object-group network OG-ANSIBLE-TEMPLATE
 
-- debug: msg="END cli/basic.yaml"
+- ansible.builtin.debug:
+    msg: "END cli/basic.yaml"

@@ -1,9 +1,11 @@
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 import re
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.network_template import (
+
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.network_template import (
     NetworkTemplate,
 )
 
@@ -87,30 +89,25 @@ def _tmplt_service_object(config_data):
 
 def _tmplt_services_object(config_data):
     if config_data.get("services_object"):
-        cmd = "service-object {protocol}".format(
-            **config_data["services_object"]
-        )
+        cmd = "service-object {protocol}".format(**config_data["services_object"])
         if config_data["services_object"].get("source_port"):
             if config_data["services_object"]["source_port"].get("range"):
                 cmd += " source range {start} {end}".format(
-                    **config_data["services_object"]["source_port"]["range"]
+                    **config_data["services_object"]["source_port"]["range"],
                 )
             else:
                 key = list(config_data["services_object"]["source_port"])[0]
                 cmd += " source {0} {1}".format(
-                    key, config_data["services_object"]["source_port"][key]
+                    key,
+                    config_data["services_object"]["source_port"][key],
                 )
         if config_data["services_object"].get("destination_port"):
             if config_data["services_object"]["destination_port"].get("range"):
                 cmd += " destination range {start} {end}".format(
-                    **config_data["services_object"]["destination_port"][
-                        "range"
-                    ]
+                    **config_data["services_object"]["destination_port"]["range"],
                 )
             else:
-                key = list(config_data["services_object"]["destination_port"])[
-                    0
-                ]
+                key = list(config_data["services_object"]["destination_port"])[0]
                 cmd += " destination {0} {1}".format(
                     key,
                     config_data["services_object"]["destination_port"][key],
@@ -122,9 +119,7 @@ def _tmplt_port_object(config_data):
     if config_data.get("port_object"):
         cmd = "port-object"
         if config_data["port_object"].get("range"):
-            cmd += " range {start} {end}".format(
-                **config_data["port_object"]["range"]
-            )
+            cmd += " range {start} {end}".format(**config_data["port_object"]["range"])
         else:
             key = list(config_data["port_object"])[0]
             cmd += " {0} {1}".format(key, config_data["port_object"][key])
@@ -176,9 +171,9 @@ class OGsTemplate(NetworkTemplate):
                             "object_type": "{{ obj_type }}",
                             "name": "{{ obj_name }}",
                             "protocol": "{{ protocol }}",
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             },
             "shared": True,
         },
@@ -194,9 +189,9 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {"description": "{{ description }}"}
-                    }
-                }
+                        "{{ obj_name }}": {"description": "{{ description }}"},
+                    },
+                },
             },
         },
         {
@@ -212,9 +207,9 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {"icmp_object": ["{{ object }}"]}
-                    }
-                }
+                        "{{ obj_name }}": {"icmp_object": ["{{ object }}"]},
+                    },
+                },
             },
         },
         {
@@ -230,9 +225,9 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {"address": ["{{ address }}"]}
-                    }
-                }
+                        "{{ obj_name }}": {"address": ["{{ address }}"]},
+                    },
+                },
             },
         },
         {
@@ -248,9 +243,9 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {"ipv6_address": ["{{ ipv6 }}"]}
-                    }
-                }
+                        "{{ obj_name }}": {"ipv6_address": ["{{ ipv6 }}"]},
+                    },
+                },
             },
         },
         {
@@ -267,9 +262,9 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {"host": ["{{ host_address }}"]}
-                    }
-                }
+                        "{{ obj_name }}": {"host": ["{{ host_address }}"]},
+                    },
+                },
             },
         },
         {
@@ -286,9 +281,9 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {"object": ["{{ object }}"]}
-                    }
-                }
+                        "{{ obj_name }}": {"object": ["{{ object }}"]},
+                    },
+                },
             },
         },
         {
@@ -304,9 +299,9 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {"protocol": ["{{ protocol }}"]}
-                    }
-                }
+                        "{{ obj_name }}": {"protocol": ["{{ protocol }}"]},
+                    },
+                },
             },
         },
         {
@@ -323,9 +318,9 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {"sec_name": ["{{ name }}"]}
-                    }
-                }
+                        "{{ obj_name }}": {"sec_name": ["{{ name }}"]},
+                    },
+                },
             },
         },
         {
@@ -342,9 +337,9 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {"tag": ["{{ tag }}"]}
-                    }
-                }
+                        "{{ obj_name }}": {"tag": ["{{ tag }}"]},
+                    },
+                },
             },
         },
         {
@@ -369,11 +364,11 @@ class OGsTemplate(NetworkTemplate):
                                         "start": "{{ range.split('range ')[1].split(' ')[0] if range is defined else None }}",
                                         "end": "{{ range.split('range ')[1].split(' ')[1] if range is defined else None }}",
                                     },
-                                }
-                            ]
-                        }
-                    }
-                }
+                                },
+                            ],
+                        },
+                    },
+                },
             },
         },
         {
@@ -427,11 +422,11 @@ class OGsTemplate(NetworkTemplate):
                                                 'range' in destination_port else None }}",
                                         },
                                     },
-                                }
-                            ]
-                        }
-                    }
-                }
+                                },
+                            ],
+                        },
+                    },
+                },
             },
         },
         {
@@ -447,9 +442,9 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {"object": "{{ object }}"}
-                    }
-                }
+                        "{{ obj_name }}": {"object": "{{ object }}"},
+                    },
+                },
             },
         },
         {
@@ -465,9 +460,9 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {"protocol": ["{{ protocol }}"]}
-                    }
-                }
+                        "{{ obj_name }}": {"protocol": ["{{ protocol }}"]},
+                    },
+                },
             },
         },
         {
@@ -489,11 +484,11 @@ class OGsTemplate(NetworkTemplate):
                                 {
                                     "name": "{{ user_name }}",
                                     "domain": "{{ domain }}",
-                                }
-                            ]
-                        }
-                    }
-                }
+                                },
+                            ],
+                        },
+                    },
+                },
             },
         },
         {
@@ -515,11 +510,11 @@ class OGsTemplate(NetworkTemplate):
                                 {
                                     "name": "{{ user_gp }}",
                                     "domain": r"{{ domain.split('\\')[0] }}",
-                                }
-                            ]
-                        }
-                    }
-                }
+                                },
+                            ],
+                        },
+                    },
+                },
             },
         },
         {
@@ -535,9 +530,9 @@ class OGsTemplate(NetworkTemplate):
             "result": {
                 "ogs": {
                     "{{ obj_type }}": {
-                        "{{ obj_name }}": {"group_object": ["{{ gp_obj }}"]}
-                    }
-                }
+                        "{{ obj_name }}": {"group_object": ["{{ gp_obj }}"]},
+                    },
+                },
             },
         },
     ]

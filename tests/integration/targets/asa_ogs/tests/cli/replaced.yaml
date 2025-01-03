@@ -1,13 +1,12 @@
 ---
-- debug:
-    msg: Start asa_ogs replced integration tests ansible_connection={{
-      ansible_connection }}
+- ansible.builtin.debug:
+    msg: "Start asa_ogs replced integration tests ansible_connection={{
+      ansible_connection }}"
 
-- include_tasks: _remove_config.yaml
-- include_tasks: _populate_config.yaml
+- ansible.builtin.include_tasks: _remove_config.yaml
+- ansible.builtin.include_tasks: _populate_config.yaml
 
 - block:
-
     - name: Replace module attributes of given object-group
       become: true
       register: result
@@ -19,9 +18,9 @@
                 description: test_og_network_replace
                 network_object:
                   host:
-                    - 192.0.3.1
+                    - 198.51.100.1
                   address:
-                    - 192.0.3.0 255.255.255.0
+                    - 198.51.100.0 255.255.255.0
           - object_type: protocol
             object_groups:
               - name: test_og_protocol
@@ -48,5 +47,4 @@
           - result.commands|length == 0
           - result.changed == false
   always:
-
-    - include_tasks: _remove_config.yaml
+    - ansible.builtin.include_tasks: _remove_config.yaml

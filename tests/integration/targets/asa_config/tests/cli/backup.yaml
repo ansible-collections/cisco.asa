@@ -1,5 +1,6 @@
 ---
-- debug: msg="START cli/backup.yaml"
+- ansible.builtin.debug:
+    msg: "START cli/backup.yaml"
 
 - name: setup
   ignore_errors: true
@@ -8,17 +9,17 @@
       - no object-group network OG-ANSIBLE-TEMPLATE
 
 - name: collect any backup files
-  find:
-    paths: '{{ role_path }}/backup'
-    pattern: '{{ inventory_hostname_short }}_config*'
+  ansible.builtin.find:
+    paths: "{{ role_path }}/backup"
+    pattern: "{{ inventory_hostname_short }}_config*"
   register: backup_files
   connection: local
 
 - name: delete backup files
-  file:
-    path: '{{ item.path }}'
+  ansible.builtin.file:
+    path: "{{ item.path }}"
     state: absent
-  with_items: '{{backup_files.files|default([])}}'
+  with_items: "{{backup_files.files|default([])}}"
 
 - name: configure device with config
   register: result
@@ -32,9 +33,9 @@
       - result.updates is defined
 
 - name: collect any backup files
-  find:
-    paths: '{{ role_path }}/backup'
-    pattern: '{{ inventory_hostname_short }}_config*'
+  ansible.builtin.find:
+    paths: "{{ role_path }}/backup"
+    pattern: "{{ inventory_hostname_short }}_config*"
   register: backup_files
   connection: local
 
@@ -47,4 +48,5 @@
     commands:
       - no object-group network OG-ANSIBLE-TEMPLATE
 
-- debug: msg="END cli/backup.yaml"
+- ansible.builtin.debug:
+    msg: "END cli/backup.yaml"

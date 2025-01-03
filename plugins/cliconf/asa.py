@@ -18,6 +18,7 @@
 #
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 DOCUMENTATION = """
@@ -44,16 +45,15 @@ options:
     - name: ansible_asa_config_commands
 """
 
-import re
 import json
+import re
 
 from itertools import chain
+
 from ansible.errors import AnsibleConnectionFailure
 from ansible.module_utils._text import to_text
 from ansible.module_utils.common._collections_compat import Mapping
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
-    to_list,
-)
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import to_list
 from ansible_collections.ansible.netcommon.plugins.plugin_utils.cliconf_base import (
     CliconfBase,
     enable_mode,
@@ -105,7 +105,7 @@ class Cliconf(CliconfBase):
     def get_config(self, source="running", flags=None, format="text"):
         if source not in ("running", "startup"):
             return self.invalid_params(
-                "fetching configuration from %s is not supported" % source
+                "fetching configuration from %s is not supported" % source,
             )
         if source == "running":
             cmd = "show running-config all"
@@ -152,8 +152,7 @@ class Cliconf(CliconfBase):
             output = cmd.pop("output", None)
             if output:
                 raise ValueError(
-                    "'output' value %s is not supported for run_commands"
-                    % output
+                    "'output' value %s is not supported for run_commands" % output,
                 )
 
             try:

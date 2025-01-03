@@ -1,22 +1,23 @@
 ---
 - name: Collect all cli test cases
-  find:
-    paths: '{{ role_path }}/tests'
-    patterns: '{{ testcase }}.yaml'
+  ansible.builtin.find:
+    paths: "{{ role_path }}/tests"
+    patterns: "{{ testcase }}.yaml"
     use_regex: true
   register: test_cases
   delegate_to: localhost
 
 - name: Set test_items
-  set_fact: test_items="{{ test_cases.files | map(attribute='path') | list }}"
+  ansible.builtin.set_fact:
+    test_items: "{{ test_cases.files | map(attribute='path') | list }}"
   delegate_to: localhost
 
 - name: Run test case (connection=network_cli)
-  include: '{{ test_case_to_run }}'
+  ansible.builtin.include_tasks: "{{ test_case_to_run }}"
   vars:
     ansible_connection: network_cli
-    ansible_network_single_user_mode: True
-  with_items: '{{ test_items }}'
+    ansible_network_single_user_mode: true
+  with_items: "{{ test_items }}"
   loop_control:
     loop_var: test_case_to_run
   tags: connection_network_cli

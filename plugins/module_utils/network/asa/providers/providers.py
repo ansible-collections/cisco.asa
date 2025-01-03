@@ -4,6 +4,7 @@
 #
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 import json
@@ -11,12 +12,10 @@ import json
 from threading import RLock
 
 from ansible.module_utils.six import itervalues
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
-    to_list,
-)
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.config import (
     NetworkConfig,
 )
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import to_list
 
 
 _registered_providers = {}
@@ -54,7 +53,6 @@ def get(network_os, module_name, connection_type):
 
 
 class ProviderBase(object):
-
     supported_connections = ()
 
     def __init__(self, params, connection=None, check_mode=False):
@@ -83,7 +81,6 @@ class ProviderBase(object):
 
 
 class CliProvider(ProviderBase):
-
     supported_connections = ("network_cli",)
 
     @property

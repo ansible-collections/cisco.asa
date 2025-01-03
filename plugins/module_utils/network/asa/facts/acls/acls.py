@@ -12,22 +12,23 @@ based on the configuration.
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
 from copy import deepcopy
+
 from ansible.module_utils.six import iteritems
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
-    utils,
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import utils
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.network_template import (
+    NetworkTemplate,
 )
+
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.acls.acls import (
     AclsArgs,
 )
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates.acls import (
     AclsTemplate,
-)
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.network_template import (
-    NetworkTemplate,
 )
 
 
@@ -35,7 +36,6 @@ class AclsFacts(object):
     """The asa_acls fact class"""
 
     def __init__(self, module, subspec="config", options="options"):
-
         self._module = module
         self.argument_spec = AclsArgs.argument_spec
         spec = deepcopy(self.argument_spec)
@@ -73,16 +73,17 @@ class AclsFacts(object):
                 for each in val.get("aces"):
                     if "protocol_number" in each:
                         each["protocol_options"] = {
-                            "protocol_number": each["protocol_number"]
+                            "protocol_number": each["protocol_number"],
                         }
                         del each["protocol_number"]
                     if "icmp_icmp6_protocol" in each and each.get("protocol"):
                         each["protocol_options"] = {
                             each.get("protocol"): {
                                 each["icmp_icmp6_protocol"].replace(
-                                    "-", "_"
-                                ): True
-                            }
+                                    "-",
+                                    "_",
+                                ): True,
+                            },
                         }
                         del each["icmp_icmp6_protocol"]
                     elif (
@@ -96,7 +97,8 @@ class AclsFacts(object):
         params = {}
         if acls:
             params = utils.validate_config(
-                self.argument_spec, {"config": {"acls": acls}}
+                self.argument_spec,
+                {"config": {"acls": acls}},
             )
             params = utils.remove_empties(params)
             facts["acls"] = params["config"]

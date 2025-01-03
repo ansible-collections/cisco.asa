@@ -1,5 +1,6 @@
 ---
-- debug: msg="START cli/bad_operator.yaml"
+- ansible.builtin.debug:
+    msg: "START cli/bad_operator.yaml"
 
 - name: test bad operator
   register: result
@@ -9,7 +10,6 @@
       - show version
       - show interfaces GigabitEthernet 0/0
     wait_for:
-
       - result[0] contains 'Description: Foo'
 
 - assert:
@@ -17,4 +17,5 @@
       - result.failed == true
       - result.msg is defined
 
-- debug: msg="END cli/bad_operator.yaml"
+- ansible.builtin.debug:
+    msg: "END cli/bad_operator.yaml"

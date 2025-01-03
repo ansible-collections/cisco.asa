@@ -1,45 +1,7 @@
 ---
-requires_ansible: '>=2.9.10'
+requires_ansible: ">=2.15.0"
 plugin_routing:
-  action:
-    asa_acl:
-      redirect: cisco.asa.asa
-    acl:
-      redirect: cisco.asa.asa
-    asa_acls:
-      redirect: cisco.asa.asa
-    acls:
-      redirect: cisco.asa.asa
-    asa_command:
-      redirect: cisco.asa.asa
-    command:
-      redirect: cisco.asa.asa
-    asa_config:
-      redirect: cisco.asa.asa
-    config:
-      redirect: cisco.asa.asa
-    asa_facts:
-      redirect: cisco.asa.asa
-    facts:
-      redirect: cisco.asa.asa
-    asa_og:
-      redirect: cisco.asa.asa
-    og:
-      redirect: cisco.asa.asa
-    asa_ogs:
-      redirect: cisco.asa.asa
-    ogs:
-      redirect: cisco.asa.asa
   modules:
-    acl:
-      redirect: cisco.asa.asa_acl
-      deprecation:
-        removal_date: '2022-06-01'
-        warning_text: See the plugin documentation for more details
-    asa_acl:
-      deprecation:
-        removal_date: '2022-06-01'
-        warning_text: See the plugin documentation for more details
     acls:
       redirect: cisco.asa.asa_acls
     command:
@@ -48,14 +10,5 @@ plugin_routing:
       redirect: cisco.asa.asa_config
     facts:
       redirect: cisco.asa.asa_facts
-    og:
-      redirect: cisco.asa.asa_og
-      deprecation:
-        removal_date: '2022-06-01'
-        warning_text: See the plugin documentation for more details
-    asa_og:
-      deprecation:
-        removal_date: '2022-06-01'
-        warning_text: See the plugin documentation for more details
     ogs:
       redirect: cisco.asa.asa_ogs
