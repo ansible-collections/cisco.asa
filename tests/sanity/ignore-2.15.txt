@@ -9,4 +9,3 @@ tests/unit/modules/network/asa/test_asa_acls.py E501: line too long (161 > 160 c
 tests/unit/modules/network/asa/test_asa_acls.py E501: line too long (161 > 160 characters)
 tests/unit/modules/network/asa/test_asa_acls.py E501: line too long (161 > 160 characters)
 tests/unit/modules/network/asa/test_asa_acls.py E501: line too long (161 > 160 characters)
-
