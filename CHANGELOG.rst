@@ -4,6 +4,25 @@ Cisco Asa Collection Release Notes
 
 .. contents:: Topics
 
+v6.1.0
+======
+
+Minor Changes
+-------------
+
+- cisco.asa.asa - add support to fetch hardware specific information in facts
+- cisco.asa.asa_acls - add support for specifying object-group as protocol
+
+Bugfixes
+--------
+
+- cisco.asa.asa_acls - fixed ace parsing when source is object-group and its name contains dots
+
+Documentation Changes
+---------------------
+
+- Includes a new support related section in the README.
+
 v6.0.0
 ======
 
@@ -31,7 +50,7 @@ v5.0.0
 Release Summary
 ---------------
 
-Starting from this release, the minimum `ansible-core` version this collection requires is `2.14.0`. The last known version compatible with ansible-core<2.14 is `v4.0.3`.
+Starting from this release, the minimum `ansible-core` version this collection requires is `2.14.0`. The last known version compatible with
 
 Major Changes
 -------------
