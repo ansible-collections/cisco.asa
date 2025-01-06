@@ -2416,85 +2416,85 @@ Examples
             - name: temp_access
               acl_type: extended
               aces:
-              - grant: deny
-                line: 1
-                protocol_options:
-                  tcp: true
-                source:
-                  address: 192.0.2.0
-                  netmask: 255.255.255.0
-                destination:
-                  address: 192.0.3.0
-                  netmask: 255.255.255.0
-                  port_protocol:
-                    eq: www
-                log: default
-              - grant: deny
-                line: 2
-                protocol_options:
-                  igrp: true
-                source:
-                  address: 198.51.100.0
-                  netmask: 255.255.255.0
-                destination:
-                  address: 198.51.110.0
-                  netmask: 255.255.255.0
-                time_range: temp
-              - grant: deny
-                line: 3
-                protocol_options:
-                  tcp: true
-                source:
-                  interface: management
-                destination:
-                  interface: management
-                  port_protocol:
-                    eq: www
-                log: warnings
-              - grant: deny
-                line: 4
-                protocol_options:
-                  tcp: true
-                source:
-                  object_group: test_og_network
-                destination:
-                  object_group: test_network_og
-                  port_protocol:
-                    eq: www
-                log: default
+                - grant: deny
+                  line: 1
+                  protocol_options:
+                    tcp: true
+                  source:
+                    address: 192.0.2.0
+                    netmask: 255.255.255.0
+                  destination:
+                    address: 198.51.100.0
+                    netmask: 255.255.255.0
+                    port_protocol:
+                      eq: www
+                  log: default
+                - grant: deny
+                  line: 2
+                  protocol_options:
+                    igrp: true
+                  source:
+                    address: 198.51.100.0
+                    netmask: 255.255.255.0
+                  destination:
+                    address: 198.51.110.0
+                    netmask: 255.255.255.0
+                  time_range: temp
+                - grant: deny
+                  line: 3
+                  protocol_options:
+                    tcp: true
+                  source:
+                    interface: management
+                  destination:
+                    interface: management
+                    port_protocol:
+                      eq: www
+                  log: warnings
+                - grant: deny
+                  line: 4
+                  protocol_options:
+                    tcp: true
+                  source:
+                    object_group: test_og_network
+                  destination:
+                    object_group: test_network_og
+                    port_protocol:
+                      eq: www
+                  log: default
             - name: global_access
               acl_type: extended
               aces:
-              - line: 3
-                remark: test global access
-              - grant: deny
-                line: 4
-                protocol_options:
-                  tcp: true
-                source:
-                  any: true
-                destination:
-                  any: true
-                  port_protocol:
-                    eq: www
-                log: errors
+                - line: 3
+                  remark: test global access
+                - grant: deny
+                  line: 4
+                  protocol_options:
+                    tcp: true
+                  source:
+                    any: true
+                  destination:
+                    any: true
+                    port_protocol:
+                      eq: www
+                  log: errors
             - name: R1_traffic
               aces:
-              - line: 1
-                remark: test_v6_acls
-              - grant: deny
-                line: 2
-                protocol_options:
-                  tcp: true
-                source:
-                  address: 2001:db8:0:3::/64
-                  port_protocol:
-                    eq: www
-                destination:
-                  address: 2001:fc8:0:4::/64
-                  port_protocol:
-                    eq: telnet
-                inactive: true
+                - line: 1
+                  remark: test_v6_acls
+                - grant: deny
+                  line: 2
+                  protocol_options:
+                    tcp: true
+                  source:
+                    address: 2001:db8:0:3::/64
+                    port_protocol:
+                      eq: www
+                  destination:
+                    address: 2001:fc8:0:4::/64
+                    port_protocol:
+                      eq: telnet
+                  inactive: true
         state: merged
 
     # Commands fired:
@@ -2503,7 +2503,7 @@ Examples
     # access-list global_access line 4 extended deny tcp any any eq www log errors interval 300
     # access-list R1_traffic line 1 remark test_v6_acls
     # access-list R1_traffic line 2 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive
-    # access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default
+    # access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default
     # access-list temp_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
     #                         time-range temp inactive
     # access-list temp_access line 2 extended deny tcp interface management interface management
@@ -2527,7 +2527,7 @@ Examples
     #                        inactive (hitcnt=0) (inactive) 0xe922b432
     # access-list temp_access; 2 elements; name hash: 0xaf1b712e
     # access-list temp_access line 1
-    #                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+    #                         extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www
     #                         log default (hitcnt=0) 0xb58abb0d
     # access-list temp_access line 2
     #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
@@ -2537,9 +2537,9 @@ Examples
     #                         interval 300 (hitcnt=0) 0x78aa233d
     # access-list test_access line 2 extended deny tcp object-group test_og_network object-group test_network_og
     #                         eq www log default (hitcnt=0) 0x477aec1e
-    #    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 192.0.3.1 eq www
+    #    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 198.51.100.1 eq www
     #                            log default (hitcnt=0) 0xdc7edff8
-    #    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 192.0.3.2 eq www
+    #    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 198.51.100.2 eq www
     #                            log default (hitcnt=0) 0x7b0e9fde
     #    access-list test_access line 2 extended deny tcp 198.51.100.0 255.255.255.0 2001:db8:3::/64 eq www
     #                            log default (hitcnt=0) 0x97c75adc
@@ -2604,7 +2604,7 @@ Examples
     #                        inactive (hitcnt=0) (inactive) 0xe922b432
     # access-list temp_access; 2 elements; name hash: 0xaf1b712e
     # access-list temp_access line 1
-    #                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+    #                         extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www
     #                         log default (hitcnt=0) 0xb58abb0d
     # access-list temp_access line 2
     #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
@@ -2617,20 +2617,20 @@ Examples
             - name: global_access
               acl_type: extended
               aces:
-              - grant: deny
-                line: 1
-                protocol_options:
-                  tcp: true
-                source:
-                  address: 192.0.4.0
-                  netmask: 255.255.255.0
-                  port_protocol:
-                    eq: telnet
-                destination:
-                  address: 192.0.5.0
-                  netmask: 255.255.255.0
-                  port_protocol:
-                    eq: www
+                - grant: deny
+                  line: 1
+                  protocol_options:
+                    tcp: true
+                  source:
+                    address: 192.0.4.0
+                    netmask: 255.255.255.0
+                    port_protocol:
+                      eq: telnet
+                  destination:
+                    address: 192.0.5.0
+                    netmask: 255.255.255.0
+                    port_protocol:
+                      eq: www
         state: replaced
 
     # Commands fired:
@@ -2656,7 +2656,7 @@ Examples
     #                        inactive (hitcnt=0) (inactive) 0xe922b432
     # access-list temp_access; 2 elements; name hash: 0xaf1b712e
     # access-list temp_access line 1
-    #                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+    #                         extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www
     #                         log default (hitcnt=0) 0xb58abb0d
     # access-list temp_access line 2
     #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
@@ -2681,7 +2681,7 @@ Examples
     #                        inactive (hitcnt=0) (inactive) 0xe922b432
     # access-list temp_access; 2 elements; name hash: 0xaf1b712e
     # access-list temp_access line 1
-    #                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+    #                         extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www
     #                         log default (hitcnt=0) 0xb58abb0d
     # access-list temp_access line 2
     #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
@@ -2695,20 +2695,20 @@ Examples
             - name: global_access
               acl_type: extended
               aces:
-              - grant: deny
-                line: 1
-                protocol_options:
-                  tcp: true
-                source:
-                  address: 192.0.4.0
-                  netmask: 255.255.255.0
-                  port_protocol:
-                    eq: telnet
-                destination:
-                  address: 192.0.5.0
-                  netmask: 255.255.255.0
-                  port_protocol:
-                    eq: www
+                - grant: deny
+                  line: 1
+                  protocol_options:
+                    tcp: true
+                  source:
+                    address: 192.0.4.0
+                    netmask: 255.255.255.0
+                    port_protocol:
+                      eq: telnet
+                  destination:
+                    address: 192.0.5.0
+                    netmask: 255.255.255.0
+                    port_protocol:
+                      eq: www
         state: overridden
 
     # Commands fired:
@@ -2716,7 +2716,7 @@ Examples
     # access-list temp_access line 2
     #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 time-range temp
     # no access-list temp_access line 1
-    #                            extended grant deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default
+    #                            extended grant deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default
     # no access-list R1_traffic line 2
     #                           extended grant deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive
     # no access-list R1_traffic line 1
@@ -2752,7 +2752,7 @@ Examples
     #                        inactive (hitcnt=0) (inactive) 0xe922b432
     # access-list temp_access; 2 elements; name hash: 0xaf1b712e
     # access-list temp_access line 1
-    #                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+    #                         extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www
     #                         log default (hitcnt=0) 0xb58abb0d
     # access-list temp_access line 2
     #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
@@ -2770,7 +2770,7 @@ Examples
     # ---------------
     # no access-list temp_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
     #                            time-range temp inactive
-    # no access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+    # no access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www
     #                            log default
     # no access-list global_access line 3 extended deny tcp any any eq www log errors interval 300
     # no access-list global_access line 2 extended deny tcp any any eq telnet
@@ -2789,7 +2789,7 @@ Examples
     #                        inactive (hitcnt=0) (inactive) 0xe922b432
 
     # Using Deleted without any config passed
-    #"(NOTE: This will delete all of configured resource module attributes)"
+    # "(NOTE: This will delete all of configured resource module attributes)"
 
     # Before state:
     # -------------
@@ -2808,7 +2808,7 @@ Examples
     #                        inactive (hitcnt=0) (inactive) 0xe922b432
     # access-list temp_access; 2 elements; name hash: 0xaf1b712e
     # access-list temp_access line 1
-    #                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+    #                         extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www
     #                         log default (hitcnt=0) 0xb58abb0d
     # access-list temp_access line 2
     #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
@@ -2826,7 +2826,7 @@ Examples
     # no access-list R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq telnet 2001:fc8:0:4::/64 eq www
     #                           log errors interval 300
     # no access-list R1_traffic line 2 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive
-    # no access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default
+    # no access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default
     # no access-list temp_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
     #                            time-range temp inactive
 
@@ -2853,7 +2853,7 @@ Examples
     #                        inactive (hitcnt=0) (inactive) 0xe922b432
     # access-list temp_access; 2 elements; name hash: 0xaf1b712e
     # access-list temp_access line 1
-    #                         extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www
+    #                         extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www
     #                         log default (hitcnt=0) 0xb58abb0d
     # access-list temp_access line 2
     #                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
@@ -2958,7 +2958,7 @@ Examples
     #                     "aces": [
     #                         {
     #                             "destination": {
-    #                                 "address": "192.0.3.0",
+    #                                 "address": "198.51.100.0",
     #                                 "netmask": "255.255.255.0",
     #                                 "port_protocol": {
     #                                     "eq": "www"
@@ -3011,44 +3011,44 @@ Examples
           - name: temp_access
             acl_type: extended
             aces:
-            - grant: deny
-              line: 1
-              protocol_options:
-                tcp: true
-              source:
-                address: 192.0.2.0
-                netmask: 255.255.255.0
-              destination:
-                address: 192.0.3.0
-                netmask: 255.255.255.0
-                port_protocol:
-                  eq: www
-              log: default
-            - grant: deny
-              line: 2
-              protocol_options:
-                igrp: true
-              source:
-                address: 198.51.100.0
-                netmask: 255.255.255.0
-              destination:
-                address: 198.51.110.0
-                netmask: 255.255.255.0
-              time_range: temp
+              - grant: deny
+                line: 1
+                protocol_options:
+                  tcp: true
+                source:
+                  address: 192.0.2.0
+                  netmask: 255.255.255.0
+                destination:
+                  address: 198.51.100.0
+                  netmask: 255.255.255.0
+                  port_protocol:
+                    eq: www
+                log: default
+              - grant: deny
+                line: 2
+                protocol_options:
+                  igrp: true
+                source:
+                  address: 198.51.100.0
+                  netmask: 255.255.255.0
+                destination:
+                  address: 198.51.110.0
+                  netmask: 255.255.255.0
+                time_range: temp
           - name: R1_traffic
             aces:
-            - grant: deny
-              protocol_options:
-                tcp: true
-              source:
-                address: 2001:db8:0:3::/64
-                port_protocol:
-                  eq: www
-              destination:
-                address: 2001:fc8:0:4::/64
-                port_protocol:
-                  eq: telnet
-              inactive: true
+              - grant: deny
+                protocol_options:
+                  tcp: true
+                source:
+                  address: 2001:db8:0:3::/64
+                  port_protocol:
+                    eq: www
+                destination:
+                  address: 2001:fc8:0:4::/64
+                  port_protocol:
+                    eq: telnet
+                inactive: true
         state: rendered
 
     # Module Execution Result:
@@ -3056,7 +3056,7 @@ Examples
     #
     # "rendered": [
     #         "access-list temp_access line 1
-    #                                  extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0
+    #                                  extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0
     #                                  eq www log default"
     #         "access-list temp_access line 2
     #                                  extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
@@ -3070,7 +3070,7 @@ Examples
     # parsed.cfg
     #
     # access-list test_access; 2 elements; name hash: 0xaf1b712e
-    # access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 192.0.3.0 255.255.255.0 eq www log default
+    # access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default
     # access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors
     # access-list test_R1_traffic; 1 elements; name hash: 0xaf40d3c2
     # access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive
@@ -3090,7 +3090,7 @@ Examples
     #                     "aces": [
     #                         {
     #                             "destination": {
-    #                                 "address": "192.0.3.0",
+    #                                 "address": "198.51.100.0",
     #                                 "netmask": "255.255.255.0",
     #                                 "port_protocol": {
     #                                     "eq": "www"

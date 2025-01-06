@@ -4,24 +4,75 @@ Cisco Asa Collection Release Notes
 
 .. contents:: Topics
 
-
-v4.0.0
+v6.0.0
 ======
 
 Release Summary
 ---------------
 
-- Releasing 4.0.0 with deprecated older modules removed and GH actions enabled for sanity and unit test over the repo.
-- This release drops support for `connection: local` and provider dictionary.
+With this release, the minimum required version of `ansible-core` for this collection is `2.15.0`. The last version known to be compatible with `ansible-core` versions below `2.15` is v5.0.1.
+
+Major Changes
+-------------
+
+- Bumping `requires_ansible` to `>=2.15.0`, since previous ansible-core versions are EoL now.
+
+v5.0.1
+======
+
+Bugfixes
+--------
+
+- Prevents module_defaults from were being incorrectly applied to the platform action, instead of the concerned module.
+
+v5.0.0
+======
+
+Release Summary
+---------------
+
+Starting from this release, the minimum `ansible-core` version this collection requires is `2.14.0`. The last known version compatible with ansible-core<2.14 is `v4.0.3`.
+
+Major Changes
+-------------
+
+- Bumping `requires_ansible` to `>=2.14.0`, since previous ansible-core versions are EoL now.
+
+v4.0.3
+======
+
+Release Summary
+---------------
+
+Release with updated workflow and lint fixes.
+
+v4.0.2
+======
+
+Documentation Changes
+---------------------
+
+- Replace all references to non-example address ranges in module documentation and tests.
+
+v4.0.1
+======
+
+Release Summary
+---------------
+
+Release with bugfix fixing the import path coming from utils and netcommon lib.
+
+v4.0.0
+======
 
 Major Changes
 -------------
 
 - Please use either of the following connection types - network_cli, httpapi or netconf.
-- This release drops support for `connection: local` and provider dictionary.
-- Use of connection: local and the provider option are no longer valid on any modules in this collection.
-- This release removes all deprecated plugins that have reached their end-of-life.
 - This includes the following modules:
+- This release drops support for `connection: local` and provider dictionary.
+- This release removes all deprecated plugins that have reached their end-of-life.
+- Use of connection: local and the provider option are no longer valid on any modules in this collection.
 - asa_acl
 - asa_og
 
@@ -31,7 +82,7 @@ v3.1.0
 Release Summary
 ---------------
 
-- Releasing 3.1.0 with bugfix.
+Releasing 3.1.0 with bugfix.
 
 Bugfixes
 --------
@@ -52,7 +103,7 @@ Major Changes
 Bugfixes
 --------
 
-- Fixes asa_ogs services object and port object issue
+- Fixes asa_ogs services object and port object issue ((https://github.com/ansible-collections/cisco.asa/issues/152).
 
 v2.1.0
 ======
@@ -60,7 +111,7 @@ v2.1.0
 Release Summary
 ---------------
 
-- Releasing 2.1.0 with updated readme with changelog link, minor change, and bugfix.
+Releasing 2.1.0 with updated readme with changelog link, minor change, and bugfix.
 
 Minor Changes
 -------------
@@ -92,8 +143,8 @@ v2.0.2
 Bugfixes
 --------
 
-- To fix asa_acls where ipv6 with host wasn't getting rendered as expected and facts was skipping (https://github.com/ansible-collections/cisco.asa/issues/105).
-- To fix Cisco ASA network_object object config which wasn't working as expected. (https://github.com/ansible-collections/cisco.asa/issues/99).
+- To fix Cisco ASA network_object object config which wasn't working as expected.
+- To fix asa_acls where ipv6 with host wasn't getting rendered as expected and facts was skipping.
 
 v2.0.1
 ======
@@ -101,8 +152,8 @@ v2.0.1
 Minor Changes
 -------------
 
-- Remove tests/sanity/requirements.txt (https://github.com/ansible-collections/cisco.asa/pull/94).
 - Add ignore-2.12.txt (https://github.com/ansible-collections/cisco.asa/pull/102).
+- Remove tests/sanity/requirements.txt (https://github.com/ansible-collections/cisco.asa/pull/94).
 
 Bugfixes
 --------
@@ -116,8 +167,8 @@ v2.0.0
 Major Changes
 -------------
 
-- Requires ansible.netcommon v2.0.0+ to support `ansible_network_single_user_mode` and `ansible_network_import_modules`.
 - Please refer to ansible.netcommon `changelog <https://github.com/ansible-collections/ansible.netcommon/blob/main/changelogs/CHANGELOG.rst#ansible-netcommon-collection-release-notes>` for more details.
+- Requires ansible.netcommon v2.0.0+ to support `ansible_network_single_user_mode` and `ansible_network_import_modules`.
 
 Minor Changes
 -------------
@@ -132,25 +183,15 @@ Bugfixes
 v1.0.4
 ======
 
-Release Summary
----------------
-
-- Releasing 1.0.4 with updated readme with changelog link, galaxy description, and bugfix.
-
 Bugfixes
 --------
 
-- Update asa acls RM to use newer RM design approach and addeed support for any4/any6 feature (https://github.com/ansible-collections/cisco.asa/pull/64).
 - Add version key to galaxy.yaml to work around ansible-galaxy bug
 - To fix ASA OGs module where delete by name was not resulting to an expected behaviour (https://github.com/ansible-collections/cisco.asa/pull/77).
+- Update asa acls RM to use newer RM design approach and addeed support for any4/any6 feature (https://github.com/ansible-collections/cisco.asa/pull/64).
 
 v1.0.3
 ======
-
-Release Summary
----------------
-
-- Releasing 1.0.3 with updated readme with changelog link, galaxy description, and bugfix.
 
 Bugfixes
 --------
@@ -163,7 +204,7 @@ v1.0.2
 Release Summary
 ---------------
 
-- Re-releasing 1.0.1 with updated changelog.
+Re-releasing 1.0.1 with updated changelog.
 
 v1.0.1
 ======
@@ -193,10 +234,8 @@ Cliconf
 New Modules
 -----------
 
-- asa_acl - (deprecated, removed after 2022-06-01) Manage access-lists on a Cisco ASA
 - asa_acls - Access-Lists resource module
 - asa_command - Run arbitrary commands on Cisco ASA devices
 - asa_config - Manage configuration sections on Cisco ASA devices
 - asa_facts - Collect facts from remote devices running Cisco ASA
-- asa_og - (deprecated, removed after 2022-06-01) Manage object groups on a Cisco ASA
 - asa_ogs - Object Group resource module

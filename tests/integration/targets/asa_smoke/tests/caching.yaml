@@ -19,8 +19,8 @@
           - network-object host 192.0.2.2
           - object-group network test_network_og
           - description test_network_og
-          - network-object host 192.0.3.1
-          - network-object host 192.0.3.2
+          - network-object host 198.51.100.1
+          - network-object host 198.51.100.2
           - network-object 2001:db8:3::/64
           - object-group user test_og_user
           - description test_user
@@ -50,8 +50,8 @@
                 description: test_network_og
                 network_object:
                   host:
-                    - 192.0.3.1
-                    - 192.0.3.2
+                    - 198.51.100.1
+                    - 198.51.100.2
                   ipv6_address:
                     - 2001:db8:3::/64
           - object_type: security

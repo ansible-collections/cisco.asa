@@ -36,7 +36,6 @@ class AclsFacts(object):
     """The asa_acls fact class"""
 
     def __init__(self, module, subspec="config", options="options"):
-
         self._module = module
         self.argument_spec = AclsArgs.argument_spec
         spec = deepcopy(self.argument_spec)
@@ -91,6 +90,7 @@ class AclsFacts(object):
                         each.get("protocol")
                         and each.get("protocol") != "icmp"
                         and each.get("protocol") != "icmp6"
+                        and "object-group" not in each.get("protocol")
                     ):
                         each["protocol_options"] = {each.get("protocol"): True}
                 acls.append(val)

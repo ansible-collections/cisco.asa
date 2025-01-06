@@ -80,7 +80,7 @@ Parameters
                 <td>
                 </td>
                 <td>
-                        <div>This is a dict object containing configurable options related to backup file path. The value of this option is read only when <code>backup</code> is set to <em>yes</em>, if <code>backup</code> is set to <em>no</em> this option will be silently ignored.</div>
+                        <div>This is a dict object containing configurable options related to backup file path. The value of this option is read only when <code>backup</code> is set to <em>true</em>, if <code>backup</code> is set to <em>no</em> this option will be silently ignored.</div>
                 </td>
             </tr>
                                 <tr>
@@ -348,19 +348,18 @@ Examples
 
     - cisco.asa.asa_config:
         lines:
-        - network-object host 10.80.30.18
-        - network-object host 10.80.30.19
-        - network-object host 10.80.30.20
+          - network-object host 10.80.30.18
+          - network-object host 10.80.30.19
+          - network-object host 10.80.30.20
         parents: [object-group network OG-MONITORED-SERVERS]
 
     - cisco.asa.asa_config:
         host: '{{ inventory_hostname }}'
         lines:
-        - message-length maximum client auto
-        - message-length maximum 512
+          - message-length maximum client auto
+          - message-length maximum 512
         match: line
         parents: [policy-map type inspect dns PM-DNS, parameters]
-        authorize: yes
         auth_pass: cisco
         username: admin
         password: cisco
@@ -368,42 +367,42 @@ Examples
 
     - cisco.asa.asa_config:
         lines:
-        - ikev1 pre-shared-key MyS3cretVPNK3y
+          - ikev1 pre-shared-key MyS3cretVPNK3y
         parents: tunnel-group 1.1.1.1 ipsec-attributes
-        passwords: yes
+        passwords: true
 
     - name: attach ASA acl on interface vlan13/nameif cloud13
       cisco.asa.asa_config:
         lines:
-        - access-group cloud-acl_access_in in interface cloud13
+          - access-group cloud-acl_access_in in interface cloud13
 
     - name: configure ASA (>=9.2) default BGP
       cisco.asa.asa_config:
         lines:
-        - bgp log-neighbor-changes
-        - bgp bestpath compare-routerid
+          - bgp log-neighbor-changes
+          - bgp bestpath compare-routerid
         parents:
-        - router bgp 65002
+          - router bgp 65002
       register: bgp
       when: bgp_default_config is defined
     - name: configure ASA (>=9.2) BGP neighbor in default/single context mode
       cisco.asa.asa_config:
         lines:
-        - bgp router-id {{ bgp_router_id }}
-        - neighbor {{ bgp_neighbor_ip }} remote-as {{ bgp_neighbor_as }}
-        - neighbor {{ bgp_neighbor_ip }} description {{ bgp_neighbor_name }}
+          - bgp router-id {{ bgp_router_id }}
+          - neighbor {{ bgp_neighbor_ip }} remote-as {{ bgp_neighbor_as }}
+          - neighbor {{ bgp_neighbor_ip }} description {{ bgp_neighbor_name }}
         parents:
-        - router bgp 65002
-        - address-family ipv4 unicast
+          - router bgp 65002
+          - address-family ipv4 unicast
       register: bgp
       when: bgp_neighbor_as is defined
     - name: configure ASA interface with standby
       cisco.asa.asa_config:
         lines:
-        - description my cloud interface
-        - nameif cloud13
-        - security-level 50
-        - ip address 192.168.13.1 255.255.255.0 standby 192.168.13.2
+          - description my cloud interface
+          - nameif cloud13
+          - security-level 50
+          - ip address 192.168.13.1 255.255.255.0 standby 192.168.13.2
         parents: [interface Vlan13]
       register: interface
     - name: Show changes to interface from task above
@@ -413,8 +412,8 @@ Examples
     - name: configurable backup path
       cisco.asa.asa_config:
         lines:
-        - access-group cloud-acl_access_in in interface cloud13
-        backup: yes
+          - access-group cloud-acl_access_in in interface cloud13
+        backup: true
         backup_options:
           filename: backup.cfg
           dir_path: /home/user
@@ -446,7 +445,7 @@ Common return values are documented `here <https://docs.ansible.com/ansible/late
                       <span style="color: purple">string</span>
                     </div>
                 </td>
-                <td>when backup is yes</td>
+                <td>when backup is true</td>
                 <td>
                             <div>The full path to the backup file</div>
                     <br/>

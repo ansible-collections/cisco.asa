@@ -2,11 +2,6 @@ ancestor: null
 releases:
   1.0.0:
     modules:
-      - description:
-          (deprecated, removed after 2022-06-01) Manage access-lists on a
-          Cisco ASA
-        name: asa_acl
-        namespace: ""
       - description: Access-Lists resource module
         name: asa_acls
         namespace: ""
@@ -18,11 +13,6 @@ releases:
         namespace: ""
       - description: Collect facts from remote devices running Cisco ASA
         name: asa_facts
-        namespace: ""
-      - description:
-          (deprecated, removed after 2022-06-01) Manage object groups on
-          a Cisco ASA
-        name: asa_og
         namespace: ""
       - description: Object Group resource module
         name: asa_ogs
@@ -42,8 +32,8 @@ releases:
         - Removes Cisco ASA sanity ignores and sync for argspec and docstring (https://github.com/ansible-collections/cisco.asa/pull/59).
         - Updated docs.
     fragments:
-      - 48-add-change-log-1.0.0.yaml
       - 1.1.0_update_docs.yaml
+      - 48-add-change-log-1.0.0.yaml
       - fix_config_module_src_backup.yaml
       - remove_asa_ignore.yaml
     release_date: "2020-08-03"
@@ -71,8 +61,8 @@ releases:
           any4/any6 feature (https://github.com/ansible-collections/cisco.asa/pull/64).
     fragments:
       - 56_acl_any4_ay6_feature_update_use_rm_approach.yaml
-      - galaxy-version.yaml
       - 76_asa_og_state_delete_not_working_as_expected.yaml
+      - galaxy-version.yaml
     release_date: "2020-11-26"
   2.0.0:
     changes:
@@ -135,13 +125,15 @@ releases:
     release_date: "2021-08-31"
   2.1.0:
     changes:
-      release_summary: Releasing 2.1.0 with updated readme with changelog link, minor change, and bugfix.
       bugfixes:
         - Fixes asa_acls to add the support for service object group under destination
           option ((https://github.com/ansible-collections/cisco.asa/issues/100).
       minor_changes:
         - Fixes asa_ogs service object where complete params were not supported and
           added with the PR ((https://github.com/ansible-collections/cisco.asa/issues/100).
+      release_summary:
+        Releasing 2.1.0 with updated readme with changelog link, minor
+        change, and bugfix.
     fragments:
       - 0-copy_ignore_txt.yml
       - 100_fix_asa_ogs_services_object_param.yaml
@@ -159,12 +151,12 @@ releases:
     release_date: "2022-05-05"
   3.1.0:
     changes:
-      release_summary: Releasing 3.1.0 with bugfix.
       bugfixes:
         - Fix service-object port range rendering
         - Fixes asa_ogs port object range issue and duplicate service cmd (https://github.com/ansible-collections/cisco.asa/issues/165,
           https://github.com/ansible-collections/cisco.asa/issues/166).
         - Unit TC for svc src/dst port range
+      release_summary: Releasing 3.1.0 with bugfix.
     fragments:
       - fix_asa_ogs_bug_165_166.yaml
     release_date: "2022-06-28"
@@ -173,11 +165,11 @@ releases:
       major_changes:
         - Please use either of the following connection types - network_cli, httpapi
           or netconf.
+        - "This includes the following modules:"
         - "This release drops support for `connection: local` and provider dictionary."
+        - This release removes all deprecated plugins that have reached their end-of-life.
         - "Use of connection: local and the provider option are no longer valid on any
           modules in this collection."
-        - This release removes all deprecated plugins that have reached their end-of-life.
-        - "This includes the following modules:"
         - asa_acl
         - asa_og
     fragments:
@@ -185,3 +177,62 @@ releases:
       - remove_deprecated_modules.yaml
       - remove_provider.yaml
     release_date: "2022-10-13"
+  4.0.1:
+    changes:
+      release_summary:
+        Release with bugfix fixing the import path coming from utils
+        and netcommon lib.
+    fragments:
+      - cleanup.yaml
+      - pre-commit.yaml
+      - rm_base.yaml
+      - rm_base_plus.yaml
+    release_date: "2023-06-13"
+  4.0.2:
+    changes:
+      doc_changes:
+        - Replace all references to non-example address ranges in module documentation
+          and tests.
+    fragments:
+      - bindep_fix.yaml
+      - test-net-2.yaml
+    release_date: "2023-09-27"
+  4.0.3:
+    changes:
+      release_summary: Release with updated workflow and lint fixes.
+    fragments:
+      - codecov_pr.yml
+      - lint_fixtures.yaml
+    release_date: "2023-10-31"
+  5.0.0:
+    changes:
+      major_changes:
+        - Bumping `requires_ansible` to `>=2.14.0`, since previous ansible-core versions
+          are EoL now.
+      release_summary:
+        Starting from this release, the minimum `ansible-core` version
+        this collection requires is `2.14.0`. The last known version compatible with
+    fragments:
+      - lint_fixtures.yaml
+    release_date: "2023-11-30"
+  5.0.1:
+    changes:
+      bugfixes:
+        - Prevents module_defaults from were being incorrectly applied to the platform
+          action, instead of the concerned module.
+    fragments:
+      - fix_module_defaults.yaml
+    release_date: "2024-01-31"
+  6.0.0:
+    changes:
+      major_changes:
+        - Bumping `requires_ansible` to `>=2.15.0`, since previous ansible-core versions
+          are EoL now.
+      release_summary:
+        "With this release, the minimum required version of `ansible-core`
+        for this collection is `2.15.0`. The last version known to be compatible with
+        `ansible-core` versions below `2.15` is v5.0.1."
+    fragments:
+      - add_2.18.yaml
+      - bump_215.yaml
+    release_date: "2024-06-11"
