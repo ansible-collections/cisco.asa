@@ -89,6 +89,10 @@ class Cliconf(CliconfBase):
             if match:
                 device_info["network_os_model"] = match.group(1)
 
+            match = re.search(r"Hardware:\s+ ([\w-]+)", data, re.M)
+            if match:
+                device_info["network_os_model"] = match.group(1)
+
             match = re.search(r"^(.+) up", data, re.M)
             if match:
                 device_info["network_os_hostname"] = match.group(1)
