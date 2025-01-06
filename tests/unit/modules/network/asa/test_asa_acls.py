@@ -88,7 +88,7 @@ class TestAsaAclsModule(TestAsaModule):
             access-list test_global_access line 2 remark test global remark
             access-list test_access; 2 elements; name hash: 0x96b5d78b
             access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default (hitcnt=0) 0xdc46eb6e
-            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8948
+            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8
             access-list test_access line 3 extended permit ip host 192.0.2.2 any interval 300 (hitcnt=0) 0x831d897d
             access-list test_R1_traffic; 1 elements; name hash: 0x2c20a0c
             access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive (hitcnt=0) (inactive) 0x11821a52
@@ -170,7 +170,7 @@ class TestAsaAclsModule(TestAsaModule):
             access-list test_global_access line 2 remark test global remark
             access-list test_access; 2 elements; name hash: 0x96b5d78b
             access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default (hitcnt=0) 0xdc46eb6e
-            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8948
+            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8
             access-list test_access line 3 extended permit ip host 192.0.2.2 any interval 300 (hitcnt=0) 0x831d897d
             access-list test_R1_traffic; 1 elements; name hash: 0x2c20a0c
             access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive (hitcnt=0) (inactive) 0x11821a52
@@ -380,7 +380,7 @@ class TestAsaAclsModule(TestAsaModule):
             access-list test_global_access line 2 remark test global remark
             access-list test_access; 2 elements; name hash: 0x96b5d78b
             access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default (hitcnt=0) 0xdc46eb6e
-            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8948
+            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8
             access-list test_access line 3 extended permit ip host 192.0.2.2 any interval 300 (hitcnt=0) 0x831d897d
             access-list test_R1_traffic; 1 elements; name hash: 0x2c20a0c
             access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive (hitcnt=0) (inactive) 0x11821a52
@@ -466,7 +466,7 @@ class TestAsaAclsModule(TestAsaModule):
             access-list test_global_access line 2 remark test global remark
             access-list test_access; 2 elements; name hash: 0x96b5d78b
             access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default (hitcnt=0) 0xdc46eb6e
-            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8948
+            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8
             access-list test_access line 3 extended permit ip host 192.0.2.2 any interval 300 (hitcnt=0) 0x831d897d
             access-list test_R1_traffic; 1 elements; name hash: 0x2c20a0c
             access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive (hitcnt=0) (inactive) 0x11821a52
@@ -676,7 +676,7 @@ class TestAsaAclsModule(TestAsaModule):
             access-list test_global_access line 2 remark test global remark
             access-list test_access; 2 elements; name hash: 0x96b5d78b
             access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default (hitcnt=0) 0xdc46eb6e
-            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8948
+            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8
             access-list test_access line 3 extended permit ip host 192.0.2.2 any interval 300 (hitcnt=0) 0x831d897d
             access-list test_R1_traffic; 1 elements; name hash: 0x2c20a0c
             access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive (hitcnt=0) (inactive) 0x11821a52
@@ -755,7 +755,7 @@ class TestAsaAclsModule(TestAsaModule):
             access-list test_global_access line 2 remark test global remark
             access-list test_access; 2 elements; name hash: 0x96b5d78b
             access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default (hitcnt=0) 0xdc46eb6e
-            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8948
+            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8
             access-list test_access line 3 extended permit ip host 192.0.2.2 any interval 300 (hitcnt=0) 0x831d897d
             access-list test_R1_traffic; 1 elements; name hash: 0x2c20a0c
             access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive (hitcnt=0) (inactive) 0x11821a52
@@ -965,7 +965,7 @@ class TestAsaAclsModule(TestAsaModule):
             access-list test_global_access line 2 remark test global remark
             access-list test_access; 2 elements; name hash: 0x96b5d78b
             access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default (hitcnt=0) 0xdc46eb6e
-            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8948
+            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8
             access-list test_access line 3 extended permit ip host 192.0.2.2 any interval 300 (hitcnt=0) 0x831d897d
             access-list test_R1_traffic; 1 elements; name hash: 0x2c20a0c
             access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive (hitcnt=0) (inactive) 0x11821a52
@@ -1014,7 +1014,7 @@ class TestAsaAclsModule(TestAsaModule):
             access-list test_global_access line 2 remark test global remark
             access-list test_access; 2 elements; name hash: 0x96b5d78b
             access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default (hitcnt=0) 0xdc46eb6e
-            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8948
+            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8
             access-list test_access line 3 extended permit ip host 192.0.2.2 any interval 300 (hitcnt=0) 0x831d897d
             access-list test_R1_traffic; 1 elements; name hash: 0x2c20a0c
             access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive (hitcnt=0) (inactive) 0x11821a52
@@ -1062,7 +1062,7 @@ class TestAsaAclsModule(TestAsaModule):
             access-list test_global_access line 2 remark test global remark
             access-list test_access; 2 elements; name hash: 0x96b5d78b
             access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default (hitcnt=0) 0xdc46eb6e
-            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8948
+            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8
             access-list test_access line 3 extended permit ip host 192.0.2.2 any interval 300 (hitcnt=0) 0x831d897d
             access-list test_R1_traffic; 1 elements; name hash: 0x2c20a0c
             access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive (hitcnt=0) (inactive) 0x11821a52
@@ -1127,7 +1127,7 @@ class TestAsaAclsModule(TestAsaModule):
             access-list test_global_access line 2 remark test global remark
             access-list test_access; 2 elements; name hash: 0x96b5d78b
             access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default (hitcnt=0) 0xdc46eb6e
-            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8948
+            access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8
             access-list test_access line 3 extended permit ip host 192.0.2.2 any interval 300 (hitcnt=0) 0x831d897d
             access-list test_R1_traffic; 1 elements; name hash: 0x2c20a0c
             access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive (hitcnt=0) (inactive) 0x11821a52
@@ -1271,8 +1271,8 @@ class TestAsaAclsModule(TestAsaModule):
                         {
                             "grant": "permit",
                             "line": 2,
-                            "source": {"object_group": "MYSERV.11"},
-                            "destination": {
+                            "protocol": "object-group MYSERV.11",
+                            "source": {
                                 "object_group": "ALLSERV.12",
                                 "port_protocol": {"eq": "9389"},
                             },
@@ -1298,10 +1298,10 @@ class TestAsaAclsModule(TestAsaModule):
                             "source": {"object_group": "O-Environments"},
                             "destination": {"any": True, "service_object_group": "O-Windows-TCP"},
                             "protocol_options": {"tcp": True},
-                        },
+                        }
                     ],
                 },
-            ],
+            ]
         }
         result = self.execute_module(changed=False)
         self.assertEqual(result["gathered"], facts)
