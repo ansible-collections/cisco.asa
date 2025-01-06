@@ -1,3 +1,2 @@
 minor_changes:
   - cisco.asa.asa_acls - add support for specifying object-group as protocol
-  - cisco.asa.asa - add support for hardware version for asa appliance
