@@ -1298,10 +1298,10 @@ class TestAsaAclsModule(TestAsaModule):
                             "source": {"object_group": "O-Environments"},
                             "destination": {"any": True, "service_object_group": "O-Windows-TCP"},
                             "protocol_options": {"tcp": True},
-                        }
+                        },
                     ],
                 },
-            ]
+            ],
         }
         result = self.execute_module(changed=False)
         self.assertEqual(result["gathered"], facts)
