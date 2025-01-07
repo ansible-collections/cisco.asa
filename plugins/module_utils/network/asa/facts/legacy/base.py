@@ -122,7 +122,7 @@ class Hardware(FactsBase):
             if "Invalid input detected" in data:
                 warnings.append("Unable to gather memory statistics")
             else:
-                mem_list = [l for l in data.splitlines() if "memory" in l]
+                mem_list = [mem for mem in data.splitlines() if "memory" in mem]
                 for each in mem_list:
                     if "Free memory" in each:
                         match = re.search(

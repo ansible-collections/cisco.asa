@@ -8,19 +8,6 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-import sys
-
-import pytest
-
-
-# These tests and/or the module under test are unstable on Python 3.5.
-# See: https://app.shippable.com/github/ansible/ansible/runs/161331/15/tests
-# This is most likely due to CPython 3.5 not maintaining dict insertion order.
-pytestmark = pytest.mark.skipif(
-    sys.version_info[:2] == (3, 5),
-    reason="Tests and/or module are unstable on Python 3.5.",
-)
-
 from textwrap import dedent
 from unittest.mock import patch
 
