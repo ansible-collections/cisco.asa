@@ -1,0 +1,2 @@
+bugfixes:
+  - cisco.asa - fixed Cliconf.edit_config() got an unexpected keyword argument 'candidate' error
