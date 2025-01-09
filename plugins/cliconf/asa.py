@@ -118,8 +118,8 @@ class Cliconf(CliconfBase):
         return self.send_command(cmd)
 
     @enable_mode
-    def edit_config(self, command):
-        for cmd in chain(["configure terminal"], to_list(command), ["end"]):
+    def edit_config(self, candidate=None, commit=True, replace=None, comment=None):
+        for cmd in chain(["configure terminal"], to_list(candidate), ["end"]):
             self.send_command(cmd)
 
     def get(
