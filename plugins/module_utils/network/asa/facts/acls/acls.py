@@ -70,6 +70,9 @@ class AclsFacts(object):
             for key, val in iteritems(current.get("acls")):
                 if val.get("name") == "cached":
                     continue
+                # there might be acls w/o aces if they're forward-referenced
+                if val.get("aces") is None:
+                    continue
                 for each in val.get("aces"):
                     if "protocol_number" in each:
                         each["protocol_options"] = {
@@ -90,7 +93,7 @@ class AclsFacts(object):
                         each.get("protocol")
                         and each.get("protocol") != "icmp"
                         and each.get("protocol") != "icmp6"
-                        and "object-group" not in each.get("protocol")
+                        and "object" not in each.get("protocol")
                     ):
                         each["protocol_options"] = {each.get("protocol"): True}
                 acls.append(val)
