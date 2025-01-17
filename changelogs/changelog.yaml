@@ -212,6 +212,7 @@ releases:
       release_summary:
         Starting from this release, the minimum `ansible-core` version
         this collection requires is `2.14.0`. The last known version compatible with
+        ansible-core<2.14 is `v4.0.3`.
     fragments:
       - lint_fixtures.yaml
     release_date: "2023-11-30"
@@ -239,8 +240,12 @@ releases:
   6.1.0:
     changes:
       bugfixes:
+        - cisco.asa - fixed Cliconf.edit_config() got an unexpected keyword argument
+          'candidate' error
         - cisco.asa.asa_acls - fixed ace parsing when source is object-group and its
           name contains dots
+        - cisco.asa.asa_acls - fixed acl modification commands order if object/group
+          name contains `no`
       doc_changes:
         - Includes a new support related section in the README.
       minor_changes:
@@ -250,6 +255,7 @@ releases:
       - 0-readme.yml
       - 239-ace-object-group-fix.yml
       - 240-ace-protocol-object-group.yml
+      - 241-sorting-fix.yml
       - adds_support.yaml
       - asa_hardware.yml
       - ignore_219.yaml

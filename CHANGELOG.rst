@@ -16,7 +16,9 @@ Minor Changes
 Bugfixes
 --------
 
+- cisco.asa - fixed Cliconf.edit_config() got an unexpected keyword argument 'candidate' error
 - cisco.asa.asa_acls - fixed ace parsing when source is object-group and its name contains dots
+- cisco.asa.asa_acls - fixed acl modification commands order if object/group name contains `no`
 
 Documentation Changes
 ---------------------
@@ -50,7 +52,7 @@ v5.0.0
 Release Summary
 ---------------
 
-Starting from this release, the minimum `ansible-core` version this collection requires is `2.14.0`. The last known version compatible with
+Starting from this release, the minimum `ansible-core` version this collection requires is `2.14.0`. The last known version compatible with ansible-core<2.14 is `v4.0.3`.
 
 Major Changes
 -------------
