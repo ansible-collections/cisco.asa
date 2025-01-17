@@ -63,6 +63,14 @@
                     port_protocol:
                       eq: www
                   log: default
+                - grant: deny
+                  line: 5
+                  protocol: object test_svc_object
+                  source:
+                    object: test_object_no_1
+                  destination:
+                    object: test_object_no_2
+                  log: default
             - name: test_global_access
               acl_type: extended
               aces:
