@@ -19,4 +19,3 @@
       - host 198.51.100.1
     parents:
       - object network test_object_no_2
-  
