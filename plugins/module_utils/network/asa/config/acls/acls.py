@@ -143,9 +143,9 @@ class Acls(ResourceModule):
                 temp.append(k)
             self._compare(want=want, have=haved.pop(k, {}))
         if self.state in ["replaced", "overridden", "deleted"]:
-            config_cmd = [cmd for cmd in self.commands if "no" in cmd][::-1]
+            config_cmd = [cmd for cmd in self.commands if cmd.startswith("no ")][::-1]
             config_cmd.extend(
-                [cmd for cmd in self.commands if "no" not in cmd],
+                [cmd for cmd in self.commands if not cmd.startswith("no ")],
             )
             self.commands = config_cmd
 

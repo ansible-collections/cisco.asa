@@ -1,2 +1,0 @@
-minor_changes:
-  - cisco.asa.asa - add support to fetch hardware specific information in facts
