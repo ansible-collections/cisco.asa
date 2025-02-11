@@ -1,0 +1,5 @@
+---
+- name: Populate Config
+  cisco.asa.asa_objects:
+    config: "{{ initial_config }}"
+

@@ -1,0 +1,173 @@
+---
+initial_config:
+  - object_type: network
+    objects:
+    - description: a test fqdn object
+      fqdn: google.com
+      name: test_fqdn_obj
+    - description: a test host object
+      host: 1.2.3.4
+      name: test_host_obj
+    - description: a test range object
+      name: test_range_obj
+      range: 10.0.0.1 10.0.0.10
+    - description: a test subnet object
+      name: test_subnet_obj
+      subnet: 10.0.0.0 255.255.255.0
+  - object_type: service
+    objects:
+    - name: test_gre_obj
+      service:
+        protocol: gre
+    - name: test_icmp_echo_obj
+      service:
+        icmpopt:
+          name: echo
+        protocol: icmp
+    - name: test_icmp_echo_repl_code_obj
+      service:
+        icmpopt:
+          code: '0'
+          name: echo-reply
+        protocol: icmp
+    - name: test_tcp_eq_obj
+      service:
+        destination_port:
+          eq: https
+        protocol: tcp
+    - name: test_tcp_range_obj
+      service:
+        destination_port:
+          range:
+            end: https
+            start: www
+        protocol: tcp
+    - name: test_tcp_source_eq_obj
+      service:
+        protocol: tcp
+        source_port:
+          eq: '5671'
+    - name: test_tcp_source_range_obj
+      service:
+        protocol: tcp
+        source_port:
+          range:
+            end: '5672'
+            start: '5671'
+deleted:
+  commands:
+    - no object network test_range_obj
+    - no object service test_icmp_echo_obj
+delete_all:
+  commands:
+    - no object network test_fqdn_obj
+    - no object network test_host_obj
+    - no object network test_range_obj
+    - no object network test_subnet_obj
+    - no object service test_gre_obj
+    - no object service test_icmp_echo_obj
+    - no object service test_icmp_echo_repl_code_obj
+    - no object service test_tcp_eq_obj
+    - no object service test_tcp_range_obj
+    - no object service test_tcp_source_eq_obj
+    - no object service test_tcp_source_range_obj
+replaced:
+  commands:
+    - object network test_fqdn_obj
+    - description a test fqdn v4 object
+    - fqdn v4 microsoft.com
+    - object network test_host_obj_1
+    - description another test host object
+    - host 1.2.3.4
+    - object service test_icmp_echo_obj
+    - service icmp echo 8
+overridden:
+  config:
+    - object_type: network
+      objects:
+        - description: a modified test fqdn object
+          fqdn_v4: microsoft.com
+          name: test_fqdn_obj
+        - description: a test subnet object
+          name: test_subnet_obj
+          subnet: 10.0.0.0 255.255.255.0
+        - description: a test range object
+          name: test_range_another_obj
+          range: 10.0.10.1 10.0.10.10
+    - object_type: service
+      objects:
+        - name: test_gre_obj
+          service:
+            protocol: gre
+  commands:
+    - no object network test_host_obj
+    - no object network test_range_obj
+    - no object service test_icmp_echo_obj
+    - no object service test_icmp_echo_repl_code_obj
+    - no object service test_tcp_eq_obj
+    - no object service test_tcp_range_obj
+    - no object service test_tcp_source_eq_obj
+    - no object service test_tcp_source_range_obj
+    - object network test_fqdn_obj
+    - description a modified test fqdn object
+    - fqdn v4 microsoft.com
+    - object network test_range_another_obj
+    - description a test range object
+    - range 10.0.10.1 10.0.10.10
+gathered: 
+  config: "{{ initial_config }}"
+parsed:
+  config: "{{ initial_config }}"
+rtt:
+  commands:
+    - no object network test_range_another_obj
+    - object network test_fqdn_obj
+    - description a test fqdn object
+    - fqdn google.com
+    - object network test_host_obj
+    - description a test host object
+    - host 1.2.3.4
+    - object network test_range_obj
+    - description a test range object
+    - range 10.0.0.1 10.0.0.10
+    - object service test_icmp_echo_obj
+    - service icmp echo
+    - object service test_icmp_echo_repl_code_obj
+    - service icmp echo-reply 0
+    - object service test_tcp_eq_obj
+    - service tcp destination eq https
+    - object service test_tcp_range_obj
+    - service tcp destination range www https
+    - object service test_tcp_source_eq_obj
+    - service tcp source eq 5671
+    - object service test_tcp_source_range_obj
+    - service tcp source range 5671 5672
+populated:
+  commands:
+    - object network test_fqdn_obj
+    - description a test fqdn object
+    - fqdn google.com
+    - object network test_host_obj
+    - description a test host object
+    - host 1.2.3.4
+    - object network test_range_obj
+    - description a test range object
+    - range 10.0.0.1 10.0.0.10
+    - object network test_subnet_obj
+    - description a test subnet object
+    - subnet 10.0.0.0 255.255.255.0
+    - object service test_gre_obj
+    - service gre
+    - object service test_icmp_echo_obj
+    - service icmp echo
+    - object service test_icmp_echo_repl_code_obj
+    - service icmp echo-reply 0
+    - object service test_tcp_eq_obj
+    - service tcp destination eq https
+    - object service test_tcp_range_obj
+    - service tcp destination range www https
+    - object service test_tcp_source_eq_obj
+    - service tcp source eq 5671
+    - object service test_tcp_source_range_obj
+    - service tcp source range 5671 5672
+
