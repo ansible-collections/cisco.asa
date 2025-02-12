@@ -8,6 +8,15 @@ initial_config:
     - description: a test host object
       host: 1.2.3.4
       name: test_host_obj
+    - description: a test nat object
+      host: 1.2.3.4
+      name: test_nat_obj
+      nat:
+        mapped_if: any
+        real_if: any
+        static:
+          name: 5.6.7.8
+          net_to_net: true
     - description: a test range object
       name: test_range_obj
       range: 10.0.0.1 10.0.0.10
@@ -62,6 +71,7 @@ delete_all:
   commands:
     - no object network test_fqdn_obj
     - no object network test_host_obj
+    - no object network test_nat_obj
     - no object network test_range_obj
     - no object network test_subnet_obj
     - no object service test_gre_obj
@@ -79,6 +89,9 @@ replaced:
     - object network test_host_obj_1
     - description another test host object
     - host 1.2.3.4
+    - object network test_nat_obj
+    - no description a test nat object
+    - no nat (any,any) static 5.6.7.8 net-to-net
     - object service test_icmp_echo_obj
     - service icmp echo 8
 overridden:
@@ -101,6 +114,7 @@ overridden:
             protocol: gre
   commands:
     - no object network test_host_obj
+    - no object network test_nat_obj
     - no object network test_range_obj
     - no object service test_icmp_echo_obj
     - no object service test_icmp_echo_repl_code_obj
@@ -127,6 +141,10 @@ rtt:
     - object network test_host_obj
     - description a test host object
     - host 1.2.3.4
+    - object network test_nat_obj
+    - description a test nat object
+    - host 1.2.3.4
+    - nat (any,any) static 5.6.7.8 net-to-net
     - object network test_range_obj
     - description a test range object
     - range 10.0.0.1 10.0.0.10
@@ -150,6 +168,10 @@ populated:
     - object network test_host_obj
     - description a test host object
     - host 1.2.3.4
+    - object network test_nat_obj
+    - description a test nat object
+    - host 1.2.3.4
+    - nat (any,any) static 5.6.7.8 net-to-net
     - object network test_range_obj
     - description a test range object
     - range 10.0.0.1 10.0.0.10

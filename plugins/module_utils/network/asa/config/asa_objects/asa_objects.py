@@ -59,6 +59,7 @@ class Asa_objects(ResourceModule):
             "obj_fqdn_v6",
             "obj_fqdn",
             "obj_service",
+            "obj_nat",
         ]
 
     def execute_module(self):
@@ -138,7 +139,15 @@ class Asa_objects(ResourceModule):
 
             if isinstance(inw, dict) and inw.get("set") is False and not inh:
                 continue
-            
+
+            # remove description and nat if they're no longer wanted
+            if parser in ["description", "obj_nat"] and inw is None and inh is not None:
+                # need to prepend command set with `object obj_type obj_name` command
+                if not obj_cmd_added:
+                    self.addcmd(want, "obj_name", False)
+                    obj_cmd_added = True
+                self.addcmd(have, parser, True)
+
             if inw is not None and inw != inh:
                 # need to prepend command set with `object obj_type obj_name` command
                 if not obj_cmd_added:

@@ -49,7 +49,8 @@ class Asa_objectsFacts(object):
         objs = []
 
         if not data:
-            data = connection.get("sh running-config object")
+            # in ASA object and object nat configurations are in different sections
+            data = connection.get("sh running-config object") + "\n" + connection.get("sh running-config nat | exclude ^nat")
 
         # parse native config using the Asa_objects template
         asa_objects_parser = Asa_objectsTemplate(lines=data.splitlines(), module=self._module)
@@ -79,6 +80,8 @@ class Asa_objectsFacts(object):
                             obj["fqdn_v4"] = each[1].pop("fqdn_v4")
                         if each[1].get("fqdn_v6"):
                             obj["fqdn_v6"] = each[1].pop("fqdn_v6")
+                        if each[1].get("nat"):
+                            obj["nat"] = each[1].pop("nat")
                     else:
                         if each[1].get("service"):
                             obj["service"] = each[1].pop("service")

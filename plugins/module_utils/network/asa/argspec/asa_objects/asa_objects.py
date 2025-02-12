@@ -53,6 +53,67 @@ class Asa_objectsArgs(object):  # pylint: disable=R0903
                         "fqdn": {"type": "str"},
                         "fqdn_v4": {"type": "str"},
                         "fqdn_v6": {"type": "str"},
+                        "nat": {
+                            "type": "dict",
+                            "options": {
+                                "real_if": {"type": "str"},
+                                "mapped_if": {"type": "str"},
+                                "dynamic": {
+                                    "type": "dict",
+                                    "options": {
+                                        "name": {"type": str},
+                                        "interface": {
+                                            "type": "dict",
+                                            "options": {
+                                                "ipv6": {"type": "bool"},
+                                            },
+                                        },
+                                        "pat_pool": {
+                                            "type": "dict",
+                                            "options": {
+                                                "name": {"type": "str"},
+                                                "interface": {
+                                                    "type": "dict",
+                                                    "options": {
+                                                        "ipv6": {"type": "bool"},
+                                                    },
+                                                },
+                                                "flat": {"type": "bool"},
+                                                "include_reserve": {"type": "bool"},
+                                                "round_robin": {"type": "bool"},
+                                                "block_allocation": {"type": "bool"},
+                                                "extended": {"type": "bool"},
+                                            },
+                                        },
+                                        "dns": {"type": "bool"},
+                                    },
+                                },
+                                "static": {
+                                    "type": "dict",
+                                    "options": {
+                                        "name": {"type": str},
+                                        "interface": {
+                                            "type": "dict",
+                                            "options": {
+                                                "ipv6": {"type": "bool"},
+                                            },
+                                        },
+                                        "service": {
+                                            "type": "dict",
+                                            "options": {
+                                                "protocol": {"type": "str", "choices": ["tcp", "udp", "sctp"]},
+                                                "real_port": {"type": "str"},
+                                                "mapped_port": {"type": "str"},
+                                            },
+                                        },
+                                        "net_to_net": {"type": "bool"},
+                                        "dns": {"type": "bool"},
+                                        "no_proxy_arp": {"type": "bool"},
+                                        "route_lookup": {"type": "bool"},
+                                    },
+                                },
+                            },
+                        },
                         "service": {
                             "type": "dict",
                             "options": {

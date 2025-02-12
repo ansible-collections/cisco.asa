@@ -23,6 +23,7 @@
             - description: another test host object
               host: 1.2.3.4
               name: test_host_obj_1
+            - name: test_nat_obj
           - object_type: service
             objects:
             - name: test_tcp_source_range_obj
@@ -47,7 +48,7 @@
 
     - assert:
         that:
-          - result.commands|length == 8
+          - result.commands|length == replaced.commands|length
           - result.changed == true
           - result.commands|symmetric_difference(replaced.commands) == []
 
