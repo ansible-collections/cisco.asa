@@ -1,0 +1,2 @@
+minor_changes:
+  - cisco.asa.asa_acls - add object support for ace protocol, source and destination parameters
