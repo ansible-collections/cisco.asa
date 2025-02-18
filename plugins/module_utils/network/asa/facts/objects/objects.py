@@ -28,7 +28,6 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates
 )
 
 
-
 class ObjectsFacts(object):
     """The asa objects facts class"""
 
