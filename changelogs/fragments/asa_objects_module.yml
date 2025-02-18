@@ -1,0 +1,2 @@
+major_changes:
+  - cisco.asa.asa_objects - resource module added to configure and manage objects on ASA platforms

@@ -8,7 +8,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 """
-The asa asa_objects fact class
+The asa objects fact class
 It is in this file the configuration is collected from the device
 for a given resource, parsed, and the facts tree is populated
 based on the configuration.
@@ -20,23 +20,23 @@ from ansible.module_utils.six import iteritems
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
     utils,
 )
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates.asa_objects import (
-    Asa_objectsTemplate,
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates.objects import (
+    ObjectsTemplate,
 )
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.asa_objects.asa_objects import (
-    Asa_objectsArgs,
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.objects.objects import (
+    ObjectsArgs,
 )
 
-class Asa_objectsFacts(object):
-    """ The asa asa_objects facts class
+class ObjectsFacts(object):
+    """ The asa objects facts class
     """
 
     def __init__(self, module, subspec='config', options='options'):
         self._module = module
-        self.argument_spec = Asa_objectsArgs.argument_spec
+        self.argument_spec = ObjectsArgs.argument_spec
 
     def populate_facts(self, connection, ansible_facts, data=None):
-        """ Populate the facts for Asa_objects network resource
+        """ Populate the facts for Objects network resource
 
         :param connection: the device connection
         :param ansible_facts: Facts dictionary
@@ -52,10 +52,10 @@ class Asa_objectsFacts(object):
             # in ASA object and object nat configurations are in different sections
             data = connection.get("sh running-config object") + "\n" + connection.get("sh running-config nat | exclude ^nat")
 
-        # parse native config using the Asa_objects template
-        asa_objects_parser = Asa_objectsTemplate(lines=data.splitlines(), module=self._module)
-        # objs = list(asa_objects_parser.parse().values())
-        current = asa_objects_parser.parse()
+        # parse native config using the Objects template
+        objects_parser = ObjectsTemplate(lines=data.splitlines(), module=self._module)
+        # objs = list(objects_parser.parse().values())
+        current = objects_parser.parse()
         if current.get("objects"):
             for k, v in iteritems(current.get("objects")):
                 obj = {}
@@ -99,10 +99,10 @@ class Asa_objectsFacts(object):
         # ansible_facts['ansible_network_resources'].pop('asa_objects', None)
 
         params = utils.remove_empties(
-            asa_objects_parser.validate_config(self.argument_spec, {"config": objs}, redact=True)
+            objects_parser.validate_config(self.argument_spec, {"config": objs}, redact=True)
         )
 
-        facts['asa_objects'] = params.get('config')
+        facts['objects'] = params.get('config')
         ansible_facts['ansible_network_resources'].update(facts)
 
         return ansible_facts

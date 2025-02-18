@@ -7,7 +7,7 @@
 - ansible.builtin.include_tasks: _populate_config.yaml
 
 - block:
-    - name: Overridden module attributes of given objects
+    - name: Override module attributes of given objects
       become: true
       register: result
       cisco.asa.asa_objects: &id001
@@ -20,7 +20,7 @@
           - result.changed == true
           - result.commands|symmetric_difference(overridden.commands) == []
 
-    - name: Overridden module attributes of given object-group (IDEMPOTENT)
+    - name: Override module attributes of given object-group (IDEMPOTENT)
       become: true
       register: result
       cisco.asa.asa_objects: *id001

@@ -11,13 +11,13 @@
       cisco.asa.asa_objects:
         config: "{{ initial_config }}"
 
-    - name: Gather Object group facts
+    - name: Gather Object facts
       cisco.asa.asa_facts:
         gather_subset:
           - "!all"
           - "!min"
         gather_network_resources:
-          - asa_objects
+          - objects
 
     - name: Apply the provided configuration (config to be reverted)
       register: result
@@ -34,7 +34,7 @@
     - name: Revert back to base config using facts round trip
       register: revert
       cisco.asa.asa_objects:
-        config: "{{ ansible_facts['network_resources']['asa_objects'] }}"
+        config: "{{ ansible_facts['network_resources']['objects'] }}"
         state: overridden
 
     - assert:

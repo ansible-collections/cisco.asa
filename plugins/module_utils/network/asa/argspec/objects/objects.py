@@ -23,12 +23,12 @@ __metaclass__ = type
 #############################################
 
 """
-The arg spec for the asa_asa_objects module
+The arg spec for the asa_objects module
 """
 
 
-class Asa_objectsArgs(object):  # pylint: disable=R0903
-    """The arg spec for the asa_asa_objects module
+class ObjectsArgs(object):  # pylint: disable=R0903
+    """The arg spec for the asa_objects module
     """
 
     argument_spec = {
@@ -61,12 +61,10 @@ class Asa_objectsArgs(object):  # pylint: disable=R0903
                                 "dynamic": {
                                     "type": "dict",
                                     "options": {
-                                        "name": {"type": str},
+                                        "name": {"type": "str"},
                                         "interface": {
                                             "type": "dict",
-                                            "options": {
-                                                "ipv6": {"type": "bool"},
-                                            },
+                                            "options": {"ipv6": {"type": "bool"}},
                                         },
                                         "pat_pool": {
                                             "type": "dict",
@@ -75,13 +73,17 @@ class Asa_objectsArgs(object):  # pylint: disable=R0903
                                                 "interface": {
                                                     "type": "dict",
                                                     "options": {
-                                                        "ipv6": {"type": "bool"},
+                                                        "ipv6": {"type": "bool"}
                                                     },
                                                 },
                                                 "flat": {"type": "bool"},
-                                                "include_reserve": {"type": "bool"},
+                                                "include_reserve": {
+                                                    "type": "bool"
+                                                },
                                                 "round_robin": {"type": "bool"},
-                                                "block_allocation": {"type": "bool"},
+                                                "block_allocation": {
+                                                    "type": "bool"
+                                                },
                                                 "extended": {"type": "bool"},
                                             },
                                         },
@@ -91,17 +93,22 @@ class Asa_objectsArgs(object):  # pylint: disable=R0903
                                 "static": {
                                     "type": "dict",
                                     "options": {
-                                        "name": {"type": str},
+                                        "name": {"type": "str"},
                                         "interface": {
                                             "type": "dict",
-                                            "options": {
-                                                "ipv6": {"type": "bool"},
-                                            },
+                                            "options": {"ipv6": {"type": "bool"}},
                                         },
                                         "service": {
                                             "type": "dict",
                                             "options": {
-                                                "protocol": {"type": "str", "choices": ["tcp", "udp", "sctp"]},
+                                                "protocol": {
+                                                    "type": "str",
+                                                    "choices": [
+                                                        "tcp",
+                                                        "udp",
+                                                        "sctp",
+                                                    ],
+                                                },
                                                 "real_port": {"type": "str"},
                                                 "mapped_port": {"type": "str"},
                                             },
@@ -132,7 +139,7 @@ class Asa_objectsArgs(object):  # pylint: disable=R0903
                                                 "end": {"type": "str"},
                                             },
                                         },
-                                    }
+                                    },
                                 },
                                 "destination_port": {
                                     "type": "dict",
@@ -148,7 +155,7 @@ class Asa_objectsArgs(object):  # pylint: disable=R0903
                                                 "end": {"type": "str"},
                                             },
                                         },
-                                    }
+                                    },
                                 },
                                 "icmpopt": {
                                     "type": "dict",

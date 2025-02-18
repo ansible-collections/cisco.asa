@@ -111,9 +111,9 @@ def _tmplt_nat(config_data):
                 cmd += " service {protocol} {real_port} {mapped_port}".format(**nat["static"]["service"])
         return cmd
 
-class Asa_objectsTemplate(NetworkTemplate):
+class ObjectsTemplate(NetworkTemplate):
     def __init__(self, lines=None, module=None):
-        super(Asa_objectsTemplate, self).__init__(lines=lines, tmplt=self, module=module)
+        super(ObjectsTemplate, self).__init__(lines=lines, tmplt=self, module=module)
 
     # fmt: off
     PARSERS = [

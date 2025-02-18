@@ -10,7 +10,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 """
-The asa_asa_objects config file.
+The asa_objects config file.
 It is in this file where the current configuration (as dict)
 is compared to the provided configuration (as dict) and the command set
 necessary to bring the current configuration to its desired end-state is
@@ -31,23 +31,23 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.r
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.facts import (
     Facts,
 )
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates.asa_objects import (
-    Asa_objectsTemplate,
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates.objects import (
+    ObjectsTemplate,
 )
 
 
-class Asa_objects(ResourceModule):
+class Objects(ResourceModule):
     """
-    The asa_asa_objects config class
+    The asa_objects config class
     """
 
     def __init__(self, module):
-        super(Asa_objects, self).__init__(
+        super(Objects, self).__init__(
             empty_fact_val={},
             facts_module=Facts(module),
             module=module,
-            resource="asa_objects",
-            tmplt=Asa_objectsTemplate(),
+            resource="objects",
+            tmplt=ObjectsTemplate(),
         )
         self.parsers = [
             "obj_name",
