@@ -5,6 +5,7 @@
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 #############################################
@@ -28,8 +29,7 @@ The arg spec for the asa_objects module
 
 
 class ObjectsArgs(object):  # pylint: disable=R0903
-    """The arg spec for the asa_objects module
-    """
+    """The arg spec for the asa_objects module"""
 
     argument_spec = {
         "config": {
@@ -73,16 +73,16 @@ class ObjectsArgs(object):  # pylint: disable=R0903
                                                 "interface": {
                                                     "type": "dict",
                                                     "options": {
-                                                        "ipv6": {"type": "bool"}
+                                                        "ipv6": {"type": "bool"},
                                                     },
                                                 },
                                                 "flat": {"type": "bool"},
                                                 "include_reserve": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "round_robin": {"type": "bool"},
                                                 "block_allocation": {
-                                                    "type": "bool"
+                                                    "type": "bool",
                                                 },
                                                 "extended": {"type": "bool"},
                                             },
