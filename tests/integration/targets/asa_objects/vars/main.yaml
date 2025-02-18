@@ -192,4 +192,3 @@ populated:
     - service tcp source eq 5671
     - object service test_tcp_source_range_obj
     - service tcp source range 5671 5672
-

@@ -14,8 +14,6 @@ for a given resource, parsed, and the facts tree is populated
 based on the configuration.
 """
 
-from copy import deepcopy
-
 from ansible.module_utils.six import iteritems
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
     utils,
@@ -26,6 +24,7 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.objects.objects import (
     ObjectsArgs,
 )
+
 
 class ObjectsFacts(object):
     """ The asa objects facts class

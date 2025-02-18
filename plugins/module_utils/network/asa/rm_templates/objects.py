@@ -19,6 +19,7 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.r
     NetworkTemplate,
 )
 
+
 def _tmplt_service(config_data):
     if config_data.get("service"):
         service = config_data.get("service")
@@ -55,6 +56,7 @@ def _tmplt_service(config_data):
                     service["icmpopt"]["code"],
                 )
         return cmd
+
 
 def _tmplt_nat(config_data):
     if config_data.get("nat"):
@@ -110,6 +112,7 @@ def _tmplt_nat(config_data):
             if nat["static"].get("service"):
                 cmd += " service {protocol} {real_port} {mapped_port}".format(**nat["static"]["service"])
         return cmd
+
 
 class ObjectsTemplate(NetworkTemplate):
     def __init__(self, lines=None, module=None):

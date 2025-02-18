@@ -17,8 +17,6 @@ necessary to bring the current configuration to its desired end-state is
 created.
 """
 
-from copy import deepcopy
-
 from ansible.module_utils.six import iteritems
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
     dict_merge,
@@ -84,7 +82,7 @@ class Objects(ResourceModule):
                 obj[each.get("name")] = each
                 obj[each.get("name")]["object_type"] = v.get("object_type")
         wantd = obj
-        
+
         obj = {}
         for v in self.have:
             for each in v.get("objects"):
@@ -159,4 +157,4 @@ class Objects(ResourceModule):
                         continue
                     self.addcmd(want, parser, not inw)
                 else:
-                    self.addcmd(want, parser, False)            
+                    self.addcmd(want, parser, False)
