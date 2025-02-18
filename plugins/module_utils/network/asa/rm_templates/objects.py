@@ -5,6 +5,7 @@
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 """
@@ -15,9 +16,11 @@ the given network resource.
 """
 
 import re
+
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.network_template import (
     NetworkTemplate,
 )
+
 
 def _tmplt_service(config_data):
     if config_data.get("service"):
@@ -55,6 +58,7 @@ def _tmplt_service(config_data):
                     service["icmpopt"]["code"],
                 )
         return cmd
+
 
 def _tmplt_nat(config_data):
     if config_data.get("nat"):
@@ -108,8 +112,11 @@ def _tmplt_nat(config_data):
             if nat["static"].get("route_lookup"):
                 cmd += " route-lookup"
             if nat["static"].get("service"):
-                cmd += " service {protocol} {real_port} {mapped_port}".format(**nat["static"]["service"])
+                cmd += " service {protocol} {real_port} {mapped_port}".format(
+                    **nat["static"]["service"]
+                )
         return cmd
+
 
 class ObjectsTemplate(NetworkTemplate):
     def __init__(self, lines=None, module=None):
@@ -124,7 +131,8 @@ class ObjectsTemplate(NetworkTemplate):
                 ^object\s
                 \s*(?P<obj_type>\S+)*
                 \s*(?P<obj_name>\S+)*
-                $""", re.VERBOSE),
+                $""", re.VERBOSE,
+            ),
             "setval": "object {{ object_type }} {{ name }}",
             "result": {
                 "objects": {
@@ -136,7 +144,7 @@ class ObjectsTemplate(NetworkTemplate):
                     },
                 },
             },
-            "shared": True
+            "shared": True,
         },
         {
             "name": "description",
@@ -303,7 +311,7 @@ class ObjectsTemplate(NetworkTemplate):
                                         "block_allocation": "{{ True if 'block-allocation' in dnat_pp_opts else None }}",
                                         "extended": "{{ True if 'extended' in dnat_pp_opts else None }}",
                                     },
-                                    "dns": "{{ True if dnat_dns else None }}"
+                                    "dns": "{{ True if dnat_dns else None }}",
                                 },
                                 "static": {
                                     "name": "{{ snat_name if snat_name and snat_name != 'interface' }}",
@@ -320,7 +328,7 @@ class ObjectsTemplate(NetworkTemplate):
                                     "no_proxy_arp": "{{ True if 'no-proxy-arp' in snat_opts else None }}",
                                     "route_lookup": "{{ True if 'route-lookup' in snat_opts else None }}",
                                 },
-                            }
+                            },
                         },
                     },
                 },
@@ -380,7 +388,7 @@ class ObjectsTemplate(NetworkTemplate):
                                 "icmpopt": {
                                     "name": "{{ icmpopt.split(' ')[0] }}",
                                     "code": "{{ icmpopt.split(' ')[1] }}",
-                                }
+                                },
                             },
                         },
                     },

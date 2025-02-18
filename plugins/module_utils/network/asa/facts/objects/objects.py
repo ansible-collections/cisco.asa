@@ -5,6 +5,7 @@
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 """
@@ -20,23 +21,24 @@ from ansible.module_utils.six import iteritems
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
     utils,
 )
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates.objects import (
-    ObjectsTemplate,
-)
+
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.objects.objects import (
     ObjectsArgs,
 )
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates.objects import (
+    ObjectsTemplate,
+)
+
 
 class ObjectsFacts(object):
-    """ The asa objects facts class
-    """
+    """The asa objects facts class"""
 
-    def __init__(self, module, subspec='config', options='options'):
+    def __init__(self, module, subspec="config", options="options"):
         self._module = module
         self.argument_spec = ObjectsArgs.argument_spec
 
     def populate_facts(self, connection, ansible_facts, data=None):
-        """ Populate the facts for Objects network resource
+        """Populate the facts for Objects network resource
 
         :param connection: the device connection
         :param ansible_facts: Facts dictionary
@@ -50,7 +52,11 @@ class ObjectsFacts(object):
 
         if not data:
             # in ASA object and object nat configurations are in different sections
-            data = connection.get("sh running-config object") + "\n" + connection.get("sh running-config nat | exclude ^nat")
+            data = (
+                connection.get("sh running-config object")
+                + "\n"
+                + connection.get("sh running-config nat | exclude ^nat")
+            )
 
         # parse native config using the Objects template
         objects_parser = ObjectsTemplate(lines=data.splitlines(), module=self._module)
@@ -99,10 +105,10 @@ class ObjectsFacts(object):
         # ansible_facts['ansible_network_resources'].pop('asa_objects', None)
 
         params = utils.remove_empties(
-            objects_parser.validate_config(self.argument_spec, {"config": objs}, redact=True)
+            objects_parser.validate_config(self.argument_spec, {"config": objs}, redact=True),
         )
 
-        facts['objects'] = params.get('config')
-        ansible_facts['ansible_network_resources'].update(facts)
+        facts["objects"] = params.get("config")
+        ansible_facts["ansible_network_resources"].update(facts)
 
         return ansible_facts

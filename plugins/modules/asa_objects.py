@@ -10,6 +10,7 @@ The module file for asa_objects
 
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 DOCUMENTATION = """
@@ -1084,6 +1085,7 @@ parsed:
 """
 
 from ansible.module_utils.basic import AnsibleModule
+
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.argspec.objects.objects import (
     ObjectsArgs,
 )

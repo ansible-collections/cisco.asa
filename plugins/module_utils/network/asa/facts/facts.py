@@ -24,8 +24,10 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.legacy
     Default,
     Hardware,
 )
+from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.objects.objects import (
+    ObjectsFacts,
+)
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.ogs.ogs import OGsFacts
-from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.objects.objects import ObjectsFacts
 
 
 FACT_LEGACY_SUBSETS = dict(default=Default, hardware=Hardware, config=Config)
