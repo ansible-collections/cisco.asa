@@ -113,7 +113,7 @@ def _tmplt_nat(config_data):
                 cmd += " route-lookup"
             if nat["static"].get("service"):
                 cmd += " service {protocol} {real_port} {mapped_port}".format(
-                    **nat["static"]["service"]
+                    **nat["static"]["service"],
                 )
         return cmd
 

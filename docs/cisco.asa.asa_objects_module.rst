@@ -1356,36 +1356,36 @@ Examples
         config:
           - object_type: network
             objects:
-            - description: a test fqdn v4 object
-              fqdn_v4: microsoft.com
-              name: test_fqdn_obj
-            - description: a test range object
-              name: test_range_obj
-              range: 10.0.0.1 10.0.0.10
-            - description: another test host object
-              host: 1.2.3.4
-              name: test_host_obj_1
-            - name: test_nat_obj
+              - description: a test fqdn v4 object
+                fqdn_v4: microsoft.com
+                name: test_fqdn_obj
+              - description: a test range object
+                name: test_range_obj
+                range: 10.0.0.1 10.0.0.10
+              - description: another test host object
+                host: 1.2.3.4
+                name: test_host_obj_1
+              - name: test_nat_obj
           - object_type: service
             objects:
-            - name: test_tcp_source_range_obj
-              service:
-                protocol: tcp
-                source_port:
-                  range:
-                    end: '5672'
-                    start: '5671'
-            - name: test_tcp_eq_obj
-              service:
-                destination_port:
-                  eq: https
-                protocol: tcp
-            - name: test_icmp_echo_obj
-              service:
-                icmpopt:
-                  name: echo
-                  code: 8
-                protocol: icmp
+              - name: test_tcp_source_range_obj
+                service:
+                  protocol: tcp
+                  source_port:
+                    range:
+                      end: '5672'
+                      start: '5671'
+              - name: test_tcp_eq_obj
+                service:
+                  destination_port:
+                    eq: https
+                  protocol: tcp
+              - name: test_icmp_echo_obj
+                service:
+                  icmpopt:
+                    name: echo
+                    code: 8
+                  protocol: icmp
         state: replaced
 
     # Commands Fired:
@@ -2193,4 +2193,4 @@ Status
 Authors
 ~~~~~~~
 
-- Vladimir Rulev
+- Vladimir Rulev (@rulev)
