@@ -28,13 +28,20 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.rm_templates
 )
 
 
-
 class ObjectsFacts(object):
     """The asa objects facts class"""
 
     def __init__(self, module, subspec="config", options="options"):
         self._module = module
         self.argument_spec = ObjectsArgs.argument_spec
+
+    def get_objects_config(self, connection):
+        # ASA has object and object nat configurations in different sections
+        return (
+            connection.get("sh running-config object")
+            + "\n"
+            + connection.get("sh running-config nat | exclude ^nat")
+        )
 
     def populate_facts(self, connection, ansible_facts, data=None):
         """Populate the facts for Objects network resource
@@ -50,12 +57,7 @@ class ObjectsFacts(object):
         objs = []
 
         if not data:
-            # in ASA object and object nat configurations are in different sections
-            data = (
-                connection.get("sh running-config object")
-                + "\n"
-                + connection.get("sh running-config nat | exclude ^nat")
-            )
+            data = self.get_objects_config(connection)
 
         # parse native config using the Objects template
         objects_parser = ObjectsTemplate(lines=data.splitlines(), module=self._module)
