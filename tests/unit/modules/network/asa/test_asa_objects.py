@@ -135,7 +135,7 @@ class TestAsaObjectsModule(TestAsaModule):
                     ),
                 ],
                 state="replaced",
-            )
+            ),
         )
 
         result = self.execute_module(changed=True)
@@ -187,7 +187,6 @@ class TestAsaObjectsModule(TestAsaModule):
                                         net_to_net=True,
                                     ),
                                 ),
-
                             ),
                         ],
                     ),
@@ -228,7 +227,7 @@ class TestAsaObjectsModule(TestAsaModule):
                     ),
                 ],
                 state="replaced",
-            )
+            ),
         )
         self.execute_module(changed=False, commands=[], sort=True)
 
@@ -269,7 +268,7 @@ class TestAsaObjectsModule(TestAsaModule):
                     ),
                 ],
                 state="overridden",
-            )
+            ),
         )
         result = self.execute_module(changed=True)
         commands = [
@@ -368,7 +367,7 @@ class TestAsaObjectsModule(TestAsaModule):
                                         eq="https",
                                     ),
                                     protocol="tcp",
-                                )
+                                ),
                             ),
                             dict(
                                 name="test_tcp_range_obj",
@@ -407,7 +406,7 @@ class TestAsaObjectsModule(TestAsaModule):
                     ),
                 ],
                 state="overridden",
-            )
+            ),
         )
         self.execute_module(changed=False, commands=[], sort=True)
 
@@ -425,7 +424,7 @@ class TestAsaObjectsModule(TestAsaModule):
                     dict(
                         object_type="service",
                         objects=[
-                            dict(name="test_icmp_echo_obj",),
+                            dict(name="test_icmp_echo_obj"),
                         ],
                     ),
                 ],
@@ -535,7 +534,7 @@ class TestAsaObjectsModule(TestAsaModule):
                                         eq="https",
                                     ),
                                     protocol="tcp",
-                                )
+                                ),
                             ),
                             dict(
                                 name="test_tcp_range_obj",
@@ -574,7 +573,7 @@ class TestAsaObjectsModule(TestAsaModule):
                     ),
                 ],
                 state="rendered",
-            )
+            ),
         )
         commands = [
             "object network test_fqdn_obj",
