@@ -282,7 +282,7 @@ class ObjectsTemplate(NetworkTemplate):
                     \s*(\((?P<nat_real_if>[^,]+),(?P<nat_mapped_if>[^)]+)\))*
                     \s*(dynamic\s+pat-pool\s+(?P<dnat_pp_name>\S+)(?P<dnat_pp_if>(\s+interface)?)(?P<dnat_pp_if_v6>(\s+ipv6)?)(?P<dnat_pp_opts>(\s+.*)?))*
                     \s*(dynamic\s+(?P<dnat_name>\S+)(?P<dnat_if>(\s+interface)?)(?P<dnat_if_v6>(\s+ipv6)?)(?P<dnat_dns>(\s+dns)?))*
-                    \s*((static\s+(?P<snat_name>\S+))(?P<snat_if>(\s+interface)?)(?P<snat_if_v6>(\s+ipv6)?)(?P<snat_opts>(\s+(dns|net-to-net|no-proxy-arp|route-lookup))*)(\s+service\s+(?P<snat_proto>(tcp|udp|sctp))\s+(?P<snat_rport>\S+)\s+(?P<snat_mport>\S+))?)
+                    \s*(static\s+(?P<snat_name>\S+)(?P<snat_if>(\s+interface)?)(?P<snat_if_v6>(\s+ipv6)?)(?P<snat_opts>(\s+(dns|net-to-net|no-proxy-arp|route-lookup))*)(\s+service\s+(?P<snat_proto>(tcp|udp|sctp))\s+(?P<snat_rport>\S+)\s+(?P<snat_mport>\S+))?\s*)
                     *$""",
                 re.VERBOSE,
             ),
