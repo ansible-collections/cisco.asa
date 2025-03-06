@@ -96,7 +96,7 @@ def _tmplt_access_list_entries(config_data):
                     cmd += " {protocol_number}".format(**config_data["aces"]["protocol_options"])
                 elif "object_group" in config_data["aces"]["protocol_options"]:
                     cmd += " object-group {object_group}".format(
-                        **config_data["aces"]["protocol_options"]
+                        **config_data["aces"]["protocol_options"],
                     )
                 elif "object" in config_data["aces"]["protocol_options"]:
                     cmd += " object {object}".format(**config_data["aces"]["protocol_options"])

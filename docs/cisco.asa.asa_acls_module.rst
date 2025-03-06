@@ -1724,8 +1724,10 @@ Parameters
                         <span style="color: purple">string</span>
                     </div>
                 </td>
-                <td valign="top">
-                    <p>Service object.</p>
+                <td>
+                </td>
+                <td>
+                        <div>Service object.</div>
                 </td>
             </tr>
             <tr>
@@ -1735,14 +1737,16 @@ Parameters
                     <td class="elbow-placeholder"></td>
                 <td colspan="3">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>object</b>
+                    <b>object-group</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">string</span>
                     </div>
                 </td>
-                <td valign="top">
-                    <p>Service or protocol object-group.</p>
+                <td>
+                </td>
+                <td>
+                        <div>Service or protocol object-group.</div>
                 </td>
             </tr>
             <tr>
