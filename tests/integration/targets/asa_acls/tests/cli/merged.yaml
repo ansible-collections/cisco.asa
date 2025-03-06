@@ -6,6 +6,7 @@
 
 - ansible.builtin.include_tasks: _remove_config.yaml
 - ansible.builtin.include_tasks: _populate_network_og.yaml
+- ansible.builtin.include_tasks: _populate_objects.yaml
 
 - block:
     - name: Merge provided configuration with device configuration
@@ -66,6 +67,23 @@
                     port_protocol:
                       eq: www
                   log: default
+                - grant: deny
+                  line: 5
+                  protocol: object test_svc_object
+                  source:
+                    object: test_object_no_1
+                  destination:
+                    object: test_object_no_2
+                  log: default
+                - grant: permit
+                  line: 6
+                  protocol_options:
+                    object_group: test_service_og
+                  source:
+                    object_group: test_og_network
+                  destination:
+                    object_group: test_network_og
+                  log: default
             - name: test_global_access
               acl_type: extended
               aces:
@@ -111,7 +129,7 @@
 
     - assert:
         that:
-          - result.commands|length == 7
+          - result.commands|length == 9
           - result.changed == true
           - result.commands|symmetric_difference(merged.commands) == []
 
@@ -127,3 +145,4 @@
   always:
     - ansible.builtin.include_tasks: _remove_config.yaml
     - ansible.builtin.include_tasks: _remove_og_config.yaml
+    - ansible.builtin.include_tasks: _remove_objects.yaml
