@@ -90,14 +90,14 @@ class Acls(ResourceModule):
                             ) == each.get(
                                 "destination",
                             ):
-                                if (
-                                    "protocol" in e_have
-                                    and "protocol" not in each
-                                    and each.get("protocol_options")
-                                    == e_have.get("protocol_options")
-                                ):
-                                    del e_have["protocol"]
-                                    break
+                                if each.get("protocol") == e_have.get("protocol"):
+                                    if not each.get("protocol_options") and e_have.get("protocol_options"):
+                                        each.update({"protocol_options": e_have.get("protocol_options")})
+                                        break
+                                elif each.get("protocol_options") == e_have.get("protocol_options") and e_have.get("protocol"):
+                                    if not each.get("protocol"):
+                                        each.update({"protocol": e_have.get("protocol")})
+                                        break
         # if state is merged, merge want onto have and then compare
         if self.state == "merged":
             # to append line number from have to want
@@ -169,11 +169,6 @@ class Acls(ResourceModule):
                             "destination",
                         ):
                             set_want = False
-                            if each.get("protocol") == e_have.get("protocol"):
-                                if not each.get(
-                                    "protocol_options",
-                                ) and e_have.get("protocol_options"):
-                                    del e_have["protocol_options"]
                             if each == e_have:
                                 del have.get("aces")[temp]
                                 break

@@ -71,6 +71,15 @@
                   destination:
                     object: test_object_no_2
                   log: default
+                - grant: permit
+                  line: 6
+                  protocol_options:
+                    object_group: test_service_og
+                  source:
+                    object_group: test_og_network
+                  destination:
+                    object_group: test_network_og
+                  log: default
             - name: test_global_access
               acl_type: extended
               aces:

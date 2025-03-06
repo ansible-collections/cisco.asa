@@ -252,6 +252,8 @@ class AclsArgs(object):
                                         "snp": {"type": "bool"},
                                         "tcp": {"type": "bool"},
                                         "udp": {"type": "bool"},
+                                        "object": {"type": "str"},
+                                        "object_group": {"type": "str"},
                                     },
                                 },
                                 "inactive": {"type": "bool"},
