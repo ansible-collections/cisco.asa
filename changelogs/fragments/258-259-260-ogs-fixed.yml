@@ -1,0 +1,4 @@
+bugfixes:
+  - cisco.asa.asa_ogs - objects ignored when group_object specified bug fix
+  - cisco.asa.asa_ogs - group_object compare procedure logic flaw fix
+  - cisco.asa.asa_ogs - description change might be ignored bug fix
