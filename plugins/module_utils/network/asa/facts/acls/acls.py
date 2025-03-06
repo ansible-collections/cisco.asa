@@ -95,10 +95,7 @@ class AclsFacts(object):
                             each["protocol_options"] = {
                                 proto[0].replace("-", "_"): proto[1],
                             }
-                        elif (
-                            each.get("protocol") != "icmp"
-                            and each.get("protocol") != "icmp6"
-                        ):
+                        elif each.get("protocol") != "icmp" and each.get("protocol") != "icmp6":
                             each["protocol_options"] = {each.get("protocol"): True}
                 acls.append(val)
         facts = {}

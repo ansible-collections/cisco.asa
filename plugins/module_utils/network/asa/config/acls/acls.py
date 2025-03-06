@@ -91,10 +91,16 @@ class Acls(ResourceModule):
                                 "destination",
                             ):
                                 if each.get("protocol") == e_have.get("protocol"):
-                                    if not each.get("protocol_options") and e_have.get("protocol_options"):
-                                        each.update({"protocol_options": e_have.get("protocol_options")})
+                                    if not each.get("protocol_options") and e_have.get(
+                                        "protocol_options"
+                                    ):
+                                        each.update(
+                                            {"protocol_options": e_have.get("protocol_options")}
+                                        )
                                         break
-                                elif each.get("protocol_options") == e_have.get("protocol_options") and e_have.get("protocol"):
+                                elif each.get("protocol_options") == e_have.get(
+                                    "protocol_options"
+                                ) and e_have.get("protocol"):
                                     if not each.get("protocol"):
                                         each.update({"protocol": e_have.get("protocol")})
                                         break
