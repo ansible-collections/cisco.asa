@@ -249,6 +249,12 @@ options:
                   nos:
                     description: KA9Q NOS compatible IP over IP tunneling.
                     type: bool
+                  object:
+                    description: Service object.
+                    type: str
+                  object-group:
+                    description: Service or protocol object-group.
+                    type: str
                   ospf:
                     description: OSPF routing protocol.
                     type: bool
