@@ -252,7 +252,7 @@ options:
                   object:
                     description: Service object.
                     type: str
-                  object-group:
+                  object_group:
                     description: Service or protocol object-group.
                     type: str
                   ospf:
