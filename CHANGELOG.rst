@@ -4,6 +4,27 @@ Cisco Asa Collection Release Notes
 
 .. contents:: Topics
 
+v6.1.0
+======
+
+Minor Changes
+-------------
+
+- cisco.asa.asa - add support to fetch hardware specific information in facts
+- cisco.asa.asa_acls - add support for specifying object-group as protocol
+
+Bugfixes
+--------
+
+- cisco.asa - fixed Cliconf.edit_config() got an unexpected keyword argument 'candidate' error
+- cisco.asa.asa_acls - fixed ace parsing when source is object-group and its name contains dots
+- cisco.asa.asa_acls - fixed acl modification commands order if object/group name contains `no`
+
+Documentation Changes
+---------------------
+
+- Includes a new support related section in the README.
+
 v6.0.0
 ======
 

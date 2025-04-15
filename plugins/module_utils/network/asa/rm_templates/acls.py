@@ -153,7 +153,7 @@ class AclsTemplate(NetworkTemplate):
                     \s*(?P<grant>deny|permit)*
                     \s*(?P<ethertype_params>(dsap\s\S+)|bpdu|eii-ipx|ipx|mpls-unicast|mpls-multicast|isis|any\s)*
                     \s*(?P<std_dest>(host\s\S+)|any4|(?:[0-9]{1,3}\.){3}[0-9]{1,3}\s(?:[0-9]{1,3}\.){3}[0-9]{1,3})*
-                    \s*(?P<protocol>ah|eigrp|esp|gre|icmp|icmp6|igmp|igrp|ip|ipinip|ipsec|nos|ospf|pcp|pim|pptp|sctp|snp|tcp|udp)*
+                    \s*(?P<protocol>ah|eigrp|esp|gre|icmp|icmp6|igmp|igrp|ip|ipinip|ipsec|nos|ospf|pcp|pim|pptp|sctp|snp|tcp|udp|object-group\s\S+)*
                     \s*(?P<protocol_num>\d+\s)*
                     \s*(?P<source>any4|any6|any|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\s([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+\S+|host\s(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+)\S+)|interface\s\S+|object-group\s\S+))*
                     \s*(?P<source_port_protocol>(eq|gts|lt|neq)\s(\S+|\d+)|range\s\S+\s\S+)*
@@ -186,7 +186,7 @@ class AclsTemplate(NetworkTemplate):
                                         not in source and 'object-group' not in source %}{{ source.split(' ')[0] }}{% elif source is defined and\
                                             '::' in source and 'host' not in source %}{{ source }}{% endif %}",
                                     "netmask": "{{ source.split(' ')[1] if source\
-                                        is defined and '.' in source and 'host' not in source else None and 'object-group' not in source }}",
+                                        is defined and '.' in source and 'host' not in source and 'object-group' not in source else None }}",
                                     "any4": "{{ True if source is defined and source == 'any4' else None }}",
                                     "any6": "{{ True if source is defined and source == 'any6' else None }}",
                                     "any": "{{ True if source is defined and source == 'any' else None }}",

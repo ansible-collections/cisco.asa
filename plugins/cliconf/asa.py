@@ -93,6 +93,10 @@ class Cliconf(CliconfBase):
             if match:
                 device_info["network_os_model"] = match.group(1)
 
+            match = re.search(r"Hardware:\s+ ([\w-]+)", data, re.M)
+            if match:
+                device_info["network_os_model"] = match.group(1)
+
             match = re.search(r"^(.+) up", data, re.M)
             if match:
                 device_info["network_os_hostname"] = match.group(1)
@@ -118,8 +122,8 @@ class Cliconf(CliconfBase):
         return self.send_command(cmd)
 
     @enable_mode
-    def edit_config(self, command):
-        for cmd in chain(["configure terminal"], to_list(command), ["end"]):
+    def edit_config(self, candidate=None, commit=True, replace=None, comment=None):
+        for cmd in chain(["configure terminal"], to_list(candidate), ["end"]):
             self.send_command(cmd)
 
     def get(
