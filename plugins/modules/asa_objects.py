@@ -79,7 +79,7 @@ options:
                 description: Specify NAT type as dynamic
                 type: dict
                 suboptions:
-                  name:
+                  mapped_ip:
                     description: Mapped IP address, network object/object-group name or IPv6 prefix
                     type: str
                   interface:
@@ -125,7 +125,7 @@ options:
                 description: Specify NAT type as static
                 type: dict
                 suboptions:
-                  name:
+                  mapped_ip:
                     description: Mapped IP address, network object/object-group name or IPv6 prefix
                     type: str
                   interface:
@@ -725,7 +725,7 @@ EXAMPLES = """
 #                     "mapped_if": "any",
 #                     "real_if": "any",
 #                     "static": {
-#                         "name": "5.6.7.8",
+#                         "mapped_ip": "5.6.7.8",
 #                         "net_to_net": true
 #                     }
 #                 }
@@ -927,7 +927,7 @@ EXAMPLES = """
 #                     "mapped_if": "any",
 #                     "real_if": "any",
 #                     "static": {
-#                         "name": "5.6.7.8",
+#                         "mapped_ip": "5.6.7.8",
 #                         "net_to_net": true
 #                     }
 #                 }

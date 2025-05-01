@@ -183,7 +183,7 @@ class TestAsaObjectsModule(TestAsaModule):
                                     mapped_if="any",
                                     real_if="any",
                                     static=dict(
-                                        name="5.6.7.8",
+                                        mapped_ip="5.6.7.8",
                                         net_to_net=True,
                                     ),
                                 ),
@@ -315,7 +315,7 @@ class TestAsaObjectsModule(TestAsaModule):
                                     mapped_if="any",
                                     real_if="any",
                                     static=dict(
-                                        name="5.6.7.8",
+                                        mapped_ip="5.6.7.8",
                                         net_to_net=True,
                                     ),
                                 ),
@@ -482,7 +482,7 @@ class TestAsaObjectsModule(TestAsaModule):
                                     mapped_if="any",
                                     real_if="any",
                                     static=dict(
-                                        name="5.6.7.8",
+                                        mapped_ip="5.6.7.8",
                                         net_to_net=True,
                                     ),
                                 ),

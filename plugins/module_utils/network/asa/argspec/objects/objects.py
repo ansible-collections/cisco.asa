@@ -61,7 +61,7 @@ class ObjectsArgs(object):  # pylint: disable=R0903
                                 "dynamic": {
                                     "type": "dict",
                                     "options": {
-                                        "name": {"type": "str"},
+                                        "mapped_ip": {"type": "str"},
                                         "interface": {
                                             "type": "dict",
                                             "options": {"ipv6": {"type": "bool"}},
@@ -93,7 +93,7 @@ class ObjectsArgs(object):  # pylint: disable=R0903
                                 "static": {
                                     "type": "dict",
                                     "options": {
-                                        "name": {"type": "str"},
+                                        "mapped_ip": {"type": "str"},
                                         "interface": {
                                             "type": "dict",
                                             "options": {"ipv6": {"type": "bool"}},

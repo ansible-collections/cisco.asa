@@ -68,8 +68,8 @@ def _tmplt_nat(config_data):
             cmd += " ({real_if},{mapped_if})".format(**nat)
         if nat.get("dynamic"):
             cmd += " dynamic"
-            if nat["dynamic"].get("name"):
-                cmd += " {name}".format(**nat["dynamic"])
+            if nat["dynamic"].get("mapped_ip"):
+                cmd += " {mapped_ip}".format(**nat["dynamic"])
             elif nat["dynamic"].get("pat_pool"):
                 cmd += " pat-pool"
                 pp = nat["dynamic"].get("pat_pool")
@@ -97,8 +97,8 @@ def _tmplt_nat(config_data):
                 cmd += " dns"
         if nat.get("static"):
             cmd += " static"
-            if nat["static"].get("name"):
-                cmd += " {name}".format(**nat["static"])
+            if nat["static"].get("mapped_ip"):
+                cmd += " {mapped_ip}".format(**nat["static"])
             elif nat["static"].get("interface"):
                 cmd += " interface"
                 if nat["static"]["interface"].get("ipv6"):
@@ -281,8 +281,8 @@ class ObjectsTemplate(NetworkTemplate):
                 r"""\s+nat\s
                     \s*(\((?P<nat_real_if>[^,]+),(?P<nat_mapped_if>[^)]+)\))*
                     \s*(dynamic\s+pat-pool\s+(?P<dnat_pp_name>\S+)(?P<dnat_pp_if>(\s+interface)?)(?P<dnat_pp_if_v6>(\s+ipv6)?)(?P<dnat_pp_opts>(\s+.*)?))*
-                    \s*(dynamic\s+(?P<dnat_name>\S+)(?P<dnat_if>(\s+interface)?)(?P<dnat_if_v6>(\s+ipv6)?)(?P<dnat_dns>(\s+dns)?))*
-                    \s*(static\s+(?P<snat_name>\S+)(?P<snat_if>(\s+interface)?)(?P<snat_if_v6>(\s+ipv6)?)(?P<snat_opts>(\s+(dns|net-to-net|no-proxy-arp|route-lookup))*)(\s+service\s+(?P<snat_proto>(tcp|udp|sctp))\s+(?P<snat_rport>\S+)\s+(?P<snat_mport>\S+))?\s*)
+                    \s*(dynamic\s+(?P<dnat_mapped>\S+)(?P<dnat_if>(\s+interface)?)(?P<dnat_if_v6>(\s+ipv6)?)(?P<dnat_dns>(\s+dns)?))*
+                    \s*(static\s+(?P<snat_mapped>\S+)(?P<snat_if>(\s+interface)?)(?P<snat_if_v6>(\s+ipv6)?)(?P<snat_opts>(\s+(dns|net-to-net|no-proxy-arp|route-lookup))*)(\s+service\s+(?P<snat_proto>(tcp|udp|sctp))\s+(?P<snat_rport>\S+)\s+(?P<snat_mport>\S+))?\s*)
                     *$""",
                 re.VERBOSE,
             ),
@@ -296,9 +296,9 @@ class ObjectsTemplate(NetworkTemplate):
                                 "real_if": "{{ nat_real_if }}",
                                 "mapped_if": "{{ nat_mapped_if }}",
                                 "dynamic": {
-                                    "name": "{{ dnat_name if dnat_name and dnat_name != 'interface' }}",
+                                    "mapped_ip": "{{ dnat_mapped if dnat_mapped and dnat_mapped != 'interface' }}",
                                     "interface": {
-                                        "ipv6": "{{ True if dnat_if_v6 else False if dnat_name == 'interface' or dnat_if else None }}",
+                                        "ipv6": "{{ True if dnat_if_v6 else False if dnat_mapped == 'interface' or dnat_if else None }}",
                                     },
                                     "pat_pool": {
                                         "name": "{{ dnat_pp_name if dnat_pp_name and dnat_pp_name != 'interface' }}",
@@ -314,9 +314,9 @@ class ObjectsTemplate(NetworkTemplate):
                                     "dns": "{{ True if dnat_dns else None }}",
                                 },
                                 "static": {
-                                    "name": "{{ snat_name if snat_name and snat_name != 'interface' }}",
+                                    "mapped_ip": "{{ snat_mapped if snat_mapped and snat_mapped != 'interface' }}",
                                     "interface": {
-                                        "ipv6": "{{ True if snat_if_v6 else False if snat_name == 'interface' or snat_if else None }}",
+                                        "ipv6": "{{ True if snat_if_v6 else False if snat_mapped == 'interface' or snat_if else None }}",
                                     },
                                     "service": {
                                         "protocol": "{{ snat_proto }}",
