@@ -480,7 +480,7 @@ Parameters
                     <td class="elbow-placeholder"></td>
                 <td colspan="2">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>mapped_ip</b>
+                    <b>name</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">string</span>
@@ -646,7 +646,7 @@ Parameters
                     <td class="elbow-placeholder"></td>
                 <td colspan="3">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>name</b>
+                    <b>mapped_ip</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">string</span>
@@ -1773,7 +1773,7 @@ Examples
     #                     "mapped_if": "any",
     #                     "real_if": "any",
     #                     "static": {
-    #                         "name": "5.6.7.8",
+    #                         "mapped_ip": "5.6.7.8",
     #                         "net_to_net": true
     #                     }
     #                 }
@@ -1975,7 +1975,7 @@ Examples
     #                     "mapped_if": "any",
     #                     "real_if": "any",
     #                     "static": {
-    #                         "name": "5.6.7.8",
+    #                         "mapped_ip": "5.6.7.8",
     #                         "net_to_net": true
     #                     }
     #                 }
