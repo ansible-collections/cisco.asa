@@ -1,0 +1,17 @@
+---
+- ansible.builtin.debug:
+    msg: "Start asa_objects rendered integration tests ansible_connection={{
+      ansible_connection }}"
+
+- block:
+    - name: Render the commands for provided  configuration
+      become: true
+      register: result
+      cisco.asa.asa_objects:
+        config: "{{ initial_config }}"
+        state: rendered
+
+    - assert:
+        that:
+          - result.changed == false
+          - result.rendered|symmetric_difference(populated.commands) == []
