@@ -249,6 +249,12 @@ options:
                   nos:
                     description: KA9Q NOS compatible IP over IP tunneling.
                     type: bool
+                  object:
+                    description: Service object.
+                    type: str
+                  object_group:
+                    description: Service or protocol object-group.
+                    type: str
                   ospf:
                     description: OSPF routing protocol.
                     type: bool
@@ -300,6 +306,9 @@ options:
                     type: str
                   interface:
                     description: Use interface address as source address
+                    type: str
+                  object:
+                    description: Network object for source address
                     type: str
                   object_group:
                     description: Network object-group for source address
@@ -359,6 +368,9 @@ options:
                     type: str
                   interface:
                     description: Use interface address as destination address
+                    type: str
+                  object:
+                    description: Network object for destination address
                     type: str
                   object_group:
                     description: Network object-group for destination address
@@ -506,6 +518,14 @@ EXAMPLES = """
                 port_protocol:
                   eq: www
               log: default
+            - grant: deny
+              line: 5
+              protocol: object tcp_443
+              source:
+                object: test_object_no_1
+              destination:
+                object: test_object_no_2
+              log: default
         - name: global_access
           acl_type: extended
           aces:
@@ -544,49 +564,52 @@ EXAMPLES = """
 # Commands fired:
 # ---------------
 # access-list global_access line 3 remark test global access
-# access-list global_access line 4 extended deny tcp any any eq www log errors interval 300
+# access-list global_access line 4 extended deny tcp any any eq www log errors
 # access-list R1_traffic line 1 remark test_v6_acls
-# access-list R1_traffic line 2 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive
-# access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default
-# access-list temp_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
-#                         time-range temp inactive
-# access-list temp_access line 2 extended deny tcp interface management interface management
-#                         eq www log warnings
-# access-list test_access line 3 extended deny tcp object-group test_og_network object-group test_network_og
-#                         eq www log default
+# access-list R1_traffic line 2 extended deny tcp 2001:db8:0:3::/64 eq www
+#             2001:fc8:0:4::/64 eq telnet inactive
+# access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0
+#             198.51.100.0 255.255.255.0 eq www log default
+# access-list temp_access line 2 extended deny igrp 198.51.100.0 255.255.255.0
+#             198.51.110.0 255.255.255.0 time-range temp
+# access-list temp_access line 3 extended deny tcp interface management
+#             interface management eq www log warnings
+# access-list temp_access line 4 extended deny tcp object-group test_og_network
+#             object-group test_network_og eq www log default
+# access-list temp_access line 5 extended deny object tcp_443 object test_object_no_1
+#             object test_object_no_2 log default
 
 # After state:
 # ------------
 #
-# vasa#sh access-lists
+# vasa#sh access-list
+# access-list cached ACL log flows: total 0, denied 0 (deny-flow-max 4096)
+#             alert-interval 300
 # access-list global_access; 3 elements; name hash: 0xbd6c87a7
-# access-list global_access line 1 extended permit icmp any any log disable (hitcnt=0) 0xf1efa630
-# access-list global_access line 2 extended deny tcp any any eq telnet (hitcnt=0) 0xae5833af
-# access-list global_access line 3 remark test global access (hitcnt=0) 0xae78337e
-# access-list global_access line 4 extended deny tcp any any eq www log errors interval 300 (hitcnt=0) 0x605f2421
+# access-list global_access line 1 extended permit icmp any any log disable
+#             (hitcnt=0) 0x3b75655e
+# access-list global_access line 2 extended deny tcp any any eq telnet
+#             (hitcnt=0) 0x3b75655e
+# access-list global_access line 3 remark test global access
+# access-list global_access line 4 extended deny tcp any any eq www log errors
+#             interval 300 (hitcnt=0) 0x3b75655e
 # access-list R1_traffic; 2 elements; name hash: 0xaf40d3c2
 # access-list R1_traffic line 1 remark test_v6_acls
-# access-list R1_traffic line 2
-#                        extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet
-#                        inactive (hitcnt=0) (inactive) 0xe922b432
-# access-list temp_access; 2 elements; name hash: 0xaf1b712e
-# access-list temp_access line 1
-#                         extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www
-#                         log default (hitcnt=0) 0xb58abb0d
-# access-list temp_access line 2
-#                         extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0
-#                         time-range temp (hitcnt=0) (inactive) 0xcd6b92ae
-# access-list test_access line 3
-#                         extended deny tcp interface management interface management eq www log warnings
-#                         interval 300 (hitcnt=0) 0x78aa233d
-# access-list test_access line 2 extended deny tcp object-group test_og_network object-group test_network_og
-#                         eq www log default (hitcnt=0) 0x477aec1e
-#    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 198.51.100.1 eq www
-#                            log default (hitcnt=0) 0xdc7edff8
-#    access-list test_access line 2 extended deny tcp 192.0.2.0 255.255.255.0 host 198.51.100.2 eq www
-#                            log default (hitcnt=0) 0x7b0e9fde
-#    access-list test_access line 2 extended deny tcp 198.51.100.0 255.255.255.0 2001:db8:3::/64 eq www
-#                            log default (hitcnt=0) 0x97c75adc
+# access-list R1_traffic line 2 extended deny tcp 2001:db8:0:3::/64 eq www
+#             2001:fc8:0:4::/64 eq telnet inactive (hitcnt=0) (inactive) 0x3b75655e
+# access-list R1_traffic line 3 extended deny tcp 2001:db8:0:3::/64 eq telnet
+#             2001:fc8:0:4::/64 eq www log errors interval 300 (hitcnt=0) 0x3b75655e
+# access-list temp_access; 3 elements; name hash: 0xaf1b712e
+# access-list temp_access line 1 extended deny tcp 192.0.2.0 255.255.255.0
+#             198.51.100.0 255.255.255.0 eq www log default (hitcnt=0) 0x3b75655e
+# access-list temp_access line 2 extended deny igrp 198.51.100.0 255.255.255.0
+#             198.51.110.0 255.255.255.0 time-range temp (hitcnt=0) 0x3b75655e
+# access-list temp_access line 3 extended deny tcp interface management
+#             interface management eq www log warnings interval 300 (hitcnt=0) 0x3b75655e
+# access-list temp_access line 4 extended deny tcp object-group test_og_network
+#             object-group test_network_og eq www log default (hitcnt=0) (forward-referenced) 0x9562c509
+# access-list temp_access line 5 extended deny object tcp_443 object test_object_no_1
+#             object test_object_no_2 log default (hitcnt=0) (forward-referenced) (inactive) 0x3b75655e
 
 # Using Merged to Rename ACLs
 # Before state:
