@@ -1,7 +1,8 @@
 # CISCO ASA Ansible Collection
 
-[![CI](https://zuul-ci.org/gated.svg)](https://dashboard.zuul.ansible.com/t/ansible/project/github.com/ansible-collections/cisco.asa) <!--[![Codecov](https://img.shields.io/codecov/c/github/ansible-collections/cisco)](https://codecov.io/gh/ansible-collections/cisco.asa)-->
 [![CI](https://github.com/ansible-collections/cisco.asa/actions/workflows/tests.yml/badge.svg?branch=main&event=schedule)](https://github.com/ansible-collections/cisco.asa/actions/workflows/tests.yml)
+
+⚠️ **The cisco.asa collection has been [deprecated](https://forum.ansible.com/t/deprecation-announcement-for-the-cisco-asa-ansible-collection/38939) and will reach it's end-of-life on May, 2027. We are no longer accepting new pull requests, except for ones that fix critical bugs or security vulnerabilities. Compatibility with ansible-core>2.17 is not guaranteed.**
 
 The Ansible Cisco ASA collection includes a variety of Ansible content to help automate the management of Cisco ASA firewall appliances.
 
