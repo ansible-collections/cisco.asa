@@ -13,10 +13,6 @@ DOCUMENTATION = """
 module: asa_command
 author: Peter Sprygada (@privateip), Patrick Ogenstad (@ogenstad)
 short_description: Run arbitrary commands on Cisco ASA devices
-deprecated:
-  removed_in: 6.0.1
-  why: This collection and all content in it is unmaintained and deprecated.
-  alternative: Unknown.
 description:
 - Sends arbitrary commands to an ASA node and returns the results read from the device.
   The C(asa_command) module includes an argument that will cause the module to wait

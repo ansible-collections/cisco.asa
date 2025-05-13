@@ -4,26 +4,11 @@ plugin_routing:
   modules:
     acls:
       redirect: cisco.asa.asa_acls
-      deprecation:
-        removal_version: 6.0.1
-        warning_text: This collection and all content in it is unmaintained and deprecated.
     command:
       redirect: cisco.asa.asa_command
-      deprecation:
-        removal_version: 6.0.1
-        warning_text: This collection and all content in it is unmaintained and deprecated.
     config:
       redirect: cisco.asa.asa_config
-      deprecation:
-        removal_version: 6.0.1
-        warning_text: This collection and all content in it is unmaintained and deprecated.
     facts:
       redirect: cisco.asa.asa_facts
-      deprecation:
-        removal_version: 6.0.1
-        warning_text: This collection and all content in it is unmaintained and deprecated.
     ogs:
       redirect: cisco.asa.asa_ogs
-      deprecation:
-        removal_version: 6.0.1
-        warning_text: This collection and all content in it is unmaintained and deprecated.

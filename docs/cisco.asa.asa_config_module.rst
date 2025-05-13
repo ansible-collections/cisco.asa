@@ -14,13 +14,6 @@ Version added: 1.0.0
    :local:
    :depth: 1
 
-DEPRECATED
-----------
-:Removed in collection release after
-:Why: This collection and all content in it is unmaintained and deprecated.
-:Alternative: Unknown.
-
-
 
 Synopsis
 --------
@@ -483,10 +476,6 @@ Common return values are documented `here <https://docs.ansible.com/ansible/late
 
 Status
 ------
-
-
-- This module will be removed in version 6.0.1. *[deprecated]*
-- For more information see `DEPRECATED`_.
 
 
 Authors

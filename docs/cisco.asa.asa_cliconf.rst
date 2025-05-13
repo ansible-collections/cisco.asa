@@ -14,13 +14,6 @@ Version added: 1.0.0
    :local:
    :depth: 1
 
-DEPRECATED
-----------
-:Removed in collection release after
-:Why: This collection and all content in it is unmaintained and deprecated.
-:Alternative: Unknown.
-
-
 
 Synopsis
 --------
@@ -75,10 +68,6 @@ Parameters
 
 Status
 ------
-
-
-- This cliconf will be removed in version 6.0.1. *[deprecated]*
-- For more information see `DEPRECATED`_.
 
 
 Authors
