@@ -153,7 +153,7 @@ class AclsTemplate(NetworkTemplate):
                     \s*(?P<grant>deny|permit)*
                     \s*(?P<ethertype_params>(dsap\s\S+)|bpdu|eii-ipx|ipx|mpls-unicast|mpls-multicast|isis|any\s)*
                     \s*(?P<std_dest>(host\s\S+)|any4|(?:[0-9]{1,3}\.){3}[0-9]{1,3}\s(?:[0-9]{1,3}\.){3}[0-9]{1,3})*
-                    \s*(?P<protocol>ah|eigrp|esp|gre|icmp|icmp6|igmp|igrp|ip|ipinip|ipsec|nos|ospf|pcp|pim|pptp|sctp|snp|tcp|udp|object-group\s\S+)*
+                    \s*(?P<protocol>ah|eigrp|esp|gre|icmp6|icmp|igmp|igrp|ip|ipinip|ipsec|nos|ospf|pcp|pim|pptp|sctp|snp|tcp|udp|object-group\s\S+)*
                     \s*(?P<protocol_num>\d+\s)*
                     \s*(?P<source>any4|any6|any|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\s([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+\S+|host\s(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-f0-9:]+:+)+[a-f0-9]+)\S+)|interface\s\S+|object-group\s\S+))*
                     \s*(?P<source_port_protocol>(eq|gts|lt|neq)\s(\S+|\d+)|range\s\S+\s\S+)*
