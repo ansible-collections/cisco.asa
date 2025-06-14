@@ -1,0 +1,60 @@
+---
+- ansible.builtin.debug:
+    msg: Start asa_objects deleted integration tests ansible_connection={{
+      ansible_connection }}
+
+- ansible.builtin.include_tasks: _remove_config.yaml
+
+- ansible.builtin.include_tasks: _populate_config.yaml
+
+- block:
+    - name: Delete given module attributes
+      register: result
+      cisco.asa.asa_objects: &id001
+        config:
+          - object_type: network
+            objects:
+              - name: test_range_obj
+              - name: test_non_existent_obj
+          - object_type: service
+            objects:
+              - name: test_icmp_echo_obj
+        state: deleted
+
+    - assert:
+        that:
+          - result.commands|length == 2
+          - result.changed == true
+          - result.commands|symmetric_difference(deleted.commands) == []
+
+    - name: Delete given module attributes (IDEMPOTENT)
+      register: result
+      cisco.asa.asa_objects: *id001
+
+    - assert:
+        that:
+          - result.changed == false
+
+    - ansible.builtin.include_tasks: _populate_config.yaml
+
+    - name: Delete ALL configured module attributes
+      register: result
+      cisco.asa.asa_objects:
+        state: deleted
+
+    - assert:
+        that:
+          - result.commands|length == delete_all.commands|length
+          - result.changed == true
+          - result.commands|symmetric_difference(delete_all.commands) == []
+
+    - name: Delete ALL configured module attributes (IDEMPOTENT)
+      register: result
+      cisco.asa.asa_objects:
+        state: deleted
+
+    - assert:
+        that:
+          - result.changed == false
+  always:
+    - ansible.builtin.include_tasks: _remove_config.yaml
