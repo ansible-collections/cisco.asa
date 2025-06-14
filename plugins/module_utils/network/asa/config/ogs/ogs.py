@@ -208,14 +208,9 @@ class OGs(ResourceModule):
             "network_object.ipv6_address",
             "network_object.object",
         ]
-        add_obj_cmd = False
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
             if entry != h_item and name != "object_type":
-                if h_item and entry.get("group_object"):
-                    self.addcmd(entry, "og_name", False)
-                    self._add_group_object_cmd(entry, h_item)
-                    continue
                 if h_item:
                     self._add_object_cmd(
                         entry,
@@ -224,13 +219,13 @@ class OGs(ResourceModule):
                         ["address", "host", "ipv6_address", "object"],
                     )
                 else:
-                    add_obj_cmd = True
                     self.addcmd(entry, "og_name", False)
-                    self.compare(["description"], entry, h_item)
+                self.compare(["description"], entry, h_item)
                 if entry.get("group_object"):
                     self._add_group_object_cmd(entry, h_item)
-                    continue
-                if entry[network_obj].get("address"):
+                elif h_item.get("group_object"):
+                    self._add_group_object_cmd({"group_object": []}, h_item)
+                if entry.get(network_obj) and entry[network_obj].get("address"):
                     self._compare_object_diff(
                         entry,
                         h_item,
@@ -243,10 +238,8 @@ class OGs(ResourceModule):
                     h_item[network_obj] = {
                         "address": h_item[network_obj].get("address"),
                     }
-                    if not add_obj_cmd:
-                        self.addcmd(entry, "og_name", False)
                     self.compare(parsers, {}, h_item)
-                if entry[network_obj].get("host"):
+                if entry.get(network_obj) and entry[network_obj].get("host"):
                     self._compare_object_diff(
                         entry,
                         h_item,
@@ -255,14 +248,12 @@ class OGs(ResourceModule):
                         parsers,
                         "network_object.host",
                     )
-                elif h_item and h_item[network_obj].get("host"):
+                elif h_item and h_item.get(network_obj) and h_item[network_obj].get("host"):
                     h_item[network_obj] = {
                         "host": h_item[network_obj].get("host"),
                     }
-                    if not add_obj_cmd:
-                        self.addcmd(entry, "og_name", False)
                     self.compare(parsers, {}, h_item)
-                if entry[network_obj].get("ipv6_address"):
+                if entry.get(network_obj) and entry[network_obj].get("ipv6_address"):
                     self._compare_object_diff(
                         entry,
                         h_item,
@@ -275,10 +266,8 @@ class OGs(ResourceModule):
                     h_item[network_obj] = {
                         "ipv6_address": h_item[network_obj].get("ipv6_address"),
                     }
-                    if not add_obj_cmd:
-                        self.addcmd(entry, "og_name", False)
                     self.compare(parsers, {}, h_item)
-                if entry[network_obj].get("object"):
+                if entry.get(network_obj) and entry[network_obj].get("object"):
                     self._compare_object_diff(
                         entry,
                         h_item,
@@ -291,8 +280,6 @@ class OGs(ResourceModule):
                     h_item[network_obj] = {
                         "object": h_item[network_obj].get("object"),
                     }
-                    if not add_obj_cmd:
-                        self.addcmd(entry, "og_name", False)
                     self.compare(parsers, {}, h_item)
         self.check_for_have_and_overidden(have)
 
@@ -301,10 +288,6 @@ class OGs(ResourceModule):
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
             if entry != h_item and name != "object_type":
-                if h_item and entry.get("group_object"):
-                    self.addcmd(entry, "og_name", False)
-                    self._add_group_object_cmd(entry, h_item)
-                    continue
                 if h_item:
                     self._add_object_cmd(
                         entry,
@@ -314,11 +297,12 @@ class OGs(ResourceModule):
                     )
                 else:
                     self.addcmd(entry, "og_name", False)
-                    self.compare(["description"], entry, h_item)
+                self.compare(["description"], entry, h_item)
                 if entry.get("group_object"):
                     self._add_group_object_cmd(entry, h_item)
-                    continue
-                if entry[protocol_obj].get("protocol"):
+                elif h_item.get("group_object"):
+                    self._add_group_object_cmd({"group_object": []}, h_item)
+                if entry.get(protocol_obj) and entry[protocol_obj].get("protocol"):
                     self._compare_object_diff(
                         entry,
                         h_item,
@@ -332,14 +316,9 @@ class OGs(ResourceModule):
     def _security_object_compare(self, want, have):
         security_obj = "security_group"
         parsers = ["security_group.sec_name", "security_group.tag"]
-        add_obj_cmd = False
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
             if entry != h_item and name != "object_type":
-                if h_item and entry.get("group_object"):
-                    self.addcmd(entry, "og_name", False)
-                    self._add_group_object_cmd(entry, h_item)
-                    continue
                 if h_item:
                     self._add_object_cmd(
                         entry,
@@ -348,13 +327,13 @@ class OGs(ResourceModule):
                         ["sec_name", "tag"],
                     )
                 else:
-                    add_obj_cmd = True
                     self.addcmd(entry, "og_name", False)
-                    self.compare(["description"], entry, h_item)
+                self.compare(["description"], entry, h_item)
                 if entry.get("group_object"):
                     self._add_group_object_cmd(entry, h_item)
-                    continue
-                if entry[security_obj].get("sec_name"):
+                elif h_item.get("group_object"):
+                    self._add_group_object_cmd({"group_object": []}, h_item)
+                if entry.get(security_obj) and entry[security_obj].get("sec_name"):
                     self._compare_object_diff(
                         entry,
                         h_item,
@@ -363,14 +342,11 @@ class OGs(ResourceModule):
                         parsers,
                         "security_group.sec_name",
                     )
-                elif h_item and h_item[security_obj].get("sec_name"):
+                elif h_item and h_item.get(security_obj) and h_item[security_obj].get("sec_name"):
                     h_item[security_obj] = {
                         "sec_name": h_item[security_obj].get("sec_name"),
                     }
-                    if not add_obj_cmd:
-                        self.addcmd(entry, "og_name", False)
-                    self.compare(parsers, {}, h_item)
-                if entry[security_obj].get("tag"):
+                if entry.get(security_obj) and entry[security_obj].get("tag"):
                     self._compare_object_diff(
                         entry,
                         h_item,
@@ -379,12 +355,10 @@ class OGs(ResourceModule):
                         parsers,
                         "security_group.tag",
                     )
-                elif h_item and h_item[security_obj].get("tag"):
+                elif h_item and h_item.get(security_obj) and h_item[security_obj].get("tag"):
                     h_item[security_obj] = {
                         "tag": h_item[security_obj].get("tag"),
                     }
-                    if not add_obj_cmd:
-                        self.addcmd(entry, "og_name", False)
                     self.compare(parsers, {}, h_item)
         self.check_for_have_and_overidden(have)
 
@@ -395,10 +369,6 @@ class OGs(ResourceModule):
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
             if entry != h_item and name != "object_type":
-                if h_item and entry.get("group_object"):
-                    self.addcmd(entry, "og_name", False)
-                    self._add_group_object_cmd(entry, h_item)
-                    continue
                 if h_item:
                     self._add_object_cmd(
                         entry,
@@ -411,10 +381,11 @@ class OGs(ResourceModule):
                     if protocol:
                         entry["name"] = "{0} {1}".format(name, protocol)
                     self.addcmd(entry, "og_name", False)
-                    self.compare(["description"], entry, h_item)
+                self.compare(["description"], entry, h_item)
                 if entry.get("group_object"):
                     self._add_group_object_cmd(entry, h_item)
-                    continue
+                elif h_item.get("group_object"):
+                    self._add_group_object_cmd({"group_object": []}, h_item)
                 if entry.get(service_obj):
                     if entry[service_obj].get("protocol"):
                         self._compare_object_diff(
@@ -564,14 +535,9 @@ class OGs(ResourceModule):
     def _user_object_compare(self, want, have):
         user_obj = "user_object"
         parsers = ["user_object.user", "user_object.user_gp"]
-        add_obj_cmd = False
         for name, entry in iteritems(want):
             h_item = have.pop(name, {})
             if entry != h_item and name != "object_type":
-                if h_item and entry.get("group_object"):
-                    self.addcmd(entry, "og_name", False)
-                    self._add_group_object_cmd(entry, h_item)
-                    continue
                 if h_item:
                     self._add_object_cmd(
                         entry,
@@ -580,13 +546,13 @@ class OGs(ResourceModule):
                         ["user", "user_group"],
                     )
                 else:
-                    add_obj_cmd = True
                     self.addcmd(entry, "og_name", False)
-                    self.compare(["description"], entry, h_item)
+                self.compare(["description"], entry, h_item)
                 if entry.get("group_object"):
                     self._add_group_object_cmd(entry, h_item)
-                    continue
-                if entry[user_obj].get("user"):
+                elif h_item.get("group_object"):
+                    self._add_group_object_cmd({"group_object": []}, h_item)
+                if entry.get(user_obj) and entry[user_obj].get("user"):
                     self._compare_object_diff(
                         entry,
                         h_item,
@@ -595,12 +561,10 @@ class OGs(ResourceModule):
                         ["user_object.user"],
                         "user_object.user",
                     )
-                elif h_item and h_item[user_obj].get("user"):
+                elif h_item and h_item.get(user_obj) and h_item[user_obj].get("user"):
                     h_item[user_obj] = {"user": h_item[user_obj].get("user")}
-                    if not add_obj_cmd:
-                        self.addcmd(entry, "og_name", False)
                     self.compare(parsers, {}, h_item)
-                if entry[user_obj].get("user_group"):
+                if entry.get(user_obj) and entry[user_obj].get("user_group"):
                     self._compare_object_diff(
                         entry,
                         h_item,
@@ -609,12 +573,10 @@ class OGs(ResourceModule):
                         ["user_object.user_group"],
                         "user_object.user_gp",
                     )
-                elif h_item and h_item[user_obj].get("user_group"):
+                elif h_item and h_item.get(user_obj) and h_item[user_obj].get("user_group"):
                     h_item[user_obj] = {
                         "user_group": h_item[user_obj].get("user_group"),
                     }
-                    if not add_obj_cmd:
-                        self.addcmd(entry, "og_name", False)
                     self.compare(parsers, {}, h_item)
         self.check_for_have_and_overidden(have)
 
@@ -631,22 +593,27 @@ class OGs(ResourceModule):
                 if want_element and have_element and want_element != have_element:
                     if not obj_cmd_added:
                         self.addcmd(want, "og_name", False)
-                        self.compare(["description"], want, have)
                         obj_cmd_added = True
             else:
                 if want_element and have_element and set(want_element) != set(have_element):
                     if not obj_cmd_added:
                         self.addcmd(want, "og_name", False)
-                        self.compare(["description"], want, have)
                         obj_cmd_added = True
+        if not obj_cmd_added and want.get("description") != have.get("description"):
+            self.addcmd(want, "og_name", False)
+            obj_cmd_added = True
+        if not obj_cmd_added and want.get("group_object") != have.get("group_object"):
+            self.addcmd(want, "og_name", False)
+            obj_cmd_added = True
 
     def _add_group_object_cmd(self, want, have):
         if have and have.get("group_object"):
+            want_go = want.get("group_object")
             want["group_object"] = list(
                 set(want.get("group_object")) - set(have.get("group_object")),
             )
             have["group_object"] = list(
-                set(have.get("group_object")) - set(want.get("group_object")),
+                set(have.get("group_object")) - set(want_go),
             )
         for each in want["group_object"]:
             self.compare(["group_object"], {"group_object": each}, dict())

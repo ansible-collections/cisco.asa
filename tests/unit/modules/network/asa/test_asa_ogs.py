@@ -96,6 +96,11 @@ class TestAsaOGsModule(TestAsaModule):
                                 name="bug_test_obj",
                                 network_object=dict(host=["9.9.9.9"]),
                             ),
+                            dict(
+                                name="mixed_og_network",
+                                network_object=dict(host=["9.9.9.9"]),
+                                group_object=["test_network_og"],
+                            ),
                         ],
                         object_type="network",
                     ),
@@ -156,6 +161,18 @@ class TestAsaOGsModule(TestAsaModule):
                                 ],
                                 protocol="tcp",
                             ),
+                            dict(
+                                name="mixed_og_service",
+                                services_object=[
+                                    dict(
+                                        source_port=dict(
+                                            range=dict(end="200", start="100"),
+                                        ),
+                                        protocol="tcp-udp",
+                                    ),
+                                ],
+                                group_object=["test_og_service"],
+                            ),
                         ],
                         object_type="service",
                     ),
@@ -176,6 +193,9 @@ class TestAsaOGsModule(TestAsaModule):
             "network-object object NEW_TEST",
             "object-group network bug_test_obj",
             "network-object host 9.9.9.9",
+            "object-group network mixed_og_network",
+            "group-object test_network_og",
+            "network-object host 9.9.9.9",
             "object-group user test_user_obj",
             "user-group domain\\\\test_merge",
             "object-group protocol test_protocol",
@@ -187,6 +207,9 @@ class TestAsaOGsModule(TestAsaModule):
             "object-group service allowed.ports.tcp tcp",
             "port-object eq 3300",
             "port-object range 9101 9103",
+            "object-group service mixed_og_service",
+            "group-object test_og_service",
+            "service-object tcp-udp source range 100 200",
         ]
         self.assertEqual(sorted(result["commands"]), sorted(commands))
 
@@ -213,6 +236,11 @@ class TestAsaOGsModule(TestAsaModule):
                                 network_object=dict(object=["TEST1", "TEST2"]),
                             ),
                             dict(name="bug_test_obj"),
+                            dict(
+                                name="mixed_og_network",
+                                network_object=dict(host=["192.0.2.1"]),
+                                group_object=["ANSIBLE_TEST"],
+                            ),
                         ],
                         object_type="network",
                     ),
@@ -311,6 +339,15 @@ class TestAsaOGsModule(TestAsaModule):
                                     address=["198.51.100.0 255.255.255.0"],
                                 ),
                             ),
+                            dict(
+                                name="mixed_og_network",
+                                description="mixed_og_network_replace",
+                                network_object=dict(
+                                    host=["198.51.100.1"],
+                                    address=["198.51.100.0 255.255.255.0"],
+                                ),
+                                group_object=["test_og_network"],
+                            ),
                         ],
                         object_type="network",
                     ),
@@ -327,6 +364,15 @@ class TestAsaOGsModule(TestAsaModule):
             "no network-object host 192.0.2.1",
             "no network-object host 2001:db8::1",
             "network-object host 198.51.100.1",
+            "object-group network mixed_og_network",
+            "description mixed_og_network_replace",
+            "no group-object ANSIBLE_TEST",
+            "group-object test_og_network",
+            "no network-object host 192.0.2.1",
+            "no network-object host 2001:db8::1",
+            "no network-object 192.0.2.0 255.255.255.0",
+            "network-object host 198.51.100.1",
+            "network-object 198.51.100.0 255.255.255.0",
         ]
         self.assertEqual(sorted(result["commands"]), sorted(commands))
 
@@ -353,6 +399,14 @@ class TestAsaOGsModule(TestAsaModule):
                                 network_object=dict(object=["TEST1", "TEST2"]),
                             ),
                             dict(name="bug_test_obj"),
+                            dict(
+                                name="mixed_og_network",
+                                network_object=dict(
+                                    host=["192.0.2.1", "2001:db8::1"],
+                                    address=["192.0.2.0 255.255.255.0"],
+                                ),
+                                group_object=["ANSIBLE_TEST"],
+                            ),
                         ],
                         object_type="network",
                     ),
@@ -411,6 +465,7 @@ class TestAsaOGsModule(TestAsaModule):
                             ),
                             dict(
                                 name="test_user_obj",
+                                description="test_user",
                                 user_object=dict(
                                     user=[dict(domain="LOCAL", name="test1")],
                                     user_group=[
@@ -464,6 +519,7 @@ class TestAsaOGsModule(TestAsaModule):
             "no object-group service 3300",
             "no object-group service sg-skype_ports",
             "no object-group service O-UNIX-TCP",
+            "no object-group service mixed_og_service",
             "no object-group network group_network_obj",
             "no object-group protocol test_protocol",
             "object-group network test_og_network",
@@ -475,6 +531,7 @@ class TestAsaOGsModule(TestAsaModule):
             "network-object host 198.51.100.1",
             "no object-group network ANSIBLE_TEST",
             "no object-group network bug_test_obj",
+            "no object-group network mixed_og_network",
             "no object-group user group_user_obj",
             "no object-group user test_user_obj",
         ]
@@ -503,6 +560,14 @@ class TestAsaOGsModule(TestAsaModule):
                                 network_object=dict(object=["TEST1", "TEST2"]),
                             ),
                             dict(name="bug_test_obj"),
+                            dict(
+                                name="mixed_og_network",
+                                network_object=dict(
+                                    host=["192.0.2.1", "2001:db8::1"],
+                                    address=["192.0.2.0 255.255.255.0"],
+                                ),
+                                group_object=["ANSIBLE_TEST"],
+                            ),
                         ],
                         object_type="network",
                     ),
@@ -550,6 +615,23 @@ class TestAsaOGsModule(TestAsaModule):
                                     dict(protocol="tcp-udp"),
                                 ],
                             ),
+                            dict(
+                                name="mixed_og_service",
+                                services_object=[
+                                    dict(
+                                        destination_port=dict(gt="nfs"),
+                                        protocol="tcp",
+                                        source_port=dict(eq=1234),
+                                    ),
+                                    dict(
+                                        destination_port=dict(
+                                            range=dict(end=200, start=100),
+                                        ),
+                                        protocol="tcp",
+                                    ),
+                                ],
+                                group_object=["sg-skype_ports"],
+                            ),
                         ],
                         object_type="service",
                     ),
@@ -561,6 +643,7 @@ class TestAsaOGsModule(TestAsaModule):
                             ),
                             dict(
                                 name="test_user_obj",
+                                description="test_user",
                                 user_object=dict(
                                     user=[dict(domain="LOCAL", name="test1")],
                                     user_group=[
@@ -611,11 +694,13 @@ class TestAsaOGsModule(TestAsaModule):
             "no object-group network test_og_network",
             "no object-group network ANSIBLE_TEST",
             "no object-group network bug_test_obj",
+            "no object-group network mixed_og_network",
             "no object-group protocol test_protocol",
             "no object-group service 3300",
             "no object-group service sg-skype_ports",
             "no object-group service test_og_service",
             "no object-group service O-UNIX-TCP",
+            "no object-group service mixed_og_service",
             "no object-group user group_user_obj",
             "no object-group user test_user_obj",
         ]
