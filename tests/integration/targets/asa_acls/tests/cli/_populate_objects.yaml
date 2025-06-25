@@ -1,0 +1,21 @@
+---
+- name: Create test service object
+  cisco.asa.asa_config:
+    lines:
+      - service tcp destination eq https
+    parents:
+      - object service test_svc_object
+
+- name: Create test object 1
+  cisco.asa.asa_config:
+    lines:
+      - host 192.0.2.1
+    parents:
+      - object network test_object_no_1
+
+- name: Create test object 2
+  cisco.asa.asa_config:
+    lines:
+      - host 198.51.100.1
+    parents:
+      - object network test_object_no_2
