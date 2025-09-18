@@ -17,7 +17,6 @@ __metaclass__ = type
 
 import copy
 
-from ansible.module_utils.six import iteritems
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.resource_module import (
     ResourceModule,
 )
@@ -79,7 +78,7 @@ class Acls(ResourceModule):
         else:
             haved = {}
 
-        for k, want in iteritems(wantd):
+        for k, want in wantd.items():
             h_want = haved.get(k, {})
             if want.get("aces"):
                 for each in want["aces"]:
@@ -103,7 +102,7 @@ class Acls(ResourceModule):
             # to append line number from have to want
             # if want ace config mateches have ace config
             temp_have = copy.deepcopy(haved)
-            for k, v in iteritems(wantd):
+            for k, v in wantd.items():
                 h_item = temp_have.pop(k, {})
                 if not h_item:
                     continue
@@ -121,7 +120,7 @@ class Acls(ResourceModule):
         # if state is deleted, empty out wantd and set haved to wantd
         if self.state == "deleted":
             temp = {}
-            for k, v in iteritems(haved):
+            for k, v in haved.items():
                 if k in wantd or not wantd:
                     temp.update({k: v})
             haved = temp
@@ -129,12 +128,12 @@ class Acls(ResourceModule):
 
         # remove superfluous config for overridden and deleted
         if self.state in ["overridden", "deleted"]:
-            for k, have in iteritems(haved):
+            for k, have in haved.items():
                 if k not in wantd:
                     self._compare(want={}, have=have)
 
         temp = []
-        for k, want in iteritems(wantd):
+        for k, want in wantd.items():
             if want.get("rename") and want.get("rename") not in temp:
                 self.commands.extend(
                     ["access-list {name} rename {rename}".format(**want)],

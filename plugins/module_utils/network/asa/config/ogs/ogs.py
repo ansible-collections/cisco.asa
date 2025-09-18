@@ -17,7 +17,6 @@ __metaclass__ = type
 
 import copy
 
-from ansible.module_utils.six import iteritems
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.resource_module import (
     ResourceModule,
 )
@@ -105,10 +104,10 @@ class OGs(ResourceModule):
         # if state is deleted, empty out wantd and set haved to wantd
         if self.state == "deleted":
             temp = {}
-            for k, v in iteritems(haved):
+            for k, v in haved.items():
                 temp_have = {}
                 if k in wantd or not wantd:
-                    for key, val in iteritems(v):
+                    for key, val in v.items():
                         if not wantd or key in wantd[k]:
                             temp_have.update({key: val})
                     temp.update({k: temp_have})
@@ -117,25 +116,25 @@ class OGs(ResourceModule):
 
         # delete processes first so we do run into "more than one" errors
         if self.state in ["overridden", "deleted"]:
-            for k, have in iteritems(haved):
+            for k, have in haved.items():
                 if k not in wantd:
-                    for each_key, each_val in iteritems(have):
+                    for each_key, each_val in have.items():
                         if each_key != "object_type":
                             each_val.update(
                                 {"object_type": have.get("object_type")},
                             )
                             self.addcmd(each_val, "og_name", True)
 
-        for k, want in iteritems(wantd):
+        for k, want in wantd.items():
             self._compare(want=want, have=haved.pop(k, {}))
 
     def _compare(self, want, have):
         if want != have:
-            for k, v in iteritems(want):
+            for k, v in want.items():
                 if k != "object_type":
                     v.update({"object_type": want.get("object_type")})
             if have:
-                for k, v in iteritems(have):
+                for k, v in have.items():
                     if k != "object_type":
                         v.update({"object_type": want.get("object_type")})
 
@@ -159,13 +158,13 @@ class OGs(ResourceModule):
 
     def check_for_have_and_overidden(self, have):
         if have and self.state == "overridden":
-            for name, entry in iteritems(have):
+            for name, entry in have.items():
                 if name != "object_type":
                     self.addcmd(entry, "og_name", True)
 
     def _icmp_object_compare(self, want, have):
         icmp_obj = "icmp_type"
-        for name, entry in iteritems(want):
+        for name, entry in want.items():
             h_item = have.pop(name, {})
             if entry != h_item and name != "object_type" and entry[icmp_obj].get("icmp_object"):
                 if h_item and entry.get("group_object"):
@@ -209,7 +208,7 @@ class OGs(ResourceModule):
             "network_object.object",
         ]
         add_obj_cmd = False
-        for name, entry in iteritems(want):
+        for name, entry in want.items():
             h_item = have.pop(name, {})
             if entry != h_item and name != "object_type":
                 if h_item and entry.get("group_object"):
@@ -298,7 +297,7 @@ class OGs(ResourceModule):
 
     def _protocol_object_compare(self, want, have):
         protocol_obj = "protocol_object"
-        for name, entry in iteritems(want):
+        for name, entry in want.items():
             h_item = have.pop(name, {})
             if entry != h_item and name != "object_type":
                 if h_item and entry.get("group_object"):
@@ -333,7 +332,7 @@ class OGs(ResourceModule):
         security_obj = "security_group"
         parsers = ["security_group.sec_name", "security_group.tag"]
         add_obj_cmd = False
-        for name, entry in iteritems(want):
+        for name, entry in want.items():
             h_item = have.pop(name, {})
             if entry != h_item and name != "object_type":
                 if h_item and entry.get("group_object"):
@@ -392,7 +391,7 @@ class OGs(ResourceModule):
         service_obj = "service_object"
         services_obj = "services_object"
         port_obj = "port_object"
-        for name, entry in iteritems(want):
+        for name, entry in want.items():
             h_item = have.pop(name, {})
             if entry != h_item and name != "object_type":
                 if h_item and entry.get("group_object"):
@@ -438,7 +437,7 @@ class OGs(ResourceModule):
                         destination="destination_port",
                     )
                     command_len = len(self.commands)
-                    for k, v in iteritems(entry):
+                    for k, v in entry.items():
                         if h_item:
                             h_service_item = h_item.pop(k, {})
                             if h_service_item != v:
@@ -457,7 +456,7 @@ class OGs(ResourceModule):
                                 have={},
                             )
                     if h_item and self.state in ["overridden", "replaced"]:
-                        for k, v in iteritems(h_item):
+                        for k, v in h_item.items():
                             temp_have = {"name": name, services_obj: v}
                             self.compare(
                                 [services_obj],
@@ -482,7 +481,7 @@ class OGs(ResourceModule):
                         destination="destination_port",
                     )
                     command_len = len(self.commands)
-                    for k, v in iteritems(entry):
+                    for k, v in entry.items():
                         h_port_item = h_item.pop(k, {})
                         if "http" in k and "_" in k:
                             # This condition is to TC of device behaviour, where if user tries to
@@ -499,7 +498,7 @@ class OGs(ResourceModule):
                             temp_want = {"name": name, port_obj: v}
                             self.compare([port_obj], want=temp_want, have={})
                     if h_item and self.state in ["overridden", "replaced"]:
-                        for k, v in iteritems(h_item):
+                        for k, v in h_item.items():
                             temp_have = {"name": name, port_obj: v}
                             self.compare([port_obj], want={}, have=temp_have)
         self.check_for_have_and_overidden(have)
@@ -565,7 +564,7 @@ class OGs(ResourceModule):
         user_obj = "user_object"
         parsers = ["user_object.user", "user_object.user_gp"]
         add_obj_cmd = False
-        for name, entry in iteritems(want):
+        for name, entry in want.items():
             h_item = have.pop(name, {})
             if entry != h_item and name != "object_type":
                 if h_item and entry.get("group_object"):

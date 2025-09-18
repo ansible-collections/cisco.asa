@@ -18,7 +18,6 @@ __metaclass__ = type
 
 from copy import deepcopy
 
-from ansible.module_utils.six import iteritems
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import utils
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.network_template import (
     NetworkTemplate,
@@ -67,7 +66,7 @@ class AclsFacts(object):
         current = rmmod.parse()
         acls = list()
         if current.get("acls"):
-            for key, val in iteritems(current.get("acls")):
+            for key, val in current.get("acls").items():
                 if val.get("name") == "cached":
                     continue
                 for each in val.get("aces"):
