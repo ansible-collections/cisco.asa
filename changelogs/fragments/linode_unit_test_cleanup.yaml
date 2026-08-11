@@ -1,0 +1,3 @@
+---
+trivial:
+  - Remove obsolete unit-test mock helpers and dependency requirements that are no longer used by the collection.
