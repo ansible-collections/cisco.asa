@@ -1292,3 +1292,147 @@ class TestAsaAclsModule(TestAsaModule):
         }
         result = self.execute_module(changed=False)
         self.assertEqual(result["gathered"], facts)
+
+    def test_asa_acls_object_gathered(self):
+        self.execute_show_command.return_value = dedent(
+            """\
+            access-list test_obj; 4 elements; name hash: 0xbd6c87a7
+            access-list test_obj line 1 remark test object remark
+            access-list test_obj line 2 extended permit udp object test_src object-group test_og eq ntp log informational (hitcnt=0) 0xf1efa630
+            access-list test_obj line 3 extended permit object-group test_svc object-group test_og object test_dst log informational (hitcnt=0) 0xae5833af
+            access-list test_obj line 4 extended permit ip object test_src object test_dst (hitcnt=0) 0x4a4660f3
+            """,
+        )
+        set_module_args(
+            dict(
+                state="gathered",
+            ),
+        )
+        facts = {
+            "acls": [
+                {
+                    "name": "test_obj",
+                    "acl_type": "extended",
+                    "aces": [
+                        {"line": 1, "remark": "test object remark"},
+                        {
+                            "grant": "permit",
+                            "line": 2,
+                            "protocol": "udp",
+                            "protocol_options": {"udp": True},
+                            "source": {"object": "test_src"},
+                            "destination": {
+                                "object_group": "test_og",
+                                "port_protocol": {"eq": "ntp"},
+                            },
+                            "log": "informational",
+                        },
+                        {
+                            "grant": "permit",
+                            "line": 3,
+                            "protocol": "object-group test_svc",
+                            "source": {"object_group": "test_og"},
+                            "destination": {"object": "test_dst"},
+                            "log": "informational",
+                        },
+                        {
+                            "grant": "permit",
+                            "line": 4,
+                            "protocol": "ip",
+                            "protocol_options": {"ip": True},
+                            "source": {"object": "test_src"},
+                            "destination": {"object": "test_dst"},
+                        },
+                    ],
+                },
+            ],
+        }
+        result = self.execute_module(changed=False)
+        self.assertEqual(result["gathered"], facts)
+
+    def test_asa_acls_object_rendered(self):
+        set_module_args(
+            dict(
+                config=dict(
+                    acls=[
+                        dict(
+                            name="test_obj",
+                            acl_type="extended",
+                            aces=[
+                                dict(
+                                    grant="permit",
+                                    line=1,
+                                    protocol_options=dict(udp=True),
+                                    source=dict(object="test_src"),
+                                    destination=dict(
+                                        object_group="test_og",
+                                        port_protocol=dict(eq="ntp"),
+                                    ),
+                                    log="informational",
+                                ),
+                                dict(
+                                    grant="permit",
+                                    line=2,
+                                    protocol_options=dict(ip=True),
+                                    source=dict(object="test_src"),
+                                    destination=dict(object="test_dst"),
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+                state="rendered",
+            ),
+        )
+        commands = [
+            "access-list test_obj line 1 extended permit udp object test_src"
+            " object-group test_og eq ntp log informational",
+            "access-list test_obj line 2 extended permit ip object test_src object test_dst",
+        ]
+        result = self.execute_module(changed=False)
+        self.assertEqual(sorted(result["rendered"]), sorted(commands))
+
+    def test_asa_acls_object_merged_idempotent(self):
+        self.execute_show_command.return_value = dedent(
+            """\
+            access-list test_obj; 2 elements; name hash: 0xbd6c87a7
+            access-list test_obj line 1 extended permit udp object test_src object-group test_og eq ntp log informational (hitcnt=0) 0xf1efa630
+            access-list test_obj line 2 extended permit ip object test_src object test_dst (hitcnt=0) 0x4a4660f3
+            """,
+        )
+        set_module_args(
+            dict(
+                config=dict(
+                    acls=[
+                        dict(
+                            name="test_obj",
+                            acl_type="extended",
+                            aces=[
+                                dict(
+                                    grant="permit",
+                                    line=1,
+                                    protocol="udp",
+                                    protocol_options=dict(udp=True),
+                                    source=dict(object="test_src"),
+                                    destination=dict(
+                                        object_group="test_og",
+                                        port_protocol=dict(eq="ntp"),
+                                    ),
+                                    log="informational",
+                                ),
+                                dict(
+                                    grant="permit",
+                                    line=2,
+                                    protocol="ip",
+                                    protocol_options=dict(ip=True),
+                                    source=dict(object="test_src"),
+                                    destination=dict(object="test_dst"),
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+                state="merged",
+            ),
+        )
+        self.execute_module(changed=False, commands=[])

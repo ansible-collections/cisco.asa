@@ -1,0 +1,7 @@
+---
+minor_changes:
+  - asa_acls - add support for referencing a network object directly in an ACE
+    source or destination with the new ``object`` option. Previously only
+    ``object_group`` was available, so ``object <name>`` entries on the device were
+    silently dropped when gathering facts, leaving the affected entries without a
+    source or destination.
