@@ -4,6 +4,8 @@ plugin_routing:
   modules:
     acls:
       redirect: cisco.asa.asa_acls
+    banner:
+      redirect: cisco.asa.asa_banner
     command:
       redirect: cisco.asa.asa_command
     config:
