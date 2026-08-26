@@ -15,7 +15,6 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-from ansible.module_utils.six import iteritems
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import utils
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.network_template import (
     NetworkTemplate,
@@ -59,12 +58,12 @@ class OGsFacts(object):
             "user": "user_object",
         }
         if current.get("ogs"):
-            for k, v in iteritems(current.get("ogs")):
+            for k, v in current.get("ogs").items():
                 obj_gp = {}
                 config_dict = {}
                 config_dict["object_type"] = k
                 config_dict["object_groups"] = []
-                for each in iteritems(v):
+                for each in v.items():
                     obj_gp["name"] = each[1].pop("name")
                     each[1].pop("object_type")
                     if each[1].get("description"):

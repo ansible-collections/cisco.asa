@@ -1,6 +1,17 @@
 ---
 requires_ansible: ">=2.15.0"
 plugin_routing:
+  action:
+    acls:
+      redirect: cisco.asa.asa_acls
+    command:
+      redirect: cisco.asa.asa_command
+    config:
+      redirect: cisco.asa.asa_config
+    facts:
+      redirect: cisco.asa.asa_facts
+    ogs:
+      redirect: cisco.asa.asa_ogs
   modules:
     acls:
       redirect: cisco.asa.asa_acls
