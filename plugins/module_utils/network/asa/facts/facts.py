@@ -10,7 +10,6 @@ calls the appropriate facts gathering function
 
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 
@@ -25,7 +24,6 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.legacy
     Hardware,
 )
 from ansible_collections.cisco.asa.plugins.module_utils.network.asa.facts.ogs.ogs import OGsFacts
-
 
 FACT_LEGACY_SUBSETS = dict(default=Default, hardware=Hardware, config=Config)
 
