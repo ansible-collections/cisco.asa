@@ -122,6 +122,36 @@ class TestAsaAclsModule(TestAsaModule):
                             aces=[
                                 dict(
                                     destination=dict(
+                                        object="test_object_no_2",
+                                    ),
+                                    grant="deny",
+                                    line=4,
+                                    protocol="object test_svc_object",
+                                    source=dict(
+                                        object="test_object_no_1",
+                                    ),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        object_group="test_network_og",
+                                    ),
+                                    grant="permit",
+                                    line=5,
+                                    protocol_options=dict(
+                                        object_group="test_service_og",
+                                    ),
+                                    source=dict(
+                                        object_group="test_og_network",
+                                    ),
+                                ),
+                            ],
+                            acl_type="extended",
+                            name="test_access",
+                        ),
+                        dict(
+                            aces=[
+                                dict(
+                                    destination=dict(
                                         any="true",
                                         service_object_group="O-UNIX-TCP",
                                     ),
@@ -143,6 +173,8 @@ class TestAsaAclsModule(TestAsaModule):
         result = self.execute_module(changed=True)
         commands = [
             "access-list test_global_access line 2 extended deny tcp object-group test_og_network object-group test_network_og eq www log default",
+            "access-list test_access line 4 extended deny object test_svc_object object test_object_no_1 object test_object_no_2",
+            "access-list test_access line 5 extended permit object-group test_service_og object-group test_og_network object-group test_network_og",
             "access-list MyACL line 2 extended permit tcp object-group O-Environments any object-group O-UNIX-TCP",
         ]
         self.assertEqual(result["commands"], commands)
@@ -159,6 +191,8 @@ class TestAsaAclsModule(TestAsaModule):
             access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default (hitcnt=0) 0xdc46eb6e
             access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8
             access-list test_access line 3 extended permit ip host 192.0.2.2 any interval 300 (hitcnt=0) 0x831d897d
+            access-list test_access line 4 extended deny object test_svc_object object test_object_no_1 object test_object_no_2 (hitcnt=0) 0x3b75655e
+            access-list test_access line 5 extended permit object-group test_service_og object-group test_og_network object-group test_network_og (hitcnt=0)
             access-list test_R1_traffic; 1 elements; name hash: 0x2c20a0c
             access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive (hitcnt=0) (inactive) 0x11821a52
             access-list test_R1_traffic line 2 extended permit ip host 2001:db8::1 any6 (hitcnt=0) 0x82a59c34
@@ -254,6 +288,29 @@ class TestAsaAclsModule(TestAsaModule):
                                     protocol="ip",
                                     protocol_options=dict(ip="true"),
                                     source=dict(host="192.0.2.2"),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        object="test_object_no_2",
+                                    ),
+                                    grant="deny",
+                                    line=4,
+                                    protocol="object test_svc_object",
+                                    source=dict(
+                                        object="test_object_no_1",
+                                    ),
+                                ),
+                                dict(
+                                    destination=dict(
+                                        object_group="test_network_og",
+                                    ),
+                                    grant="permit",
+                                    protocol_options=dict(
+                                        object_group="test_service_og",
+                                    ),
+                                    source=dict(
+                                        object_group="test_og_network",
+                                    ),
                                 ),
                             ],
                             acl_type="extended",
@@ -410,6 +467,21 @@ class TestAsaAclsModule(TestAsaModule):
                                     ),
                                     time_range="temp",
                                 ),
+                                dict(
+                                    destination=dict(
+                                        address="198.51.110.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                    grant="deny",
+                                    line=2,
+                                    log="errors",
+                                    protocol="igrp",
+                                    protocol_options=dict(igrp="true"),
+                                    source=dict(
+                                        address="198.51.100.0",
+                                        netmask="255.255.255.0",
+                                    ),
+                                ),
                             ],
                         ),
                         dict(
@@ -436,7 +508,6 @@ class TestAsaAclsModule(TestAsaModule):
         commands = [
             "no access-list ansible_test line 1 remark HostA",
             "no access-list test_access line 3 extended permit ip host 192.0.2.2 any",
-            "no access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors",
             "no access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default",
             "access-list test_access line 1 extended deny igrp 198.51.101.0 255.255.255.0 198.51.102.0 255.255.255.0 log default time-range temp",
             "access-list ansible_test line 1 remark HostA0",
@@ -1116,6 +1187,10 @@ class TestAsaAclsModule(TestAsaModule):
             access-list test_access line 1 extended deny tcp 192.0.2.0 255.255.255.0 198.51.100.0 255.255.255.0 eq www log default (hitcnt=0) 0xdc46eb6e
             access-list test_access line 2 extended deny igrp 198.51.100.0 255.255.255.0 198.51.110.0 255.255.255.0 log errors interval 300 (hitcnt=0) 0x831d8
             access-list test_access line 3 extended permit ip host 192.0.2.2 any interval 300 (hitcnt=0) 0x831d897d
+            access-list test_access line 4 extended deny object test_svc_object object test_object_no_1 object test_object_no_2 (hitcnt=0) 0x3b75655e
+              access-list test_access line 4 extended deny tcp host 192.0.2.1 host 198.51.100.1 eq https (hitcnt=0) 0x3b75655e
+            access-list test_access line 5 extended permit object-group test_service_og object-group test_og_network object-group test_network_og (hitcnt=0)
+              access-list test_access line 5 extended permit tcp 192.0.2.0 255.255.255.0 host 198.51.100.1 eq domain (hitcnt=0) 0x0a546180
             access-list test_R1_traffic; 1 elements; name hash: 0x2c20a0c
             access-list test_R1_traffic line 1 extended deny tcp 2001:db8:0:3::/64 eq www 2001:fc8:0:4::/64 eq telnet inactive (hitcnt=0) (inactive) 0x11821a52
             access-list test_R1_traffic line 2 extended permit ip host 2001:db8::1 any6 (hitcnt=0) 0x82a59c34
@@ -1124,7 +1199,7 @@ class TestAsaAclsModule(TestAsaModule):
             access-list ansible_test line 2 extended deny ip host 192.0.5.1 any4
             access-list management_in; 2 elements; name hash: 0x4acd1688
             access-list management_in line 1 extended permit tcp host 198.51.100.5 range 49152 65535 198.51.100.0 255.255.255.0 eq 100 (hitcnt=0) 0x53ec762f
-            access-list management_in line 2 extended permit object-group MYSERV.11 object-group ALLSERV.12 eq 9389 (hitcnt=0) 0xc8881c8c
+            access-list management_in line 2 extended permit tcp object-group MYSERV.11 object-group ALLSERV.12 eq 9389 (hitcnt=0) 0xc8881c8c
               access-list management_in line 2 extended permit tcp 198.51.101.0 255.255.255.0 1.1.1.1 1.1.1.1 eq 9389 (hitcnt=0) 0xd39d4f42
             access-list management_in line 3 extended permit ip any4 host 192.0.2.1
             access-list MyACL; 10 elements; name hash: 0x436611e8
@@ -1189,6 +1264,22 @@ class TestAsaAclsModule(TestAsaModule):
                             "source": {"host": "192.0.2.2"},
                             "destination": {"any": True},
                             "protocol_options": {"ip": True},
+                        },
+                        {
+                            "grant": "deny",
+                            "line": 4,
+                            "protocol": "object test_svc_object",
+                            "source": {"object": "test_object_no_1"},
+                            "destination": {"object": "test_object_no_2"},
+                            "protocol_options": {"object": "test_svc_object"},
+                        },
+                        {
+                            "grant": "permit",
+                            "line": 5,
+                            "protocol": "object-group test_service_og",
+                            "source": {"object_group": "test_og_network"},
+                            "destination": {"object_group": "test_network_og"},
+                            "protocol_options": {"object_group": "test_service_og"},
                         },
                     ],
                 },
@@ -1258,11 +1349,15 @@ class TestAsaAclsModule(TestAsaModule):
                         {
                             "grant": "permit",
                             "line": 2,
-                            "protocol": "object-group MYSERV.11",
+                            "protocol": "tcp",
                             "source": {
+                                "object_group": "MYSERV.11",
+                            },
+                            "destination": {
                                 "object_group": "ALLSERV.12",
                                 "port_protocol": {"eq": "9389"},
                             },
+                            "protocol_options": {"tcp": True},
                         },
                         {
                             "grant": "permit",

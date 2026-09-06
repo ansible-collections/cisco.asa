@@ -18,4 +18,12 @@
                 - 198.51.100.1
               ipv6_address:
                 - 2001:db8:3::/64
+      - object_type: service
+        object_groups:
+          - name: test_service_og
+            services_object:
+              - protocol: tcp-udp
+                destination_port:
+                  eq: domain
+
     state: merged

@@ -1,0 +1,7 @@
+---
+- name: Remove test objects
+  cisco.asa.asa_config:
+    lines:
+      - no object service test_svc_object
+      - no object network test_object_no_1
+      - no object network test_object_no_2
