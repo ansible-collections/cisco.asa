@@ -117,7 +117,6 @@ failed_conditions:
 import time
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.six import string_types
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.parsing import (
     Conditional,
 )
@@ -131,7 +130,7 @@ from ansible_collections.cisco.asa.plugins.module_utils.network.asa.asa import (
 
 def to_lines(stdout):
     for item in stdout:
-        if isinstance(item, string_types):
+        if isinstance(item, str):
             item = str(item).split("\n")
         yield item
 
