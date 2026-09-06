@@ -1,7 +1,8 @@
 # CISCO ASA Ansible Collection
 
-[![CI](https://zuul-ci.org/gated.svg)](https://dashboard.zuul.ansible.com/t/ansible/project/github.com/ansible-collections/cisco.asa) <!--[![Codecov](https://img.shields.io/codecov/c/github/ansible-collections/cisco)](https://codecov.io/gh/ansible-collections/cisco.asa)-->
 [![CI](https://github.com/ansible-collections/cisco.asa/actions/workflows/tests.yml/badge.svg?branch=main&event=schedule)](https://github.com/ansible-collections/cisco.asa/actions/workflows/tests.yml)
+
+⚠️ The cisco.asa collection is no longer officially supported by Red Hat and has transitioned to [community maintenance](https://forum.ansible.com/t/announcing-a-change-in-support-for-cisco-asa-transitioning-to-community-maintenance/44482).Only critical bug and security fixes will be considered. Compatibility with ansible-core >2.17 is not guaranteed. The collection will remain available on Ansible Galaxy but will be removed from Automation Hub once the transition is complete.
 
 The Ansible Cisco ASA collection includes a variety of Ansible content to help automate the management of Cisco ASA firewall appliances.
 
@@ -31,10 +32,8 @@ For more information about communication, see the [Ansible communication guide](
 <!--start requires_ansible-->
 ## Ansible version compatibility
 
-This collection has been tested against following Ansible versions: **>=2.15.0**.
+This collection has been tested against the following Ansible versions: **>=2.15.0**.
 
-For collections that support Ansible 2.9, please ensure you update your `network_os` to use the
-fully qualified collection name (for example, `cisco.ios.ios`).
 Plugins and modules within a collection may be tested with only specific Ansible versions.
 A collection may contain metadata that identifies these versions.
 PEP440 is the schema used to describe the versions of Ansible.

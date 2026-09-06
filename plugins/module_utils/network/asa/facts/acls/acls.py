@@ -18,7 +18,6 @@ __metaclass__ = type
 
 from copy import deepcopy
 
-from ansible.module_utils.six import iteritems
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import utils
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.network_template import (
     NetworkTemplate,
@@ -67,8 +66,11 @@ class AclsFacts(object):
         current = rmmod.parse()
         acls = list()
         if current.get("acls"):
-            for key, val in iteritems(current.get("acls")):
+            for key, val in current.get("acls").items():
                 if val.get("name") == "cached":
+                    continue
+                # there might be acls w/o aces if they're forward-referenced
+                if val.get("aces") is None:
                     continue
                 for each in val.get("aces"):
                     if "protocol_number" in each:
@@ -86,13 +88,14 @@ class AclsFacts(object):
                             },
                         }
                         del each["icmp_icmp6_protocol"]
-                    elif (
-                        each.get("protocol")
-                        and each.get("protocol") != "icmp"
-                        and each.get("protocol") != "icmp6"
-                        and "object-group" not in each.get("protocol")
-                    ):
-                        each["protocol_options"] = {each.get("protocol"): True}
+                    elif each.get("protocol"):
+                        if "object" in each.get("protocol"):
+                            proto = each.get("protocol").split(" ")
+                            each["protocol_options"] = {
+                                proto[0].replace("-", "_"): proto[1],
+                            }
+                        elif each.get("protocol") != "icmp" and each.get("protocol") != "icmp6":
+                            each["protocol_options"] = {each.get("protocol"): True}
                 acls.append(val)
         facts = {}
         params = {}
