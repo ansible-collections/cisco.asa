@@ -326,8 +326,6 @@ class TestAsaOGsModule(TestAsaModule):
         self.execute_module(changed=False, commands=[], sort=True)
 
     def test_asa_ogs_merged_new_element_type(self):
-        """Regression test for issue #273: adding a new element type to an
-        existing group must emit the object-group context command first."""
         set_module_args(
             dict(
                 config=[
