@@ -325,6 +325,35 @@ class TestAsaOGsModule(TestAsaModule):
         )
         self.execute_module(changed=False, commands=[], sort=True)
 
+    def test_asa_ogs_merged_new_element_type(self):
+        """Regression test for issue #273: adding a new element type to an
+        existing group must emit the object-group context command first."""
+        set_module_args(
+            dict(
+                config=[
+                    dict(
+                        object_groups=[
+                            dict(
+                                name="object_only_group",
+                                network_object=dict(
+                                    object=["TEST1"],
+                                    host=["1.2.3.4"],
+                                ),
+                            ),
+                        ],
+                        object_type="network",
+                    ),
+                ],
+                state="merged",
+            ),
+        )
+        result = self.execute_module(changed=True)
+        commands = [
+            "object-group network object_only_group",
+            "network-object host 1.2.3.4",
+        ]
+        self.assertEqual(sorted(result["commands"]), sorted(commands))
+
     def test_asa_ogs_replaced(self):
         set_module_args(
             dict(
@@ -532,6 +561,7 @@ class TestAsaOGsModule(TestAsaModule):
             "no object-group network ANSIBLE_TEST",
             "no object-group network bug_test_obj",
             "no object-group network mixed_og_network",
+            "no object-group network object_only_group",
             "no object-group user group_user_obj",
             "no object-group user test_user_obj",
         ]
@@ -560,6 +590,10 @@ class TestAsaOGsModule(TestAsaModule):
                                 network_object=dict(object=["TEST1", "TEST2"]),
                             ),
                             dict(name="bug_test_obj"),
+                            dict(
+                                name="object_only_group",
+                                network_object=dict(object=["TEST1"]),
+                            ),
                             dict(
                                 name="mixed_og_network",
                                 network_object=dict(
@@ -695,6 +729,7 @@ class TestAsaOGsModule(TestAsaModule):
             "no object-group network ANSIBLE_TEST",
             "no object-group network bug_test_obj",
             "no object-group network mixed_og_network",
+            "no object-group network object_only_group",
             "no object-group protocol test_protocol",
             "no object-group service 3300",
             "no object-group service sg-skype_ports",

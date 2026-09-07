@@ -590,12 +590,14 @@ class OGs(ResourceModule):
                 and isinstance(want_element, list)
                 and isinstance(want_element[0], dict)
             ):
-                if want_element and have_element and want_element != have_element:
+                if want_element and want_element != have_element:
                     if not obj_cmd_added:
                         self.addcmd(want, "og_name", False)
                         obj_cmd_added = True
             else:
-                if want_element and have_element and set(want_element) != set(have_element):
+                if want_element and (
+                    not have_element or set(want_element) != set(have_element)
+                ):
                     if not obj_cmd_added:
                         self.addcmd(want, "og_name", False)
                         obj_cmd_added = True
