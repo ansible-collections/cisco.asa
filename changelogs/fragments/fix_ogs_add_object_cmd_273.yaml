@@ -1,2 +1,0 @@
-bugfixes:
-  - asa_ogs - fix _add_object_cmd not emitting object-group context command when adding a new element type to an existing group, causing Invalid input detected error (https://github.com/ansible-collections/cisco.asa/issues/273)
