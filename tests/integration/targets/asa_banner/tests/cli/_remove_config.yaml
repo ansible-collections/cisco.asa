@@ -1,0 +1,5 @@
+---
+- name: Remove the motd banner
+  cisco.asa.asa_banner:
+    banner: motd
+    state: absent
