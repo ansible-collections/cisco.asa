@@ -1,0 +1,33 @@
+---
+- ansible.builtin.debug:
+    msg: Start asa_objects overridden integration tests ansible_connection={{
+      ansible_connection }}
+
+- ansible.builtin.include_tasks: _remove_config.yaml
+- ansible.builtin.include_tasks: _populate_config.yaml
+
+- block:
+    - name: Override module attributes of given objects
+      become: true
+      register: result
+      cisco.asa.asa_objects: &id001
+        config: "{{ overridden.config }}"
+        state: overridden
+
+    - assert:
+        that:
+          - result.commands|length == overridden.commands|length
+          - result.changed == true
+          - result.commands|symmetric_difference(overridden.commands) == []
+
+    - name: Override module attributes of given object-group (IDEMPOTENT)
+      become: true
+      register: result
+      cisco.asa.asa_objects: *id001
+
+    - assert:
+        that:
+          - result.commands|length == 0
+          - result.changed == false
+  always:
+    - ansible.builtin.include_tasks: _remove_config.yaml
