@@ -1,0 +1,2 @@
+bugfixes:
+  - asa_acls - fix regex alternation order so icmp6 is matched before icmp, preventing icmp6 ACEs from being incorrectly parsed as icmp
