@@ -1,0 +1,17 @@
+---
+- ansible.builtin.debug:
+    msg:
+      "START asa_objects parsed integration tests on connection={{ ansible_connection
+      }}"
+
+- name: Parse the commands for provided configuration
+  become: true
+  register: result
+  cisco.asa.asa_objects:
+    running_config: "{{ lookup('file', '_parsed.cfg') }}"
+    state: parsed
+
+- assert:
+    that:
+      - result.changed == false
+      - parsed['config']|symmetric_difference(result.parsed) == []

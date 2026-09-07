@@ -23,3 +23,5 @@ plugin_routing:
       redirect: cisco.asa.asa_facts
     ogs:
       redirect: cisco.asa.asa_ogs
+    objects:
+      redirect: cisco.asa.asa_objects
