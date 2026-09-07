@@ -15,7 +15,6 @@ for a given resource, parsed, and the facts tree is populated
 based on the configuration.
 """
 
-from ansible.module_utils.six import iteritems
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
     utils,
 )
@@ -64,12 +63,12 @@ class ObjectsFacts(object):
         # objs = list(objects_parser.parse().values())
         current = objects_parser.parse()
         if current.get("objects"):
-            for k, v in iteritems(current.get("objects")):
+            for k, v in current.get("objects").items():
                 obj = {}
                 config_dict = {}
                 config_dict["object_type"] = k
                 config_dict["objects"] = []
-                for each in iteritems(v):
+                for each in v.items():
                     obj["name"] = each[1].pop("name")
                     each[1].pop("object_type")
                     if each[1].get("description"):
