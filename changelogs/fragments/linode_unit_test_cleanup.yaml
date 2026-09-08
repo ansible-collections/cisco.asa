@@ -1,5 +1,0 @@
----
-bugfixes:
-  - Rename action plugin aliases to match their corresponding module names while preserving short-name redirects.
-trivial:
-  - Remove obsolete unit-test mock helpers and dependency requirements that are no longer used by the collection.

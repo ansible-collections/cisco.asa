@@ -4,6 +4,30 @@ Cisco Asa Collection Release Notes
 
 .. contents:: Topics
 
+v7.0.0
+======
+
+Major Changes
+-------------
+
+- cisco.asa.asa_objects - resource module added to configure and manage objects on ASA platforms
+
+Minor Changes
+-------------
+
+- cisco.asa.asa_acls - add object support for ace protocol, source and destination parameters
+- asa_banner - new module to configure the asdm, exec, login and motd banners.
+
+Bugfixes
+--------
+
+- asa_acls - fix regex alternation order so icmp6 is matched before icmp, preventing icmp6 ACEs from being incorrectly parsed as icmp
+- asa_ogs - fix _add_object_cmd not emitting object-group context command when adding a new element type to an existing group, causing Invalid input detected error (https://github.com/ansible-collections/cisco.asa/issues/273)
+- asa_ogs - fix description changes being ignored for existing network object-groups (https://github.com/ansible-collections/cisco.asa/issues/260)
+- asa_ogs - fix group_object compare logic that caused objects to be skipped when group_object was specified (https://github.com/ansible-collections/cisco.asa/issues/258)
+- asa_ogs - fix group_object set mutation bug that corrupted want/have diff computation (https://github.com/ansible-collections/cisco.asa/issues/259)
+- Rename action plugin aliases to match their corresponding module names while preserving short-name redirects.
+
 v6.1.0
 ======
 

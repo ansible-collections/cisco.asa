@@ -1,3 +1,0 @@
----
-minor_changes:
-  - asa_banner - new module to configure the asdm, exec, login and motd banners.
