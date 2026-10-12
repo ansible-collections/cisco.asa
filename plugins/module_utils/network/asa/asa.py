@@ -27,7 +27,6 @@
 #
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 import json
 
@@ -36,7 +35,6 @@ from ansible.module_utils.connection import Connection, ConnectionError, exec_co
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
     EntityCollection,
 )
-
 
 _DEVICE_CONFIGS = {}
 _CONNECTION = None
